@@ -317,21 +317,32 @@
     if (!dados.tarefas) dados.tarefas = estadoPadrao.tarefas;
     function salvar() { localStorage.setItem(STORAGE_KEY, JSON.stringify(dados)); }
 
-     function obterImagemPet(tipo, doente, deNoite, xp) {
+         function obterImagemPet(tipo, doente, deNoite, xp) {
       const level = Math.floor(xp / 100) + 1;
       
       // ANIMAÇÃO DE DORMIR
-      if (deNoite) return "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-v/black-white/animated/143.gif"; 
+      if (deNoite) return "https://play.pokemonshowdown.com/sprites/ani/snorlax.gif"; 
       
       // ANIMAÇÃO DE DOENTE/TRISTE
-      if (doente) return "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-v/black-white/animated/104.gif"; 
+      if (doente) return "https://play.pokemonshowdown.com/sprites/ani/cubone.gif"; 
       
-      // PET 1: REXY (Evolução de Fogo/Dragão)
+      // PET 1: REXY (Evolução de Fogo)
       if (tipo === 'rexy') {
-        if (level < 15) return "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-v/black-white/animated/4.gif"; // Nível 1 ao 14
-        if (level < 30) return "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-v/black-white/animated/5.gif"; // Nível 15 ao 29
-        return "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-v/black-white/animated/6.gif"; // Nível 30+ (Mestre Lenda)
+        if (level < 15) return "https://play.pokemonshowdown.com/sprites/ani/charmander.gif"; // Iniciante
+        if (level < 30) return "https://play.pokemonshowdown.com/sprites/ani/charmeleon.gif"; // Explorador
+        return "https://play.pokemonshowdown.com/sprites/ani/charizard.gif"; // Mestre Lenda
       }
+      
+      // PET 2: PIPOCA (Evolução Elétrica)
+      if (tipo === 'pipoca') {
+        if (level < 15) return "https://play.pokemonshowdown.com/sprites/ani/pichu.gif";
+        return "https://play.pokemonshowdown.com/sprites/ani/pikachu.gif"; 
+      }
+
+      // PET PADRÃO
+      return "https://play.pokemonshowdown.com/sprites/ani/ditto.gif";
+    }
+
       
       // PET 2: PIPOCA (Evolução Elétrica/Ágil)
       if (tipo === 'pipoca') {
