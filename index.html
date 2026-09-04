@@ -15,6 +15,7 @@
 </head>
 <body class="bg-slate-900 sm:bg-sky-100 min-h-screen flex items-center justify-center p-0 sm:p-4 font-sans select-none transition-colors duration-700" id="corpo-pagina">
 
+  <!-- Câmera Oculta -->
   <input type="file" id="camera-input" accept="image/*" capture="environment" class="hidden" onchange="processarFotoCapturada(event)">
 
   <div id="card-app" class="w-full h-full min-h-screen sm:min-h-[690px] sm:max-w-sm bg-white sm:rounded-3xl shadow-2xl overflow-hidden sm:border-4 border-sky-300 flex flex-col justify-between relative transition-colors duration-700">
@@ -45,10 +46,10 @@
       <span class="text-[10px] text-indigo-400">Pet Dormindo</span>
     </div>
 
-    <!-- Tela da Criança -->
+    <!-- Tela Principal (Criança) -->
     <div id="view-crianca" class="p-3.5 flex-1 flex flex-col justify-between overflow-y-auto">
       
-      <!-- Status -->
+      <!-- Status do Pet -->
       <div id="painel-status" class="grid grid-cols-3 gap-2 bg-slate-50 p-2 rounded-2xl border border-slate-200 text-center transition-colors flex-shrink-0">
         <div>
           <span class="text-[9px] font-bold text-slate-500 uppercase">Fome</span>
@@ -69,7 +70,7 @@
         <span class="bg-indigo-100 text-indigo-800 text-[11px] px-3 py-0.5 rounded-full font-black mb-1 uppercase tracking-wide" id="txt-nivel-nome">Iniciante 🥉</span>
         <h2 class="text-xl font-black text-slate-800 tracking-wider uppercase mb-1" id="nome-pet">ZION</h2>
         
-        <!-- BARRA DE XP -->
+        <!-- Barra de XP -->
         <div class="w-48 mb-3">
           <div class="flex justify-between text-[10px] font-black text-slate-500 mb-0.5">
             <span>NÍVEL <span id="txt-level-num">1</span></span>
@@ -80,6 +81,7 @@
           </div>
         </div>
         
+        <!-- Imagem do Pet -->
         <div onclick="fazerCarinho()" class="cursor-pointer relative active:scale-95 transition-transform flex items-center justify-center h-36 w-36">
           <img id="img-pet-visual" src="" class="w-full h-full object-contain pet-breathe drop-shadow-xl" />
           <span id="zzz-pet" class="hidden absolute -top-4 right-4 text-indigo-400 text-xl font-black pointer-events-none zzz-anim">z Z Z</span>
@@ -91,13 +93,12 @@
         </button>
       </div>
 
-      <!-- Ações -->
+      <!-- Botões de Ação -->
       <div class="grid grid-cols-4 gap-1.5 mb-2 flex-shrink-0" id="grid-acoes-pet">
         <button onclick="alimentarPet()" class="bg-amber-100 hover:bg-amber-200 text-amber-900 font-bold py-1.5 rounded-xl text-xs flex flex-col items-center border border-amber-300 active:scale-95 transition">
-          <span>🍎 Lanche</span>
-          <span class="text-[8px] text-amber-700" id="txt-comidas">3 disp.</span>
+          <span>🍎 Lanche</span><span class="text-[8px] text-amber-700" id="txt-comidas">3 disp.</span>
         </button>
-        <button onclick="alert('Recurso em breve!')" class="bg-purple-100 hover:bg-purple-200 text-purple-900 font-bold py-1.5 rounded-xl text-xs flex flex-col items-center border border-purple-300 active:scale-95 transition">
+        <button id="btn-voz" onclick="gravarVoz()" class="bg-purple-100 hover:bg-purple-200 text-purple-900 font-bold py-1.5 rounded-xl text-xs flex flex-col items-center border border-purple-300 active:scale-95 transition">
           <span>🎤 Voz</span><span class="text-[8px] text-purple-700">Grave 3s</span>
         </button>
         <button onclick="abrirMinigame()" class="bg-emerald-100 hover:bg-emerald-200 text-emerald-900 font-bold py-1.5 rounded-xl text-xs flex flex-col items-center border border-emerald-300 active:scale-95 transition">
@@ -142,12 +143,12 @@
           </div>
         </div>
 
-        <!-- NOVO: EDITOR DE RECOMPENSAS / LOJA -->
+        <!-- EDITOR DE RECOMPENSAS / LOJA -->
         <div class="bg-white p-3 rounded-2xl border border-rose-200 shadow-sm mb-3">
           <h3 class="text-xs font-bold text-rose-900 mb-2">🎁 Editar Loja de Prêmios</h3>
           <div id="lista-edicao-premios" class="space-y-1 mb-2 max-h-32 overflow-y-auto"></div>
           <div class="flex gap-1 mt-2 border-t pt-2 border-slate-100 flex-wrap">
-            <input type="text" id="novo-premio-texto" placeholder="Ex: Escolher Filme, 30m Tela..." class="flex-1 border rounded-lg px-2 py-1 text-[11px]">
+            <input type="text" id="novo-premio-texto" placeholder="Ex: Filme, 30m Tela..." class="flex-1 border rounded-lg px-2 py-1 text-[11px]">
             <input type="number" id="novo-premio-custo" placeholder="🪙" value="10" class="w-10 border rounded-lg px-1 py-1 text-[11px] text-center">
             <select id="novo-premio-tipo" class="border rounded-lg px-1 py-1 text-[10px] bg-slate-50">
                 <option value="0">Prêmio Normal</option>
@@ -159,13 +160,14 @@
           </div>
         </div>
 
+        <!-- FORÇAR NOITE -->
         <div class="bg-indigo-50 p-3 rounded-2xl border border-indigo-200 shadow-sm mb-3">
           <button onclick="alternarModoNoiteManual()" class="w-full bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-1.5 rounded-xl text-xs transition">Forçar Noite / Dia Manualmente</button>
         </div>
       </div>
     </div>
 
-    <!-- Modais -->
+    <!-- Modais e Janelas Flutuantes -->
     <div id="modal-foto-preview" class="hidden fixed inset-0 bg-black/80 flex items-center justify-center p-4 z-50">
       <div class="bg-white rounded-3xl p-3 max-w-xs w-full text-center shadow-2xl">
         <h3 class="text-xs font-black text-slate-800 mb-2">Comprovação📸</h3>
@@ -191,7 +193,6 @@
       </div>
     </div>
 
-    <!-- Modal do Jogo/Desafio -->
     <div id="modal-jogo" class="hidden fixed inset-0 bg-black/50 flex items-center justify-center p-4 z-50">
       <div class="bg-white rounded-3xl p-5 w-80 text-center shadow-2xl border-4 border-emerald-400">
         <h3 class="text-base font-black text-emerald-700 mb-0.5">Desafio! 🧠</h3>
@@ -212,6 +213,7 @@
       return audioContext;
     }
 
+    // Gerador de Sons
     function tocarSom(tipo) {
       try {
         const ctx = obterAudioContext();
@@ -233,7 +235,7 @@
       } catch (e) {}
     }
 
-    // NOVOS PERSONAGENS (NOMES ORIGINAIS)
+    // Regras de Desbloqueio dos Personagens
     const BIBLIOTECA_PETS = [
       { id: 'zion', nome: 'Zion (O Furtivo)', emoji: '🦎', desc: 'Rápido e invisível!', requisito: 'Desbloqueado', checarLiberado: () => true },
       { id: 'cacton', nome: 'Cacton', emoji: '🌵', desc: 'Abraços espinhosos!', requisito: 'Nível 5', checarLiberado: (d) => (d.pet.xp >= 400) },
@@ -245,6 +247,7 @@
       const d = new Date(); return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`;
     }
 
+    // Estado inicial de quem abre o app a primeira vez
     const estadoPadrao = {
       pet: { tipo: 'zion', nome: 'Zion', fome: 80, saude: 90, felicidade: 70, doente: false, comidas: 3, xp: 0 },
       moedas: 15, ofensivaDias: 1, ultimoDiaAcesso: obterDataAtualFormatada(), tempoTelaSegundos: 0, modoNoiteForcado: null,
@@ -252,41 +255,54 @@
         { id: 1, texto: 'Escovar os dentes', recompensa: 5, status: 'pendente', foto: null },
         { id: 2, texto: 'Arrumar a cama', recompensa: 5, status: 'pendente', foto: null }
       ],
-      // NOVO SISTEMA DE LOJA CUSTOMIZAVEL
       recompensas: [
         { id: 1, texto: '15 min de Tela', custo: 10, tipo: 15 },
         { id: 2, texto: '30 min de Tela', custo: 18, tipo: 30 },
-        { id: 3, texto: 'Escolher o Filme', custo: 40, tipo: 0 } // Tipo 0 = Prêmio Normal/Manual
+        { id: 3, texto: 'Escolher o Filme', custo: 40, tipo: 0 } // 0 = Recompensa Manual sem Cronômetro
       ]
     };
 
     let dados = JSON.parse(localStorage.getItem(STORAGE_KEY)) || JSON.parse(localStorage.getItem('ROTINAPET_SAVE_V3')) || estadoPadrao;
-    if (dados.pet.tipo === 'rexy') dados.pet.tipo = 'zion'; // migração de nome
+    if (dados.pet.tipo === 'rexy') dados.pet.tipo = 'zion'; 
     if (dados.pet.tipo === 'pipoca') dados.pet.tipo = 'cacton'; 
     if (!dados.recompensas) dados.recompensas = estadoPadrao.recompensas;
     function salvar() { localStorage.setItem(STORAGE_KEY, JSON.stringify(dados)); }
 
-    // SISTEMA DE IMAGENS ATUALIZADO (Você substitui os LINKS depois pelas suas imagens)
+    // Motor de Imagens Seguras (Substitua as URLs pelas suas no futuro)
     function obterImagemPet(tipo, doente, deNoite, xp) {
       const level = Math.floor(xp / 100) + 1;
-      if (deNoite) return "https://media.tenor.com/22517970/spike-brawl-stars.gif"; 
-      if (doente) return "https://media.tenor.com/12435951606251542640/crow.gif"; 
       
+      if (deNoite) return "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/home/143.png"; 
+      if (doente) return "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/home/104.png"; 
+      
+      // ZION
       if (tipo === 'zion') {
-        if (level < 15) return "https://media.tenor.com/21957900/leon.gif";
-        if (level < 30) return "https://media.tenor.com/2229503204816863975/leon-nita.gif";
-        return "LINK_ZION_FASE3.gif"; 
+        if (level < 15) return "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/home/448.png"; 
+        if (level < 30) return "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/home/658.png"; 
+        return "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/home/6.png"; 
       }
+      
+      // CACTON
       if (tipo === 'cacton') {
-        if (level < 15) return "https://media.tenor.com/2839050247755774552/spike.gif";
-        return "https://media.tenor.com/8171325419545437347/spike-dance.gif";
+        if (level < 15) return "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/home/722.png";
+        return "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/home/724.png";
       }
-      if (tipo === 'luma') return "LINK_LUMA.gif";
-      if (tipo === 'ryu') return "LINK_RYU.gif";
 
-      return "https://media.tenor.com/21957900/leon.gif";
+      // LUMA
+      if (tipo === 'luma') {
+        if (level < 50) return "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/home/282.png";
+        return "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/home/282.png";
+      }
+
+      // RYU
+      if (tipo === 'ryu') {
+        return "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/home/130.png";
+      }
+
+      return "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/home/448.png";
     }
 
+    // Lógica da Câmera Fotográfica
     let tarefaIdParaFoto = null;
     function dispararCamera(id) { tarefaIdParaFoto = id; document.getElementById('camera-input').click(); }
     function processarFotoCapturada(e) {
@@ -307,6 +323,7 @@
     function abrirFotoPreview(url) { document.getElementById('img-preview-expandida').src = url; document.getElementById('modal-foto-preview').classList.remove('hidden'); }
     function fecharFotoPreview() { document.getElementById('modal-foto-preview').classList.add('hidden'); }
 
+    // Renderizações
     function renderizarTarefas() {
       const container = document.getElementById('lista-todas-tarefas'); container.innerHTML = '';
       dados.tarefas.forEach(t => {
@@ -342,12 +359,10 @@
     }
     function recusarTarefa(id) { const t = dados.tarefas.find(x => x.id === id); if (!t) return; t.status = 'pendente'; t.foto = null; atualizarTela(); }
 
-    /* EDIÇÃO TAREFAS/PRÊMIOS (PAIS) */
+    /* CRUD de Tarefas e Prêmios */
     function renderizarEdicaoTarefas() {
       const c = document.getElementById('lista-edicao-tarefas'); c.innerHTML = '';
-      dados.tarefas.forEach(t => {
-        c.innerHTML += `<div class="flex justify-between bg-slate-50 p-1.5 rounded border text-xs"><span class="truncate">${t.texto} <b class="text-amber-600">(${t.recompensa}🪙)</b></span><button onclick="removerTarefa(${t.id})" class="text-rose-500 font-bold px-1">Excluir</button></div>`;
-      });
+      dados.tarefas.forEach(t => { c.innerHTML += `<div class="flex justify-between bg-slate-50 p-1.5 rounded border text-xs"><span class="truncate">${t.texto} <b class="text-amber-600">(${t.recompensa}🪙)</b></span><button onclick="removerTarefa(${t.id})" class="text-rose-500 font-bold px-1">Excluir</button></div>`; });
     }
     function adicionarTarefa() {
       const txt = document.getElementById('nova-tarefa-texto').value; const moedas = parseInt(document.getElementById('nova-tarefa-moedas').value) || 5;
@@ -359,9 +374,7 @@
 
     function renderizarEdicaoPremios() {
       const c = document.getElementById('lista-edicao-premios'); c.innerHTML = '';
-      dados.recompensas.forEach(r => {
-        c.innerHTML += `<div class="flex justify-between bg-slate-50 p-1.5 rounded border text-xs"><span class="truncate">${r.texto} <b class="text-amber-600">(${r.custo}🪙)</b></span><button onclick="removerPremio(${r.id})" class="text-rose-500 font-bold px-1">Excluir</button></div>`;
-      });
+      dados.recompensas.forEach(r => { c.innerHTML += `<div class="flex justify-between bg-slate-50 p-1.5 rounded border text-xs"><span class="truncate">${r.texto} <b class="text-amber-600">(${r.custo}🪙)</b></span><button onclick="removerPremio(${r.id})" class="text-rose-500 font-bold px-1">Excluir</button></div>`; });
     }
     function adicionarRecompensa() {
       const txt = document.getElementById('novo-premio-texto').value; const custo = parseInt(document.getElementById('novo-premio-custo').value) || 10;
@@ -372,7 +385,7 @@
     }
     function removerPremio(id) { dados.recompensas = dados.recompensas.filter(r => r.id !== id); atualizarTela(); }
 
-    /* LOJA DE PRÊMIOS DA CRIANÇA */
+    /* Loja de Recompensas (Criança) */
     function abrirLojaRecompensas() { if(estaDeNoite()) return alert('Loja fechada à noite.'); document.getElementById('modal-recompensas').classList.remove('hidden'); }
     function fecharLojaRecompensas() { document.getElementById('modal-recompensas').classList.add('hidden'); }
     
@@ -380,9 +393,7 @@
       const c = document.getElementById('lista-itens-loja'); c.innerHTML = '';
       dados.recompensas.forEach(r => {
         const icone = r.tipo > 0 ? '📱' : '🎁';
-        c.innerHTML += `<div class="flex justify-between items-center p-2.5 rounded-xl bg-amber-50 border border-amber-200">
-          <span class="font-bold text-amber-950 text-[11px]">${icone} ${r.texto}</span>
-          <button onclick="comprarPremio(${r.id})" class="bg-amber-500 text-white px-2.5 py-1.5 rounded-lg font-bold text-xs">${r.custo} 🪙</button></div>`;
+        c.innerHTML += `<div class="flex justify-between items-center p-2.5 rounded-xl bg-amber-50 border border-amber-200"><span class="font-bold text-amber-950 text-[11px]">${icone} ${r.texto}</span><button onclick="comprarPremio(${r.id})" class="bg-amber-500 text-white px-2.5 py-1.5 rounded-lg font-bold text-xs">${r.custo} 🪙</button></div>`;
       });
     }
     
@@ -403,14 +414,8 @@
       const r = dados.recompensas.find(x => x.id === id); if (!r) return;
       if (dados.moedas < r.custo) return alert('Moedas insuficientes!');
       dados.moedas -= r.custo; fecharLojaRecompensas(); tocarSom('moeda');
-      
-      if (r.tipo > 0) { 
-        dados.tempoTelaSegundos += r.tipo * 60; 
-        alert(`Voucher ativado: +${r.tipo} min de tela!`); 
-        iniciarCronometro(); 
-      } else { 
-        alert(`🎉 COMPRA REALIZADA!\nVocê comprou: "${r.texto}"\n\nMostre este aviso para seus pais resgatarem seu prêmio!`); 
-      }
+      if (r.tipo > 0) { dados.tempoTelaSegundos += r.tipo * 60; alert(`Voucher ativado: +${r.tipo} min de tela!`); iniciarCronometro(); } 
+      else { alert(`🎉 COMPRA REALIZADA!\nVocê comprou: "${r.texto}"\n\nMostre este aviso para seus pais resgatarem seu prêmio!`); }
       atualizarTela();
     }
 
@@ -485,7 +490,56 @@
       document.getElementById('modal-jogo').classList.remove('hidden');
     }
     function fecharJogo() { document.getElementById('modal-jogo').classList.add('hidden'); }
+
+    /* GRAVADOR DE VOZ */
+    let gravando = false;
+    async function gravarVoz() {
+      if (estaDeNoite()) return alert('Shiii... O pet está dormindo! 🤫');
+      if (gravando) return;
+      
+      try {
+        const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+        const mediaRecorder = new MediaRecorder(stream);
+        const audioChunks = [];
+
+        mediaRecorder.ondataavailable = (event) => { if (event.data.size > 0) audioChunks.push(event.data); };
+        mediaRecorder.onstop = () => {
+          const audioBlob = new Blob(audioChunks, { type: 'audio/webm' });
+          const audioUrl = URL.createObjectURL(audioBlob);
+          new Audio(audioUrl).play();
+          
+          dados.pet.felicidade = Math.min(100, dados.pet.felicidade + 15);
+          salvar(); atualizarTela(); gravando = false;
+        };
+
+        mediaRecorder.start(); gravando = true;
+        const btnVoz = document.getElementById('btn-voz');
+        if (btnVoz) btnVoz.innerHTML = '<span class="animate-pulse text-rose-600 font-black">🔴 Gravando</span><span class="text-[8px] font-bold text-rose-500">Fale agora!</span>';
+
+        setTimeout(() => {
+          mediaRecorder.stop();
+          stream.getTracks().forEach(track => track.stop()); 
+          if (btnVoz) btnVoz.innerHTML = '<span>🎤 Voz</span><span class="text-[8px] text-purple-700">Grave 3s</span>';
+        }, 3000);
+      } catch (err) {
+        alert('Você precisa permitir o acesso ao microfone no seu celular/navegador!');
+        gravando = false;
+      }
+    }
+
     atualizarTela();
   </script>
+  
+  <!-- Início do Sistema Offline (Service Worker) -->
+  <script>
+    if ('serviceWorker' in navigator) {
+      window.addEventListener('load', () => {
+        navigator.serviceWorker.register('./sw.js')
+          .then(registration => console.log('Modo Offline ativado com sucesso!'))
+          .catch(err => console.log('Erro ao ativar o modo offline:', err));
+      });
+    }
+  </script>
+
 </body>
 </html>
