@@ -90,7 +90,7 @@
           <div id="pet-simples" class="pet-breathe relative z-10 flex items-center justify-center shadow-xl border-4 border-black/10 transition-all duration-1000">
              <span id="slot-cabeca" class="absolute -top-[35%] text-[0.8em] z-20 pointer-events-none drop-shadow-md transition-all duration-500"></span>
              <span id="slot-rosto" class="absolute inset-0 flex items-center justify-center text-[1em] z-20 pointer-events-none drop-shadow-md transition-all duration-500"></span>
-             <span id="pet-rosto" class="relative z-10 drop-shadow-md transition-all duration-500 pointer-events-none"></span>
+             <span id="pet-rosto" class="relative z-10 drop-shadow-md transition-all duration-500 pointer-events-none">🐱</span>
              <span id="slot-pe" class="absolute -bottom-[35%] text-[0.8em] z-20 pointer-events-none drop-shadow-md transition-all duration-500"></span>
           </div>
           <span id="zzz-pet" class="hidden absolute top-0 right-2 text-indigo-400 text-xl font-black pointer-events-none zzz-anim z-30">z Z Z</span>
@@ -118,7 +118,7 @@
         </button>
       </div>
 
-      <!-- Lista de Missões -->
+      <!-- Lista de Tarefas -->
       <div class="space-y-1.5 border-t pt-2 border-slate-100 max-h-40 overflow-y-auto flex-shrink-0">
         <div class="flex justify-between items-center mb-1">
           <span class="text-[10px] font-black text-slate-700 uppercase tracking-wider">🛡️ Lista de Tarefas</span>
@@ -237,7 +237,7 @@
       console.log('Firebase local/erro.');
     }
 
-    const STORAGE_KEY = 'ROTINAPET_SAVE_V10';
+    const STORAGE_KEY = 'ROTINAPET_SAVE_V12';
 
     let audioContext = null;
     function obterAudioContext() { if (!audioContext) audioContext = new (window.AudioContext || window.webkitAudioContext)(); if (audioContext.state === 'suspended') audioContext.resume(); return audioContext; }
@@ -298,6 +298,7 @@
 
     let dados = JSON.parse(localStorage.getItem(STORAGE_KEY)) || estadoPadrao;
     if (!dados.pinPais) dados.pinPais = '1234';
+    if (!dados.tarefas || dados.tarefas.length === 0) dados.tarefas = estadoPadrao.tarefas;
 
     function salvar() {
       localStorage.setItem(STORAGE_KEY, JSON.stringify(dados));
@@ -311,6 +312,7 @@
         const dadosNuvem = snapshot.val();
         if (dadosNuvem) {
           dados = dadosNuvem;
+          if (!dados.tarefas) dados.tarefas = estadoPadrao.tarefas;
           localStorage.setItem(STORAGE_KEY, JSON.stringify(dados));
           atualizarTela();
         }
@@ -319,7 +321,7 @@
 
     function obterEstiloPetSimples(tipo, doente, deNoite, xp) {
       const level = Math.floor(xp / 100) + 1;
-      let rosto = doente ? '🤒' : (deNoite ? '😴' : '🙂');
+      let rosto = doente ? '🤒' : (deNoite ? '😴' : '🐱');
       let formato = 'rounded-full'; let cor = 'bg-amber-400'; let tamanho = 'w-16 h-16 text-3xl'; let textura = ''; let faseTexto = 'Fase 1 🥉';
 
       if (level < 10) { tamanho = 'w-20 h-20 text-4xl'; faseTexto = 'Iniciante (Fase 1)'; }
@@ -331,7 +333,7 @@
       if (tipo === 'pipoca') {
         cor = 'bg-orange-400';
         textura = 'background-image: radial-gradient(#fbbf24 15%, transparent 16%), radial-gradient(#fbbf24 15%, transparent 16%); background-size: 20px 20px; background-position: 0 0, 10px 10px;';
-        if (!doente && !deNoite) { rosto = level < 10 ? '🥚' : level < 25 ? '🐱' : level < 50 ? '😼' : level < 100 ? '🐯' : '🦁'; }
+        if (!doente && !deNoite) { rosto = level < 10 ? '🐱' : level < 25 ? '🐱' : level < 50 ? '😼' : level < 100 ? '🐯' : '🦁'; }
       } else if (tipo === 'zion' || tipo === 'luma' || tipo === 'titan') {
         cor = tipo === 'titan' ? 'bg-amber-600' : 'bg-emerald-400';
         formato = level < 25 ? 'rounded-[40%]' : 'rounded-2xl';
@@ -365,10 +367,17 @@
     function fecharFotoPreview() { document.getElementById('modal-foto-preview').classList.add('hidden'); }
 
     function renderizarTarefas() {
-      const container = document.getElementById('lista-todas-tarefas'); container.innerHTML = '';
+      const container = document.getElementById('lista-todas-tarefas');
+      if (!container) return;
+      container.innerHTML = '';
+      if (!dados.tarefas || dados.tarefas.length === 0) {
+        container.innerHTML = '<div class="text-[10px] text-slate-400 text-center py-1">Nenhuma tarefa cadastrada.</div>';
+        return;
+      }
       dados.tarefas.forEach(t => {
         const pend = t.status === 'aguardando_aprovacao', apr = t.status === 'aprovada';
-        const card = document.createElement('div'); card.className = `flex flex-col p-2 rounded-2xl border transition-all text-xs ${apr ? 'bg-slate-50 border-slate-200 opacity-60' : pend ? 'bg-amber-50 border-amber-300' : 'bg-white border-slate-200'}`;
+        const card = document.createElement('div'); 
+        card.className = `flex flex-col p-2 rounded-2xl border transition-all text-xs ${apr ? 'bg-slate-50 border-slate-200 opacity-60' : pend ? 'bg-amber-50 border-amber-300' : 'bg-white border-slate-200'}`;
         let botoes = apr ? `<span class="text-[10px] font-black text-emerald-700">✓ Concluída</span>` : pend ? `<span class="text-[10px] font-black text-amber-700">⏳ Avaliando</span>` : `<div class="flex gap-1.5"><button onclick="dispararCamera(${t.id})" class="px-2 py-1 rounded-xl border text-[10px] font-bold ${t.foto ? 'bg-emerald-50 border-emerald-400 text-emerald-700' : 'bg-slate-100 border-slate-300'}">${t.foto ? '📷 OK' : '📷 Foto'}</button><button onclick="enviarParaAprovacao(${t.id})" class="bg-sky-500 text-white text-[10px] font-bold px-2 py-1 rounded-xl">Enviar</button></div>`;
         card.innerHTML = `<div class="flex items-center justify-between"><div><span class="font-bold text-slate-800 ${apr ? 'line-through' : ''}">${t.texto}</span><span class="text-[9px] text-indigo-600 font-bold ml-1">+20 XP</span></div><div>${botoes}</div></div>`;
         container.appendChild(card);
@@ -384,13 +393,21 @@
 
     function renderizarPainelAprovacao() {
       const pendentes = dados.tarefas.filter(t => t.status === 'aguardando_aprovacao');
-      document.getElementById('contador-aprovacoes').innerText = `${pendentes.length}`; document.getElementById('badge-pendentes').className = pendentes.length > 0 ? 'absolute -top-1 -right-1 bg-rose-500 text-[9px] px-1.5 rounded-full' : 'hidden';
-      const c = document.getElementById('lista-aprovacao-pais'); c.innerHTML = '';
+      document.getElementById('contador-aprovacoes').innerText = `${pendentes.length}`; 
+      const badge = document.getElementById('badge-pendentes');
+      if(badge) badge.className = pendentes.length > 0 ? 'absolute -top-1 -right-1 bg-rose-500 text-[9px] px-1.5 rounded-full' : 'hidden';
+      const c = document.getElementById('lista-aprovacao-pais'); 
+      if(!c) return;
+      c.innerHTML = '';
+      if(pendentes.length === 0) {
+        c.innerHTML = '<div class="text-[10px] text-slate-400 text-center py-2">Nenhuma tarefa aguardando aprovação.</div>';
+        return;
+      }
       pendentes.forEach(t => { c.innerHTML += `<div class="p-2 rounded-xl bg-slate-50 border border-slate-200 flex flex-col gap-1.5"><div class="flex justify-between items-center"><span class="font-bold text-xs">${t.texto}</span><div class="flex gap-1"><button onclick="recusarTarefa(${t.id})" class="bg-rose-100 px-2 py-1 rounded text-[10px] font-bold">X</button><button onclick="aprovarTarefa(${t.id})" class="bg-emerald-500 text-white px-2 py-1 rounded text-[10px] font-bold">✓</button></div></div>${t.foto ? `<img src="${t.foto}" onclick="abrirFotoPreview('${t.foto}')" class="w-12 h-12 rounded object-cover cursor-pointer" />` : ''}</div>`; });
     }
 
     function renderizarEdicaoTarefas() {
-      const c = document.getElementById('lista-edicao-tarefas'); c.innerHTML = '';
+      const c = document.getElementById('lista-edicao-tarefas'); if(!c) return; c.innerHTML = '';
       dados.tarefas.forEach(t => { c.innerHTML += `<div class="flex justify-between bg-slate-50 p-1.5 rounded border text-xs"><span class="truncate">${t.texto} <b class="text-amber-600">(${t.recompensa}🪙)</b></span><button onclick="removerTarefa(${t.id})" class="text-rose-500 font-bold px-1">Excluir</button></div>`; });
     }
     function adicionarTarefa() {
@@ -430,7 +447,7 @@
     function abrirLojaRecompensas() { if(estaDeNoite()) return alert('Loja fechada à noite.'); document.getElementById('modal-recompensas').classList.remove('hidden'); }
     function fecharLojaRecompensas() { document.getElementById('modal-recompensas').classList.add('hidden'); }
     function renderizarLojaCrianca() {
-      const c = document.getElementById('lista-itens-loja'); c.innerHTML = '';
+      const c = document.getElementById('lista-itens-loja'); if(!c) return; c.innerHTML = '';
       dados.recompensas.forEach(r => { c.innerHTML += `<div class="flex justify-between items-center p-2.5 rounded-xl bg-amber-50 border border-amber-200"><span class="font-bold text-amber-950 text-[11px]">${r.tipo > 0 ? '📱' : '🎁'} ${r.texto}</span><button onclick="comprarPremio(${r.id})" class="bg-amber-500 hover:bg-amber-600 text-white px-2.5 py-1.5 rounded-lg font-bold text-xs">${r.custo} 🪙</button></div>`; });
     }
     
@@ -460,7 +477,6 @@
       document.getElementById('txt-dinheiro').innerText = `R$ ${valorDinheiro}`;
       document.getElementById('input-taxa-cambio').value = dados.taxaCambio;
 
-      document.getElementById('txt-ofensiva').innerText = dados.ofensivaDias;
       document.getElementById('txt-comidas').innerText = dados.pet.comidas + ' disp.';
       
       const petAtivo = BIBLIOTECA_PETS.find(p => p.id === dados.pet.tipo);
@@ -508,7 +524,7 @@
 
       document.getElementById('bar-fome').style.width = dados.pet.fome + '%'; document.getElementById('bar-saude').style.width = dados.pet.saude + '%'; document.getElementById('bar-felicidade').style.width = dados.pet.felicidade + '%';
       
-      renderizarTarefas(); renderizarPainelAprovacao(); renderizarEdicaoTarefas(); renderizarEdicaoPremios(); renderizarLojaCrianca();
+      renderizarTarefas(); renderizarPainelAprovacao(); renderizarEdicaoTarefas(); renderizarLojaCrianca();
       if(dados.tempoTelaSegundos > 0 && !intTimer) iniciarCronometro();
     }
 
