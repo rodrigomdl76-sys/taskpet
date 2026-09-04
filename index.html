@@ -90,7 +90,7 @@
           <div id="pet-simples" class="pet-breathe relative z-10 flex items-center justify-center shadow-xl border-4 border-black/10 transition-all duration-1000">
              <span id="slot-cabeca" class="absolute -top-[35%] text-[0.8em] z-20 pointer-events-none drop-shadow-md transition-all duration-500"></span>
              <span id="slot-rosto" class="absolute inset-0 flex items-center justify-center text-[1em] z-20 pointer-events-none drop-shadow-md transition-all duration-500"></span>
-             <span id="pet-rosto" class="relative z-10 drop-shadow-md transition-all duration-500 pointer-events-none">🐱</span>
+             <span id="pet-rosto" class="relative z-10 drop-shadow-md transition-all duration-500 pointer-events-none text-4xl">🐱</span>
              <span id="slot-pe" class="absolute -bottom-[35%] text-[0.8em] z-20 pointer-events-none drop-shadow-md transition-all duration-500"></span>
           </div>
           <span id="zzz-pet" class="hidden absolute top-0 right-2 text-indigo-400 text-xl font-black pointer-events-none zzz-anim z-30">z Z Z</span>
@@ -168,6 +168,8 @@
             <button onclick="adicionarTarefa()" class="bg-sky-500 text-white px-2.5 py-1 rounded-lg text-xs font-bold">+</button>
           </div>
         </div>
+        
+        <button onclick="resetarDados()" class="w-full bg-rose-100 hover:bg-rose-200 text-rose-700 text-xs font-bold py-2 rounded-xl mt-2 border border-rose-300">🔄 Resetar Dados (Limpar Cache)</button>
       </div>
     </div>
 
@@ -216,7 +218,7 @@
   </div>
 
   <script>
-    // CONFIGURAÇÃO DO FIREBASE (Sincronizado com o seu projeto rotinapet-624a9)
+    // CONFIGURAÇÃO DO FIREBASE
     const firebaseConfig = {
       apiKey: "AIzaSyCiDk3ERIe8_uVqBhRnFRD5Od8nyLNlLVQ",
       authDomain: "rotinapet-624a9.firebaseapp.com",
@@ -231,13 +233,13 @@
     let cloudHabilitado = false;
     try {
       firebase.initializeApp(firebaseConfig);
-      var dbRef = firebase.database().ref('rotinapet/familia_bernardo');
+      var dbRef = firebase.database().ref('rotinapet/familia_bernardo_v15');
       cloudHabilitado = true;
     } catch(e) {
       console.log('Firebase local/erro.');
     }
 
-    const STORAGE_KEY = 'ROTINAPET_SAVE_V12';
+    const STORAGE_KEY = 'ROTINAPET_SAVE_V15';
 
     let audioContext = null;
     function obterAudioContext() { if (!audioContext) audioContext = new (window.AudioContext || window.webkitAudioContext)(); if (audioContext.state === 'suspended') audioContext.resume(); return audioContext; }
@@ -260,10 +262,10 @@
 
     const BIBLIOTECA_PETS = [
       { id: 'pipoca', nome: 'Pipoca', emoji: '🐱', desc: 'O clássico original!', requisito: 'Desbloqueado', checarLiberado: () => true },
-      { id: 'zion', nome: 'Zion', emoji: '🦎', desc: 'Nível 10', requisito: 'Nível 10', checarLiberado: (d) => (d.pet.xp >= 900) },
-      { id: 'ryu', nome: 'Ryu', emoji: '🤖', desc: 'Nível 25', requisito: 'Nível 25', checarLiberado: (d) => (d.pet.xp >= 2400) },
-      { id: 'luma', nome: 'Luma', emoji: '🐲', desc: 'Nível 50', requisito: 'Nível 50', checarLiberado: (d) => (d.pet.xp >= 4900) },
-      { id: 'titan', nome: 'Titan', emoji: '👑', desc: 'Nível 100', requisito: 'Nível 100', checarLiberado: (d) => (d.pet.xp >= 9900) }
+      { id: 'zion', nome: 'Zion', emoji: '🦎', desc: 'Nível 10', requisito: 'Nível 10', checarLiberado: (d) => (d.pet && d.pet.xp >= 900) },
+      { id: 'ryu', nome: 'Ryu', emoji: '🤖', desc: 'Nível 25', requisito: 'Nível 25', checarLiberado: (d) => (d.pet && d.pet.xp >= 2400) },
+      { id: 'luma', nome: 'Luma', emoji: '🐲', desc: 'Nível 50', requisito: 'Nível 50', checarLiberado: (d) => (d.pet && d.pet.xp >= 4900) },
+      { id: 'titan', nome: 'Titan', emoji: '👑', desc: 'Nível 100', requisito: 'Nível 100', checarLiberado: (d) => (d.pet && d.pet.xp >= 9900) }
     ];
 
     const ITENS_PETSHOP = [
@@ -298,12 +300,13 @@
 
     let dados = JSON.parse(localStorage.getItem(STORAGE_KEY)) || estadoPadrao;
     if (!dados.pinPais) dados.pinPais = '1234';
-    if (!dados.tarefas || dados.tarefas.length === 0) dados.tarefas = estadoPadrao.tarefas;
+    if (!dados.tarefas) dados.tarefas = estadoPadrao.tarefas;
+    if (!dados.inventario) dados.inventario = estadoPadrao.inventario;
 
     function salvar() {
       localStorage.setItem(STORAGE_KEY, JSON.stringify(dados));
       if (cloudHabilitado) {
-        dbRef.set(dados).catch(err => console.log('Erro ao sincronizar nuvem:', err));
+        dbRef.set(dados).catch(err => console.log('Erro nuvem:', err));
       }
     }
 
@@ -313,10 +316,19 @@
         if (dadosNuvem) {
           dados = dadosNuvem;
           if (!dados.tarefas) dados.tarefas = estadoPadrao.tarefas;
+          if (!dados.inventario) dados.inventario = estadoPadrao.inventario;
           localStorage.setItem(STORAGE_KEY, JSON.stringify(dados));
           atualizarTela();
         }
       });
+    }
+
+    function resetarDados() {
+      if (confirm('Deseja zerar e recarregar o sistema padrão?')) {
+        dados = estadoPadrao;
+        salvar();
+        location.reload();
+      }
     }
 
     function obterEstiloPetSimples(tipo, doente, deNoite, xp) {
