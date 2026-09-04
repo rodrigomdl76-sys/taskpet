@@ -318,27 +318,28 @@
     function salvar() { localStorage.setItem(STORAGE_KEY, JSON.stringify(dados)); }
 
     // --- NOVA FUNÇÃO DE IMAGENS BRAWL STARS ---
-        function obterImagemPet(tipo, doente, deNoite, xp) {
+            function obterImagemPet(tipo, doente, deNoite, xp) {
       const level = Math.floor(xp / 100) + 1;
       
-      if (deNoite) return "https://play.pokemonshowdown.com/sprites/ani/snorlax.gif"; 
-      if (doente) return "https://play.pokemonshowdown.com/sprites/ani/cubone.gif"; 
+      if (deNoite) return "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/home/143.png"; // Snorlax HD
+      if (doente) return "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/home/104.png";  // Cubone HD
       
-      // PET 1: REXY / LEON (Evoluções Animadas Reais)
+      // PET 1: REXY / LEON (Imagens HD estilo 3D/Desenho)
       if (tipo === 'rexy') {
-        if (level < 15) return "https://play.pokemonshowdown.com/sprites/ani/lucario.gif"; 
-        if (level < 30) return "https://play.pokemonshowdown.com/sprites/ani/greninja.gif"; 
-        return "https://play.pokemonshowdown.com/sprites/ani/charizard-mega-x.gif"; 
+        if (level < 15) return "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/home/448.png"; // Lucario
+        if (level < 30) return "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/home/658.png"; // Greninja
+        return "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/home/6.png"; // Charizard Mega X
       }
       
       // PET 2: PIPOCA / SPIKE
       if (type === 'pipoca') {
-        if (level < 15) return "https://play.pokemonshowdown.com/sprites/ani/rowlet.gif";
-        return "https://play.pokemonshowdown.com/sprites/ani/decidueye.gif"; 
+         if (level < 15) return "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/home/722.png"; // Rowlet
+         return "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/home/724.png"; // Decidueye
       }
 
-      return "https://play.pokemonshowdown.com/sprites/ani/lucario.gif";
+      return "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/home/448.png"; // Padrão Lucario
     }
+
 
 
     let tarefaIdParaFoto = null;
