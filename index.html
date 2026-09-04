@@ -157,11 +157,10 @@
           <div id="lista-aprovacao-pais" class="space-y-2"></div>
         </div>
 
-        <!-- EDITOR DE TAREFAS (NOVO) -->
+        <!-- EDITOR DE TAREFAS -->
         <div class="bg-white p-3 rounded-2xl border border-sky-200 shadow-sm mb-3">
           <h3 class="text-xs font-bold text-sky-900 mb-2">✏️ Gerenciar Tarefas</h3>
           <div id="lista-edicao-tarefas" class="space-y-1 mb-2 max-h-32 overflow-y-auto"></div>
-          
           <div class="flex gap-1 mt-2 border-t pt-2 border-slate-100">
             <input type="text" id="nova-tarefa-texto" placeholder="Nome da tarefa..." class="flex-1 border border-slate-300 rounded-lg px-2 py-1.5 text-xs focus:outline-none focus:border-sky-500">
             <input type="number" id="nova-tarefa-moedas" placeholder="🪙" value="5" class="w-12 border border-slate-300 rounded-lg px-1 py-1.5 text-xs text-center focus:outline-none focus:border-sky-500">
@@ -243,6 +242,17 @@
         <button onclick="fecharLojaRecompensas()" class="text-xs text-slate-400 font-bold hover:underline">Fechar</button>
       </div>
     </div>
+
+    <!-- Modal do Jogo/Desafio -->
+    <div id="modal-jogo" class="hidden fixed inset-0 bg-black/50 flex items-center justify-center p-4 z-50">
+      <div class="bg-white rounded-3xl p-5 w-80 text-center shadow-2xl border-4 border-emerald-400">
+        <h3 class="text-base font-black text-emerald-700 mb-0.5">Desafio de Matemática! 🧠</h3>
+        <p class="text-[11px] text-slate-500 mb-3">Acerte para ganhar moedas!</p>
+        <div class="text-2xl font-black text-slate-800 bg-slate-100 py-3 rounded-2xl mb-4 tracking-wider" id="txt-pergunta">3 + 2 = ?</div>
+        <div class="grid grid-cols-3 gap-2" id="opcoes-jogo"></div>
+        <button onclick="fecharJogo()" class="mt-4 text-xs text-slate-400 font-bold hover:underline">Fechar</button>
+      </div>
+    </div>
   </div>
 
   <script>
@@ -317,9 +327,9 @@
         if (level < 15) return "https://api.dicebear.com/7.x/bottts/svg?seed=RexyGamer&accessories=sunglasses&primaryColor=10b981";
         if (level < 30) return "https://api.dicebear.com/7.x/bottts/svg?seed=RexyPro&accessories=sensor&primaryColor=8b5cf6";
         if (level < 50) return "https://api.dicebear.com/7.x/bottts/svg?seed=RexyLegend&accessories=crown&primaryColor=f59e0b";
-        if (level < 75) return "https://api.dicebear.com/7.x/bottts/svg?seed=RexyGalactic&accessories=antenna01&primaryColor=ec4899"; // Rosa Galáctico
-        if (level < 100) return "https://api.dicebear.com/7.x/bottts/svg?seed=RexyGod&accessories=cables01&primaryColor=06b6d4"; // Ciano Deus
-        return "https://api.dicebear.com/7.x/bottts/svg?seed=RexyUniverse&accessories=sensor02&primaryColor=fb7185"; // Universo
+        if (level < 75) return "https://api.dicebear.com/7.x/bottts/svg?seed=RexyGalactic&accessories=antenna01&primaryColor=ec4899";
+        if (level < 100) return "https://api.dicebear.com/7.x/bottts/svg?seed=RexyGod&accessories=cables01&primaryColor=06b6d4";
+        return "https://api.dicebear.com/7.x/bottts/svg?seed=RexyUniverse&accessories=sensor02&primaryColor=fb7185";
       }
       return "https://api.dicebear.com/7.x/bottts/svg?seed=Random" + tipo + level;
     }
@@ -483,13 +493,27 @@
     function fazerCarinho() { if(estaDeNoite()) return; dados.pet.felicidade = Math.min(100, dados.pet.felicidade + 5); tocarSom('carinho'); atualizarTela(); }
     function darRemedio() { dados.pet.doente = false; dados.pet.saude = 100; tocarSom('carinho'); atualizarTela(); }
 
-    function abrirBibliotecaPets() { document.getElementById('modal-biblioteca').classList.remove('hidden'); }
+    /* FUNÇÕES DO ÁLBUM RECUPERADAS */
+    function abrirBibliotecaPets() {
+      const grid = document.getElementById('grid-pets-album'); grid.innerHTML = '';
+      BIBLIOTECA_PETS.forEach(p => {
+        const lib = p.checarLiberado(dados); const uso = dados.pet.tipo === p.id;
+        grid.innerHTML += `<div class="p-3 rounded-2xl border text-center ${uso ? 'border-sky-500 bg-sky-50 ring-2 ring-sky-300' : lib ? 'border-slate-200 bg-white shadow-sm' : 'border-slate-200 bg-slate-50 opacity-60'}">
+          <div class="text-3xl mb-1">${lib ? p.emoji : '🔒'}</div><div class="text-xs font-black text-slate-800">${p.nome}</div><div class="text-[9px] text-slate-500 mb-2">${lib ? p.desc : p.requisito}</div>
+          ${uso ? '<span class="text-[9px] font-black bg-sky-500 text-white px-2 py-0.5 rounded-full">Ativo</span>' : lib ? `<button onclick="selecionarPet('${p.id}', '${p.nome}')" class="w-full bg-sky-500 hover:bg-sky-600 text-white text-[10px] font-bold py-1.5 rounded-lg transition">Escolher</button>` : '<span class="text-[9px] font-bold text-slate-400">Bloqueado</span>'}
+        </div>`;
+      });
+      document.getElementById('modal-biblioteca').classList.remove('hidden');
+    }
     function fecharBibliotecaPets() { document.getElementById('modal-biblioteca').classList.add('hidden'); }
+    function selecionarPet(tipo, nome) { dados.pet.tipo = tipo; dados.pet.nome = nome; fecharBibliotecaPets(); tocarSom('carinho'); atualizarTela(); }
+
     function alternarModoPais() {
       const vC = document.getElementById('view-crianca'); const vP = document.getElementById('view-pais');
       if (vC.classList.contains('hidden')) { vC.classList.remove('hidden'); vP.classList.add('hidden'); }
       else { const pin = prompt('PIN dos pais (1234):'); if (pin === '1234') { vC.classList.add('hidden'); vP.classList.remove('hidden'); } else if(pin) alert('PIN incorreto!'); }
     }
+    
     function abrirLojaRecompensas() { if(estaDeNoite()) return alert('Loja fechada.'); document.getElementById('modal-recompensas').classList.remove('hidden'); }
     function fecharLojaRecompensas() { document.getElementById('modal-recompensas').classList.add('hidden'); }
 
@@ -503,6 +527,35 @@
         else { clearInterval(intTimer); document.getElementById('banner-timer').classList.add('hidden'); tocarSom('alarme'); alert('⏰ O tempo de tela acabou!'); }
       }, 1000); alert(`Voucher de ${min} min ativado!`);
     }
+
+    /* FUNÇÕES DO DESAFIO RECUPERADAS */
+    let respostaCerta = 0;
+    function abrirMinigame() {
+      if (estaDeNoite()) { alert('O pet está dormindo! Desafios voltam pela manhã.'); return; }
+      const a = Math.floor(Math.random() * 10) + 2; const b = Math.floor(Math.random() * 8) + 2;
+      respostaCerta = a + b;
+      document.getElementById('txt-pergunta').innerText = `${a} + ${b} = ?`;
+      const container = document.getElementById('opcoes-jogo'); container.innerHTML = '';
+      const opcoes = [respostaCerta, respostaCerta + 1, Math.max(0, respostaCerta - 1)].sort(() => Math.random() - 0.5);
+
+      opcoes.forEach(op => {
+        const btn = document.createElement('button');
+        btn.className = 'bg-emerald-500 hover:bg-emerald-600 text-white font-bold py-3 rounded-xl text-lg transition';
+        btn.innerText = op;
+        btn.onclick = () => {
+          if (op === respostaCerta) {
+            dados.moedas += 1;
+            dados.pet.felicidade = Math.min(100, dados.pet.felicidade + 10);
+            tocarSom('moeda'); alert('🎉 Acertou! +1 Moeda!'); fecharJogo(); atualizarTela();
+          } else { alert('Tente de novo!'); }
+        };
+        container.appendChild(btn);
+      });
+      document.getElementById('modal-jogo').classList.remove('hidden');
+    }
+    function fecharJogo() { document.getElementById('modal-jogo').classList.add('hidden'); }
+    
+    function gravarVoz() { alert('Recurso de voz indisponível temporariamente.'); }
 
     verificarViradaDeDia(); atualizarTela();
   </script>
