@@ -83,7 +83,7 @@
       <!-- Mascote Visual e Barra de XP -->
       <div class="flex flex-col items-center justify-center my-auto py-2 relative flex-shrink-0">
         <span class="bg-indigo-100 text-indigo-800 text-[11px] px-3 py-0.5 rounded-full font-black mb-1 uppercase tracking-wide" id="txt-nivel-nome">Iniciante 🥉</span>
-        <h2 class="text-xl font-black text-slate-800 tracking-wider uppercase mb-1" id="nome-pet">REXY</h2>
+        <h2 class="text-xl font-black text-slate-800 tracking-wider uppercase mb-1" id="nome-pet">LEON</h2>
         
         <!-- BARRA DE XP -->
         <div class="w-48 mb-3">
@@ -293,8 +293,8 @@
     }
 
     const BIBLIOTECA_PETS = [
-      { id: 'rexy', nome: 'Mecha Rexy', emoji: '🤖', desc: 'Robô Fiel', requisito: 'Desbloqueado', checarLiberado: () => true },
-      { id: 'pipoca', nome: 'Pipoca Cyber', emoji: '👾', desc: 'Robô Ágil', requisito: 'Chegar no Nível 5', checarLiberado: (d) => (d.pet.xp >= 400) }
+      { id: 'rexy', nome: 'Leon (Camaleão)', emoji: '🦎', desc: 'Furtivo e veloz!', requisito: 'Desbloqueado', checarLiberado: () => true },
+      { id: 'pipoca', nome: 'Spike (Cacto)', emoji: '🌵', desc: 'Abraços espinhosos!', requisito: 'Chegar no Nível 5', checarLiberado: (d) => (d.pet.xp >= 400) }
     ];
 
     function obterDataAtualFormatada() {
@@ -302,7 +302,7 @@
     }
 
     const estadoPadrao = {
-      pet: { tipo: 'rexy', nome: 'Rexy', fome: 80, saude: 90, felicidade: 70, doente: false, comidas: 3, xp: 0 },
+      pet: { tipo: 'rexy', nome: 'Leon', fome: 80, saude: 90, felicidade: 70, doente: false, comidas: 3, xp: 0 },
       moedas: 15, ofensivaDias: 1, ultimoDiaAcesso: obterDataAtualFormatada(), tempoTelaSegundos: 0, modoNoiteForcado: null,
       metricasSemana: { minutosTelaResgatados: 0, moedasGanhasSemana: 15, totalTarefasAprovadas: 0, historico7Dias: [true, true, true] },
       tarefas: [
@@ -317,52 +317,30 @@
     if (!dados.tarefas) dados.tarefas = estadoPadrao.tarefas;
     function salvar() { localStorage.setItem(STORAGE_KEY, JSON.stringify(dados)); }
 
-         function obterImagemPet(tipo, doente, deNoite, xp) {
+    // --- NOVA FUNÇÃO DE IMAGENS BRAWL STARS ---
+    function obterImagemPet(tipo, doente, deNoite, xp) {
       const level = Math.floor(xp / 100) + 1;
       
-      // ANIMAÇÃO DE DORMIR
-      if (deNoite) return "https://play.pokemonshowdown.com/sprites/ani/snorlax.gif"; 
+      // ANIMAÇÃO DE DORMIR (Spike com sono)
+      if (deNoite) return "https://media.tenor.com/22517970/spike-brawl-stars.gif"; 
       
-      // ANIMAÇÃO DE DOENTE/TRISTE
-      if (doente) return "https://play.pokemonshowdown.com/sprites/ani/cubone.gif"; 
+      // ANIMAÇÃO DE DOENTE/TRISTE (Corvo Triste)
+      if (doente) return "https://media.tenor.com/12435951606251542640/crow.gif"; 
       
-      // PET 1: REXY (Evolução de Fogo)
+      // PET 1: LEON
       if (tipo === 'rexy') {
-        if (level < 15) return "https://play.pokemonshowdown.com/sprites/ani/charmander.gif"; // Iniciante
-        if (level < 30) return "https://play.pokemonshowdown.com/sprites/ani/charmeleon.gif"; // Explorador
-        return "https://play.pokemonshowdown.com/sprites/ani/charizard.gif"; // Mestre Lenda
+        if (level < 15) return "https://media.tenor.com/21957900/leon.gif"; // Leon Padrão
+        if (level < 30) return "https://media.tenor.com/2229503204816863975/leon-nita.gif"; // Leon Evolução
+        return "https://media.tenor.com/21957900/leon.gif"; // Leon Lenda
       }
       
-      // PET 2: PIPOCA (Evolução Elétrica)
+      // PET 2: SPIKE
       if (tipo === 'pipoca') {
-        if (level < 15) return "https://play.pokemonshowdown.com/sprites/ani/pichu.gif";
-        return "https://play.pokemonshowdown.com/sprites/ani/pikachu.gif"; 
+        if (level < 15) return "https://media.tenor.com/2839050247755774552/spike.gif"; // Spike Clássico
+        return "https://media.tenor.com/8171325419545437347/spike-dance.gif"; // Spike Dançando
       }
 
-      // PET PADRÃO
-      return "https://play.pokemonshowdown.com/sprites/ani/ditto.gif";
-    }
-
-      
-      // PET 2: PIPOCA (Evolução Elétrica/Ágil)
-      if (tipo === 'pipoca') {
-        if (level < 15) return "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-v/black-white/animated/172.gif";
-        return "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-v/black-white/animated/25.gif"; 
-      }
-
-      // PET PADRÃO
-      return "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-v/black-white/animated/132.gif";
-    }
-
-        if (level < 5) return "https://api.dicebear.com/7.x/bottts/svg?seed=RexyNerd&primaryColor=3b82f6";
-        if (level < 15) return "https://api.dicebear.com/7.x/bottts/svg?seed=RexyGamer&accessories=sunglasses&primaryColor=10b981";
-        if (level < 30) return "https://api.dicebear.com/7.x/bottts/svg?seed=RexyPro&accessories=sensor&primaryColor=8b5cf6";
-        if (level < 50) return "https://api.dicebear.com/7.x/bottts/svg?seed=RexyLegend&accessories=crown&primaryColor=f59e0b";
-        if (level < 75) return "https://api.dicebear.com/7.x/bottts/svg?seed=RexyGalactic&accessories=antenna01&primaryColor=ec4899";
-        if (level < 100) return "https://api.dicebear.com/7.x/bottts/svg?seed=RexyGod&accessories=cables01&primaryColor=06b6d4";
-        return "https://api.dicebear.com/7.x/bottts/svg?seed=RexyUniverse&accessories=sensor02&primaryColor=fb7185";
-      }
-      return "https://api.dicebear.com/7.x/bottts/svg?seed=Random" + tipo + level;
+      return "https://media.tenor.com/21957900/leon.gif";
     }
 
     let tarefaIdParaFoto = null;
