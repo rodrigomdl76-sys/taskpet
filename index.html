@@ -318,30 +318,28 @@
     function salvar() { localStorage.setItem(STORAGE_KEY, JSON.stringify(dados)); }
 
     // --- NOVA FUNÇÃO DE IMAGENS BRAWL STARS ---
-    function obterImagemPet(tipo, doente, deNoite, xp) {
+        function obterImagemPet(tipo, doente, deNoite, xp) {
       const level = Math.floor(xp / 100) + 1;
       
-      // ANIMAÇÃO DE DORMIR (Spike com sono)
-      if (deNoite) return "https://media.tenor.com/22517970/spike-brawl-stars.gif"; 
+      if (deNoite) return "https://play.pokemonshowdown.com/sprites/ani/snorlax.gif"; 
+      if (doente) return "https://play.pokemonshowdown.com/sprites/ani/cubone.gif"; 
       
-      // ANIMAÇÃO DE DOENTE/TRISTE (Corvo Triste)
-      if (doente) return "https://media.tenor.com/12435951606251542640/crow.gif"; 
-      
-      // PET 1: LEON
+      // PET 1: REXY / LEON (Evoluções Animadas Reais)
       if (tipo === 'rexy') {
-        if (level < 15) return "https://media.tenor.com/21957900/leon.gif"; // Leon Padrão
-        if (level < 30) return "https://media.tenor.com/2229503204816863975/leon-nita.gif"; // Leon Evolução
-        return "https://media.tenor.com/21957900/leon.gif"; // Leon Lenda
+        if (level < 15) return "https://play.pokemonshowdown.com/sprites/ani/lucario.gif"; 
+        if (level < 30) return "https://play.pokemonshowdown.com/sprites/ani/greninja.gif"; 
+        return "https://play.pokemonshowdown.com/sprites/ani/charizard-mega-x.gif"; 
       }
       
-      // PET 2: SPIKE
-      if (tipo === 'pipoca') {
-        if (level < 15) return "https://media.tenor.com/2839050247755774552/spike.gif"; // Spike Clássico
-        return "https://media.tenor.com/8171325419545437347/spike-dance.gif"; // Spike Dançando
+      // PET 2: PIPOCA / SPIKE
+      if (type === 'pipoca') {
+        if (level < 15) return "https://play.pokemonshowdown.com/sprites/ani/rowlet.gif";
+        return "https://play.pokemonshowdown.com/sprites/ani/decidueye.gif"; 
       }
 
-      return "https://media.tenor.com/21957900/leon.gif";
+      return "https://play.pokemonshowdown.com/sprites/ani/lucario.gif";
     }
+
 
     let tarefaIdParaFoto = null;
     function dispararCamera(id) { tarefaIdParaFoto = id; document.getElementById('camera-input').click(); }
