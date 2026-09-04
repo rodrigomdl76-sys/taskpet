@@ -11,6 +11,11 @@
     @keyframes float-zzz { 0% { opacity: 0; transform: translateY(0) scale(0.8); } 50% { opacity: 1; } 100% { opacity: 0; transform: translateY(-24px) scale(1.2); } }
     .pet-breathe { animation: breathe 2.5s infinite ease-in-out; transform-origin: bottom center; }
     .zzz-anim { animation: float-zzz 2.5s infinite ease-in-out; }
+    
+    /* Efeitos de Aura da Loja de Estilo */
+    .aura-fogo { background: radial-gradient(circle, rgba(255, 100, 0, 0.4) 0%, transparent 70%); }
+    .aura-gelo { background: radial-gradient(circle, rgba(0, 200, 255, 0.4) 0%, transparent 70%); }
+    .aura-luz { background: radial-gradient(circle, rgba(255, 220, 0, 0.5) 0%, transparent 75%); }
   </style>
 </head>
 <body class="bg-slate-900 sm:bg-sky-100 min-h-screen flex items-center justify-center p-0 sm:p-4 font-sans select-none transition-colors duration-700" id="corpo-pagina">
@@ -21,7 +26,7 @@
   <div id="card-app" class="w-full h-full min-h-screen sm:min-h-[690px] sm:max-w-sm bg-white sm:rounded-3xl shadow-2xl overflow-hidden sm:border-4 border-sky-300 flex flex-col justify-between relative transition-colors duration-700">
     
     <!-- Topo -->
-    <div id="barra-topo" class="bg-sky-400 p-3.5 text-white flex justify-between items-center shadow transition-colors duration-700 flex-shrink-0">
+    <div id="barra-topo" class="bg-sky-400 p-3 text-white flex justify-between items-center shadow transition-colors duration-700 flex-shrink-0">
       <div>
         <div class="flex items-center gap-1.5">
           <span class="text-xl font-extrabold text-yellow-300">🪙 <span id="txt-moedas">15</span></span>
@@ -29,8 +34,9 @@
         </div>
       </div>
       <div class="flex gap-1">
-        <button onclick="abrirBibliotecaPets()" class="bg-sky-500 hover:bg-sky-600 text-xs px-2.5 py-1.5 rounded-xl font-bold transition flex items-center gap-1">📖 Álbum</button>
-        <button onclick="alternarModoPais()" class="bg-sky-600 hover:bg-sky-700 text-xs px-2.5 py-1.5 rounded-xl font-bold transition">🔒 Pais <span id="badge-pendentes" class="hidden bg-rose-500 text-[10px] px-1.5 py-0.2 rounded-full ml-0.5">!</span></button>
+        <button onclick="abrirBibliotecaPets()" class="bg-sky-500 hover:bg-sky-600 text-[11px] px-2 py-1.5 rounded-xl font-bold transition">📖 Álbum</button>
+        <button onclick="abrirPetShop()" class="bg-purple-500 hover:bg-purple-600 text-[11px] px-2 py-1.5 rounded-xl font-bold transition">👕 Estilo</button>
+        <button onclick="alternarModoPais()" class="bg-sky-600 hover:bg-sky-700 text-[11px] px-2 py-1.5 rounded-xl font-bold transition relative">🔒 Pais <span id="badge-pendentes" class="hidden absolute -top-1 -right-1 bg-rose-500 text-[9px] px-1.5 rounded-full">!</span></button>
       </div>
     </div>
 
@@ -81,12 +87,13 @@
           </div>
         </div>
         
-        <!-- Imagem do Pet -->
-        <div onclick="fazerCarinho()" class="cursor-pointer relative active:scale-95 transition-transform flex items-center justify-center h-36 w-36">
-          <img id="img-pet-visual" src="" class="w-full h-full object-contain pet-breathe drop-shadow-xl" />
-          <span id="zzz-pet" class="hidden absolute -top-4 right-4 text-indigo-400 text-xl font-black pointer-events-none zzz-anim">z Z Z</span>
+        <!-- Imagem do Pet com Aura e Acessório -->
+        <div onclick="fazerCarinho()" id="bg-pet-visual" class="cursor-pointer relative active:scale-95 transition-all flex items-center justify-center h-40 w-40 rounded-full">
+          <span id="pet-acessorio" class="absolute top-0 text-5xl z-10 pointer-events-none drop-shadow-md transition-transform"></span>
+          <img id="img-pet-visual" src="" class="w-32 h-32 object-contain pet-breathe drop-shadow-xl relative z-0" />
+          <span id="zzz-pet" class="hidden absolute -top-2 right-4 text-indigo-400 text-xl font-black pointer-events-none zzz-anim z-20">z Z Z</span>
         </div>
-        <span id="txt-toque-pet" class="text-[10px] text-slate-400 font-bold mt-2">Toque para interagir</span>
+        <span id="txt-toque-pet" class="text-[10px] text-slate-400 font-bold mt-1">Toque para interagir</span>
 
         <button id="btn-remedio" onclick="darRemedio()" class="hidden mt-2 w-full bg-rose-500 hover:bg-rose-600 text-white font-extrabold py-2 px-4 rounded-xl shadow-lg animate-pulse transition text-xs">
           🩹 DAR REMÉDIO (Pet Doente)
@@ -105,12 +112,12 @@
           <span>🧠 Desafio</span><span class="text-[8px] text-emerald-700">+1 Moeda</span>
         </button>
         <button onclick="abrirLojaRecompensas()" class="bg-rose-100 hover:bg-rose-200 text-rose-900 font-bold py-1.5 rounded-xl text-xs flex flex-col items-center border border-rose-300 active:scale-95 transition">
-          <span>🎁 Loja</span><span class="text-[8px] text-rose-700">Prêmios</span>
+          <span>🎁 Prêmios</span><span class="text-[8px] text-rose-700">Resgatar</span>
         </button>
       </div>
 
       <!-- Lista de Missões -->
-      <div class="space-y-1.5 border-t pt-2 border-slate-100 max-h-48 overflow-y-auto flex-shrink-0">
+      <div class="space-y-1.5 border-t pt-2 border-slate-100 max-h-40 overflow-y-auto flex-shrink-0">
         <div class="flex justify-between items-center mb-1">
           <span class="text-[10px] font-black text-slate-700 uppercase tracking-wider">🛡️ Lista de Tarefas</span>
           <span class="text-[9px] font-bold text-sky-600 bg-sky-50 px-2 py-0.5 rounded-full">Aprovação 🔒</span>
@@ -145,7 +152,7 @@
 
         <!-- EDITOR DE RECOMPENSAS / LOJA -->
         <div class="bg-white p-3 rounded-2xl border border-rose-200 shadow-sm mb-3">
-          <h3 class="text-xs font-bold text-rose-900 mb-2">🎁 Editar Loja de Prêmios</h3>
+          <h3 class="text-xs font-bold text-rose-900 mb-2">🎁 Editar Prêmios Pessoais</h3>
           <div id="lista-edicao-premios" class="space-y-1 mb-2 max-h-32 overflow-y-auto"></div>
           <div class="flex gap-1 mt-2 border-t pt-2 border-slate-100 flex-wrap">
             <input type="text" id="novo-premio-texto" placeholder="Ex: Filme, 30m Tela..." class="flex-1 border rounded-lg px-2 py-1 text-[11px]">
@@ -159,15 +166,10 @@
             <button onclick="adicionarRecompensa()" class="bg-rose-500 text-white px-2 py-1 rounded-lg text-xs font-bold">+</button>
           </div>
         </div>
-
-        <!-- FORÇAR NOITE -->
-        <div class="bg-indigo-50 p-3 rounded-2xl border border-indigo-200 shadow-sm mb-3">
-          <button onclick="alternarModoNoiteManual()" class="w-full bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-1.5 rounded-xl text-xs transition">Forçar Noite / Dia Manualmente</button>
-        </div>
       </div>
     </div>
 
-    <!-- Modais e Janelas Flutuantes -->
+    <!-- Modais -->
     <div id="modal-foto-preview" class="hidden fixed inset-0 bg-black/80 flex items-center justify-center p-4 z-50">
       <div class="bg-white rounded-3xl p-3 max-w-xs w-full text-center shadow-2xl">
         <h3 class="text-xs font-black text-slate-800 mb-2">Comprovação📸</h3>
@@ -176,7 +178,17 @@
       </div>
     </div>
 
-    <div id="modal-biblioteca" class="hidden fixed inset-0 bg-black/50 flex items-center justify-center p-4 z-50">
+    <!-- Modal Loja do Pet (Acessórios) -->
+    <div id="modal-petshop" class="hidden fixed inset-0 bg-black/60 flex items-center justify-center p-4 z-50">
+      <div class="bg-white rounded-3xl p-4 w-84 max-w-sm text-center shadow-2xl border-4 border-purple-400 max-h-[90vh] overflow-y-auto">
+        <h3 class="text-base font-black text-purple-700 mb-0.5">Loja de Estilo 👕</h3>
+        <p class="text-[10px] text-slate-500 mb-3">Gaste suas moedas para vestir seu Pet!</p>
+        <div class="grid grid-cols-3 gap-2 text-left" id="grid-petshop"></div>
+        <button onclick="fecharPetShop()" class="mt-4 w-full bg-slate-200 text-slate-700 px-2 py-2 rounded-xl font-bold text-xs transition">Fechar Loja</button>
+      </div>
+    </div>
+
+    <div id="modal-biblioteca" class="hidden fixed inset-0 bg-black/60 flex items-center justify-center p-4 z-50">
       <div class="bg-white rounded-3xl p-4 w-84 max-w-sm text-center shadow-2xl border-4 border-sky-400 max-h-[90vh] overflow-y-auto">
         <h3 class="text-base font-black text-slate-800 mb-0.5">Álbum de Mascotes 📖</h3>
         <div class="grid grid-cols-2 gap-2 text-left mt-3" id="grid-pets-album"></div>
@@ -184,16 +196,16 @@
       </div>
     </div>
 
-    <div id="modal-recompensas" class="hidden fixed inset-0 bg-black/50 flex items-center justify-center p-4 z-50">
+    <div id="modal-recompensas" class="hidden fixed inset-0 bg-black/60 flex items-center justify-center p-4 z-50">
       <div class="bg-white rounded-3xl p-4 w-80 text-center shadow-2xl border-4 border-rose-400 max-h-[80vh] overflow-y-auto">
-        <h3 class="text-base font-black text-rose-700 mb-1">Loja de Prêmios 🎁</h3>
+        <h3 class="text-base font-black text-rose-700 mb-1">Meus Prêmios 🎁</h3>
         <p class="text-[10px] text-slate-500 mb-2">Compre prêmios com seu esforço!</p>
         <div id="lista-itens-loja" class="space-y-2 mb-3 text-left mt-3"></div>
         <button onclick="fecharLojaRecompensas()" class="text-xs text-slate-400 font-bold hover:underline">Fechar</button>
       </div>
     </div>
 
-    <div id="modal-jogo" class="hidden fixed inset-0 bg-black/50 flex items-center justify-center p-4 z-50">
+    <div id="modal-jogo" class="hidden fixed inset-0 bg-black/60 flex items-center justify-center p-4 z-50">
       <div class="bg-white rounded-3xl p-5 w-80 text-center shadow-2xl border-4 border-emerald-400">
         <h3 class="text-base font-black text-emerald-700 mb-0.5">Desafio! 🧠</h3>
         <div class="text-2xl font-black text-slate-800 bg-slate-100 py-3 rounded-2xl mb-4 tracking-wider mt-2" id="txt-pergunta">?</div>
@@ -204,7 +216,7 @@
   </div>
 
   <script>
-    const STORAGE_KEY = 'ROTINAPET_SAVE_V4';
+    const STORAGE_KEY = 'ROTINAPET_SAVE_V5';
 
     let audioContext = null;
     function obterAudioContext() {
@@ -213,7 +225,6 @@
       return audioContext;
     }
 
-    // Gerador de Sons
     function tocarSom(tipo) {
       try {
         const ctx = obterAudioContext();
@@ -226,83 +237,60 @@
         } else if (tipo === 'levelup' || tipo === 'vitoria') {
           const notas = [523.25, 659.25, 783.99];
           notas.forEach((freq, idx) => {
-            const o = ctx.createOscillator(); const g = ctx.createGain();
-            o.connect(g); g.connect(ctx.destination); o.type = 'square'; o.frequency.value = freq;
-            const t = agora + (idx * 0.1); g.gain.setValueAtTime(0.1, t); g.gain.exponentialRampToValueAtTime(0.001, t + 0.3);
-            o.start(t); o.stop(t + 0.3);
+            const o = ctx.createOscillator(); const g = ctx.createGain(); o.connect(g); g.connect(ctx.destination); o.type = 'square'; o.frequency.value = freq;
+            const t = agora + (idx * 0.1); g.gain.setValueAtTime(0.1, t); g.gain.exponentialRampToValueAtTime(0.001, t + 0.3); o.start(t); o.stop(t + 0.3);
           });
         }
       } catch (e) {}
     }
 
-    // Regras de Desbloqueio dos Personagens
     const BIBLIOTECA_PETS = [
-      { id: 'zion', nome: 'Zion (O Furtivo)', emoji: '🦎', desc: 'Rápido e invisível!', requisito: 'Desbloqueado', checarLiberado: () => true },
-      { id: 'cacton', nome: 'Cacton', emoji: '🌵', desc: 'Abraços espinhosos!', requisito: 'Nível 5', checarLiberado: (d) => (d.pet.xp >= 400) },
-      { id: 'luma', nome: 'Luma', emoji: '⚾', desc: 'Força e precisão!', requisito: 'Nível 30', checarLiberado: (d) => (d.pet.xp >= 2900) },
-      { id: 'ryu', nome: 'Ryu', emoji: '⚔️', desc: 'Lâmina implacável!', requisito: 'Nível 50', checarLiberado: (d) => (d.pet.xp >= 4900) }
+      { id: 'zion', nome: 'Zion', emoji: '🦎', desc: 'Rápido!', requisito: 'Desbloqueado', checarLiberado: () => true },
+      { id: 'cacton', nome: 'Cacton', emoji: '🌵', desc: 'Espinhos!', requisito: 'Nível 5', checarLiberado: (d) => (d.pet.xp >= 400) },
+      { id: 'luma', nome: 'Luma', emoji: '⚾', desc: 'Força!', requisito: 'Nível 30', checarLiberado: (d) => (d.pet.xp >= 2900) },
+      { id: 'ryu', nome: 'Ryu', emoji: '⚔️', desc: 'Lâmina!', requisito: 'Nível 50', checarLiberado: (d) => (d.pet.xp >= 4900) }
     ];
 
-    function obterDataAtualFormatada() {
-      const d = new Date(); return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`;
-    }
+    // ITENS DO PET SHOP
+    const ITENS_PETSHOP = [
+      { id: 'coroa', nome: 'Coroa', emoji: '👑', preco: 25, tipo: 'acessorio' },
+      { id: 'oculos', nome: 'Óculos', emoji: '🕶️', preco: 15, tipo: 'acessorio' },
+      { id: 'festa', nome: 'Festa', emoji: '🥳', preco: 10, tipo: 'acessorio' },
+      { id: 'aura_fogo', nome: 'Fogo', classe: 'aura-fogo', preco: 40, tipo: 'fundo', emoji: '🔥' },
+      { id: 'aura_gelo', nome: 'Gelo', classe: 'aura-gelo', preco: 40, tipo: 'fundo', emoji: '❄️' },
+      { id: 'aura_luz', nome: 'Aura', classe: 'aura-luz', preco: 60, tipo: 'fundo', emoji: '✨' }
+    ];
 
-    // Estado inicial de quem abre o app a primeira vez
+    function obterDataAtualFormatada() { const d = new Date(); return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`; }
+
     const estadoPadrao = {
       pet: { tipo: 'zion', nome: 'Zion', fome: 80, saude: 90, felicidade: 70, doente: false, comidas: 3, xp: 0 },
       moedas: 15, ofensivaDias: 1, ultimoDiaAcesso: obterDataAtualFormatada(), tempoTelaSegundos: 0, modoNoiteForcado: null,
-      tarefas: [
-        { id: 1, texto: 'Escovar os dentes', recompensa: 5, status: 'pendente', foto: null },
-        { id: 2, texto: 'Arrumar a cama', recompensa: 5, status: 'pendente', foto: null }
-      ],
-      recompensas: [
-        { id: 1, texto: '15 min de Tela', custo: 10, tipo: 15 },
-        { id: 2, texto: '30 min de Tela', custo: 18, tipo: 30 },
-        { id: 3, texto: 'Escolher o Filme', custo: 40, tipo: 0 } // 0 = Recompensa Manual sem Cronômetro
-      ]
+      tarefas: [{ id: 1, texto: 'Escovar os dentes', recompensa: 5, status: 'pendente', foto: null }],
+      recompensas: [{ id: 1, texto: '15 min Tela', custo: 10, tipo: 15 }, { id: 2, texto: 'Escolher Filme', custo: 40, tipo: 0 }],
+      inventario: { itens: [], acessorio: null, fundo: null } // NOVO INVENTÁRIO
     };
 
-    let dados = JSON.parse(localStorage.getItem(STORAGE_KEY)) || JSON.parse(localStorage.getItem('ROTINAPET_SAVE_V3')) || estadoPadrao;
-    if (dados.pet.tipo === 'rexy') dados.pet.tipo = 'zion'; 
-    if (dados.pet.tipo === 'pipoca') dados.pet.tipo = 'cacton'; 
-    if (!dados.recompensas) dados.recompensas = estadoPadrao.recompensas;
+    let dados = JSON.parse(localStorage.getItem(STORAGE_KEY)) || JSON.parse(localStorage.getItem('ROTINAPET_SAVE_V4')) || estadoPadrao;
+    if (!dados.inventario) dados.inventario = estadoPadrao.inventario;
     function salvar() { localStorage.setItem(STORAGE_KEY, JSON.stringify(dados)); }
 
-    // Motor de Imagens Seguras (Substitua as URLs pelas suas no futuro)
     function obterImagemPet(tipo, doente, deNoite, xp) {
       const level = Math.floor(xp / 100) + 1;
-      
       if (deNoite) return "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/home/143.png"; 
       if (doente) return "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/home/104.png"; 
-      
-      // ZION
       if (tipo === 'zion') {
         if (level < 15) return "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/home/448.png"; 
         if (level < 30) return "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/home/658.png"; 
         return "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/home/6.png"; 
       }
-      
-      // CACTON
-      if (tipo === 'cacton') {
-        if (level < 15) return "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/home/722.png";
-        return "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/home/724.png";
-      }
-
-      // LUMA
-      if (tipo === 'luma') {
-        if (level < 50) return "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/home/282.png";
-        return "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/home/282.png";
-      }
-
-      // RYU
-      if (tipo === 'ryu') {
-        return "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/home/130.png";
-      }
-
+      if (tipo === 'cacton') return level < 15 ? "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/home/722.png" : "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/home/724.png";
+      if (tipo === 'luma') return "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/home/282.png";
+      if (tipo === 'ryu') return "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/home/130.png";
       return "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/home/448.png";
     }
 
-    // Lógica da Câmera Fotográfica
+    // Lógica da Câmera
     let tarefaIdParaFoto = null;
     function dispararCamera(id) { tarefaIdParaFoto = id; document.getElementById('camera-input').click(); }
     function processarFotoCapturada(e) {
@@ -319,7 +307,6 @@
         }; img.src = ev.target.result;
       }; reader.readAsDataURL(file); e.target.value = '';
     }
-
     function abrirFotoPreview(url) { document.getElementById('img-preview-expandida').src = url; document.getElementById('modal-foto-preview').classList.remove('hidden'); }
     function fecharFotoPreview() { document.getElementById('modal-foto-preview').classList.add('hidden'); }
 
@@ -339,17 +326,6 @@
     }
 
     function enviarParaAprovacao(id) { const t = dados.tarefas.find(x => x.id === id); if (!t) return; t.status = 'aguardando_aprovacao'; atualizarTela(); }
-
-    function renderizarPainelAprovacao() {
-      const pendentes = dados.tarefas.filter(t => t.status === 'aguardando_aprovacao');
-      document.getElementById('contador-aprovacoes').innerText = `${pendentes.length}`;
-      document.getElementById('badge-pendentes').className = pendentes.length > 0 ? 'bg-rose-500 text-[10px] px-1.5 py-0.2 rounded-full ml-0.5' : 'hidden';
-      const c = document.getElementById('lista-aprovacao-pais'); c.innerHTML = '';
-      pendentes.forEach(t => {
-        c.innerHTML += `<div class="p-2 rounded-xl bg-slate-50 border border-slate-200 flex flex-col gap-1.5"><div class="flex justify-between items-center"><span class="font-bold text-xs">${t.texto}</span><div class="flex gap-1"><button onclick="recusarTarefa(${t.id})" class="bg-rose-100 px-2 py-1 rounded text-[10px] font-bold">X</button><button onclick="aprovarTarefa(${t.id})" class="bg-emerald-500 text-white px-2 py-1 rounded text-[10px] font-bold">✓</button></div></div>${t.foto ? `<img src="${t.foto}" onclick="abrirFotoPreview('${t.foto}')" class="w-12 h-12 rounded object-cover cursor-pointer" />` : ''}</div>`;
-      });
-    }
-
     function aprovarTarefa(id) {
       const t = dados.tarefas.find(x => x.id === id); if (!t) return;
       t.status = 'aprovada'; dados.moedas += t.recompensa; dados.pet.comidas += 1;
@@ -359,6 +335,16 @@
     }
     function recusarTarefa(id) { const t = dados.tarefas.find(x => x.id === id); if (!t) return; t.status = 'pendente'; t.foto = null; atualizarTela(); }
 
+    function renderizarPainelAprovacao() {
+      const pendentes = dados.tarefas.filter(t => t.status === 'aguardando_aprovacao');
+      document.getElementById('contador-aprovacoes').innerText = `${pendentes.length}`;
+      document.getElementById('badge-pendentes').className = pendentes.length > 0 ? 'absolute -top-1 -right-1 bg-rose-500 text-[9px] px-1.5 rounded-full' : 'hidden';
+      const c = document.getElementById('lista-aprovacao-pais'); c.innerHTML = '';
+      pendentes.forEach(t => {
+        c.innerHTML += `<div class="p-2 rounded-xl bg-slate-50 border border-slate-200 flex flex-col gap-1.5"><div class="flex justify-between items-center"><span class="font-bold text-xs">${t.texto}</span><div class="flex gap-1"><button onclick="recusarTarefa(${t.id})" class="bg-rose-100 px-2 py-1 rounded text-[10px] font-bold">X</button><button onclick="aprovarTarefa(${t.id})" class="bg-emerald-500 text-white px-2 py-1 rounded text-[10px] font-bold">✓</button></div></div>${t.foto ? `<img src="${t.foto}" onclick="abrirFotoPreview('${t.foto}')" class="w-12 h-12 rounded object-cover cursor-pointer" />` : ''}</div>`;
+      });
+    }
+
     /* CRUD de Tarefas e Prêmios */
     function renderizarEdicaoTarefas() {
       const c = document.getElementById('lista-edicao-tarefas'); c.innerHTML = '';
@@ -367,8 +353,7 @@
     function adicionarTarefa() {
       const txt = document.getElementById('nova-tarefa-texto').value; const moedas = parseInt(document.getElementById('nova-tarefa-moedas').value) || 5;
       if (!txt) return; const novoId = dados.tarefas.length > 0 ? Math.max(...dados.tarefas.map(t => t.id)) + 1 : 1;
-      dados.tarefas.push({ id: novoId, texto: txt, recompensa: moedas, status: 'pendente', foto: null });
-      document.getElementById('nova-tarefa-texto').value = ''; atualizarTela();
+      dados.tarefas.push({ id: novoId, texto: txt, recompensa: moedas, status: 'pendente', foto: null }); document.getElementById('nova-tarefa-texto').value = ''; atualizarTela();
     }
     function removerTarefa(id) { dados.tarefas = dados.tarefas.filter(t => t.id !== id); atualizarTela(); }
 
@@ -380,33 +365,52 @@
       const txt = document.getElementById('novo-premio-texto').value; const custo = parseInt(document.getElementById('novo-premio-custo').value) || 10;
       const tipo = parseInt(document.getElementById('novo-premio-tipo').value) || 0;
       if (!txt) return; const novoId = dados.recompensas.length > 0 ? Math.max(...dados.recompensas.map(r => r.id)) + 1 : 1;
-      dados.recompensas.push({ id: novoId, texto: txt, custo: custo, tipo: tipo });
-      document.getElementById('novo-premio-texto').value = ''; atualizarTela();
+      dados.recompensas.push({ id: novoId, texto: txt, custo: custo, tipo: tipo }); document.getElementById('novo-premio-texto').value = ''; atualizarTela();
     }
     function removerPremio(id) { dados.recompensas = dados.recompensas.filter(r => r.id !== id); atualizarTela(); }
+
+    /* LOJA DO PET (ESTILO) */
+    function abrirPetShop() {
+      const g = document.getElementById('grid-petshop'); g.innerHTML = '';
+      ITENS_PETSHOP.forEach(i => {
+        const comprado = dados.inventario.itens.includes(i.id);
+        const equipado = dados.inventario.acessorio === i.id || dados.inventario.fundo === i.id;
+        let btn = equipado ? `<span class="w-full bg-purple-500 text-white px-1 py-1 rounded text-[9px] font-bold block mt-1">Equipado</span>` :
+                  comprado ? `<button onclick="equiparItemPet('${i.id}')" class="w-full bg-sky-500 text-white px-1 py-1 rounded text-[9px] font-bold mt-1">Usar</button>` :
+                  `<button onclick="comprarItemPet('${i.id}')" class="w-full bg-amber-500 text-white px-1 py-1 rounded text-[9px] font-bold mt-1">${i.preco} 🪙</button>`;
+        g.innerHTML += `<div class="p-1.5 rounded-xl border bg-slate-50 text-center"><div class="text-3xl mb-1">${i.emoji}</div><div class="text-[9px] font-bold text-slate-700 truncate">${i.nome}</div>${btn}</div>`;
+      });
+      document.getElementById('modal-petshop').classList.remove('hidden');
+    }
+    function fecharPetShop() { document.getElementById('modal-petshop').classList.add('hidden'); }
+    function comprarItemPet(id) {
+      const item = ITENS_PETSHOP.find(x => x.id === id);
+      if (dados.moedas < item.preco) return alert('Você não tem moedas suficientes! Cumpra mais tarefas.');
+      dados.moedas -= item.preco; dados.inventario.itens.push(item.id); tocarSom('moeda'); equiparItemPet(id);
+    }
+    function equiparItemPet(id) {
+      const item = ITENS_PETSHOP.find(x => x.id === id);
+      if(item.tipo === 'acessorio') { dados.inventario.acessorio = (dados.inventario.acessorio === id) ? null : id; } // Desequipa se clicar de novo
+      if(item.tipo === 'fundo') { dados.inventario.fundo = (dados.inventario.fundo === id) ? null : id; }
+      salvar(); abrirPetShop(); atualizarTela();
+    }
 
     /* Loja de Recompensas (Criança) */
     function abrirLojaRecompensas() { if(estaDeNoite()) return alert('Loja fechada à noite.'); document.getElementById('modal-recompensas').classList.remove('hidden'); }
     function fecharLojaRecompensas() { document.getElementById('modal-recompensas').classList.add('hidden'); }
-    
     function renderizarLojaCrianca() {
       const c = document.getElementById('lista-itens-loja'); c.innerHTML = '';
       dados.recompensas.forEach(r => {
-        const icone = r.tipo > 0 ? '📱' : '🎁';
-        c.innerHTML += `<div class="flex justify-between items-center p-2.5 rounded-xl bg-amber-50 border border-amber-200"><span class="font-bold text-amber-950 text-[11px]">${icone} ${r.texto}</span><button onclick="comprarPremio(${r.id})" class="bg-amber-500 text-white px-2.5 py-1.5 rounded-lg font-bold text-xs">${r.custo} 🪙</button></div>`;
+        c.innerHTML += `<div class="flex justify-between items-center p-2.5 rounded-xl bg-amber-50 border border-amber-200"><span class="font-bold text-amber-950 text-[11px]">${r.tipo > 0 ? '📱' : '🎁'} ${r.texto}</span><button onclick="comprarPremio(${r.id})" class="bg-amber-500 text-white px-2.5 py-1.5 rounded-lg font-bold text-xs">${r.custo} 🪙</button></div>`;
       });
     }
     
     let intTimer = null;
     function iniciarCronometro() {
-      if (intTimer) clearInterval(intTimer);
-      document.getElementById('banner-timer').classList.remove('hidden');
+      if (intTimer) clearInterval(intTimer); document.getElementById('banner-timer').classList.remove('hidden');
       intTimer = setInterval(() => {
-        if (dados.tempoTelaSegundos > 0) {
-          dados.tempoTelaSegundos--;
-          const m = Math.floor(dados.tempoTelaSegundos / 60).toString().padStart(2, '0'); const s = (dados.tempoTelaSegundos % 60).toString().padStart(2, '0');
-          document.getElementById('display-tempo-tela').innerText = `${m}:${s}`;
-        } else { clearInterval(intTimer); document.getElementById('banner-timer').classList.add('hidden'); alert('⏰ O tempo de tela acabou!'); }
+        if (dados.tempoTelaSegundos > 0) { dados.tempoTelaSegundos--; const m = Math.floor(dados.tempoTelaSegundos / 60).toString().padStart(2, '0'); const s = (dados.tempoTelaSegundos % 60).toString().padStart(2, '0'); document.getElementById('display-tempo-tela').innerText = `${m}:${s}`; } 
+        else { clearInterval(intTimer); document.getElementById('banner-timer').classList.add('hidden'); alert('⏰ O tempo de tela acabou!'); }
       }, 1000);
     }
 
@@ -432,16 +436,25 @@
       document.getElementById('txt-level-num').innerText = level; document.getElementById('txt-xp-atual').innerText = xpAtualNivel;
       document.getElementById('bar-xp').style.width = xpAtualNivel + '%';
       
+      // Aplicar Cosméticos e Fundos
+      const bgPet = document.getElementById('bg-pet-visual');
+      const acessorioPet = document.getElementById('pet-acessorio');
+      const fundoItem = ITENS_PETSHOP.find(x => x.id === dados.inventario.fundo);
+      const accItem = ITENS_PETSHOP.find(x => x.id === dados.inventario.acessorio);
+      
+      bgPet.className = `cursor-pointer relative active:scale-95 transition-all flex items-center justify-center h-40 w-40 rounded-full ${fundoItem ? fundoItem.classe : 'bg-transparent'}`;
+      acessorioPet.innerText = accItem && !deNoite ? accItem.emoji : '';
+      
       if (deNoite) {
         document.getElementById('corpo-pagina').className = 'bg-slate-900 min-h-screen flex items-center justify-center p-0 sm:p-4 font-sans select-none';
         document.getElementById('card-app').className = 'w-full h-full min-h-screen sm:min-h-[690px] sm:max-w-sm bg-slate-900 shadow-2xl overflow-hidden flex flex-col justify-between relative text-slate-100';
-        document.getElementById('barra-topo').className = 'bg-indigo-950 p-3.5 text-white flex justify-between shadow border-b border-indigo-800';
+        document.getElementById('barra-topo').className = 'bg-indigo-950 p-3 text-white flex justify-between shadow border-b border-indigo-800';
         document.getElementById('banner-noite').classList.remove('hidden'); document.getElementById('zzz-pet').classList.remove('hidden');
         document.getElementById('txt-nivel-nome').innerText = 'Dormindo 🌙'; document.getElementById('grid-acoes-pet').classList.add('opacity-40');
       } else {
         document.getElementById('corpo-pagina').className = 'bg-sky-100 min-h-screen flex items-center justify-center p-0 sm:p-4 font-sans select-none';
         document.getElementById('card-app').className = 'w-full h-full min-h-screen sm:min-h-[690px] sm:max-w-sm bg-white shadow-2xl overflow-hidden sm:border-4 border-sky-300 flex flex-col justify-between relative text-slate-800';
-        document.getElementById('barra-topo').className = 'bg-sky-400 p-3.5 text-white flex justify-between shadow';
+        document.getElementById('barra-topo').className = 'bg-sky-400 p-3 text-white flex justify-between shadow';
         document.getElementById('banner-noite').classList.add('hidden'); document.getElementById('zzz-pet').classList.add('hidden');
         document.getElementById('txt-nivel-nome').innerText = level >= 30 ? 'Lenda 👑' : level >= 15 ? 'Explorador 🥈' : 'Iniciante 🥉';
         document.getElementById('grid-acoes-pet').classList.remove('opacity-40');
@@ -496,50 +509,23 @@
     async function gravarVoz() {
       if (estaDeNoite()) return alert('Shiii... O pet está dormindo! 🤫');
       if (gravando) return;
-      
       try {
-        const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
-        const mediaRecorder = new MediaRecorder(stream);
-        const audioChunks = [];
-
+        const stream = await navigator.mediaDevices.getUserMedia({ audio: true }); const mediaRecorder = new MediaRecorder(stream); const audioChunks = [];
         mediaRecorder.ondataavailable = (event) => { if (event.data.size > 0) audioChunks.push(event.data); };
         mediaRecorder.onstop = () => {
-          const audioBlob = new Blob(audioChunks, { type: 'audio/webm' });
-          const audioUrl = URL.createObjectURL(audioBlob);
-          new Audio(audioUrl).play();
-          
-          dados.pet.felicidade = Math.min(100, dados.pet.felicidade + 15);
-          salvar(); atualizarTela(); gravando = false;
+          const audioBlob = new Blob(audioChunks, { type: 'audio/webm' }); const audioUrl = URL.createObjectURL(audioBlob); new Audio(audioUrl).play();
+          dados.pet.felicidade = Math.min(100, dados.pet.felicidade + 15); salvar(); atualizarTela(); gravando = false;
         };
-
         mediaRecorder.start(); gravando = true;
-        const btnVoz = document.getElementById('btn-voz');
-        if (btnVoz) btnVoz.innerHTML = '<span class="animate-pulse text-rose-600 font-black">🔴 Gravando</span><span class="text-[8px] font-bold text-rose-500">Fale agora!</span>';
-
-        setTimeout(() => {
-          mediaRecorder.stop();
-          stream.getTracks().forEach(track => track.stop()); 
-          if (btnVoz) btnVoz.innerHTML = '<span>🎤 Voz</span><span class="text-[8px] text-purple-700">Grave 3s</span>';
-        }, 3000);
-      } catch (err) {
-        alert('Você precisa permitir o acesso ao microfone no seu celular/navegador!');
-        gravando = false;
-      }
+        const btnVoz = document.getElementById('btn-voz'); if (btnVoz) btnVoz.innerHTML = '<span class="animate-pulse text-rose-600 font-black">🔴 Gravando</span><span class="text-[8px] font-bold text-rose-500">Fale agora!</span>';
+        setTimeout(() => { mediaRecorder.stop(); stream.getTracks().forEach(track => track.stop()); if (btnVoz) btnVoz.innerHTML = '<span>🎤 Voz</span><span class="text-[8px] text-purple-700">Grave 3s</span>'; }, 3000);
+      } catch (err) { alert('Você precisa permitir o acesso ao microfone no seu celular!'); gravando = false; }
     }
 
     atualizarTela();
   </script>
-  
-  <!-- Início do Sistema Offline (Service Worker) -->
   <script>
-    if ('serviceWorker' in navigator) {
-      window.addEventListener('load', () => {
-        navigator.serviceWorker.register('./sw.js')
-          .then(registration => console.log('Modo Offline ativado com sucesso!'))
-          .catch(err => console.log('Erro ao ativar o modo offline:', err));
-      });
-    }
+    if ('serviceWorker' in navigator) { window.addEventListener('load', () => { navigator.serviceWorker.register('./sw.js').catch(err => console.log('Erro SW:', err)); }); }
   </script>
-
 </body>
 </html>
