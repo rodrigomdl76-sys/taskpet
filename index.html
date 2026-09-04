@@ -317,12 +317,32 @@
     if (!dados.tarefas) dados.tarefas = estadoPadrao.tarefas;
     function salvar() { localStorage.setItem(STORAGE_KEY, JSON.stringify(dados)); }
 
-    function obterImagemPet(tipo, doente, deNoite, xp) {
+     function obterImagemPet(tipo, doente, deNoite, xp) {
       const level = Math.floor(xp / 100) + 1;
-      if (deNoite) return "https://api.dicebear.com/7.x/bottts/svg?seed=SleepBot&eyes=sleep&baseColor=475569";
-      if (doente) return "https://api.dicebear.com/7.x/bottts/svg?seed=SickBot&mouth=sad01&baseColor=ef4444";
       
+      // ANIMAÇÃO DE DORMIR
+      if (deNoite) return "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-v/black-white/animated/143.gif"; 
+      
+      // ANIMAÇÃO DE DOENTE/TRISTE
+      if (doente) return "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-v/black-white/animated/104.gif"; 
+      
+      // PET 1: REXY (Evolução de Fogo/Dragão)
       if (tipo === 'rexy') {
+        if (level < 15) return "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-v/black-white/animated/4.gif"; // Nível 1 ao 14
+        if (level < 30) return "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-v/black-white/animated/5.gif"; // Nível 15 ao 29
+        return "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-v/black-white/animated/6.gif"; // Nível 30+ (Mestre Lenda)
+      }
+      
+      // PET 2: PIPOCA (Evolução Elétrica/Ágil)
+      if (tipo === 'pipoca') {
+        if (level < 15) return "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-v/black-white/animated/172.gif";
+        return "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-v/black-white/animated/25.gif"; 
+      }
+
+      // PET PADRÃO
+      return "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-v/black-white/animated/132.gif";
+    }
+
         if (level < 5) return "https://api.dicebear.com/7.x/bottts/svg?seed=RexyNerd&primaryColor=3b82f6";
         if (level < 15) return "https://api.dicebear.com/7.x/bottts/svg?seed=RexyGamer&accessories=sunglasses&primaryColor=10b981";
         if (level < 30) return "https://api.dicebear.com/7.x/bottts/svg?seed=RexyPro&accessories=sensor&primaryColor=8b5cf6";
