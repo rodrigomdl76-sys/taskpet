@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
-  <title>TaskPet - Mascote de Rotina</title>
+  <title>RotinaPet - Mascote de Rotina</title>
   <link rel="manifest" href="manifest.json">
   <script src="https://cdn.tailwindcss.com"></script>
   <style>
@@ -11,30 +11,26 @@
       0%, 100% { transform: scale(1) translateY(0); }
       50% { transform: scale(1.03, 0.97) translateY(-3px); }
     }
-    @keyframes blink {
-      0%, 90%, 100% { transform: scaleY(1); }
-      95% { transform: scaleY(0.1); }
-    }
     @keyframes float-zzz {
       0% { opacity: 0; transform: translateY(0) scale(0.8); }
       50% { opacity: 1; }
       100% { opacity: 0; transform: translateY(-24px) scale(1.2); }
     }
     .pet-breathe { animation: breathe 2.5s infinite ease-in-out; transform-origin: bottom center; }
-    .pet-blink { animation: blink 4s infinite; transform-origin: center; }
     .zzz-anim { animation: float-zzz 2.5s infinite ease-in-out; }
   </style>
 </head>
 <body class="bg-slate-900 sm:bg-sky-100 min-h-screen flex items-center justify-center p-0 sm:p-4 font-sans select-none transition-colors duration-700" id="corpo-pagina">
 
+  <input type="file" id="camera-input" accept="image/*" capture="environment" class="hidden" onchange="processarFotoCapturada(event)">
+
   <div id="card-app" class="w-full h-full min-h-screen sm:min-h-[690px] sm:max-w-sm bg-white sm:rounded-3xl shadow-2xl overflow-hidden sm:border-4 border-sky-300 flex flex-col justify-between relative transition-colors duration-700">
     
-    <!-- Topo / Recursos -->
+    <!-- Topo -->
     <div id="barra-topo" class="bg-sky-400 p-3.5 text-white flex justify-between items-center shadow transition-colors duration-700 flex-shrink-0">
       <div>
         <div class="flex items-center gap-1.5">
           <span class="text-xl font-extrabold text-yellow-300">🪙 <span id="txt-moedas">15</span></span>
-          <span class="text-xs bg-sky-600 px-2 py-0.5 rounded-full font-bold" id="txt-reais">R$ 0,15</span>
           <span class="text-xs bg-amber-500 text-white px-2 py-0.5 rounded-full font-black flex items-center gap-0.5">
             🔥 <span id="txt-ofensiva">1</span>d
           </span>
@@ -65,42 +61,47 @@
     <!-- Tela da Criança -->
     <div id="view-crianca" class="p-3.5 flex-1 flex flex-col justify-between overflow-y-auto">
       
-      <!-- Barras de Status -->
+      <!-- Status -->
       <div id="painel-status" class="grid grid-cols-3 gap-2 bg-slate-50 p-2 rounded-2xl border border-slate-200 text-center transition-colors flex-shrink-0">
         <div>
           <span class="text-[9px] font-bold text-slate-500 uppercase">Fome</span>
-          <div class="w-full bg-slate-200 h-2 rounded-full overflow-hidden mt-0.5">
-            <div id="bar-fome" class="bg-orange-500 h-full transition-all duration-300"></div>
-          </div>
+          <div class="w-full bg-slate-200 h-2 rounded-full overflow-hidden mt-0.5"><div id="bar-fome" class="bg-orange-500 h-full transition-all duration-300"></div></div>
           <span id="txt-fome" class="text-[9px] font-bold text-slate-600">80%</span>
         </div>
         <div>
           <span class="text-[9px] font-bold text-slate-500 uppercase">Saúde</span>
-          <div class="w-full bg-slate-200 h-2 rounded-full overflow-hidden mt-0.5">
-            <div id="bar-saude" class="bg-emerald-500 h-full transition-all duration-300"></div>
-          </div>
+          <div class="w-full bg-slate-200 h-2 rounded-full overflow-hidden mt-0.5"><div id="bar-saude" class="bg-emerald-500 h-full transition-all duration-300"></div></div>
           <span id="txt-saude" class="text-[9px] font-bold text-slate-600">90%</span>
         </div>
         <div>
           <span class="text-[9px] font-bold text-slate-500 uppercase">Diversão</span>
-          <div class="w-full bg-slate-200 h-2 rounded-full overflow-hidden mt-0.5">
-            <div id="bar-felicidade" class="bg-pink-500 h-full transition-all duration-300"></div>
-          </div>
+          <div class="w-full bg-slate-200 h-2 rounded-full overflow-hidden mt-0.5"><div id="bar-felicidade" class="bg-pink-500 h-full transition-all duration-300"></div></div>
           <span id="txt-felicidade" class="text-[9px] font-bold text-slate-600">70%</span>
         </div>
       </div>
 
-      <!-- Mascote Visual -->
+      <!-- Mascote Visual e Barra de XP -->
       <div class="flex flex-col items-center justify-center my-auto py-2 relative flex-shrink-0">
-        <span class="bg-sky-100 text-sky-700 text-[11px] px-3 py-0.5 rounded-full font-black mb-0.5" id="txt-nivel">Bebê • Dias 1 a 3</span>
-        <h2 class="text-lg font-black text-slate-800 tracking-wide uppercase" id="nome-pet">REXY</h2>
+        <span class="bg-indigo-100 text-indigo-800 text-[11px] px-3 py-0.5 rounded-full font-black mb-1 uppercase tracking-wide" id="txt-nivel-nome">Iniciante 🥉</span>
+        <h2 class="text-xl font-black text-slate-800 tracking-wider uppercase mb-1" id="nome-pet">REXY</h2>
         
-        <div onclick="fazerCarinho()" class="cursor-pointer relative mt-0.5 active:scale-95 transition-transform flex items-center justify-center h-36 w-36">
-          <div id="container-pet-visual" class="pet-breathe transition-all duration-500 flex items-center justify-center"></div>
-          <span id="feedback-pet" class="absolute top-2 right-2 text-xl opacity-0 transition-opacity font-bold pointer-events-none">❤️</span>
-          <span id="zzz-pet" class="hidden absolute -top-2 right-4 text-indigo-400 text-lg font-black pointer-events-none zzz-anim">z Z Z</span>
+        <!-- BARRA DE XP -->
+        <div class="w-48 mb-3">
+          <div class="flex justify-between text-[10px] font-black text-slate-500 mb-0.5">
+            <span>NÍVEL <span id="txt-level-num">1</span></span>
+            <span><span id="txt-xp-atual">0</span>/100 XP</span>
+          </div>
+          <div class="w-full bg-slate-200 h-3 rounded-full overflow-hidden border border-slate-300">
+            <div id="bar-xp" class="bg-indigo-500 h-full transition-all duration-700 shadow-inner"></div>
+          </div>
         </div>
-        <span id="txt-toque-pet" class="text-[10px] text-slate-400 font-medium">Toque para fazer carinho</span>
+        
+        <div onclick="fazerCarinho()" class="cursor-pointer relative active:scale-95 transition-transform flex items-center justify-center h-36 w-36">
+          <img id="img-pet-visual" src="" class="w-full h-full object-contain pet-breathe drop-shadow-xl" />
+          <span id="feedback-pet" class="absolute -top-2 right-0 text-3xl opacity-0 transition-opacity font-bold pointer-events-none">❤️</span>
+          <span id="zzz-pet" class="hidden absolute -top-4 right-4 text-indigo-400 text-xl font-black pointer-events-none zzz-anim">z Z Z</span>
+        </div>
+        <span id="txt-toque-pet" class="text-[10px] text-slate-400 font-bold mt-2">Toque para interagir</span>
 
         <button id="btn-remedio" onclick="darRemedio()" class="hidden mt-2 w-full bg-rose-500 hover:bg-rose-600 text-white font-extrabold py-2 px-4 rounded-xl shadow-lg animate-pulse transition text-xs">
           🩹 DAR REMÉDIO (Pet Doente)
@@ -122,25 +123,20 @@
           <span class="text-[8px] text-emerald-700">+1 Moeda</span>
         </button>
         <button onclick="abrirLojaRecompensas()" id="btn-premios" class="bg-rose-100 hover:bg-rose-200 text-rose-900 font-bold py-1.5 rounded-xl text-xs flex flex-col items-center border border-rose-300 active:scale-95 transition">
-          <span>🎁 Prêmios</span>
-          <span class="text-[8px] text-rose-700">Resgatar</span>
+          <span>🎁 Loja</span>
+          <span class="text-[8px] text-rose-700">Tela/Prêmios</span>
         </button>
       </div>
 
-      <!-- Missões -->
-      <div class="space-y-1.5 border-t pt-1.5 border-slate-100 max-h-44 overflow-y-auto flex-shrink-0">
-        <div>
-          <span class="text-[10px] font-black text-rose-600 flex items-center gap-1 uppercase tracking-wider">
-            🛡️ Missões Vitais (Necessitam Aprovação)
+      <!-- Lista de Missões -->
+      <div class="space-y-1.5 border-t pt-2 border-slate-100 max-h-48 overflow-y-auto flex-shrink-0">
+        <div class="flex justify-between items-center mb-1">
+          <span class="text-[10px] font-black text-slate-700 flex items-center gap-1 uppercase tracking-wider">
+            🛡️ Lista de Tarefas (+20 XP)
           </span>
-          <div id="lista-obrigatorias" class="space-y-1 mt-1"></div>
+          <span class="text-[9px] font-bold text-sky-600 bg-sky-50 px-2 py-0.5 rounded-full">Aprovação 🔒</span>
         </div>
-        <div class="pt-1">
-          <span class="text-[10px] font-black text-indigo-600 flex items-center gap-1 uppercase tracking-wider">
-            ⭐ Missões Extras (Moedas Imediatas)
-          </span>
-          <div id="lista-extras" class="space-y-1 mt-1"></div>
-        </div>
+        <div id="lista-todas-tarefas" class="space-y-1.5"></div>
       </div>
     </div>
 
@@ -152,17 +148,35 @@
           <button onclick="alternarModoPais()" class="text-xs bg-slate-200 hover:bg-slate-300 px-3 py-1 rounded-lg font-bold text-slate-700">Voltar</button>
         </div>
 
-        <!-- Relatório Semanal -->
+        <!-- Tarefas para Aprovar -->
+        <div class="bg-white p-3 rounded-2xl border border-slate-200 shadow-sm mb-3">
+          <h3 class="text-xs font-bold text-slate-800 mb-2 flex items-center justify-between">
+            <span>✅ Tarefas para Aprovar</span>
+            <span id="contador-aprovacoes" class="text-[10px] bg-amber-100 text-amber-800 px-2 py-0.5 rounded-full font-black">0 pendentes</span>
+          </h3>
+          <div id="lista-aprovacao-pais" class="space-y-2"></div>
+        </div>
+
+        <!-- EDITOR DE TAREFAS (NOVO) -->
+        <div class="bg-white p-3 rounded-2xl border border-sky-200 shadow-sm mb-3">
+          <h3 class="text-xs font-bold text-sky-900 mb-2">✏️ Gerenciar Tarefas</h3>
+          <div id="lista-edicao-tarefas" class="space-y-1 mb-2 max-h-32 overflow-y-auto"></div>
+          
+          <div class="flex gap-1 mt-2 border-t pt-2 border-slate-100">
+            <input type="text" id="nova-tarefa-texto" placeholder="Nome da tarefa..." class="flex-1 border border-slate-300 rounded-lg px-2 py-1.5 text-xs focus:outline-none focus:border-sky-500">
+            <input type="number" id="nova-tarefa-moedas" placeholder="🪙" value="5" class="w-12 border border-slate-300 rounded-lg px-1 py-1.5 text-xs text-center focus:outline-none focus:border-sky-500">
+            <button onclick="adicionarTarefa()" class="bg-sky-500 hover:bg-sky-600 text-white px-2.5 py-1.5 rounded-lg text-xs font-bold transition">+</button>
+          </div>
+        </div>
+
         <div class="bg-white p-3 rounded-2xl border border-indigo-200 shadow-sm mb-3">
           <div class="flex justify-between items-center mb-2">
             <h3 class="text-xs font-black text-indigo-900 flex items-center gap-1">📊 Relatório Semanal</h3>
             <span id="relatorio-taxa-badge" class="text-[10px] bg-indigo-100 text-indigo-700 px-2 py-0.5 rounded-full font-extrabold">100% Concluído</span>
           </div>
-
           <div class="w-full bg-slate-100 h-2.5 rounded-full overflow-hidden mb-3 border border-slate-200">
             <div id="relatorio-barra-progresso" class="bg-emerald-500 h-full transition-all duration-500" style="width: 100%;"></div>
           </div>
-
           <div class="grid grid-cols-3 gap-1.5 text-center mb-3">
             <div class="bg-slate-50 p-1.5 rounded-xl border border-slate-200">
               <span class="text-[9px] text-slate-500 block font-bold">Tarefas OK</span>
@@ -177,108 +191,62 @@
               <span id="relatorio-total-moedas" class="text-xs font-black text-yellow-600">0 🪙</span>
             </div>
           </div>
-
           <div>
             <span class="text-[9px] font-bold text-slate-400 block mb-1 uppercase tracking-wider">Histórico dos Últimos 7 Dias</span>
             <div id="relatorio-grid-dias" class="flex justify-between items-center bg-slate-50 p-2 rounded-xl border border-slate-200"></div>
           </div>
         </div>
 
-        <!-- Aprovação -->
-        <div class="bg-white p-3 rounded-2xl border border-slate-200 shadow-sm mb-3">
-          <h3 class="text-xs font-bold text-slate-800 mb-1 flex items-center justify-between">
-            <span>✅ Missões para Aprovar</span>
-            <span id="contador-aprovacoes" class="text-[10px] bg-amber-100 text-amber-800 px-2 py-0.5 rounded-full font-black">0 pendentes</span>
-          </h3>
-          <div id="lista-aprovacao-pais" class="space-y-1.5 mt-2"></div>
-        </div>
-
-        <!-- Modo Noturno Manual -->
         <div class="bg-indigo-50 p-3 rounded-2xl border border-indigo-200 shadow-sm mb-3">
           <h3 class="text-xs font-bold text-indigo-950 mb-1">🌙 Modo Noturno / Dormir</h3>
           <button onclick="alternarModoNoiteManual()" class="w-full bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-1.5 rounded-xl text-xs transition">
             Alternar Noite / Dia Manualmente
           </button>
         </div>
-
-        <!-- Testador Virada de Dia -->
-        <div class="bg-emerald-50 p-3 rounded-2xl border border-emerald-200 shadow-sm mb-3">
-          <h3 class="text-xs font-bold text-emerald-950 mb-1">🌅 Testar Virada de Dia (Ofensiva 🔥)</h3>
-          <button onclick="simularViradaDeDia()" class="w-full bg-emerald-600 hover:bg-emerald-700 text-white font-bold py-1.5 rounded-xl text-xs transition">
-            Simular Virada para Amanhã
-          </button>
-        </div>
-
-        <!-- Testador de Crescimento -->
-        <div class="bg-amber-50 p-3 rounded-2xl border border-amber-200 shadow-sm mb-3">
-          <h3 class="text-xs font-bold text-amber-900 mb-1">🧪 Ajustar Dias de Consistência (🔥)</h3>
-          <div class="flex gap-2">
-            <input id="input-dias-teste" type="number" min="1" max="100" class="w-20 text-xs p-2 rounded-xl border border-amber-300 font-bold text-center" />
-            <button onclick="aplicarDiasTeste()" class="flex-1 bg-amber-500 hover:bg-amber-600 text-white font-bold py-1.5 rounded-xl text-xs transition">
-              Aplicar Fase
-            </button>
-          </div>
-        </div>
-
-        <!-- Rotinas Rápidas -->
-        <div class="bg-white p-3 rounded-2xl border border-slate-200 shadow-sm mb-3">
-          <h3 class="text-xs font-bold text-slate-700 mb-1.5">⚡ Rotinas Prontas em 1 Clique</h3>
-          <div class="grid grid-cols-3 gap-1.5">
-            <button onclick="adicionarRotinaPronta('manha')" class="bg-amber-50 hover:bg-amber-100 text-amber-800 border border-amber-300 text-[10px] font-bold py-1.5 rounded-xl transition">🌅 Manhã</button>
-            <button onclick="adicionarRotinaPronta('escola')" class="bg-blue-50 hover:bg-blue-100 text-blue-800 border border-blue-300 text-[10px] font-bold py-1.5 rounded-xl transition">🎒 Escolar</button>
-            <button onclick="adicionarRotinaPronta('noite')" class="bg-indigo-50 hover:bg-indigo-100 text-indigo-800 border border-indigo-300 text-[10px] font-bold py-1.5 rounded-xl transition">🌙 Noite</button>
-          </div>
-        </div>
-
-        <button onclick="resetarDados()" class="w-full border border-rose-300 text-rose-600 font-bold py-1.5 rounded-xl text-xs hover:bg-rose-50 transition">Restaurar Dados Padrão</button>
       </div>
     </div>
 
     <!-- Modais -->
+    <div id="modal-foto-preview" class="hidden fixed inset-0 bg-black/80 flex items-center justify-center p-4 z-50">
+      <div class="bg-white rounded-3xl p-3 max-w-xs w-full text-center shadow-2xl">
+        <h3 class="text-xs font-black text-slate-800 mb-2">Comprovação da Atividade 📸</h3>
+        <img id="img-preview-expandida" src="" class="w-full h-64 object-cover rounded-2xl border border-slate-200 mb-3" />
+        <button onclick="fecharFotoPreview()" class="w-full bg-slate-800 text-white text-xs font-bold py-2 rounded-xl">Fechar Imagem</button>
+      </div>
+    </div>
+
     <div id="modal-biblioteca" class="hidden fixed inset-0 bg-black/50 flex items-center justify-center p-4 z-50">
       <div class="bg-white rounded-3xl p-4 w-84 max-w-sm text-center shadow-2xl border-4 border-sky-400 max-h-[90vh] overflow-y-auto">
         <h3 class="text-base font-black text-slate-800 mb-0.5">Álbum de Mascotes 📖</h3>
-        <p class="text-[11px] text-slate-500 mb-3">Colecione e desbloqueie novos companheiros!</p>
-        <div class="grid grid-cols-2 gap-2 text-left" id="grid-pets-album"></div>
+        <div class="grid grid-cols-2 gap-2 text-left mt-3" id="grid-pets-album"></div>
         <button onclick="fecharBibliotecaPets()" class="mt-4 text-xs text-slate-400 font-bold hover:underline">Fechar Álbum</button>
       </div>
     </div>
 
     <div id="modal-recompensas" class="hidden fixed inset-0 bg-black/50 flex items-center justify-center p-4 z-50">
       <div class="bg-white rounded-3xl p-4 w-80 text-center shadow-2xl border-4 border-rose-400">
-        <h3 class="text-base font-black text-rose-700 mb-1">Loja de Prêmios Reais 🎁</h3>
-        <div class="space-y-2 mb-3 text-left text-xs">
+        <h3 class="text-base font-black text-rose-700 mb-1">Loja de Prêmios 🎁</h3>
+        <div class="space-y-2 mb-3 text-left text-xs mt-3">
           <div class="flex items-center justify-between p-2.5 rounded-2xl bg-amber-50 border border-amber-200">
-            <div><span class="font-bold text-amber-950 block">📱 15 min de Tela</span><span class="text-[10px] text-amber-700">Pausa rápida</span></div>
+            <div><span class="font-bold text-amber-950 block">📱 15 min de Tela</span></div>
             <button onclick="comprarTempoTela(15, 10)" class="bg-amber-500 text-white px-2.5 py-1.5 rounded-xl font-bold text-xs">10 🪙</button>
           </div>
           <div class="flex items-center justify-between p-2.5 rounded-2xl bg-amber-50 border border-amber-200">
-            <div><span class="font-bold text-amber-950 block">📱 30 min de Tela</span><span class="text-[10px] text-amber-700">Padrão equilibrado</span></div>
+            <div><span class="font-bold text-amber-950 block">📱 30 min de Tela</span></div>
             <button onclick="comprarTempoTela(30, 18)" class="bg-amber-500 text-white px-2.5 py-1.5 rounded-xl font-bold text-xs">18 🪙</button>
           </div>
           <div class="flex items-center justify-between p-2.5 rounded-2xl bg-amber-50 border border-amber-200">
-            <div><span class="font-bold text-amber-950 block">📱 60 min de Tela</span><span class="text-[10px] text-amber-700">Super bloco</span></div>
+            <div><span class="font-bold text-amber-950 block">📱 60 min de Tela</span></div>
             <button onclick="comprarTempoTela(60, 30)" class="bg-amber-500 text-white px-2.5 py-1.5 rounded-xl font-bold text-xs">30 🪙</button>
           </div>
         </div>
         <button onclick="fecharLojaRecompensas()" class="text-xs text-slate-400 font-bold hover:underline">Fechar</button>
       </div>
     </div>
-
-    <div id="modal-jogo" class="hidden fixed inset-0 bg-black/50 flex items-center justify-center p-4 z-50">
-      <div class="bg-white rounded-3xl p-5 w-80 text-center shadow-2xl border-4 border-emerald-400">
-        <h3 class="text-base font-black text-emerald-700 mb-0.5">Desafio de Matemática! 🧠</h3>
-        <p class="text-[11px] text-slate-500 mb-3">Acerte para ganhar moedas!</p>
-        <div class="text-2xl font-black text-slate-800 bg-slate-100 py-3 rounded-2xl mb-4 tracking-wider" id="txt-pergunta">3 + 2 = ?</div>
-        <div class="grid grid-cols-3 gap-2" id="opcoes-jogo"></div>
-        <button onclick="fecharJogo()" class="mt-4 text-xs text-slate-400 font-bold hover:underline">Fechar</button>
-      </div>
-    </div>
-
   </div>
 
   <script>
-    const STORAGE_KEY = 'TASKPET_SAVE_FINAL_MOBILE';
+    const STORAGE_KEY = 'ROTINAPET_SAVE_V3';
 
     let audioContext = null;
     function obterAudioContext() {
@@ -290,726 +258,253 @@
     function tocarSom(tipo) {
       try {
         const ctx = obterAudioContext();
-        const osc = ctx.createOscillator();
-        const gain = ctx.createGain();
-        osc.connect(gain); gain.connect(ctx.destination);
-        const agora = ctx.currentTime;
-
+        const osc = ctx.createOscillator(); const gain = ctx.createGain();
+        osc.connect(gain); gain.connect(ctx.destination); const agora = ctx.currentTime;
         if (tipo === 'moeda') {
-          osc.type = 'sine';
-          osc.frequency.setValueAtTime(987.77, agora);
-          osc.frequency.setValueAtTime(1318.51, agora + 0.08);
-          gain.gain.setValueAtTime(0.18, agora);
-          gain.gain.exponentialRampToValueAtTime(0.001, agora + 0.35);
+          osc.type = 'sine'; osc.frequency.setValueAtTime(987.77, agora); osc.frequency.setValueAtTime(1318.51, agora + 0.08);
+          gain.gain.setValueAtTime(0.18, agora); gain.gain.exponentialRampToValueAtTime(0.001, agora + 0.35);
           osc.start(agora); osc.stop(agora + 0.35);
         } else if (tipo === 'carinho') {
-          osc.type = 'triangle';
-          osc.frequency.setValueAtTime(523.25, agora);
-          osc.frequency.exponentialRampToValueAtTime(783.99, agora + 0.2);
-          gain.gain.setValueAtTime(0.12, agora);
-          gain.gain.exponentialRampToValueAtTime(0.001, agora + 0.25);
+          osc.type = 'triangle'; osc.frequency.setValueAtTime(523.25, agora); osc.frequency.exponentialRampToValueAtTime(783.99, agora + 0.2);
+          gain.gain.setValueAtTime(0.12, agora); gain.gain.exponentialRampToValueAtTime(0.001, agora + 0.25);
           osc.start(agora); osc.stop(agora + 0.25);
-        } else if (tipo === 'vitoria') {
+        } else if (tipo === 'vitoria' || tipo === 'levelup') {
           const notas = [523.25, 659.25, 783.99, 1046.50];
           notas.forEach((freq, idx) => {
-            const o = ctx.createOscillator();
-            const g = ctx.createGain();
+            const o = ctx.createOscillator(); const g = ctx.createGain();
             o.connect(g); g.connect(ctx.destination);
-            o.type = 'sine'; o.frequency.value = freq;
-            const t = agora + (idx * 0.08);
-            g.gain.setValueAtTime(0.15, t);
-            g.gain.exponentialRampToValueAtTime(0.001, t + 0.25);
-            o.start(t); o.stop(t + 0.25);
-          });
-        } else if (tipo === 'alarme') {
-          [0, 0.2, 0.4].forEach(offset => {
-            const o = ctx.createOscillator();
-            const g = ctx.createGain();
-            o.connect(g); g.connect(ctx.destination);
-            o.type = 'square'; o.frequency.value = 440;
-            const t = agora + offset;
-            g.gain.setValueAtTime(0.08, t);
-            g.gain.exponentialRampToValueAtTime(0.001, t + 0.12);
-            o.start(t); o.stop(t + 0.12);
+            o.type = tipo === 'levelup' ? 'square' : 'sine'; o.frequency.value = freq;
+            const t = agora + (idx * 0.1);
+            g.gain.setValueAtTime(0.15, t); g.gain.exponentialRampToValueAtTime(0.001, t + 0.3);
+            o.start(t); o.stop(t + 0.3);
           });
         }
       } catch (e) {}
     }
 
     const BIBLIOTECA_PETS = [
-      { id: 'rexy', nome: 'Rexy Dino', emoji: '🦖', desc: 'Mascote Inicial Leal', requisito: 'Desbloqueado', checarLiberado: () => true },
-      { id: 'pipoca', nome: 'Pipoca Cat', emoji: '🐱', desc: 'Gato Robótico Curioso', requisito: '7 dias seguidos (🔥)', checarLiberado: (d) => d.ofensivaDias >= 7 },
-      { id: 'blob', nome: 'Blob Pou', emoji: '🟣', desc: 'Criatura Gelatinosa', requisito: 'Juntar 30 moedas (🪙)', checarLiberado: (d) => d.moedas >= 30 },
-      { id: 'coruja', nome: 'Coruja Sábia', emoji: '🦉', desc: 'Mestre da Sabedoria', requisito: '14 dias seguidos (🔥)', checarLiberado: (d) => d.ofensivaDias >= 14 }
+      { id: 'rexy', nome: 'Mecha Rexy', emoji: '🤖', desc: 'Robô Fiel', requisito: 'Desbloqueado', checarLiberado: () => true },
+      { id: 'pipoca', nome: 'Pipoca Cyber', emoji: '👾', desc: 'Robô Ágil', requisito: 'Chegar no Nível 5', checarLiberado: (d) => (d.pet.xp >= 400) }
     ];
 
     function obterDataAtualFormatada() {
-      const d = new Date();
-      return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`;
+      const d = new Date(); return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`;
     }
 
     const estadoPadrao = {
-      pet: { tipo: 'rexy', nome: 'Rexy', fome: 80, saude: 90, felicidade: 70, doente: false, comidas: 3 },
-      faixaEtaria: 'fundamental1',
-      moedas: 15,
-      ofensivaDias: 1,
-      ultimoDiaAcesso: obterDataAtualFormatada(),
-      tempoTelaSegundos: 0,
-      modoNoiteForcado: null,
-      metricasSemana: {
-        minutosTelaResgatados: 0,
-        moedasGanhasSemana: 15,
-        totalTarefasAprovadas: 0,
-        historico7Dias: [true, true, true, true, true, true, true]
-      },
+      pet: { tipo: 'rexy', nome: 'Rexy', fome: 80, saude: 90, felicidade: 70, doente: false, comidas: 3, xp: 0 },
+      moedas: 15, ofensivaDias: 1, ultimoDiaAcesso: obterDataAtualFormatada(), tempoTelaSegundos: 0, modoNoiteForcado: null,
+      metricasSemana: { minutosTelaResgatados: 0, moedasGanhasSemana: 15, totalTarefasAprovadas: 0, historico7Dias: [true, true, true] },
       tarefas: [
-        { id: 1, texto: 'Escovar os dentes', obrigatoria: true, status: 'pendente' },
-        { id: 2, texto: 'Tomar banho', obrigatoria: true, status: 'pendente' },
-        { id: 3, texto: 'Almoçar no horário', obrigatoria: true, status: 'pendente' },
-        { id: 4, texto: 'Guardar os sapatos', obrigatoria: false, status: 'pendente' }
+        { id: 1, texto: 'Escovar os dentes', recompensa: 5, status: 'pendente', foto: null },
+        { id: 2, texto: 'Arrumar a cama', recompensa: 5, status: 'pendente', foto: null },
+        { id: 3, texto: 'Fazer lição de casa', recompensa: 8, status: 'pendente', foto: null }
       ]
     };
 
-    let dados = JSON.parse(localStorage.getItem(STORAGE_KEY)) || estadoPadrao;
-    if (!dados.metricasSemana) dados.metricasSemana = estadoPadrao.metricasSemana;
+    let dados = JSON.parse(localStorage.getItem(STORAGE_KEY)) || JSON.parse(localStorage.getItem('ROTINAPET_SAVE_V2')) || estadoPadrao;
+    if (dados.pet.xp === undefined) dados.pet.xp = 0;
+    if (!dados.tarefas) dados.tarefas = estadoPadrao.tarefas;
     function salvar() { localStorage.setItem(STORAGE_KEY, JSON.stringify(dados)); }
 
-    function verificarViradaDeDia() {
-      const hoje = obterDataAtualFormatada();
-      if (!dados.ultimoDiaAcesso) {
-        dados.ultimoDiaAcesso = hoje;
-        salvar();
-        return;
+    function obterImagemPet(tipo, doente, deNoite, xp) {
+      const level = Math.floor(xp / 100) + 1;
+      if (deNoite) return "https://api.dicebear.com/7.x/bottts/svg?seed=SleepBot&eyes=sleep&baseColor=475569";
+      if (doente) return "https://api.dicebear.com/7.x/bottts/svg?seed=SickBot&mouth=sad01&baseColor=ef4444";
+      
+      if (tipo === 'rexy') {
+        if (level < 5) return "https://api.dicebear.com/7.x/bottts/svg?seed=RexyNerd&primaryColor=3b82f6";
+        if (level < 15) return "https://api.dicebear.com/7.x/bottts/svg?seed=RexyGamer&accessories=sunglasses&primaryColor=10b981";
+        if (level < 30) return "https://api.dicebear.com/7.x/bottts/svg?seed=RexyPro&accessories=sensor&primaryColor=8b5cf6";
+        if (level < 50) return "https://api.dicebear.com/7.x/bottts/svg?seed=RexyLegend&accessories=crown&primaryColor=f59e0b";
+        if (level < 75) return "https://api.dicebear.com/7.x/bottts/svg?seed=RexyGalactic&accessories=antenna01&primaryColor=ec4899"; // Rosa Galáctico
+        if (level < 100) return "https://api.dicebear.com/7.x/bottts/svg?seed=RexyGod&accessories=cables01&primaryColor=06b6d4"; // Ciano Deus
+        return "https://api.dicebear.com/7.x/bottts/svg?seed=RexyUniverse&accessories=sensor02&primaryColor=fb7185"; // Universo
       }
-      if (dados.ultimoDiaAcesso !== hoje) {
-        processarNovoDia(hoje);
-      }
+      return "https://api.dicebear.com/7.x/bottts/svg?seed=Random" + tipo + level;
     }
 
-    function processarNovoDia(novaData) {
-      const vitaisPendentes = dados.tarefas.filter(t => t.obrigatoria && t.status !== 'aprovada').length;
-      const diaCumpridoComSucesso = vitaisPendentes === 0;
+    let tarefaIdParaFoto = null;
+    function dispararCamera(id) { tarefaIdParaFoto = id; document.getElementById('camera-input').click(); }
 
-      dados.metricasSemana.historico7Dias.push(diaCumpridoComSucesso);
-      if (dados.metricasSemana.historico7Dias.length > 7) {
-        dados.metricasSemana.historico7Dias.shift();
-      }
-
-      if (diaCumpridoComSucesso) {
-        dados.ofensivaDias += 1;
-        dados.moedas += 10;
-        dados.metricasSemana.moedasGanhasSemana += 10;
-        tocarSom('vitoria');
-        alert(`🌅 Bom dia! Você manteve a rotina ontem!\n🔥 Sequência aumentada para ${dados.ofensivaDias} dias!\n🪙 Bônus de +10 moedas ganho!`);
-      } else {
-        dados.ofensivaDias = 1;
-        dados.pet.saude = Math.max(20, dados.pet.saude - 30);
-        dados.pet.fome = Math.max(20, dados.pet.fome - 30);
-        dados.pet.doente = true;
-        alert(`🌅 Novo dia! Ficaram ${vitaisPendentes} tarefas vitais sem aprovação.\nO pet amanheceu dodói e a sequência reiniciou para 1 dia.`);
-      }
-
-      dados.tarefas.forEach(t => t.status = 'pendente');
-      dados.ultimoDiaAcesso = novaData;
-      salvar();
-      atualizarTela();
+    function processarFotoCapturada(e) {
+      const file = e.target.files[0]; if (!file || !tarefaIdParaFoto) return;
+      const reader = new FileReader();
+      reader.onload = function (ev) {
+        const img = new Image();
+        img.onload = function () {
+          const canvas = document.createElement('canvas');
+          let w = img.width, h = img.height; const maxDim = 400;
+          if (w > h) { if (w > maxDim) { h *= maxDim / w; w = maxDim; } } else { if (h > maxDim) { w *= maxDim / h; h = maxDim; } }
+          canvas.width = w; canvas.height = h;
+          canvas.getContext('2d').drawImage(img, 0, 0, w, h);
+          const t = dados.tarefas.find(x => x.id === tarefaIdParaFoto);
+          if (t) { t.foto = canvas.toDataURL('image/jpeg', 0.65); salvar(); atualizarTela(); alert('📸 Foto anexada!'); }
+          tarefaIdParaFoto = null;
+        }; img.src = ev.target.result;
+      }; reader.readAsDataURL(file); e.target.value = '';
     }
 
-    function simularViradaDeDia() {
-      const amanha = 'SIMULADO_' + Date.now();
-      processarNovoDia(amanha);
-      alternarModoPais();
-    }
-
-    function renderizarRelatorioSemanal() {
-      const hist = dados.metricasSemana.historico7Dias || [];
-      const diasPositivos = hist.filter(Boolean).length;
-      const percentual = hist.length ? Math.round((diasPositivos / hist.length) * 100) : 100;
-
-      document.getElementById('relatorio-taxa-badge').innerText = `${percentual}% Concluído`;
-      const barra = document.getElementById('relatorio-barra-progresso');
-      barra.style.width = `${percentual}%`;
-      barra.className = percentual >= 70 ? 'bg-emerald-500 h-full transition-all duration-500' : percentual >= 40 ? 'bg-amber-500 h-full transition-all duration-500' : 'bg-rose-500 h-full transition-all duration-500';
-
-      document.getElementById('relatorio-total-aprovadas').innerText = dados.metricasSemana.totalTarefasAprovadas || 0;
-      document.getElementById('relatorio-total-tela').innerText = `${dados.metricasSemana.minutosTelaResgatados || 0} min`;
-      document.getElementById('relatorio-total-moedas').innerText = `${dados.metricasSemana.moedasGanhasSemana || 0} 🪙`;
-
-      const gridDias = document.getElementById('relatorio-grid-dias');
-      gridDias.innerHTML = '';
-      hist.forEach((sucesso, i) => {
-        const bolinha = document.createElement('div');
-        bolinha.className = 'flex flex-col items-center gap-1';
-        bolinha.innerHTML = `
-          <div class="w-6 h-6 rounded-full flex items-center justify-center text-[10px] font-black text-white ${
-            sucesso ? 'bg-emerald-500 shadow-sm' : 'bg-slate-300'
-          }">${sucesso ? '✓' : '✕'}</div>
-          <span class="text-[8px] font-bold text-slate-400">D${i+1}</span>
-        `;
-        gridDias.appendChild(bolinha);
-      });
-    }
-
-    function estaDeNoite() {
-      if (dados.modoNoiteForcado !== null) return dados.modoNoiteForcado;
-      const hora = new Date().getHours();
-      return hora >= 21 || hora < 6;
-    }
-
-    function gerarSVGEvoluido(tipo, doente, faseNome, deNoite) {
-      if (doente) {
-        return `
-          <svg viewBox="0 0 140 140" class="w-32 h-32 drop-shadow-lg">
-            <circle cx="70" cy="75" r="48" fill="#94a3b8" />
-            <path d="M52 65 Q58 69 64 65" stroke="#334155" stroke-width="4" stroke-linecap="round" fill="none"/>
-            <path d="M76 65 Q82 69 88 65" stroke="#334155" stroke-width="4" stroke-linecap="round" fill="none"/>
-            <path d="M58 93 Q70 83 82 93" stroke="#334155" stroke-width="4" stroke-linecap="round" fill="none"/>
-            <rect x="74" y="83" width="26" height="7" rx="3.5" fill="#ef4444" transform="rotate(-18 74 83)"/>
-          </svg>
-        `;
-      }
-
-      let aderecosCabeca = '';
-      let aderecosBoca = '';
-      let olhosSVG = '';
-
-      if (deNoite) {
-        aderecosCabeca = `
-          <path d="M42 50 Q66 18 102 34 Q88 56 60 52 Z" fill="#3b82f6" stroke="#1d4ed8" stroke-width="2"/>
-          <circle cx="104" cy="34" r="7" fill="#ffffff" stroke="#cbd5e1" stroke-width="1.5"/>
-          <ellipse cx="54" cy="52" rx="20" ry="5" fill="#ffffff" transform="rotate(-6 54 52)"/>
-        `;
-        olhosSVG = `
-          <path d="M50 72 Q56 78 62 72" stroke="#1e293b" stroke-width="3.5" stroke-linecap="round" fill="none"/>
-          <path d="M78 72 Q84 78 90 72" stroke="#1e293b" stroke-width="3.5" stroke-linecap="round" fill="none"/>
-        `;
-        aderecosBoca = `<path d="M66 84 Q70 87 74 84" stroke="#1e293b" stroke-width="3" stroke-linecap="round" fill="none"/>`;
-      } else {
-        olhosSVG = `
-          <g class="pet-blink">
-            <circle cx="58" cy="68" r="6" fill="#ffffff" /><circle cx="60" cy="68" r="3.5" fill="#0f172a" />
-            <circle cx="84" cy="68" r="6" fill="#ffffff" /><circle cx="86" cy="68" r="3.5" fill="#0f172a" />
-          </g>
-        `;
-
-        if (faseNome === 'Bebê') {
-          aderecosBoca = `
-            <circle cx="70" cy="85" r="8" fill="#38bdf8"/><circle cx="70" cy="85" r="4" fill="#bae6fd"/>
-            <path d="M70 89 Q70 96 66 96" stroke="#0284c7" stroke-width="3" fill="none" stroke-linecap="round"/>
-          `;
-        } else if (faseNome === 'Criança') {
-          aderecosBoca = `<path d="M62 85 Q70 94 78 85" stroke="#312e81" stroke-width="4" stroke-linecap="round" fill="none"/>`;
-        } else if (faseNome === 'Jovem') {
-          aderecosCabeca = `
-            <path d="M36 72 Q70 26 104 72" stroke="#0f172a" stroke-width="8" fill="none" stroke-linecap="round"/>
-            <rect x="30" y="65" width="12" height="20" rx="5" fill="#ef4444" stroke="#0f172a" stroke-width="2"/>
-            <rect x="98" y="65" width="12" height="20" rx="5" fill="#ef4444" stroke="#0f172a" stroke-width="2"/>
-          `;
-          aderecosBoca = `<path d="M62 84 Q70 90 78 84" stroke="#312e81" stroke-width="4" stroke-linecap="round" fill="none"/>`;
-        } else if (faseNome === 'Adulto Mestre') {
-          aderecosCabeca = `
-            <g transform="translate(0, -6)">
-              <polygon points="46,42 54,20 70,34 86,20 94,42" fill="#fbbf24" stroke="#b45309" stroke-width="3"/>
-              <circle cx="54" cy="20" r="3.5" fill="#ef4444"/><circle cx="70" cy="34" r="3.5" fill="#3b82f6"/><circle cx="86" cy="20" r="3.5" fill="#10b981"/>
-              <ellipse cx="70" cy="42" rx="24" ry="4" fill="#f59e0b"/>
-            </g>
-          `;
-          aderecosBoca = `<path d="M60 84 Q70 95 80 84" stroke="#312e81" stroke-width="4.5" stroke-linecap="round" fill="none"/>`;
-        }
-      }
-
-      if (tipo === 'blob') {
-        return `
-          <svg viewBox="0 0 140 140" class="w-32 h-32 drop-shadow-xl">
-            <ellipse cx="70" cy="78" rx="46" ry="42" fill="#8b5cf6" />
-            ${olhosSVG}
-            <circle cx="44" cy="82" r="5" fill="#c084fc" opacity="0.6"/><circle cx="96" cy="82" r="5" fill="#c084fc" opacity="0.6"/>
-            ${aderecosBoca} ${aderecosCabeca}
-          </svg>
-        `;
-      } else if (tipo === 'pipoca') {
-        return `
-          <svg viewBox="0 0 140 140" class="w-32 h-32 drop-shadow-xl">
-            <polygon points="40,50 46,26 64,44" fill="#f59e0b"/><polygon points="100,50 94,26 76,44" fill="#f59e0b"/>
-            <circle cx="70" cy="78" r="44" fill="#fbbf24" />
-            ${olhosSVG}
-            <polygon points="67,82 73,82 70,86" fill="#e11d48"/>
-            <circle cx="46" cy="84" r="5" fill="#f43f5e" opacity="0.4"/><circle cx="94" cy="84" r="5" fill="#f43f5e" opacity="0.4"/>
-            ${aderecosBoca} ${aderecosCabeca}
-          </svg>
-        `;
-      } else if (tipo === 'coruja') {
-        return `
-          <svg viewBox="0 0 140 140" class="w-32 h-32 drop-shadow-xl">
-            <ellipse cx="70" cy="80" rx="42" ry="46" fill="#9a3412" />
-            <ellipse cx="70" cy="88" rx="28" ry="32" fill="#fed7aa" />
-            ${olhosSVG}
-            <polygon points="66,75 74,75 70,84" fill="#ea580c"/>
-            ${aderecosCabeca}
-          </svg>
-        `;
-      } else {
-        return `
-          <svg viewBox="0 0 140 140" class="w-32 h-32 drop-shadow-xl">
-            <path d="M36 94 Q28 40 76 40 Q112 40 106 94 Q100 116 70 116 Q40 116 36 94 Z" fill="#10b981" />
-            <polygon points="52,40 58,26 64,40" fill="#047857"/><polygon points="70,40 76,26 82,40" fill="#047857"/>
-            ${olhosSVG}
-            <circle cx="50" cy="78" r="5" fill="#6ee7b7" opacity="0.6"/><circle cx="92" cy="78" r="5" fill="#6ee7b7" opacity="0.6"/>
-            ${aderecosBoca} ${aderecosCabeca}
-          </svg>
-        `;
-      }
-    }
-
-    function calcularFaseCrescimento(dias) {
-      if (dias <= 3) return { nome: 'Bebê', escala: 'scale(0.85)', desc: 'Bebê • Dias 1 a 3' };
-      if (dias <= 10) return { nome: 'Criança', escala: 'scale(1.0)', desc: 'Criança • Dias 4 a 10' };
-      if (dias <= 20) return { nome: 'Jovem', escala: 'scale(1.15)', desc: 'Jovem • Dias 11 a 20' };
-      return { nome: 'Adulto Mestre', escala: 'scale(1.3)', desc: 'Adulto • 21+ Dias 👑' };
-    }
-
-    function atualizarTela() {
-      const deNoite = estaDeNoite();
-
-      document.getElementById('txt-moedas').innerText = dados.moedas;
-      document.getElementById('txt-reais').innerText = 'R$ ' + (dados.moedas * 0.01).toFixed(2);
-      document.getElementById('txt-ofensiva').innerText = dados.ofensivaDias;
-      document.getElementById('input-dias-teste').value = dados.ofensivaDias;
-      document.getElementById('txt-comidas').innerText = dados.pet.comidas + ' disp.';
-      document.getElementById('nome-pet').innerText = dados.pet.nome;
-
-      const fase = calcularFaseCrescimento(dados.ofensivaDias);
-      document.getElementById('txt-nivel').innerText = deNoite ? 'Dormindo 🌙' : fase.desc;
-
-      const corpo = document.getElementById('corpo-pagina');
-      const card = document.getElementById('card-app');
-      const topo = document.getElementById('barra-topo');
-      const bannerNoite = document.getElementById('banner-noite');
-      const zzz = document.getElementById('zzz-pet');
-      const txtToque = document.getElementById('txt-toque-pet');
-      const gridAcoes = document.getElementById('grid-acoes-pet');
-
-      if (deNoite) {
-        corpo.className = 'bg-slate-900 min-h-screen flex items-center justify-center p-0 sm:p-4 font-sans select-none';
-        card.className = 'w-full h-full min-h-screen sm:min-h-[690px] sm:max-w-sm bg-slate-900 sm:rounded-3xl shadow-2xl overflow-hidden sm:border-4 border-indigo-500 flex flex-col justify-between relative text-slate-100';
-        topo.className = 'bg-indigo-950 p-3.5 text-white flex justify-between items-center shadow border-b border-indigo-800 flex-shrink-0';
-        bannerNoite.classList.remove('hidden');
-        zzz.classList.remove('hidden');
-        txtToque.innerText = 'Shh... o mascote está dormindo!';
-        document.getElementById('btn-jogar').disabled = true;
-        document.getElementById('btn-premios').disabled = true;
-        document.getElementById('btn-falar').disabled = true;
-        gridAcoes.classList.add('opacity-40');
-      } else {
-        corpo.className = 'bg-sky-100 min-h-screen flex items-center justify-center p-0 sm:p-4 font-sans select-none';
-        card.className = 'w-full h-full min-h-screen sm:min-h-[690px] sm:max-w-sm bg-white sm:rounded-3xl shadow-2xl overflow-hidden sm:border-4 border-sky-300 flex flex-col justify-between relative text-slate-800';
-        topo.className = 'bg-sky-400 p-3.5 text-white flex justify-between items-center shadow flex-shrink-0';
-        bannerNoite.classList.add('hidden');
-        zzz.classList.add('hidden');
-        txtToque.innerText = 'Toque para fazer carinho';
-        document.getElementById('btn-jogar').disabled = false;
-        document.getElementById('btn-premios').disabled = false;
-        document.getElementById('btn-falar').disabled = false;
-        gridAcoes.classList.remove('opacity-40');
-      }
-
-      const petContainer = document.getElementById('container-pet-visual');
-      if (petContainer) {
-        petContainer.style.transform = fase.escala;
-        petContainer.innerHTML = gerarSVGEvoluido(dados.pet.tipo, dados.pet.doente, fase.nome, deNoite);
-      }
-
-      document.getElementById('bar-fome').style.width = dados.pet.fome + '%';
-      document.getElementById('txt-fome').innerText = dados.pet.fome + '%';
-      document.getElementById('bar-saude').style.width = dados.pet.saude + '%';
-      document.getElementById('txt-saude').innerText = dados.pet.saude + '%';
-      document.getElementById('bar-felicidade').style.width = dados.pet.felicidade + '%';
-      document.getElementById('txt-felicidade').innerText = dados.pet.felicidade + '%';
-
-      if (dados.pet.doente) {
-        document.getElementById('btn-remedio').classList.remove('hidden');
-        document.getElementById('btn-comer').disabled = true;
-      } else {
-        document.getElementById('btn-remedio').classList.add('hidden');
-        document.getElementById('btn-comer').disabled = false;
-      }
-
-      renderizarTarefas();
-      renderizarPainelAprovacao();
-      renderizarRelatorioSemanal();
-      salvar();
-    }
+    function abrirFotoPreview(url) { document.getElementById('img-preview-expandida').src = url; document.getElementById('modal-foto-preview').classList.remove('hidden'); }
+    function fecharFotoPreview() { document.getElementById('modal-foto-preview').classList.add('hidden'); }
 
     function renderizarTarefas() {
-      const listaObrigatorias = document.getElementById('lista-obrigatorias');
-      const listaExtras = document.getElementById('lista-extras');
-      listaObrigatorias.innerHTML = '';
-      listaExtras.innerHTML = '';
-
+      const container = document.getElementById('lista-todas-tarefas'); container.innerHTML = '';
+      if(dados.tarefas.length === 0) return container.innerHTML = '<p class="text-[10px] text-slate-500 italic text-center p-2">Nenhuma tarefa criada. Peça aos pais para adicionar!</p>';
+      
       dados.tarefas.forEach(t => {
-        const item = document.createElement('div');
-        const estaPendenteAprovacao = t.status === 'aguardando_aprovacao';
-        const estaFeita = t.status === 'aprovada' || t.status === 'concluida_extra';
-
-        item.className = `flex items-center justify-between p-2 rounded-xl border text-xs font-semibold ${
-          estaFeita ? 'bg-slate-100 text-slate-400 border-slate-200 line-through' :
-          estaPendenteAprovacao ? 'bg-amber-50 text-amber-900 border-amber-300' : 'bg-white text-slate-700 border-slate-200 shadow-sm'
-        }`;
-
-        let botaoAcao = '';
-        if (estaFeita) {
-          botaoAcao = `<span class="text-emerald-600 font-bold text-[10px]">Feito ✓</span>`;
-        } else if (estaPendenteAprovacao) {
-          botaoAcao = `<span class="bg-amber-200 text-amber-900 px-2 py-1 rounded-lg text-[9px] font-black">Aguardando Pais ⏳</span>`;
-        } else {
-          botaoAcao = `
-            <button onclick="solicitarConclusaoTarefa(${t.id})" class="bg-sky-500 hover:bg-sky-600 text-white px-2.5 py-1 rounded-lg text-[10px] font-bold">
-              ${t.obrigatoria ? 'Concluir' : 'Fazer (+5 🪙)'}
-            </button>
-          `;
-        }
-
-        item.innerHTML = `<span>${t.texto}</span>${botaoAcao}`;
-        if (t.obrigatoria) listaObrigatorias.appendChild(item);
-        else listaExtras.appendChild(item);
+        const pend = t.status === 'aguardando_aprovacao', apr = t.status === 'aprovada';
+        const card = document.createElement('div');
+        card.className = `flex flex-col p-2 rounded-2xl border transition-all text-xs ${apr ? 'bg-slate-50 border-slate-200 opacity-60' : pend ? 'bg-amber-50 border-amber-300' : 'bg-white border-slate-200'}`;
+        let botoes = apr ? `<span class="text-[10px] font-black text-emerald-700">✓ Concluída</span>` :
+                     pend ? `<span class="text-[10px] font-black text-amber-700">⏳ Aguardando</span>` :
+                     `<div class="flex gap-1.5"><button onclick="dispararCamera(${t.id})" class="px-2 py-1 rounded-xl border text-[10px] font-bold ${t.foto ? 'bg-emerald-50 border-emerald-400 text-emerald-700' : 'bg-slate-100 border-slate-300'}">${t.foto ? '📷 OK' : '📷 Foto'}</button><button onclick="enviarParaAprovacao(${t.id})" class="bg-sky-500 text-white text-[10px] font-bold px-2 py-1 rounded-xl">Enviar</button></div>`;
+        card.innerHTML = `<div class="flex items-center justify-between"><div><span class="font-bold text-slate-800 ${apr ? 'line-through' : ''}">${t.texto}</span><span class="text-[9px] text-indigo-600 font-bold ml-1">+20 XP</span></div><div>${botoes}</div></div>
+          ${t.foto && !apr ? `<div class="mt-1.5 flex items-center gap-2"><img src="${t.foto}" onclick="abrirFotoPreview('${t.foto}')" class="w-8 h-8 rounded-lg object-cover border cursor-pointer" /></div>` : ''}`;
+        container.appendChild(card);
       });
     }
 
-    function solicitarConclusaoTarefa(id) {
-      const t = dados.tarefas.find(x => x.id === id);
-      if (!t) return;
-
-      if (t.obrigatoria) {
-        t.status = 'aguardando_aprovacao';
-        tocarSom('carinho');
-        alert('Missão concluída! Peça para seus pais aprovarem no Painel.');
-      } else {
-        t.status = 'concluida_extra';
-        dados.moedas += 5;
-        dados.metricasSemana.moedasGanhasSemana += 5;
-        tocarSom('moeda');
-        alert('🎉 Missão extra feita! +5 Moedas!');
-      }
-      atualizarTela();
-    }
+    function enviarParaAprovacao(id) { const t = dados.tarefas.find(x => x.id === id); if (!t) return; t.status = 'aguardando_aprovacao'; tocarSom('carinho'); alert('Enviado para avaliação dos pais!'); atualizarTela(); }
 
     function renderizarPainelAprovacao() {
       const container = document.getElementById('lista-aprovacao-pais');
-      const badgePendente = document.getElementById('badge-pendentes');
-      const contadorTxt = document.getElementById('contador-aprovacoes');
       const pendentes = dados.tarefas.filter(t => t.status === 'aguardando_aprovacao');
-
-      contadorTxt.innerText = `${pendentes.length} pendentes`;
-      if (pendentes.length > 0) badgePendente.classList.remove('hidden');
-      else badgePendente.classList.add('hidden');
-
+      document.getElementById('contador-aprovacoes').innerText = `${pendentes.length} pendentes`;
+      if (pendentes.length > 0) document.getElementById('badge-pendentes').classList.remove('hidden'); else document.getElementById('badge-pendentes').classList.add('hidden');
       container.innerHTML = '';
-      if (pendentes.length === 0) {
-        container.innerHTML = `<p class="text-[11px] text-slate-400 italic">Nenhuma missão aguardando aprovação no momento.</p>`;
-        return;
-      }
-
+      if (pendentes.length === 0) return container.innerHTML = `<p class="text-[11px] text-slate-400 italic">Nenhuma atividade aguardando.</p>`;
+      
       pendentes.forEach(t => {
-        const row = document.createElement('div');
-        row.className = 'flex items-center justify-between p-2 rounded-xl bg-slate-50 border border-slate-200 text-xs';
-        row.innerHTML = `
-          <span class="font-bold text-slate-800">${t.texto}</span>
-          <div class="flex gap-1">
-            <button onclick="recusarTarefa(${t.id})" class="bg-rose-100 hover:bg-rose-200 text-rose-800 px-2 py-1 rounded-lg text-[10px] font-bold">Refazer</button>
-            <button onclick="aprovarTarefa(${t.id})" class="bg-emerald-500 hover:bg-emerald-600 text-white px-2.5 py-1 rounded-lg text-[10px] font-bold">Aprovar ✓</button>
-          </div>
-        `;
-        container.appendChild(row);
+        container.innerHTML += `<div class="p-2.5 rounded-2xl bg-slate-50 border border-slate-200 flex flex-col gap-2">
+          <div class="flex items-center justify-between"><span class="font-bold text-slate-800 text-xs">${t.texto}</span><div class="flex gap-1.5"><button onclick="recusarTarefa(${t.id})" class="bg-rose-100 text-rose-800 px-2 py-1 rounded-xl text-[10px] font-bold">Refazer</button><button onclick="aprovarTarefa(${t.id})" class="bg-emerald-500 text-white px-2 py-1 rounded-xl text-[10px] font-bold">Aprovar ✓</button></div></div>
+          ${t.foto ? `<img src="${t.foto}" onclick="abrirFotoPreview('${t.foto}')" class="w-14 h-14 rounded-lg object-cover cursor-pointer border" />` : `<span class="text-[10px] text-amber-700 italic">Sem foto.</span>`}</div>`;
       });
     }
 
     function aprovarTarefa(id) {
-      const t = dados.tarefas.find(x => x.id === id);
-      if (!t) return;
-      t.status = 'aprovada';
-      dados.moedas += 5;
-      dados.metricasSemana.moedasGanhasSemana += 5;
-      dados.metricasSemana.totalTarefasAprovadas += 1;
-      dados.pet.comidas += 1;
-      dados.pet.fome = Math.min(100, dados.pet.fome + 10);
-      dados.pet.saude = Math.min(100, dados.pet.saude + 15);
-      tocarSom('vitoria');
-      checarSaudePet();
+      const t = dados.tarefas.find(x => x.id === id); if (!t) return;
+      t.status = 'aprovada'; dados.moedas += t.recompensa; dados.pet.comidas += 1;
+      const lvlAntigo = Math.floor(dados.pet.xp / 100) + 1;
+      dados.pet.xp += 20; 
+      if(Math.floor(dados.pet.xp / 100) + 1 > lvlAntigo) { tocarSom('levelup'); alert(`🎉 LEVEL UP! 🚀\nSubiu para o Nível ${lvlAntigo + 1}!`); } else tocarSom('vitoria');
       atualizarTela();
     }
+    function recusarTarefa(id) { const t = dados.tarefas.find(x => x.id === id); if (!t) return; t.status = 'pendente'; t.foto = null; atualizarTela(); }
 
-    function recusarTarefa(id) {
-      const t = dados.tarefas.find(x => x.id === id);
-      if (!t) return;
-      t.status = 'pendente';
-      atualizarTela();
-      alert('A tarefa voltou para pendente para a criança refazer.');
-    }
-
-    function checarSaudePet() {
-      const obrigatoriasNaoAprovadas = dados.tarefas.filter(t => t.obrigatoria && t.status !== 'aprovada').length;
-      if (obrigatoriasNaoAprovadas >= 3) dados.pet.doente = true;
-    }
-
-    function darRemedio() {
-      dados.pet.doente = false;
-      dados.pet.saude = 100;
-      dados.pet.fome = 75;
-      tocarSom('carinho');
-      atualizarTela();
-    }
-
-    function alimentarPet() {
-      if (dados.pet.comidas > 0) {
-        dados.pet.comidas -= 1;
-        dados.pet.fome = Math.min(100, dados.pet.fome + 20);
-        dados.pet.felicidade = Math.min(100, dados.pet.felicidade + 5);
-        tocarSom('carinho');
-        exibirFeedback('😋');
-        atualizarTela();
-      } else {
-        alert('Sem lanches! Complete e aprove missões vitais para ganhar comida.');
-      }
-    }
-
-    function fazerCarinho() {
-      if (estaDeNoite()) return;
-      dados.pet.felicidade = Math.min(100, dados.pet.felicidade + 5);
-      tocarSom('carinho');
-      exibirFeedback('❤️');
-      atualizarTela();
-    }
-
-    function exibirFeedback(emoji) {
-      const fb = document.getElementById('feedback-pet');
-      fb.innerText = emoji;
-      fb.classList.remove('opacity-0');
-      setTimeout(() => fb.classList.add('opacity-0'), 1000);
-    }
-
-    function alternarModoNoiteManual() {
-      if (dados.modoNoiteForcado === null) dados.modoNoiteForcado = !estaDeNoite();
-      else dados.modoNoiteForcado = !dados.modoNoiteForcado;
-      salvar();
-      atualizarTela();
-      alternarModoPais();
-    }
-
-    function abrirBibliotecaPets() {
-      const grid = document.getElementById('grid-pets-album');
-      grid.innerHTML = '';
-
-      BIBLIOTECA_PETS.forEach(p => {
-        const liberado = p.checarLiberado(dados);
-        const estaEmUso = dados.pet.tipo === p.id;
-
-        const card = document.createElement('div');
-        card.className = `p-3 rounded-2xl border text-center transition ${
-          estaEmUso ? 'border-sky-500 bg-sky-50 ring-2 ring-sky-400' :
-          liberado ? 'border-slate-200 bg-white hover:border-sky-300' : 'border-slate-200 bg-slate-50 opacity-60'
-        }`;
-
-        card.innerHTML = `
-          <div class="text-3xl mb-1">${liberado ? p.emoji : '🔒'}</div>
-          <div class="text-xs font-black text-slate-800">${p.nome}</div>
-          <div class="text-[9px] text-slate-500 mb-2">${liberado ? p.desc : p.requisito}</div>
-          ${
-            estaEmUso ? '<span class="text-[9px] font-black bg-sky-500 text-white px-2 py-0.5 rounded-full">Em Uso</span>' :
-            liberado ? `<button onclick="selecionarPetBiblioteca('${p.id}', '${p.nome}')" class="w-full bg-sky-500 hover:bg-sky-600 text-white text-[10px] font-bold py-1 rounded-lg">Escolher</button>` :
-            '<span class="text-[9px] font-bold text-slate-400">Bloqueado</span>'
-          }
-        `;
-        grid.appendChild(card);
+    /* EDIÇÃO DE TAREFAS PELOS PAIS */
+    function renderizarEdicaoTarefas() {
+      const container = document.getElementById('lista-edicao-tarefas'); container.innerHTML = '';
+      if(dados.tarefas.length === 0) return container.innerHTML = '<span class="text-[10px] text-slate-400 italic">Lista vazia. Adicione abaixo.</span>';
+      dados.tarefas.forEach(t => {
+        container.innerHTML += `<div class="flex items-center justify-between bg-slate-50 p-1.5 rounded-lg border text-xs">
+          <span class="truncate pr-2 text-slate-700 font-medium">${t.texto} <span class="text-[9px] text-amber-600 font-bold">(+${t.recompensa}🪙)</span></span>
+          <button onclick="removerTarefa(${t.id})" class="text-rose-500 font-bold px-2 py-1 bg-white border border-rose-200 rounded-lg text-[10px]">Excluir</button>
+        </div>`;
       });
-
-      document.getElementById('modal-biblioteca').classList.remove('hidden');
+    }
+    function adicionarTarefa() {
+      const txt = document.getElementById('nova-tarefa-texto').value;
+      const moedas = parseInt(document.getElementById('nova-tarefa-moedas').value) || 5;
+      if (!txt.trim()) return alert('Digite o nome da tarefa!');
+      const novoId = dados.tarefas.length > 0 ? Math.max(...dados.tarefas.map(t => t.id)) + 1 : 1;
+      dados.tarefas.push({ id: novoId, texto: txt, recompensa: moedas, status: 'pendente', foto: null });
+      document.getElementById('nova-tarefa-texto').value = ''; salvar(); atualizarTela(); alert('Tarefa adicionada com sucesso!');
+    }
+    function removerTarefa(id) {
+      if(!confirm('Tem certeza que deseja excluir esta tarefa permanentemente?')) return;
+      dados.tarefas = dados.tarefas.filter(t => t.id !== id); salvar(); atualizarTela();
     }
 
-    function fecharBibliotecaPets() { document.getElementById('modal-biblioteca').classList.add('hidden'); }
-    function selecionarPetBiblioteca(tipo, nome) {
-      dados.pet.tipo = tipo;
-      dados.pet.nome = nome;
-      fecharBibliotecaPets();
-      tocarSom('carinho');
-      atualizarTela();
-    }
-
-    function aplicarDiasTeste() {
-      const valor = parseInt(document.getElementById('input-dias-teste').value, 10);
-      if (!isNaN(valor) && valor >= 1) {
-        dados.ofensivaDias = valor;
-        salvar();
-        atualizarTela();
-        alternarModoPais();
-      }
-    }
-
-    let intervaloTimer = null;
-    function comprarTempoTela(minutos, custo) {
-      if (dados.moedas < custo) { alert('Moedas insuficientes!'); return; }
-      dados.moedas -= custo;
-      dados.tempoTelaSegundos += minutos * 60;
-      dados.metricasSemana.minutosTelaResgatados += minutos;
-      tocarSom('moeda');
-      fecharLojaRecompensas();
-      atualizarTela();
-      iniciarCronometro();
-      alert(`🎉 Voucher de ${minutos} minutos ativado!`);
-    }
-
-    function iniciarCronometro() {
-      if (intervaloTimer) clearInterval(intervaloTimer);
-      const banner = document.getElementById('banner-timer');
-      banner.classList.remove('hidden');
-
-      intervaloTimer = setInterval(() => {
-        if (dados.tempoTelaSegundos > 0) {
-          dados.tempoTelaSegundos--;
-          const m = Math.floor(dados.tempoTelaSegundos / 60).toString().padStart(2, '0');
-          const s = (dados.tempoTelaSegundos % 60).toString().padStart(2, '0');
-          document.getElementById('display-tempo-tela').innerText = `${m}:${s}`;
-        } else {
-          clearInterval(intervaloTimer);
-          banner.classList.add('hidden');
-          tocarSom('alarme');
-          alert('⏰ O tempo de tela combinado acabou!');
+    function verificarViradaDeDia() {
+      const hoje = obterDataAtualFormatada();
+      if (dados.ultimoDiaAcesso !== hoje) {
+        if(dados.tarefas.length > 0) {
+           const concluiuTudo = dados.tarefas.filter(t => t.status !== 'aprovada').length === 0;
+           if (concluiuTudo) { dados.ofensivaDias += 1; dados.moedas += 10; alert(`🌅 Bom dia! Sequência de ${dados.ofensivaDias} dias! (+10 Moedas)`); } 
+           else { dados.ofensivaDias = 1; dados.pet.doente = true; alert(`🌅 Novo dia... Algumas tarefas ficaram para trás e o mascote ficou doente.`); }
         }
-      }, 1000);
-    }
-
-    function adicionarRotinaPronta(tipo) {
-      if (tipo === 'manha') {
-        dados.tarefas.push(
-          { id: Date.now(), texto: 'Escovar dentes da manhã', obrigatoria: true, status: 'pendente' },
-          { id: Date.now()+1, texto: 'Arrumar a cama', obrigatoria: true, status: 'pendente' }
-        );
-      } else if (tipo === 'escola') {
-        dados.tarefas.push(
-          { id: Date.now(), texto: 'Fazer lição de casa', obrigatoria: true, status: 'pendente' },
-          { id: Date.now()+1, texto: 'Organizar mochila', obrigatoria: true, status: 'pendente' }
-        );
-      } else if (tipo === 'noite') {
-        dados.tarefas.push(
-          { id: Date.now(), texto: 'Tomar banho', obrigatoria: true, status: 'pendente' },
-          { id: Date.now()+1, texto: 'Guardar brinquedos', obrigatoria: true, status: 'pendente' }
-        );
+        dados.tarefas.forEach(t => { t.status = 'pendente'; t.foto = null; });
+        dados.ultimoDiaAcesso = hoje; salvar(); atualizarTela();
       }
-      alert('Rotina adicionada!');
-      alternarModoPais();
-      atualizarTela();
     }
 
-    let respostaCerta = 0;
-    function abrirMinigame() {
-      if (estaDeNoite()) { alert('O pet está dormindo! Desafios voltam pela manhã.'); return; }
-      const faixa = dados.faixaEtaria || 'fundamental1';
-      let a, b, pergunta;
-      if (faixa === 'infantil') {
-        a = Math.floor(Math.random() * 4) + 1; b = Math.floor(Math.random() * 3) + 1;
-        respostaCerta = a + b; pergunta = `${a} + ${b} = ?`;
-      } else if (faixa === 'fundamental1') {
-        a = Math.floor(Math.random() * 10) + 2; b = Math.floor(Math.random() * 8) + 2;
-        respostaCerta = a + b; pergunta = `${a} + ${b} = ?`;
-      } else if (faixa === 'fundamental2') {
-        a = Math.floor(Math.random() * 8) + 2; b = Math.floor(Math.random() * 7) + 2;
-        respostaCerta = a * b; pergunta = `${a} × ${b} = ?`;
+    function estaDeNoite() { if (dados.modoNoiteForcado !== null) return dados.modoNoiteForcado; const hora = new Date().getHours(); return hora >= 21 || hora < 6; }
+    function alternarModoNoiteManual() { dados.modoNoiteForcado = dados.modoNoiteForcado === null ? !estaDeNoite() : !dados.modoNoiteForcado; salvar(); atualizarTela(); alternarModoPais(); }
+
+    function atualizarTela() {
+      const deNoite = estaDeNoite();
+      const level = Math.floor(dados.pet.xp / 100) + 1;
+      const xpAtualNivel = dados.pet.xp % 100;
+      
+      let nomeFase = 'Iniciante 🥉';
+      if (level >= 5) nomeFase = 'Explorador 🥈';
+      if (level >= 15) nomeFase = 'Gamer Pro 🥇';
+      if (level >= 30) nomeFase = 'Mestre Lenda 👑';
+      if (level >= 50) nomeFase = 'Herói Galáctico 🚀';
+      if (level >= 75) nomeFase = 'Deus Cibernético ⚡';
+      if (level >= 100) nomeFase = 'Guardião do Universo 🌌';
+
+      document.getElementById('txt-moedas').innerText = dados.moedas;
+      document.getElementById('txt-ofensiva').innerText = dados.ofensivaDias;
+      document.getElementById('txt-comidas').innerText = dados.pet.comidas + ' disp.';
+      document.getElementById('nome-pet').innerText = dados.pet.nome;
+      
+      document.getElementById('txt-level-num').innerText = level;
+      document.getElementById('txt-xp-atual').innerText = xpAtualNivel;
+      document.getElementById('bar-xp').style.width = xpAtualNivel + '%';
+      
+      const corpo = document.getElementById('corpo-pagina'); const card = document.getElementById('card-app'); const topo = document.getElementById('barra-topo');
+      
+      if (deNoite) {
+        corpo.className = 'bg-slate-900 min-h-screen flex items-center justify-center p-0 sm:p-4 font-sans select-none';
+        card.className = 'w-full h-full min-h-screen sm:min-h-[690px] sm:max-w-sm bg-slate-900 shadow-2xl overflow-hidden sm:border-4 border-indigo-500 flex flex-col justify-between relative text-slate-100';
+        topo.className = 'bg-indigo-950 p-3.5 text-white flex justify-between shadow border-b border-indigo-800';
+        document.getElementById('banner-noite').classList.remove('hidden'); document.getElementById('zzz-pet').classList.remove('hidden');
+        document.getElementById('txt-nivel-nome').innerText = 'Dormindo 🌙'; document.getElementById('grid-acoes-pet').classList.add('opacity-40');
       } else {
-        b = Math.floor(Math.random() * 8) + 3; respostaCerta = Math.floor(Math.random() * 8) + 2;
-        a = b * respostaCerta; pergunta = `${a} ÷ ${b} = ?`;
+        corpo.className = 'bg-sky-100 min-h-screen flex items-center justify-center p-0 sm:p-4 font-sans select-none';
+        card.className = 'w-full h-full min-h-screen sm:min-h-[690px] sm:max-w-sm bg-white shadow-2xl overflow-hidden sm:border-4 border-sky-300 flex flex-col justify-between relative text-slate-800';
+        topo.className = 'bg-sky-400 p-3.5 text-white flex justify-between shadow';
+        document.getElementById('banner-noite').classList.add('hidden'); document.getElementById('zzz-pet').classList.add('hidden');
+        document.getElementById('txt-nivel-nome').innerText = nomeFase; document.getElementById('grid-acoes-pet').classList.remove('opacity-40');
       }
 
-      document.getElementById('txt-pergunta').innerText = pergunta;
-      const container = document.getElementById('opcoes-jogo');
-      container.innerHTML = '';
-      const opcoes = [respostaCerta, respostaCerta + 1, Math.max(0, respostaCerta - 1)].sort(() => Math.random() - 0.5);
-
-      opcoes.forEach(op => {
-        const btn = document.createElement('button');
-        btn.className = 'bg-emerald-500 hover:bg-emerald-600 text-white font-bold py-2 rounded-xl text-sm transition';
-        btn.innerText = op;
-        btn.onclick = () => {
-          if (op === respostaCerta) {
-            dados.moedas += 1;
-            dados.metricasSemana.moedasGanhasSemana += 1;
-            dados.pet.felicidade = Math.min(100, dados.pet.felicidade + 10);
-            tocarSom('moeda');
-            alert('🎉 Acertou! +1 Moeda!');
-            fecharJogo();
-            atualizarTela();
-          } else { alert('Tente de novo!'); }
-        };
-        container.appendChild(btn);
-      });
-      document.getElementById('modal-jogo').classList.remove('hidden');
+      document.getElementById('img-pet-visual').src = obterImagemPet(dados.pet.tipo, dados.pet.doente, deNoite, dados.pet.xp);
+      document.getElementById('bar-fome').style.width = dados.pet.fome + '%'; document.getElementById('txt-fome').innerText = dados.pet.fome + '%';
+      document.getElementById('bar-saude').style.width = dados.pet.saude + '%'; document.getElementById('txt-saude').innerText = dados.pet.saude + '%';
+      document.getElementById('bar-felicidade').style.width = dados.pet.felicidade + '%'; document.getElementById('txt-felicidade').innerText = dados.pet.felicidade + '%';
+      if (dados.pet.doente) { document.getElementById('btn-remedio').classList.remove('hidden'); } else { document.getElementById('btn-remedio').classList.add('hidden'); }
+      
+      renderizarTarefas(); renderizarPainelAprovacao(); renderizarEdicaoTarefas(); salvar();
     }
 
-    function fecharJogo() { document.getElementById('modal-jogo').classList.add('hidden'); }
-    function abrirLojaRecompensas() {
-      if (estaDeNoite()) { alert('Hora de dormir! A loja reabre amanhã.'); return; }
-      document.getElementById('modal-recompensas').classList.remove('hidden');
+    function alimentarPet() { if (dados.pet.comidas > 0) { dados.pet.comidas--; dados.pet.fome = Math.min(100, dados.pet.fome + 20); tocarSom('carinho'); atualizarTela(); } else { alert('Sem lanches!'); } }
+    function fazerCarinho() { if(estaDeNoite()) return; dados.pet.felicidade = Math.min(100, dados.pet.felicidade + 5); tocarSom('carinho'); atualizarTela(); }
+    function darRemedio() { dados.pet.doente = false; dados.pet.saude = 100; tocarSom('carinho'); atualizarTela(); }
+
+    function abrirBibliotecaPets() { document.getElementById('modal-biblioteca').classList.remove('hidden'); }
+    function fecharBibliotecaPets() { document.getElementById('modal-biblioteca').classList.add('hidden'); }
+    function alternarModoPais() {
+      const vC = document.getElementById('view-crianca'); const vP = document.getElementById('view-pais');
+      if (vC.classList.contains('hidden')) { vC.classList.remove('hidden'); vP.classList.add('hidden'); }
+      else { const pin = prompt('PIN dos pais (1234):'); if (pin === '1234') { vC.classList.add('hidden'); vP.classList.remove('hidden'); } else if(pin) alert('PIN incorreto!'); }
     }
+    function abrirLojaRecompensas() { if(estaDeNoite()) return alert('Loja fechada.'); document.getElementById('modal-recompensas').classList.remove('hidden'); }
     function fecharLojaRecompensas() { document.getElementById('modal-recompensas').classList.add('hidden'); }
 
-    function alternarModoPais() {
-      const vC = document.getElementById('view-crianca');
-      const vP = document.getElementById('view-pais');
-      if (vC.classList.contains('hidden')) { vC.classList.remove('hidden'); vP.classList.add('hidden'); }
-      else {
-        const pin = prompt('PIN dos pais (Padrão: 1234):');
-        if (pin === '1234') { vC.classList.add('hidden'); vP.classList.remove('hidden'); }
-        else if (pin !== null) alert('PIN incorreto!');
-      }
+    let intTimer = null;
+    function comprarTempoTela(min, custo) {
+      if (dados.moedas < custo) return alert('Moedas insuficientes!');
+      dados.moedas -= custo; dados.tempoTelaSegundos += min * 60; tocarSom('moeda'); fecharLojaRecompensas(); atualizarTela();
+      if (intTimer) clearInterval(intTimer); document.getElementById('banner-timer').classList.remove('hidden');
+      intTimer = setInterval(() => {
+        if (dados.tempoTelaSegundos > 0) { dados.tempoTelaSegundos--; const m = Math.floor(dados.tempoTelaSegundos / 60).toString().padStart(2, '0'); const s = (dados.tempoTelaSegundos % 60).toString().padStart(2, '0'); document.getElementById('display-tempo-tela').innerText = `${m}:${s}`; } 
+        else { clearInterval(intTimer); document.getElementById('banner-timer').classList.add('hidden'); tocarSom('alarme'); alert('⏰ O tempo de tela acabou!'); }
+      }, 1000); alert(`Voucher de ${min} min ativado!`);
     }
 
-    function resetarDados() {
-      if (confirm('Restaurar padrão?')) {
-        dados = JSON.parse(JSON.stringify(estadoPadrao));
-        salvar();
-        atualizarTela();
-        alternarModoPais();
-      }
-    }
-
-    let audioCtxGravacao = null;
-    async function gravarVoz() {
-      if (estaDeNoite()) { alert('Shh... não acorde o mascote!'); return; }
-      const label = document.getElementById('label-falar');
-      try {
-        const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
-        const mr = new MediaRecorder(stream);
-        let ch = [];
-        label.innerText = '🔴 Gravando...';
-        mr.ondataavailable = e => ch.push(e.data);
-        mr.onstop = async () => {
-          label.innerText = '🔊 Falando!';
-          const blob = new Blob(ch);
-          const buf = await blob.arrayBuffer();
-          if (!audioCtxGravacao) audioCtxGravacao = new (window.AudioContext || window.webkitAudioContext)();
-          const ab = await audioCtxGravacao.decodeAudioData(buf);
-          const src = audioCtxGravacao.createBufferSource();
-          src.buffer = ab;
-          src.playbackRate.value = 1.5;
-          src.connect(audioCtxGravacao.destination);
-          src.start();
-          src.onended = () => { label.innerText = '🎤 Voz'; };
-          stream.getTracks().forEach(t => t.stop());
-        };
-        mr.start();
-        setTimeout(() => { if (mr.state === 'recording') mr.stop(); }, 3000);
-      } catch (e) {
-        alert('Microfone indisponível ou permissão negada.');
-        label.innerText = '🎤 Voz';
-      }
-    }
-
-    verificarViradaDeDia();
-    atualizarTela();
-
-    if ('serviceWorker' in navigator) {
-      navigator.serviceWorker.register('./sw.js')
-        .then(() => console.log('PWA Service Worker Ativo!'))
-        .catch((e) => console.log('SW não registrado neste ambiente.', e));
-    }
+    verificarViradaDeDia(); atualizarTela();
   </script>
 </body>
 </html>
