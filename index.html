@@ -9,9 +9,6 @@
   <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-database-compat.js"></script>
   <style>
-    /* ======================================================
-       🎨 ANIMAÇÕES E EFEITOS ESPECIAIS — COMPLETOS
-       ====================================================== */
     @keyframes breathe { 0%,100% { transform:scale(1) translateY(0); } 50% { transform:scale(1.03,0.97) translateY(-3px); } }
     @keyframes float-zzz { 0% { opacity:0; transform:translateY(0) scale(0.8); } 50% { opacity:1; } 100% { opacity:0; transform:translateY(-24px) scale(1.2); } }
     @keyframes levelup { 0% { transform:scale(1); } 50% { transform:scale(1.2); filter:brightness(1.3); } 100% { transform:scale(1); } }
@@ -34,9 +31,6 @@
     .cura-brilho { animation: cura-brilho 0.8s ease-out; }
     .glow-pulse { animation: glow-pulse 2s infinite; }
 
-    /* ======================================================
-       📊 BARRAS DE STATUS — COMPLETAMENTE RENOVADAS
-       ====================================================== */
     .bar-container {
       position: relative; height: 12px; border-radius: 999px;
       background: linear-gradient(90deg, #fef2f2, #f0fdf4);
@@ -56,7 +50,6 @@
     .bar-fill.baixa { background: linear-gradient(90deg, #f97316, #fb923c); }
     .bar-fill.critica { background: linear-gradient(90deg, #dc2626, #f87171); animation: pulse-critico 1s infinite; }
 
-    /* BARRA DE XP COM BRILHO */
     .bar-xp-container {
       position:relative; background: linear-gradient(135deg, #e0e7ff, #c7d2fe);
       border-radius:999px; box-shadow: inset 0 2px 6px rgba(99,102,241,0.2); height:14px; overflow:hidden;
@@ -68,9 +61,6 @@
       transition: width 0.8s cubic-bezier(0.4,0,0.2,1);
     }
 
-    /* ======================================================
-       🐱 VISUAIS DOS PETS — EVOLUTIVOS POR NÍVEL (COMPLETO)
-       ====================================================== */
     .pet-avatar {
       position:relative; width:140px; height:140px; border-radius:50%;
       display:flex; align-items:center; justify-content:center; font-size:4.5rem;
@@ -80,31 +70,26 @@
     }
     .pet-avatar:active { transform:scale(0.95); }
 
-    /* --- PIPOCA 🐱 --- */
     .pet-pipoca { background: linear-gradient(145deg, #fbbf24, #f97316); }
     .pet-pipoca.level-25 { background: linear-gradient(145deg, #fcd34d, #fb923c); box-shadow: 0 0 40px rgba(251,191,36,0.5); }
     .pet-pipoca.level-50 { background: linear-gradient(145deg, #fef3c7, #f59e0b); transform:scale(1.1); box-shadow: 0 0 60px rgba(251,146,60,0.6); }
     .pet-pipoca.level-100 { background: linear-gradient(145deg, #fffbeb, #fbbf24, #f59e0b); transform:scale(1.2); box-shadow: 0 0 80px rgba(251,191,36,0.8), inset 0 0 30px rgba(255,255,255,0.5); }
 
-    /* --- ZION 🦎 --- */
     .pet-zion { background: linear-gradient(145deg, #34d399, #10b981); }
     .pet-zion.level-25 { background: linear-gradient(145deg, #6ee7b7, #059669); }
     .pet-zion.level-50 { background: linear-gradient(145deg, #a7f3d0, #047857); transform:scale(1.1); }
     .pet-zion.level-100 { background: linear-gradient(145deg, #d1fae5, #10b981, #047857); transform:scale(1.2); box-shadow: 0 0 60px rgba(16,185,129,0.6); }
 
-    /* --- RYU 🤖 --- */
     .pet-ryu { background: linear-gradient(145deg, #38bdf8, #0284c7); }
     .pet-ryu.level-25 { background: linear-gradient(145deg, #7dd3fc, #0369a1); }
     .pet-ryu.level-50 { background: linear-gradient(145deg, #bae6fd, #0284c7); transform:scale(1.1); }
     .pet-ryu.level-100 { background: linear-gradient(145deg, #e0f2fe, #38bdf8, #0369a1); transform:scale(1.2); box-shadow: 0 0 60px rgba(56,189,248,0.6); }
 
-    /* --- LUMA 🐲 --- */
     .pet-luma { background: linear-gradient(145deg, #a78bfa, #7c3aed); }
     .pet-luma.level-25 { background: linear-gradient(145deg, #c4b5fd, #6d28d9); }
     .pet-luma.level-50 { background: linear-gradient(145deg, #ddd6fe, #5b21b6); transform:scale(1.1); }
     .pet-luma.level-100 { background: linear-gradient(145deg, #f5f3ff, #a78bfa, #6d28d9); transform:scale(1.2); box-shadow: 0 0 60px rgba(124,58,237,0.6); }
 
-    /* --- TITAN 👑 --- */
     .pet-titan { background: linear-gradient(145deg, #fcd34d, #b45309); }
     .pet-titan.level-25 { background: linear-gradient(145deg, #fef3c7, #92400e); }
     .pet-titan.level-50 { background: linear-gradient(145deg, #fffbeb, #b45309); transform:scale(1.1); }
@@ -114,12 +99,10 @@
       box-shadow: 0 0 80px rgba(251,191,36,0.8), 0 0 120px rgba(245,158,11,0.4);
     }
 
-    /* --- ESTADOS DO PET --- */
     .pet-doente { filter: hue-rotate(90deg) saturate(0.6); }
     .pet-dormindo { filter: brightness(0.7) saturate(0.8); }
     .pet-feliz { animation: pulsa-feliz 0.5s ease-in-out; }
 
-    /* --- AURAS DE PODER --- */
     .aura-wrapper { position:relative; }
     .aura-fogo, .aura-gelo, .aura-luz {
       position:absolute; inset:-15px; border-radius:50%; z-index:-1; opacity:0.5;
@@ -129,9 +112,6 @@
     .aura-gelo { background:radial-gradient(circle, rgba(0,200,255,0.5) 0%, transparent 60%); }
     .aura-luz { background:radial-gradient(circle, rgba(255,220,0,0.6) 0%, transparent 60%); }
 
-    /* ======================================================
-       ✨ ELEMENTOS DE INTERAÇÃO FLUTUANTES
-       ====================================================== */
     .coracao {
       position:absolute; font-size:1.5rem; pointer-events:none; z-index:100;
       animation: coracoes-flutuam 1.2s ease-out forwards;
@@ -145,9 +125,6 @@
       animation: confete-cair 5s ease-in-out forwards;
     }
 
-    /* ======================================================
-       🎭 TEMA E LAYOUT
-       ====================================================== */
     .btn-loading { opacity:0.6; pointer-events:none; }
     .modo-noturno { background: linear-gradient(180deg, #1e1b4b 0%, #312e81 100%) !important; }
     .modo-noturno .bg-white { background: #1e293b !important; color:#e0e7ff !important; }
@@ -164,14 +141,12 @@
 
   <div id="card-app" class="w-full h-full min-h-screen sm:min-h-[720px] sm:max-w-sm bg-white sm:rounded-3xl shadow-2xl overflow-hidden sm:border-4 border-sky-300 flex flex-col justify-between relative transition-colors duration-700">
     
-    <!-- Tela de Carregamento -->
     <div id="tela-carregamento" class="absolute inset-0 bg-sky-50 flex flex-col items-center justify-center z-50">
       <div class="text-6xl mb-4 animate-bounce">🐱</div>
       <p class="text-sky-700 font-bold text-xl">Carregando RotinaPet...</p>
       <p class="text-sky-500 text-sm mt-2">Preparando tudo com carinho 🐾✨</p>
     </div>
 
-    <!-- Topo -->
     <div id="barra-topo" class="bg-sky-400 p-3 text-white flex justify-between items-center shadow transition-colors duration-700 flex-shrink-0 z-40">
       <div>
         <div class="flex items-center gap-2">
@@ -187,22 +162,18 @@
       </div>
     </div>
 
-    <!-- Banner Tempo de Tela -->
     <div id="banner-timer" class="hidden bg-amber-400 text-amber-950 px-3 py-1.5 flex justify-between items-center text-xs font-black shadow-inner flex-shrink-0 z-40 relative">
       <span>⏱️ Tempo de Tela Restante:</span>
       <span id="display-tempo-tela" class="bg-amber-100 px-2 py-0.5 rounded-lg border border-amber-500 font-mono text-sm">00:00</span>
     </div>
 
-    <!-- Banner Noturno -->
     <div id="banner-noite" class="hidden bg-indigo-950 text-indigo-200 px-3 py-1.5 flex justify-between items-center text-[11px] font-bold border-b border-indigo-800 flex-shrink-0 z-40 relative">
       <span>🌙 Hora do Descanso</span>
       <span class="text-[10px] text-indigo-400">Pet Dormindo — Sonhando com doces 💤</span>
     </div>
 
-    <!-- Tela Principal (Criança) -->
     <div id="view-crianca" class="p-3.5 flex-1 flex flex-col justify-between overflow-y-auto">
       
-      <!-- Status do Pet — GRÁFICOS RENOVADOS -->
       <div id="painel-status" class="grid grid-cols-3 gap-3 bg-slate-50 p-3 rounded-2xl border border-slate-200 text-center transition-colors flex-shrink-0 shadow-sm">
         <div>
           <div class="flex items-center justify-center gap-1 mb-1">
@@ -230,7 +201,6 @@
         </div>
       </div>
 
-      <!-- Mascote Visual e XP — COMPLETAMENTE RENOVADO -->
       <div class="flex flex-col items-center justify-center my-auto py-4 relative flex-shrink-0 min-h-[280px]" id="pet-container-principal">
         <span class="bg-gradient-to-r from-indigo-500 to-purple-500 text-white text-[11px] px-4 py-1 rounded-full font-black mb-2 uppercase tracking-wide shadow-lg" id="txt-nivel-nome">Fase 1 🥉 Iniciante</span>
         <h2 class="text-2xl font-black text-slate-800 tracking-wider uppercase mb-3" id="nome-pet">PIPOCA</h2>
@@ -243,7 +213,6 @@
           <div class="bar-xp-container"><div id="bar-xp" class="bar-xp-fill" style="width:0%"></div></div>
         </div>
         
-        <!-- PET VISUAL — EVOLUTIVO + AURAS + EFEITOS -->
         <div class="aura-wrapper" id="aura-wrapper-pet">
           <div id="camada-aura" class="absolute inset-0 rounded-full pointer-events-none -z-10 scale-150"></div>
           <div onclick="fazerCarinho(event)" id="bg-pet-visual" class="pet-avatar pet-pipoca pet-breathe relative">
@@ -264,7 +233,6 @@
         </button>
       </div>
 
-      <!-- Botões de Ação — MELHORADOS -->
       <div class="grid grid-cols-4 gap-2 mb-3 flex-shrink-0" id="grid-acoes-pet">
         <button onclick="alimentarPet(event)" id="btn-alimentar" class="bg-gradient-to-b from-amber-100 to-amber-200 hover:from-amber-200 hover:to-amber-300 text-amber-900 font-bold py-2.5 rounded-xl text-xs flex flex-col items-center border border-amber-300 active:scale-95 transition-all shadow-sm hover:shadow">
           <span class="text-lg">🍎</span>
@@ -288,7 +256,6 @@
         </button>
       </div>
 
-      <!-- Lista de Tarefas -->
       <div class="space-y-1.5 border-t pt-3 border-slate-200 max-h-44 overflow-y-auto flex-shrink-0">
         <div class="flex justify-between items-center mb-2">
           <span class="text-[11px] font-black text-slate-700 uppercase tracking-wider flex items-center gap-1">🛡️ Lista de Tarefas</span>
@@ -298,7 +265,6 @@
       </div>
     </div>
 
-    <!-- Painel dos Pais -->
     <div id="view-pais" class="hidden p-4 flex-1 flex flex-col justify-between bg-slate-50 overflow-y-auto">
       <div>
         <div class="flex justify-between items-center mb-4">
@@ -358,7 +324,6 @@
       </div>
     </div>
 
-    <!-- MODAIS — Todos renovados -->
     <div id="modal-foto-preview" class="hidden fixed inset-0 bg-black/80 flex items-center justify-center p-4 z-50 backdrop-blur-sm">
       <div class="bg-white rounded-3xl p-4 max-w-xs w-full text-center shadow-2xl border-4 border-sky-300">
         <h3 class="text-lg font-black text-slate-800 mb-3">📸 Comprovação da Tarefa</h3>
@@ -405,13 +370,6 @@
   </div>
 
   <script>
-    // ==========================================================
-    // 🚀 ROTINAPET — CÓDIGO COMPLETO COM TODAS AS MELHORIAS VISUAIS
-    // ==========================================================
-
-    // ----------------------
-    // FIREBASE — MANTER ORIGINAL
-    // ----------------------
     const firebaseConfig = {
       apiKey: "AIzaSyCiDk3ERIe8_uVqBhRnFRD5Od8nyLNlLVQ",
       authDomain: "rotinapet-624a9.firebaseapp.com",
@@ -431,9 +389,6 @@
       console.log('✅ Firebase conectado!');
     } catch(e) { console.log('⚠️ Firebase indisponível:', e.message); }
 
-    // ----------------------
-    // CONSTANTES E DADOS
-    // ----------------------
     const STORAGE_KEY = 'ROTINAPET_SAVE_V19';
 
     const BIBLIOTECA_PETS = [
@@ -475,9 +430,6 @@
       inventario: { itens: [], cabeca: null, rosto: null, pe: null, cor: null, fundo: null }
     };
 
-    // ----------------------
-    // FUNÇÕES UTILITÁRIAS
-    // ----------------------
     function obterDataAtualFormatada() { 
       const d = new Date(); 
       return `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`; 
@@ -492,4 +444,497 @@
 
     function tocarSom(tipo) {
       try {
-        const ctx 
+        const ctx = obterAudioContext();
+        const osc = ctx.createOscillator();
+        const gain = ctx.createGain();
+        osc.connect(gain);
+        gain.connect(ctx.destination);
+        
+        switch(tipo) {
+          case 'sucesso':
+            osc.frequency.setValueAtTime(523, ctx.currentTime);
+            osc.frequency.setValueAtTime(659, ctx.currentTime + 0.1);
+            gain.gain.setValueAtTime(0.15, ctx.currentTime);
+            gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 0.3);
+            osc.start(ctx.currentTime);
+            osc.stop(ctx.currentTime + 0.3);
+            break;
+          case 'alimentar':
+            osc.frequency.setValueAtTime(440, ctx.currentTime);
+            gain.gain.setValueAtTime(0.1, ctx.currentTime);
+            gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 0.15);
+            osc.start(ctx.currentTime);
+            osc.stop(ctx.currentTime + 0.15);
+            break;
+          case 'carinho':
+            osc.type = 'sine';
+            osc.frequency.setValueAtTime(330, ctx.currentTime);
+            gain.gain.setValueAtTime(0.08, ctx.currentTime);
+            gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 0.2);
+            osc.start(ctx.currentTime);
+            osc.stop(ctx.currentTime + 0.2);
+            break;
+          case 'erro':
+            osc.frequency.setValueAtTime(200, ctx.currentTime);
+            osc.type = 'sawtooth';
+            gain.gain.setValueAtTime(0.1, ctx.currentTime);
+            gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 0.2);
+            osc.start(ctx.currentTime);
+            osc.stop(ctx.currentTime + 0.2);
+            break;
+          case 'level':
+            osc.frequency.setValueAtTime(587, ctx.currentTime);
+            osc.frequency.setValueAtTime(880, ctx.currentTime + 0.15);
+            gain.gain.setValueAtTime(0.2, ctx.currentTime);
+            gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 0.4);
+            osc.start(ctx.currentTime);
+            osc.stop(ctx.currentTime + 0.4);
+            break;
+          default:
+            osc.frequency.setValueAtTime(440, ctx.currentTime);
+            gain.gain.setValueAtTime(0.1, ctx.currentTime);
+            gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 0.1);
+            osc.start(ctx.currentTime);
+            osc.stop(ctx.currentTime + 0.1);
+        }
+      } catch (e) {}
+    }
+
+    let dados = JSON.parse(localStorage.getItem(STORAGE_KEY)) || estadoPadrao;
+    if (!dados.pinPais) dados.pinPais = '1234';
+    if (!dados.idadeCrianca) dados.idadeCrianca = 8;
+    if (!dados.tarefas) dados.tarefas = estadoPadrao.tarefas;
+    if (!dados.inventario) dados.inventario = estadoPadrao.inventario;
+
+    function salvar() {
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(dados));
+      if (cloudHabilitado && dbRef) {
+        dbRef.set(dados).catch(err => console.log('⚠️ Erro ao salvar na nuvem:', err));
+      }
+    }
+
+    if (cloudHabilitado && dbRef) {
+      dbRef.on('value', (snapshot) => {
+        const dadosNuvem = snapshot.val();
+        if (dadosNuvem) {
+          dados = dadosNuvem;
+          if (!dados.tarefas) dados.tarefas = estadoPadrao.tarefas;
+          if (!dados.inventario) dados.inventario = estadoPadrao.inventario;
+          localStorage.setItem(STORAGE_KEY, JSON.stringify(dados));
+          atualizarTela();
+        }
+      });
+    }
+
+    function dispararConfetes() {
+      for (let i = 0; i < 40; i++) {
+        const confete = document.createElement('div');
+        confete.className = 'confete';
+        confete.style.left = Math.random() * 100 + 'vw';
+        confete.style.backgroundColor = ['#fbbf24', '#34d399', '#38bdf8', '#f43f5e', '#a855f7'][Math.floor(Math.random() * 5)];
+        confete.style.width = (Math.random() * 8 + 6) + 'px';
+        confete.style.height = (Math.random() * 8 + 6) + 'px';
+        confete.style.animationDuration = (Math.random() * 2 + 2) + 's';
+        document.body.appendChild(confete);
+        setTimeout(() => confete.remove(), 5000);
+      }
+    }
+
+    function fazerCarinho(event) {
+      if (estaDeNoite()) return;
+      dados.pet.felicidade = Math.min(100, (dados.pet.felicidade || 0) + 5);
+      tocarSom('carinho');
+      
+      const petVisual = document.getElementById('bg-pet-visual');
+      if(petVisual) {
+        petVisual.classList.add('pulsa-feliz');
+        setTimeout(() => petVisual.classList.remove('pulsa-feliz'), 500);
+      }
+
+      if (event) {
+        const coracao = document.createElement('div');
+        coracao.className = 'coracao';
+        coracao.innerText = '💖';
+        coracao.style.left = (event.clientX - 15) + 'px';
+        coracao.style.top = (event.clientY - 30) + 'px';
+        document.body.appendChild(coracao);
+        setTimeout(() => coracao.remove(), 1200);
+      }
+      salvar();
+      atualizarTela();
+    }
+
+    function alimentarPet(event) {
+      if (estaDeNoite()) return alert('🌙 O pet está dormindo e não pode comer agora!');
+      if ((dados.pet.comidas || 0) <= 0) return alert('🍎 Suas comidas acabaram! Complete tarefas para ganhar mais.');
+      
+      dados.pet.comidas--;
+      dados.pet.fome = Math.min(100, (dados.pet.fome || 0) + 25);
+      tocarSom('alimentar');
+      
+      if (event) {
+        const comida = document.createElement('div');
+        comida.className = 'comida-voadora';
+        comida.innerText = '🍎';
+        comida.style.left = (event.clientX - 15) + 'px';
+        comida.style.top = (event.clientY - 20) + 'px';
+        document.body.appendChild(comida);
+        setTimeout(() => comida.remove(), 600);
+      }
+      salvar();
+      atualizarTela();
+    }
+
+    function darRemedio() {
+      dados.pet.doente = false;
+      dados.pet.saude = 100;
+      tocarSom('sucesso');
+      
+      const petVisual = document.getElementById('bg-pet-visual');
+      if(petVisual) {
+        petVisual.classList.add('cura-brilho');
+        setTimeout(() => petVisual.classList.remove('cura-brilho'), 800);
+      }
+      salvar();
+      atualizarTela();
+    }
+
+    function estaDeNoite() {
+      if (dados.modoNoiteForcado !== null && dados.modoNoiteForcado !== undefined) return dados.modoNoiteForcado;
+      const hora = new Date().getHours();
+      return hora >= 21 || hora < 6;
+    }
+
+    function forcarModoNoite(status) {
+      dados.modoNoiteForcado = status;
+      salvar();
+      atualizarTela();
+    }
+
+    function atualizarTela() {
+      const deNoite = estaDeNoite();
+      const xp = dados.pet.xp || 0;
+      const level = Math.floor(xp / 100) + 1;
+      const xpAtualNivel = xp % 100;
+
+      if (deNoite) {
+        document.getElementById('corpo-pagina').classList.add('modo-noturno');
+        document.getElementById('banner-noite').classList.remove('hidden');
+        document.getElementById('zzz-pet').classList.remove('hidden');
+      } else {
+        document.getElementById('corpo-pagina').classList.remove('modo-noturno');
+        document.getElementById('banner-noite').classList.add('hidden');
+        document.getElementById('zzz-pet').classList.add('hidden');
+      }
+
+      document.getElementById('txt-moedas').innerText = dados.moedas;
+      document.getElementById('txt-dinheiro').innerText = (dados.moedas * dados.taxaCambio).toFixed(2).replace('.', ',');
+      document.getElementById('txt-ofensiva').innerText = dados.ofensivaDias || 1;
+      document.getElementById('txt-comidas').innerText = (dados.pet.comidas || 0) + ' disp.';
+      document.getElementById('txt-level-num').innerText = level;
+      document.getElementById('txt-xp-atual').innerText = xpAtualNivel;
+      document.getElementById('bar-xp').style.width = xpAtualNivel + '%';
+
+      // Status Bars
+      const fome = dados.pet.fome || 0;
+      const saude = dados.pet.saude || 0;
+      const felicidade = dados.pet.felicidade || 0;
+
+      document.getElementById('val-fome').innerText = fome;
+      document.getElementById('val-saude').innerText = saude;
+      document.getElementById('val-felicidade').innerText = felicidade;
+
+      const barraFome = document.getElementById('bar-fome');
+      barraFome.style.width = fome + '%';
+      barraFome.className = 'bar-fill ' + (fome > 50 ? 'alta' : fome > 25 ? 'media' : fome > 10 ? 'baixa' : 'critica');
+
+      const barraSaude = document.getElementById('bar-saude');
+      barraSaude.style.width = saude + '%';
+      barraSaude.className = 'bar-fill ' + (saude > 50 ? 'alta' : saude > 25 ? 'media' : saude > 10 ? 'baixa' : 'critica');
+
+      const barraFelicidade = document.getElementById('bar-felicidade');
+      barraFelicidade.style.width = felicidade + '%';
+      barraFelicidade.className = 'bar-fill ' + (felicidade > 50 ? 'alta' : felicidade > 25 ? 'media' : felicidade > 10 ? 'baixa' : 'critica');
+
+      // Mascote Visual
+      const petAtivo = BIBLIOTECA_PETS.find(p => p.id === dados.pet.tipo) || BIBLIOTECA_PETS[0];
+      document.getElementById('nome-pet').innerText = petAtivo.nome;
+      document.getElementById('pet-emoji').innerText = petAtivo.emoji;
+
+      const bgVisual = document.getElementById('bg-pet-visual');
+      bgVisual.className = `pet-avatar pet-${petAtivo.id} pet-breathe relative`;
+      if (level >= 100) bgVisual.classList.add('level-100');
+      else if (level >= 50) bgVisual.classList.add('level-50');
+      else if (level >= 25) bgVisual.classList.add('level-25');
+
+      if (dados.pet.doente) bgVisual.classList.add('pet-doente');
+      if (deNoite) bgVisual.classList.add('pet-dormindo');
+
+      document.getElementById('btn-remedio').classList.toggle('hidden', !dados.pet.doente);
+
+      // Auras e Acessórios
+      const inv = dados.inventario || {};
+      const auraWrapper = document.getElementById('camada-aura');
+      const itemFundo = ITENS_PETSHOP.find(x => x.id === inv.fundo);
+      auraWrapper.className = itemFundo ? `absolute inset-0 rounded-full pointer-events-none -z-10 scale-150 ${itemFundo.classe}` : '';
+
+      const itemCabeca = ITENS_PETSHOP.find(x => x.id === inv.cabeca);
+      const itemRosto = ITENS_PETSHOP.find(x => x.id === inv.rosto);
+      const itemPe = ITENS_PETSHOP.find(x => x.id === inv.pe);
+      const itemCor = ITENS_PETSHOP.find(x => x.id === inv.cor);
+
+      document.getElementById('slot-cabeca').innerText = (itemCabeca && !deNoite) ? itemCabeca.emoji : '';
+      document.getElementById('slot-rosto').innerText = (itemRosto && !deNoite) ? itemRosto.emoji : '';
+      document.getElementById('slot-pe').innerText = (itemPe && !deNoite) ? itemPe.emoji : '';
+
+      if (itemCor && itemCor.classe_cor) {
+        bgVisual.className = `pet-avatar ${itemCor.classe_cor} pet-breathe relative`;
+      }
+
+      renderizarTarefas();
+      renderizarPainelAprovacao();
+      renderizarEdicaoTarefas();
+      renderizarLojaCrianca();
+
+      const telaCarregamento = document.getElementById('tela-carregamento');
+      if (telaCarregamento) {
+        setTimeout(() => telaCarregamento.style.display = 'none', 400);
+      }
+    }
+
+    function renderizarTarefas() {
+      const container = document.getElementById('lista-todas-tarefas');
+      if (!container) return;
+      container.innerHTML = '';
+      if (!dados.tarefas || dados.tarefas.length === 0) {
+        container.innerHTML = '<div class="text-xs text-slate-400 text-center py-2">Nenhuma tarefa no momento.</div>';
+        return;
+      }
+      dados.tarefas.forEach(t => {
+        const pend = t.status === 'aguardando_aprovacao', apr = t.status === 'aprovada';
+        const card = document.createElement('div');
+        card.className = `flex items-center justify-between p-2.5 rounded-2xl border text-xs transition-all ${apr ? 'bg-slate-50 border-slate-200 opacity-60' : pend ? 'bg-amber-50 border-amber-300' : 'bg-white border-slate-200 shadow-sm'}`;
+        
+        let botoes = apr ? `<span class="text-[10px] font-black text-emerald-600">✓ Concluída</span>` :
+                     pend ? `<span class="text-[10px] font-black text-amber-600">⏳ Avaliando</span>` :
+                     `<div class="flex gap-1.5"><button onclick="dispararCamera(${t.id})" class="px-2 py-1 rounded-xl border text-[10px] font-bold ${t.foto ? 'bg-emerald-50 border-emerald-400 text-emerald-700' : 'bg-slate-100 border-slate-300'}">${t.foto ? '📷 OK' : '📷 Foto'}</button><button onclick="enviarParaAprovacao(${t.id})" class="bg-sky-500 hover:bg-sky-600 text-white text-[10px] font-bold px-2.5 py-1 rounded-xl transition">Enviar</button></div>`;
+        
+        card.innerHTML = `<div><span class="font-bold text-slate-800 ${apr ? 'line-through' : ''}">${t.texto}</span><span class="text-[9px] text-indigo-600 font-bold block">+20 XP • ${t.recompensa} 🪙</span></div><div>${botoes}</div>`;
+        container.appendChild(card);
+      });
+    }
+
+    let tarefaIdParaFoto = null;
+    function dispararCamera(id) { tarefaIdParaFoto = id; document.getElementById('camera-input').click(); }
+    function processarFotoCapturada(e) {
+      const file = e.target.files[0]; if (!file || !tarefaIdParaFoto) return; const reader = new FileReader();
+      reader.onload = function (ev) {
+        const img = new Image(); img.onload = function () {
+          const canvas = document.createElement('canvas'); let w = img.width, h = img.height; const maxDim = 400;
+          if (w > h) { if (w > maxDim) { h *= maxDim / w; w = maxDim; } } else { if (h > maxDim) { w *= maxDim / h; h = maxDim; } }
+          canvas.width = w; canvas.height = h; canvas.getContext('2d').drawImage(img, 0, 0, w, h);
+          const t = dados.tarefas.find(x => x.id === tarefaIdParaFoto);
+          if (t) { t.foto = canvas.toDataURL('image/jpeg', 0.65); salvar(); atualizarTela(); alert('📸 Foto enviada com sucesso!'); }
+        }; img.src = ev.target.result;
+      }; reader.readAsDataURL(file); e.target.value = '';
+    }
+    function abrirFotoPreview(url) { document.getElementById('img-preview-expandida').src = url; document.getElementById('modal-foto-preview').classList.remove('hidden'); }
+    function fecharFotoPreview() { document.getElementById('modal-foto-preview').classList.add('hidden'); }
+
+    function enviarParaAprovacao(id) { const t = dados.tarefas.find(x => x.id === id); if (!t) return; t.status = 'aguardando_aprovacao'; salvar(); atualizarTela(); }
+    function aprovarTarefa(id) {
+      const t = dados.tarefas.find(x => x.id === id); if (!t) return;
+      t.status = 'aprovada'; dados.moedas += t.recompensa; dados.pet.comidas = (dados.pet.comidas || 0) + 1;
+      const lvlA = Math.floor((dados.pet.xp || 0) / 100);
+      dados.pet.xp = (dados.pet.xp || 0) + 20;
+      if (Math.floor(dados.pet.xp / 100) > lvlA) { tocarSom('level'); dispararConfetes(); alert('🎉 NÍVEL ACIMA! Parabéns!'); }
+      else { tocarSom('sucesso'); }
+      salvar(); atualizarTela();
+    }
+    function recusarTarefa(id) { const t = dados.tarefas.find(x => x.id === id); if (!t) return; t.status = 'pendente'; t.foto = null; salvar(); atualizarTela(); }
+
+    function renderizarPainelAprovacao() {
+      const pendentes = (dados.tarefas || []).filter(t => t.status === 'aguardando_aprovacao');
+      document.getElementById('contador-aprovacoes').innerText = pendentes.length;
+      const badge = document.getElementById('badge-pendentes');
+      if (badge) badge.className = pendentes.length > 0 ? 'absolute -top-1 -right-1 bg-rose-500 text-[9px] px-1.5 rounded-full' : 'hidden';
+      const c = document.getElementById('lista-aprovacao-pais'); if (!c) return; c.innerHTML = '';
+      if (pendentes.length === 0) { c.innerHTML = '<div class="text-xs text-slate-400 text-center py-2">Nenhuma tarefa pendente.</div>'; return; }
+      pendentes.forEach(t => {
+        c.innerHTML += `<div class="p-3 rounded-xl bg-slate-50 border border-slate-200 flex flex-col gap-2"><div class="flex justify-between items-center"><span class="font-bold text-sm text-slate-800">${t.texto}</span><div class="flex gap-1.5"><button onclick="recusarTarefa(${t.id})" class="bg-rose-100 hover:bg-rose-200 text-rose-700 px-2.5 py-1 rounded-lg text-xs font-bold transition">Recusar</button><button onclick="aprovarTarefa(${t.id})" class="bg-emerald-500 hover:bg-emerald-600 text-white px-2.5 py-1 rounded-lg text-xs font-bold transition">Aprovar ✓</button></div></div>${t.foto ? `<img src="${t.foto}" onclick="abrirFotoPreview('${t.foto}')" class="w-16 h-16 rounded-xl object-cover cursor-pointer border shadow-sm" />` : ''}</div>`;
+      });
+    }
+
+    function renderizarEdicaoTarefas() {
+      const c = document.getElementById('lista-edicao-tarefas'); if (!c) return; c.innerHTML = '';
+      (dados.tarefas || []).forEach(t => {
+        c.innerHTML += `<div class="flex justify-between items-center bg-slate-50 p-2 rounded-xl border text-xs"><span class="truncate font-medium">${t.texto} <b class="text-amber-600">(${t.recompensa}🪙)</b></span><button onclick="removerTarefa(${t.id})" class="text-rose-500 hover:text-rose-700 font-bold px-2 py-1 transition">Excluir</button></div>`;
+      });
+    }
+    function adicionarTarefa() {
+      const txt = document.getElementById('nova-tarefa-texto').value; const moedas = parseInt(document.getElementById('nova-tarefa-moedas').value) || 5;
+      if (!txt) return; const novoId = dados.tarefas.length > 0 ? Math.max(...dados.tarefas.map(t => t.id)) + 1 : 1;
+      dados.tarefas.push({ id: novoId, texto: txt, recompensa: moedas, status: 'pendente', foto: null }); document.getElementById('nova-tarefa-texto').value = ''; salvar(); atualizarTela();
+    }
+    function removerTarefa(id) { dados.tarefas = dados.tarefas.filter(t => t.id !== id); salvar(); atualizarTela(); }
+
+    function salvarNovoPin() {
+      const novoPin = document.getElementById('novo-pin-pais').value;
+      if (novoPin.length === 4) { dados.pinPais = novoPin; salvar(); alert('🔒 PIN alterado com sucesso!'); document.getElementById('novo-pin-pais').value = ''; }
+      else { alert('O PIN precisa ter exatamente 4 dígitos numéricos.'); }
+    }
+    function atualizarTaxaCambio(val) { dados.taxaCambio = parseFloat(val) || 0.01; salvar(); atualizarTela(); }
+    function atualizarIdadeCrianca(val) { dados.idadeCrianca = parseInt(val) || 8; salvar(); }
+
+    function abrirPetShop() {
+      const g = document.getElementById('grid-petshop'); g.innerHTML = '';
+      ITENS_PETSHOP.forEach(i => {
+        const comprado = (dados.inventario.itens || []).includes(i.id);
+        const equipado = (dados.inventario[i.tipo] === i.id);
+        let btn = equipado ? `<span class="w-full bg-purple-500 text-white px-2 py-1 rounded-lg text-[10px] font-bold block mt-1.5 text-center">Usando</span>` :
+                  comprado ? `<button onclick="equiparItemPet('${i.id}')" class="w-full bg-sky-500 hover:bg-sky-600 text-white px-2 py-1 rounded-lg text-[10px] font-bold mt-1.5 transition shadow-sm">Equipar</button>` :
+                  `<button onclick="comprarItemPet('${i.id}')" class="w-full bg-amber-500 hover:bg-amber-600 text-white px-2 py-1 rounded-lg text-[10px] font-bold mt-1.5 transition shadow-sm">${i.preco} 🪙</button>`;
+        g.innerHTML += `<div class="p-2 rounded-2xl border bg-slate-50 text-center flex flex-col justify-between shadow-sm"><div class="text-3xl mb-1">${i.emoji}</div><div class="text-[10px] font-bold text-slate-700 truncate">${i.nome}</div>${btn}</div>`;
+      });
+      document.getElementById('modal-petshop').classList.remove('hidden');
+    }
+    function fecharPetShop() { document.getElementById('modal-petshop').classList.add('hidden'); }
+    function comprarItemPet(id) {
+      const item = ITENS_PETSHOP.find(x => x.id === id); if (dados.moedas < item.preco) return alert('🪙 Moedas insuficientes!');
+      dados.moedas -= item.preco; dados.inventario.itens.push(item.id); tocarSom('sucesso'); equiparItemPet(id);
+    }
+    function equiparItemPet(id) {
+      const item = ITENS_PETSHOP.find(x => x.id === id);
+      if (dados.inventario[item.tipo] === id) dados.inventario[item.tipo] = null;
+      else dados.inventario[item.tipo] = id;
+      salvar(); abrirPetShop(); atualizarTela();
+    }
+
+    function abrirBibliotecaPets() {
+      const g = document.getElementById('grid-pets-album'); g.innerHTML = '';
+      BIBLIOTECA_PETS.forEach(p => {
+        const lib = p.checarLiberado(dados); const uso = dados.pet.tipo === p.id;
+        g.innerHTML += `<div class="p-3 rounded-2xl border text-center ${uso ? 'border-sky-500 bg-sky-50 ring-2 ring-sky-300' : lib ? 'bg-white shadow-sm' : 'bg-slate-50 opacity-60'}"><div class="text-4xl mb-1">${lib ? p.emoji : '🔒'}</div><div class="text-xs font-black text-slate-800">${p.nome}</div><div class="text-[9px] text-slate-500 mb-2">${lib ? p.desc : p.requisito}</div>${uso ? '<span class="text-[9px] font-black bg-sky-500 text-white px-2.5 py-0.5 rounded-full">Ativo</span>' : lib ? `<button onclick="selecionarPet('${p.id}', '${p.nome}')" class="w-full bg-sky-500 hover:bg-sky-600 text-white text-[10px] font-bold py-1.5 rounded-xl transition shadow-sm">Escolher</button>` : '<span class="text-[9px] font-bold text-slate-400">Bloqueado</span>'}</div>`;
+      });
+      document.getElementById('modal-biblioteca').classList.remove('hidden');
+    }
+    function fecharBibliotecaPets() { document.getElementById('modal-biblioteca').classList.add('hidden'); }
+    function selecionarPet(t, n) { dados.pet.tipo = t; dados.pet.nome = n; salvar(); fecharBibliotecaPets(); atualizarTela(); }
+
+    function abrirLojaRecompensas() { if (estaDeNoite()) return alert('🌙 Loja fechada à noite.'); document.getElementById('modal-recompensas').classList.remove('hidden'); }
+    function fecharLojaRecompensas() { document.getElementById('modal-recompensas').classList.add('hidden'); }
+    function renderizarLojaCrianca() {
+      const c = document.getElementById('lista-itens-loja'); if (!c) return; c.innerHTML = '';
+      (dados.recompensas || []).forEach(r => {
+        c.innerHTML += `<div class="flex justify-between items-center p-3 rounded-2xl bg-amber-50 border border-amber-200 shadow-sm"><span class="font-bold text-amber-950 text-xs">${r.tipo > 0 ? '📱' : '🎁'} ${r.texto}</span><button onclick="comprarPremio(${r.id})" class="bg-amber-500 hover:bg-amber-600 text-white px-3 py-1.5 rounded-xl font-bold text-xs transition shadow-sm">${r.custo} 🪙</button></div>`;
+      });
+    }
+
+    let intTimer = null;
+    function iniciarCronometro() {
+      if (intTimer) clearInterval(intTimer); document.getElementById('banner-timer').classList.remove('hidden');
+      intTimer = setInterval(() => {
+        if (dados.tempoTelaSegundos > 0) {
+          dados.tempoTelaSegundos--;
+          const m = Math.floor(dados.tempoTelaSegundos / 60).toString().padStart(2, '0');
+          const s = (dados.tempoTelaSegundos % 60).toString().padStart(2, '0');
+          document.getElementById('display-tempo-tela').innerText = `${m}:${s}`;
+        } else {
+          clearInterval(intTimer);
+          document.getElementById('banner-timer').classList.add('hidden');
+          alert('⏰ O tempo de tela acabou!');
+        }
+      }, 1000);
+    }
+    function comprarPremio(id) {
+      const r = dados.recompensas.find(x => x.id === id); if (!r) return;
+      if (dados.moedas < r.custo) return alert('🪙 Moedas insuficientes!');
+      dados.moedas -= r.custo; fecharLojaRecompensas(); tocarSom('sucesso');
+      if (r.tipo > 0) { dados.tempoTelaSegundos += r.tipo * 60; alert(`📱 Voucher ativado: +${r.tipo} min de tela!`); iniciarCronometro(); }
+      else { alert(`🎉 COMPRA REALIZADA!\nVocê comprou: "${r.texto}"\n\nMostre este aviso para seus pais resgatarem seu prêmio!`); }
+      salvar(); atualizarTela();
+    }
+
+    function alternarModoPais() {
+      const vC = document.getElementById('view-crianca'); const vP = document.getElementById('view-pais');
+      if (vC.classList.contains('hidden')) { vC.classList.remove('hidden'); vP.classList.add('hidden'); }
+      else { const pin = prompt('🔑 Digite o PIN dos pais:'); if (pin === dados.pinPais) { vC.classList.add('hidden'); vP.classList.remove('hidden'); } else if (pin) { tocarSom('erro'); alert('❌ PIN incorreto!'); } }
+    }
+
+    let respCerta = 0;
+    function abrirMinigame() {
+      if (estaDeNoite()) return alert('🌙 O pet está dormindo!');
+      const idade = dados.idadeCrianca || 8; let a, b, operacao = '+';
+      if (idade <= 6) { a = Math.floor(Math.random() * 5) + 1; b = Math.floor(Math.random() * 5) + 1; respCerta = a + b; }
+      else if (idade <= 8) {
+        operacao = Math.random() > 0.5 ? '+' : '-';
+        if (operacao === '+') { a = Math.floor(Math.random() * 10) + 1; b = Math.floor(Math.random() * 10) + 1; respCerta = a + b; }
+        else { a = Math.floor(Math.random() * 10) + 5; b = Math.floor(Math.random() * a); respCerta = a - b; }
+      } else {
+        if (Math.random() > 0.5) { operacao = '×'; a = Math.floor(Math.random() * 6) + 2; b = Math.floor(Math.random() * 6) + 2; respCerta = a * b; }
+        else { operacao = '+'; a = Math.floor(Math.random() * 20) + 5; b = Math.floor(Math.random() * 20) + 5; respCerta = a + b; }
+      }
+      document.getElementById('txt-pergunta').innerText = `${a} ${operacao} ${b} = ?`;
+      const c = document.getElementById('opcoes-jogo'); c.innerHTML = '';
+      [respCerta, respCerta + (Math.random() > 0.5 ? 1 : 2), Math.max(0, respCerta - (Math.random() > 0.5 ? 1 : 2))]
+        .sort(() => Math.random() - 0.5)
+        .forEach(op => {
+          const btn = document.createElement('button');
+          btn.className = 'bg-emerald-500 hover:bg-emerald-600 text-white font-bold py-3.5 rounded-2xl text-lg transition shadow-md';
+          btn.innerText = op;
+          btn.onclick = () => {
+            if (op === respCerta) { dados.moedas += 1; tocarSom('sucesso'); alert('🎉 Acertou! +1 Moeda'); fecharJogo(); salvar(); atualizarTela(); }
+            else { tocarSom('erro'); alert('❌ Ops! Tente de novo.'); }
+          };
+          c.appendChild(btn);
+        });
+      document.getElementById('modal-jogo').classList.remove('hidden');
+    }
+    function fecharJogo() { document.getElementById('modal-jogo').classList.add('hidden'); }
+
+    let gravando = false;
+    async function gravarVoz() {
+      if (estaDeNoite()) return alert('🌙 O pet está dormindo! Shii...');
+      if (gravando) return;
+      try {
+        const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+        const mediaRecorder = new MediaRecorder(stream); const audioChunks = [];
+        mediaRecorder.ondataavailable = e => { if (e.data.size > 0) audioChunks.push(e.data); };
+        mediaRecorder.onstop = async () => {
+          const audioBlob = new Blob(audioChunks, { type: 'audio/webm' });
+          const arrayBuffer = await audioBlob.arrayBuffer();
+          const audioCtx = obterAudioContext();
+          const audioBuffer = await audioCtx.decodeAudioData(arrayBuffer);
+          const source = audioCtx.createBufferSource();
+          source.buffer = audioBuffer;
+          source.playbackRate.value = 1.6; // Efeito Talking Tom
+          const gain = audioCtx.createGain(); gain.gain.value = 1.5;
+          source.connect(gain); gain.connect(audioCtx.destination);
+          source.start(0);
+          dados.pet.felicidade = Math.min(100, (dados.pet.felicidade || 0) + 15);
+          salvar(); atualizarTela(); gravando = false;
+        };
+        mediaRecorder.start(); gravando = true;
+        const btnVoz = document.getElementById('btn-voz');
+        if (btnVoz) btnVoz.innerHTML = '<span class="animate-pulse text-rose-600 font-black">🔴 Gravando</span><span class="text-[8px] font-bold text-rose-500">Fale...</span>';
+        setTimeout(() => {
+          mediaRecorder.stop();
+          stream.getTracks().forEach(t => t.stop());
+          if (btnVoz) btnVoz.innerHTML = '<span class="text-lg">🎤</span><span>Voz</span><span class="text-[9px] text-purple-700 font-semibold">Falar 3s</span>';
+        }, 3000);
+      } catch (err) { alert('⚠️ Você precisa permitir o acesso ao microfone no seu celular!'); gravando = false; }
+    }
+
+    function resetarDados() {
+      if (confirm('🔄 Deseja realmente zerar e restaurar o sistema padrão do RotinaPet?')) {
+        localStorage.removeItem(STORAGE_KEY);
+        dados = estadoPadrao;
+        salvar();
+        location.reload();
+      }
+    }
+
+    atualizarTela();
+  </script>
+</body>
+</html>
