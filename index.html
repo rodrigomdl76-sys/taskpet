@@ -18,7 +18,6 @@ body{
 
 .app{width:100%;max-width:400px;height:100vh;margin:0 auto;position:relative;display:flex;flex-direction:column;justify-content:space-between;padding:8px 12px;}
 
-/* ===== TOPO COMPACTO ===== */
 .top-row{display:flex;align-items:center;justify-content:space-between;gap:6px;flex-shrink:0;}
 .top-pill{
   background:rgba(255,255,255,0.95);border-radius:20px;padding:5px 8px;
@@ -28,7 +27,6 @@ body{
 .top-pill-text{font-size:11px;font-weight:800;color:#1e293b;line-height:1.1;}
 .top-pill-sub{font-size:8px;font-weight:700;color:#64748b;line-height:1;text-transform:lowercase;}
 
-/* ===== SELETOR DE PET ===== */
 .pet-selector{display:flex;justify-content:center;position:relative;z-index:20;margin:2px 0;}
 .pet-unico-btn{
   width:46px;height:46px;border-radius:50%;background:rgba(255,255,255,0.95);
@@ -44,7 +42,6 @@ body{
 .opcao-pet{width:42px;height:42px;border-radius:50%;background:#f3f4f6;display:flex;align-items:center;justify-content:center;font-size:20px;cursor:pointer;transition:.2s;}
 .opcao-pet:hover,.opcao-pet.ativo{background:#ede9fe;border:2px solid #7c3aed;}
 
-/* ===== STATUS ===== */
 .status-row{display:flex;align-items:center;gap:6px;flex-shrink:0;margin:1px 0;}
 .mini-card{
   background:rgba(255,255,255,0.9);border-radius:12px;padding:4px 8px;
@@ -57,7 +54,6 @@ body{
 .bar-bg{height:7px;background:#e2e8f0;border-radius:8px;overflow:hidden;margin-top:2px;}
 .bar-fill{height:100%;width:70%;border-radius:8px;background:linear-gradient(90deg,#42C95E,#FFD000,#FF9500);transition:width .5s ease;}
 
-/* ===== ÁREA DO PET CENTRAL COMPACTA ===== */
 .cat-section{display:flex;flex-direction:column;align-items:center;justify-content:center;flex-shrink:0;margin:1px 0;position:relative;}
 .cat-wrapper{
   width:115px;height:115px;display:flex;align-items:center;justify-content:center;
@@ -76,7 +72,6 @@ body{
 .xp-bar-fill{position:absolute;left:0;top:0;bottom:0;width:0%;background:linear-gradient(90deg,#9C27B0,#E040FB);border-radius:8px;transition:width .5s ease;z-index:1;}
 .xp-text{font-weight:800;font-size:9px;color:#fff;z-index:2;text-shadow:0 1px 2px rgba(0,0,0,0.4);}
 
-/* ANIMAÇÃO FLUTUANTE */
 .floating-text {
   position: absolute; font-weight: 900; font-size: 16px; color: #10b981;
   text-shadow: 0 2px 4px rgba(0,0,0,0.3); pointer-events: none;
@@ -87,7 +82,6 @@ body{
   100% { transform: translateY(-40px) scale(1.2); opacity: 0; }
 }
 
-/* ===== TAREFAS DIÁRIAS COMPACTAS ===== */
 .tasks-section{background:rgba(255,255,255,0.92);border-radius:14px;padding:6px 10px;flex-shrink:0;max-height:100px;overflow-y:auto;box-shadow:0 2px 6px rgba(0,0,0,0.05);}
 .task-row{display:flex;align-items:center;justify-content:space-between;padding:3px 0;border-bottom:1px solid #f1f5f9;font-size:10px;}
 .task-row:last-child{border-bottom:none;}
@@ -97,7 +91,6 @@ body{
 .task-btn{padding:2px 6px;border-radius:6px;border:none;font-weight:800;font-size:9px;cursor:pointer;}
 .btn-ok{background:#22c55e;color:#fff;}
 
-/* ===== BOTÕES INFERIORES ===== */
 .bottom-buttons{display:grid;grid-template-columns:repeat(4,1fr);gap:6px;flex-shrink:0;margin-bottom:2px;}
 .bottom-btn{
   aspect-ratio:1;border-radius:16px;border:none;display:flex;flex-direction:column;
@@ -111,7 +104,6 @@ body{
 .btn-premios{background:linear-gradient(135deg,#FF5252,#FF3D00);}
 .btn-icon{font-size:16px;line-height:1;}
 
-/* ===== MODAIS ===== */
 .modal-overlay{position:fixed;inset:0;background:rgba(0,0,0,0.6);display:flex;align-items:center;justify-content:center;padding:14px;z-index:100;backdrop-filter:blur(4px);opacity:0;visibility:hidden;transition:.3s;}
 .modal-overlay.mostrar{opacity:1;visibility:visible;}
 .modal{background:#fff;border-radius:24px;padding:18px;width:100%;max-width:340px;max-height:85vh;overflow-y:auto;box-shadow:0 15px 35px rgba(0,0,0,0.25);}
@@ -127,7 +119,6 @@ body{
 
 <div class="app">
 
-    <!-- ===== TOPO: MOEDAS, PAIS E EVOLUÇÕES ===== -->
     <div class="top-row">
         <div class="top-pill" onclick="alternarModoPais()">
             <div style="width: 10px; height: 16px; background: linear-gradient(180deg, #FFD300, #F9B800); border-radius: 3px; flex-shrink: 0;"></div>
@@ -136,7 +127,7 @@ body{
         <div class="top-pill" onclick="alternarModoPais()">
             <div style="width: 8px; height: 8px; background: #10B981; border-radius: 50%; flex-shrink: 0;"></div>
             <div>
-                <div class="top-pill-text">R$ <span id="txt-dinheiro">0,15</span></div>
+                <div class="top-pill-text">R$ <span id="txt-dinheiro">0,00</span></div>
                 <div class="top-pill-sub">🔒 pais</div>
             </div>
         </div>
@@ -149,7 +140,6 @@ body{
         </div>
     </div>
 
-    <!-- SELETOR DE PET NO TOPO CENTRAL -->
     <div class="pet-selector">
         <button class="pet-unico-btn" id="btn-pet-atual" onclick="alternarListaPets(event)">🐱</button>
         <div class="lista-pet-dropdown" id="lista-pets">
@@ -160,7 +150,6 @@ body{
         </div>
     </div>
 
-    <!-- STATUS (SAÚDE E FELICIDADE) -->
     <div class="status-row">
         <div class="mini-card" onclick="darRemedio()" title="Saúde">
             <span style="font-size: 13px;">💚</span>
@@ -175,7 +164,6 @@ body{
         </div>
     </div>
 
-    <!-- ===== PET CENTRAL SVG ===== -->
     <div class="cat-section" id="pet-section-area">
         <div class="cat-wrapper" onclick="somDoPet(event)" id="pet-principal">
             <div id="pet-svg-container"></div>
@@ -188,7 +176,6 @@ body{
         </div>
     </div>
 
-    <!-- TAREFAS DIÁRIAS (COM RESET AUTOMÁTICO) -->
     <div class="tasks-section">
         <div style="font-size: 9px; font-weight: 800; color: #555; margin-bottom: 2px; display: flex; justify-content: space-between;">
             <span>🛡️ TAREFAS DE HOJE</span>
@@ -197,7 +184,6 @@ body{
         <div id="lista-tarefas" style="display: flex; flex-direction: column; gap: 3px;"></div>
     </div>
 
-    <!-- ===== BOTÕES INFERIORES ===== -->
     <div class="bottom-buttons">
         <button class="bottom-btn btn-food" onclick="darLanche(event)">
             <span class="btn-icon">🍎</span>Comida
@@ -215,7 +201,7 @@ body{
 
 </div>
 
-<!-- ===== MODAL TIMER TELA ===== -->
+<!-- MODAL TIMER TELA -->
 <div id="modal-timer" class="modal-overlay">
     <div class="modal" style="text-align:center;">
         <h3 style="font-size:16px; font-weight:900; color:#0284c7; margin-bottom:8px;">⏳ Tempo de Tela Ativo!</h3>
@@ -224,7 +210,7 @@ body{
     </div>
 </div>
 
-<!-- ===== PAINEL DOS PAIS ===== -->
+<!-- PAINEL DOS PAIS -->
 <div id="modal-pais" class="modal-overlay">
     <div class="modal">
         <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px;">
@@ -232,13 +218,17 @@ body{
             <button onclick="fecharModal('modal-pais')" style="background: #e2e8f0; border: none; padding: 4px 8px; border-radius: 6px; font-weight: bold; cursor: pointer;">X</button>
         </div>
         
-        <!-- SAQUE E HISTÓRICO -->
         <div style="background:#f8fafc; border:1px solid #e2e8f0; border-radius:10px; padding:8px; margin-bottom:10px;">
             <div style="display:flex; justify-content:space-between; align-items:center; font-size:11px;">
                 <span>Disponível: <b>R$ <span id="txt-painel-disponivel">0,00</span></b></span>
                 <button onclick="sacarDinheiro()" style="background:#10b981; color:white; border:none; padding:3px 8px; border-radius:6px; font-weight:bold; cursor:pointer;">💸 Pagar / Sacar</button>
             </div>
             <div style="font-size:10px; color:#64748b; margin-top:4px;">Total pago no histórico: R$ <span id="txt-total-pago">0,00</span></div>
+        </div>
+
+        <div style="margin-bottom: 10px;">
+            <label style="font-size: 11px; font-weight: 700; color: #555;">👶 Idade da Criança (Dificuldade da Matemática)</label>
+            <input type="number" id="input-idade-crianca" min="3" max="15" style="width: 100%; border: 1px solid #cbd5e1; border-radius: 6px; padding: 5px; margin-top: 2px; font-weight: bold; font-size:11px;" onchange="atualizarIdadeCrianca(this.value)">
         </div>
 
         <div style="margin-bottom: 10px;">
@@ -296,7 +286,8 @@ body{
 <!-- MODAL MATEMÁTICA -->
 <div class="modal-overlay" id="modal-matematica">
     <div class="modal" style="text-align: center;">
-        <h3 style="font-size: 16px; font-weight: 900; color: #059669; margin-bottom: 8px;">🎮 Desafio Matemático</h3>
+        <h3 style="font-size: 16px; font-weight: 900; color: #059669; margin-bottom: 4px;">🎮 Desafio Matemático</h3>
+        <p style="font-size:10px; color:#64748b; margin-bottom:8px;">Acerte e ganhe: +1 🪙 e +1 XP</p>
         <div id="conta-math" style="font-size: 24px; font-weight: 900; background: #f1f5f9; padding: 8px; border-radius: 12px; margin-bottom: 10px;">?</div>
         <div id="opcoes-math" style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 6px; margin-bottom: 10px;"></div>
         <button onclick="fecharModal('modal-matematica')" style="background: none; border: none; color: #64748b; font-weight: bold; cursor: pointer;">Fechar</button>
@@ -325,20 +316,15 @@ body{
 <div class="toast" id="toast"></div>
 
 <script>
-// GERADOR SVG DINÂMICO COM EVOLUÇÕES PARA TODOS OS PETS
 function obterSvgPetComEvolucao(tipo, level) {
   let acessorio = '';
   if (level >= 5 && level < 10) {
-    // Gravata borboleta azul
     acessorio = `<polygon points="130,150 115,165 130,180 145,165" fill="#38BDF8"/><circle cx="130" cy="165" r="5" fill="#0284C7"/>`;
   } else if (level >= 10 && level < 20) {
-    // Óculos escuros
     acessorio = `<rect x="75" y="92" width="40" height="24" rx="4" fill="#1e293b"/><rect x="145" y="92" width="40" height="24" rx="4" fill="#1e293b"/><line x1="115" y1="102" x2="145" y2="102" stroke="#1e293b" stroke-width="4"/><circle cx="85" cy="98" r="4" fill="white" opacity="0.6"/>`;
   } else if (level >= 20 && level < 50) {
-    // Capa roxa mágica
     acessorio = `<path d="M85 170 L55 240 L130 220 L205 240 L175 170 Z" fill="#9333EA"/><circle cx="130" cy="110" r="95" fill="none" stroke="#C084FC" stroke-width="3" stroke-dasharray="8 6" opacity="0.7"/>`;
   } else if (level >= 50) {
-    // Coroa real dourada
     acessorio = `<path d="M85 170 L55 240 L130 220 L205 240 L175 170 Z" fill="#D97706"/><path d="M100 35 L110 55 L130 30 L150 55 L160 35 L165 65 L95 65 Z" fill="#FBBF24"/><circle cx="130" cy="48" r="4" fill="#EF4444"/><circle cx="110" cy="52" r="3" fill="#3B82F6"/><circle cx="150" cy="52" r="3" fill="#10B981"/>`;
   }
 
@@ -350,7 +336,6 @@ function obterSvgPetComEvolucao(tipo, level) {
       <path d="M135 138 L112 152 L158 152 Z" fill="#FFCC00"/>
       <path d="M120 152 Q135 162 150 152" fill="#FF9933"/>
       <ellipse cx="135" cy="150" rx="12" ry="8" fill="#552200"/>
-      <!-- OLHOS VIVOS E BRILHANTES -->
       <circle cx="100" cy="105" r="22" fill="#FFFFFF" stroke="#2D1B10" stroke-width="3.5"/>
       <circle cx="170" cy="105" r="22" fill="#FFFFFF" stroke="#2D1B10" stroke-width="3.5"/>
       <circle cx="95" cy="100" r="11" fill="#2D1B10"/>
@@ -394,7 +379,6 @@ function obterSvgPetComEvolucao(tipo, level) {
       ${acessorio}
     </svg>`;
   } else {
-    // Gato
     return `<svg width="120" height="120" viewBox="0 0 260 260" xmlns="http://www.w3.org/2000/svg">
       <ellipse cx="130" cy="235" rx="75" ry="12" fill="rgba(0,0,0,0.06)"/>
       <path d="M195 180 Q240 140 225 95" stroke="#FF9F29" stroke-width="28" stroke-linecap="round" fill="none"/>
@@ -423,7 +407,8 @@ const BANCO_PETS = {
 };
 
 let estado = {
-  petAtual: 'gato', moedas: 15, taxaCambio: 0.01, pinPais: '1234',
+  petAtual: 'gato', moedas: 15, dinheiroAcumulado: 0.15, taxaCambio: 0.01, pinPais: '1234',
+  idadeCrianca: 7,
   nivel: 1, xp: 40, xpMax: 100, felicidade: 100, saude: 100,
   metaMoedas: 50, totalSacado: 0, ultimoDiaAcesso: new Date().toISOString().slice(0,10),
   tarefas: [
@@ -437,9 +422,13 @@ let estado = {
 };
 
 const salvo = localStorage.getItem('ROTINAPET_SAVE_FINAL');
-if (salvo) estado = JSON.parse(salvo);
+if (salvo) {
+  estado = JSON.parse(salvo);
+  if (typeof estado.dinheiroAcumulado !== 'number') {
+    estado.dinheiroAcumulado = (estado.moedas || 0) * (estado.taxaCambio || 0.01);
+  }
+}
 
-// RESET DIÁRIO AUTOMÁTICO
 const hoje = new Date().toISOString().slice(0,10);
 if (estado.ultimoDiaAcesso !== hoje) {
   estado.tarefas.forEach(t => { t.status = 'pendente'; t.foto = null; });
@@ -450,7 +439,7 @@ function salvar() { localStorage.setItem('ROTINAPET_SAVE_FINAL', JSON.stringify(
 
 function atualizarTela() {
     document.getElementById('txt-moedas').innerText = estado.moedas;
-    const valorReais = (estado.moedas * estado.taxaCambio).toFixed(2).replace('.', ',');
+    const valorReais = (estado.dinheiroAcumulado || 0).toFixed(2).replace('.', ',');
     document.getElementById('txt-dinheiro').innerText = valorReais;
     document.getElementById('txt-painel-disponivel').innerText = valorReais;
     document.getElementById('txt-total-pago').innerText = (estado.totalSacado || 0).toFixed(2).replace('.', ',');
@@ -469,11 +458,13 @@ function atualizarTela() {
     document.getElementById('pet-svg-container').innerHTML = obterSvgPetComEvolucao(estado.petAtual, level);
     document.getElementById('pet-evol-nome').textContent = pet.nome;
 
+    const inputIdade = document.getElementById('input-idade-crianca');
+    if (inputIdade) inputIdade.value = estado.idadeCrianca || 7;
+
     renderizarTarefas();
     renderizarEvolucoes();
 }
 
-// SOM E VIBRAÇÃO
 let ctxAudio = null;
 function somDoPet(event) {
     if (!ctxAudio) ctxAudio = new (window.AudioContext || window.webkitAudioContext)();
@@ -500,9 +491,9 @@ function darLanche(event) {
     if (estado.moedas < 5) return alert('🪙 Moedas insuficientes para lanche!');
     estado.moedas -= 5;
     estado.felicidade = Math.min(100, estado.felicidade + 20);
-    ganharXP(10, event);
+    ganharXP(5, event);
     salvar(); atualizarTela();
-    mostrarToast('🍎 Pet alimentado!');
+    mostrarToast('🍎 Pet alimentado! +5 XP');
 }
 
 function darRemedio() {
@@ -549,7 +540,6 @@ function dispararConfetes() {
   }
 }
 
-// TAREFAS E FOTO
 let tarefaIdFoto = null;
 function dispararCamera(id) { tarefaIdFoto = id; document.getElementById('camera-input').click(); }
 function processarFotoCapturada(e) {
@@ -587,7 +577,6 @@ function renderizarTarefas() {
     });
 }
 
-// PAINEL DOS PAIS
 function alternarModoPais() {
     const pin = prompt('🔑 Digite o PIN dos pais (padrão: 1234):');
     if (pin === estado.pinPais) {
@@ -600,6 +589,8 @@ function alternarModoPais() {
 
 function renderizarPainelPais() {
     document.getElementById('input-taxa-cambio').value = estado.taxaCambio;
+    const inputIdade = document.getElementById('input-idade-crianca');
+    if (inputIdade) inputIdade.value = estado.idadeCrianca || 7;
     const ap = document.getElementById('lista-aprovacao-pais'); ap.innerHTML = '';
     const pendentes = estado.tarefas.filter(t => t.status === 'aguardando_aprovacao');
     if(pendentes.length === 0) ap.innerHTML = '<span style="font-size:10px;color:#888;">Nenhuma pendente.</span>';
@@ -615,17 +606,20 @@ function renderizarPainelPais() {
 
 function aprovarTarefaPais(id) {
     const t = estado.tarefas.find(x => x.id === id); if(!t) return;
-    t.status = 'aprovada'; estado.moedas += t.recompensa; ganharXP(t.xp);
+    t.status = 'aprovada';
+    estado.moedas += t.recompensa;
+    estado.dinheiroAcumulado = (estado.dinheiroAcumulado || 0) + (t.recompensa * (estado.taxaCambio || 0.01));
+    ganharXP(t.xp);
     dispararConfetes();
     salvar(); renderizarPainelPais(); atualizarTela(); alert('🎉 Tarefa Aprovada com Sucesso!');
 }
 
 function sacarDinheiro() {
-  const valor = estado.moedas * estado.taxaCambio;
+  const valor = estado.dinheiroAcumulado || 0;
   if (valor <= 0) return alert('Sem saldo para saque!');
-  if (confirm(`Confirmar o pagamento de R$ ${valor.toFixed(2)} ao Bernardo?`)) {
+  if (confirm(`Confirmar o pagamento de R$ ${valor.toFixed(2).replace('.', ',')} ao Bernardo?`)) {
     estado.totalSacado = (estado.totalSacado || 0) + valor;
-    estado.moedas = 0;
+    estado.dinheiroAcumulado = 0;
     salvar(); renderizarPainelPais(); atualizarTela();
     alert('💸 Saque registrado com sucesso!');
   }
@@ -647,8 +641,12 @@ function salvarNovoPin() {
     if(p.length === 4) { estado.pinPais = p; salvar(); alert('🔑 PIN alterado!'); } else alert('Precisa de 4 dígitos.');
 }
 function atualizarTaxaCambio(v) { estado.taxaCambio = parseFloat(v) || 0.01; salvar(); atualizarTela(); }
+function atualizarIdadeCrianca(v) {
+    estado.idadeCrianca = Math.max(3, Math.min(15, parseInt(v) || 7));
+    salvar();
+    mostrarToast(`Idade definida: ${estado.idadeCrianca} anos`);
+}
 
-// SELETOR DE PET
 function alternarListaPets(e) { if(e) e.stopPropagation(); document.getElementById('lista-pets').classList.toggle('abrir'); }
 function escolherPet(tipo) {
     estado.petAtual = tipo; salvar(); atualizarTela();
@@ -659,7 +657,6 @@ document.addEventListener('click', (e) => {
     if (!lista.contains(e.target) && e.target !== btn) lista.classList.remove('abrir');
 });
 
-// EVOLUÇÕES
 function renderizarEvolucoes() {
     const pet = BANCO_PETS[estado.petAtual];
     const c = document.getElementById('lista-evolucoes'); c.innerHTML = '';
@@ -669,26 +666,85 @@ function renderizarEvolucoes() {
     });
 }
 
-// MINIGAME MATEMÁTICA
 let contaCorreta = 0;
 function abrirDesafioMatematica() {
-    const a = Math.floor(Math.random()*6)+1; const b = Math.floor(Math.random()*6)+1;
-    contaCorreta = a + b;
-    document.getElementById('conta-math').innerText = `${a} + ${b} = ?`;
+    const idade = estado.idadeCrianca || 7;
+    let a, b, op;
+
+    if (idade <= 5) {
+        a = Math.floor(Math.random() * 5) + 1;
+        b = Math.floor(Math.random() * 5) + 1;
+        op = '+';
+        contaCorreta = a + b;
+    } else if (idade <= 7) {
+        a = Math.floor(Math.random() * 10) + 1;
+        b = Math.floor(Math.random() * 10) + 1;
+        op = Math.random() > 0.5 ? '+' : '-';
+        if (op === '-' && b > a) [a, b] = [b, a];
+        contaCorreta = op === '+' ? a + b : a - b;
+    } else if (idade <= 9) {
+        const tipo = Math.random();
+        if (tipo < 0.4) {
+            a = Math.floor(Math.random() * 20) + 5;
+            b = Math.floor(Math.random() * 20) + 5;
+            op = '+';
+            contaCorreta = a + b;
+        } else if (tipo < 0.7) {
+            a = Math.floor(Math.random() * 25) + 5;
+            b = Math.floor(Math.random() * 20) + 1;
+            if (b > a) [a, b] = [b, a];
+            op = '-';
+            contaCorreta = a - b;
+        } else {
+            a = Math.floor(Math.random() * 6) + 2;
+            b = Math.floor(Math.random() * 6) + 2;
+            op = '×';
+            contaCorreta = a * b;
+        }
+    } else {
+        const tipo = Math.random();
+        if (tipo < 0.5) {
+            a = Math.floor(Math.random() * 9) + 2;
+            b = Math.floor(Math.random() * 9) + 2;
+            op = '×';
+            contaCorreta = a * b;
+        } else {
+            b = Math.floor(Math.random() * 7) + 2;
+            contaCorreta = Math.floor(Math.random() * 8) + 2;
+            a = b * contaCorreta;
+            op = '÷';
+        }
+    }
+
+    document.getElementById('conta-math').innerText = `${a} ${op} ${b} = ?`;
+    const opcoes = [contaCorreta];
+    while (opcoes.length < 4) {
+        const delta = (Math.floor(Math.random() * 5) + 1) * (Math.random() > 0.5 ? 1 : -1);
+        const falsa = Math.max(0, contaCorreta + delta);
+        if (!opcoes.includes(falsa)) opcoes.push(falsa);
+    }
+    opcoes.sort(() => Math.random() - 0.5);
+
     const c = document.getElementById('opcoes-math'); c.innerHTML = '';
-    [contaCorreta, contaCorreta+1, Math.max(0, contaCorreta-1)].sort(()=>Math.random()-0.5).forEach(op=>{
+    opcoes.forEach(op => {
         c.innerHTML += `<button onclick="testarMath(${op})" style="padding:8px;background:#e0e7ff;border:none;border-radius:8px;font-weight:900;font-size:15px;cursor:pointer;">${op}</button>`;
     });
     abrirModal('modal-matematica');
 }
+
 function testarMath(op) {
     if(op === contaCorreta) {
-      estado.moedas += 2; ganharXP(15); dispararConfetes();
-      alert('🎉 Acertou! +2 Moedas'); fecharModal('modal-matematica'); salvar(); atualizarTela();
+      estado.moedas += 1;
+      estado.dinheiroAcumulado = (estado.dinheiroAcumulado || 0) + (1 * (estado.taxaCambio || 0.01));
+      ganharXP(1);
+      dispararConfetes();
+      alert('🎉 Acertou! +1 🪙 e +1 XP');
+      fecharModal('modal-matematica');
+      salvar();
+      atualizarTela();
     } else alert('❌ Tente de novo!');
 }
 
-// TIMER DE TELA
 let intervaloTimer = null;
 function iniciarTimerTela(minutos) {
   fecharModal('modal-recompensas');
@@ -714,7 +770,6 @@ function pausarFecharTimer() {
   fecharModal('modal-timer');
 }
 
-// LOJA DE PRÊMIOS
 function abrirLojaRecompensas() {
     const meta = estado.metaMoedas || 50;
     const progresso = Math.min(100, Math.round((estado.moedas / meta) * 100));
@@ -732,7 +787,9 @@ function comprarPremio(id) {
     const r = estado.recompensas.find(x => x.id === id);
     if (!r) return;
     if(estado.moedas < r.custo) return alert('🪙 Moedas insuficientes!');
-    estado.moedas -= r.custo; salvar(); atualizarTela();
+    estado.moedas -= r.custo;
+    salvar();
+    atualizarTela();
     if (r.tipo === 'timer') {
       iniciarTimerTela(r.minutos);
     } else {
@@ -741,7 +798,6 @@ function comprarPremio(id) {
     }
 }
 
-// GRAVADOR
 function alternarGravador() { abrirModal('modal-gravador'); }
 async function iniciarGravacao() {
     try {
@@ -765,7 +821,6 @@ function pararGravacao() {
 }
 function salvarVoz() { mostrarToast('✅ Voz salva!'); fecharModal('modal-gravador'); }
 
-// HELPERS
 function abrirModal(id) { document.getElementById(id).classList.add('mostrar'); }
 function fecharModal(id) { document.getElementById(id).classList.remove('mostrar'); }
 
