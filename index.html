@@ -69,7 +69,7 @@
             width: 100%;
             max-width: 400px;
             height: 100vh;
-            max-height: 820px;
+            max-height: 840px;
             margin: auto;
             padding: 10px 12px 14px;
             position: relative;
@@ -90,7 +90,7 @@
             }
         }
 
-        /* ===== TOPO — COMPACTO E ORGANIZADO ===== */
+        /* ===== TOPO — LINHA SUPERIOR COMPACTA E LADO A LADO ===== */
         .top-row {
             display: flex;
             justify-content: space-between;
@@ -100,16 +100,19 @@
         }
 
         .top-pill {
-            background: rgba(255, 255, 255, 0.92);
-            border-radius: 20px;
-            padding: 6px 10px;
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 18px;
+            padding: 6px 8px;
             display: flex;
             align-items: center;
-            gap: 6px;
-            box-shadow: 0 2px 6px rgba(0,0,0,0.05);
+            gap: 5px;
+            box-shadow: 0 2px 6px rgba(0,0,0,0.06);
             cursor: pointer;
             transition: transform 0.2s;
-            border: 1px solid rgba(255,255,255,0.8);
+            border: 1px solid rgba(255,255,255,0.9);
+            flex: 1;
+            min-width: 0;
+            justify-content: center;
         }
         .top-pill:active { transform: scale(0.95); }
 
@@ -118,6 +121,9 @@
             font-weight: 800;
             color: #1e293b;
             line-height: 1.1;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
         }
         .top-pill-sub {
             font-size: 8px;
@@ -125,15 +131,16 @@
             color: #64748b;
             line-height: 1;
             text-transform: lowercase;
+            white-space: nowrap;
         }
 
-        /* ===== STATUS E FELICIDADE COMPACTOS (SEM BOTÃO DE CORAÇÃO) ===== */
+        /* ===== STATUS E FELICIDADE ===== */
         .status-row {
             display: flex;
             align-items: center;
             gap: 8px;
             flex-shrink: 0;
-            margin: 2px 0;
+            margin: 4px 0;
         }
 
         .mini-card {
@@ -178,7 +185,7 @@
             align-items: center;
             justify-content: center;
             flex-shrink: 0;
-            margin: 2px 0;
+            margin: 4px 0;
         }
         .cat-wrapper {
             width: 155px;
@@ -195,10 +202,10 @@
             50% { transform: translateY(-4px); }
         }
         .level-number {
-            font-size: 36px;
+            font-size: 38px;
             font-weight: 800;
             color: #9C27B0;
-            margin: -2px 0 0px;
+            margin: 0;
             text-shadow: 0 0 12px rgba(156, 39, 176, 0.2);
             line-height: 1;
         }
@@ -208,12 +215,12 @@
             width: 80%;
             max-width: 240px;
             height: 22px;
-            background: rgba(255,255,255,0.6);
+            background: rgba(255,255,255,0.7);
             border-radius: 11px;
             display: flex;
             align-items: center;
             justify-content: center;
-            margin-top: 3px;
+            margin-top: 4px;
             overflow: hidden;
             position: relative;
             box-shadow: inset 0 2px 4px rgba(0,0,0,0.05);
@@ -240,7 +247,7 @@
             border-radius: 12px;
             padding: 6px 8px;
             flex-shrink: 0;
-            max-height: 90px;
+            max-height: 95px;
             overflow-y: auto;
             box-shadow: 0 2px 6px rgba(0,0,0,0.05);
         }
@@ -254,18 +261,18 @@
         }
         .bottom-btn {
             aspect-ratio: 1;
-            border-radius: 16px;
+            border-radius: 18px;
             border: none;
             display: flex;
             flex-direction: column;
             align-items: center;
             justify-content: center;
-            gap: 1px;
-            font-size: 10px;
+            gap: 2px;
+            font-size: 11px;
             font-weight: 800;
             color: white;
             cursor: pointer;
-            box-shadow: 0 3px 8px rgba(0,0,0,0.1);
+            box-shadow: 0 4px 10px rgba(0,0,0,0.12);
             transition: transform 0.2s ease;
         }
         .bottom-btn:active { transform: scale(0.92); }
@@ -273,9 +280,9 @@
         .btn-voz { background: linear-gradient(135deg, #4CAF50, #00BFA5); }
         .btn-desafio { background: linear-gradient(135deg, #9C27B0, #7B1FA2); }
         .btn-premios { background: linear-gradient(135deg, #FF5252, #FF3D00); }
-        .btn-icon { font-size: 18px; line-height: 1; }
+        .btn-icon { font-size: 20px; line-height: 1; }
 
-        /* PAINEL PAIS & MODAIS */
+        /* MODAIS E PAINEL PAIS */
         .modal-overlay {
             position: fixed; inset: 0; background: rgba(0,0,0,0.6);
             display: flex; align-items: center; justify-content: center;
@@ -302,38 +309,38 @@
 
     <div class="container" id="view-crianca">
 
-        <!-- ===== TOPO LIMPO E COMPACTO ===== -->
+        <!-- ===== TOPO: 3 BOTÕES LADO A LADO ===== -->
         <div class="top-row">
             <!-- Moedas -->
             <div class="top-pill" onclick="alternarModoPais()">
-                <div style="width: 10px; height: 18px; background: linear-gradient(180deg, #FFD300, #F9B800); border-radius: 3px;"></div>
-                <div>
+                <div style="width: 10px; height: 16px; background: linear-gradient(180deg, #FFD300, #F9B800); border-radius: 3px; flex-shrink: 0;"></div>
+                <div style="min-width: 0;">
                     <div class="top-pill-text"><span id="txt-moedas">15</span> moedas</div>
                 </div>
             </div>
             <!-- Dinheiro / Pais -->
             <div class="top-pill" onclick="alternarModoPais()">
-                <div style="width: 8px; height: 8px; background: #10B981; border-radius: 50%;"></div>
-                <div>
+                <div style="width: 8px; height: 8px; background: #10B981; border-radius: 50%; flex-shrink: 0;"></div>
+                <div style="min-width: 0;">
                     <div class="top-pill-text">R$ <span id="txt-dinheiro">0,15</span></div>
                     <div class="top-pill-sub">🔒 pais</div>
                 </div>
             </div>
-            <!-- Ofensiva / Álbum de Pets -->
+            <!-- Pet Ativo / Trocar -->
             <div class="top-pill" onclick="abrirBibliotecaPets()">
-                <span style="font-size: 12px;">🐾</span>
-                <div>
+                <span style="font-size: 11px; flex-shrink: 0;">🐾</span>
+                <div style="min-width: 0;">
                     <div class="top-pill-text" id="txt-pet-ativo">Pipoca</div>
                     <div class="top-pill-sub">trocar pet</div>
                 </div>
             </div>
         </div>
 
-        <!-- ===== STATUS E FELICIDADE COMPACTOS (SEM CORAÇÃO) ===== -->
+        <!-- ===== STATUS E FELICIDADE ===== -->
         <div class="status-row">
             <!-- Fome / Lanche -->
             <div class="mini-card" onclick="alimentarPet(event)" title="Fome">
-                <span style="font-size: 14px;">🍎</span>
+                <span style="font-size: 15px;">🍎</span>
                 <span id="txt-comidas" style="font-size: 11px; font-weight: 800; background:#f43f5e; color:white; padding:1px 6px; border-radius:10px;">3</span>
             </div>
             <!-- Saúde -->
@@ -353,7 +360,7 @@
             </div>
         </div>
 
-        <!-- ===== PET CENTRAL SVG COM EVOLUÇÃO E MIADO REALISTA ===== -->
+        <!-- ===== PET CENTRAL SVG COM EVOLUÇÃO E MIADO ===== -->
         <div class="cat-section">
             <div class="cat-wrapper" onclick="fazerCarinho(event)" id="bg-pet-visual">
                 <div id="svg-pet-container"></div>
@@ -481,14 +488,13 @@
     </div>
 
     <script>
-        const STORAGE_KEY = 'ROTINAPET_SAVE_V30';
+        const STORAGE_KEY = 'ROTINAPET_SAVE_V31';
 
-        // LISTA DE PETS DISPONÍVEIS COM XP INDIVIDUAL
         const LISTA_PETS = [
-            { id: 'pipoca', nome: 'Pipoca', emoji: '🐱', corBase: '#FF9F29', desc: 'Gatinho fofinho' },
-            { id: 'cachorrinha', nome: 'Cachorrinha', emoji: '🐶', corBase: '#D97706', desc: 'Filhote brincalhão' },
-            { id: 'frango', nome: 'Franguinho', emoji: '🐔', corBase: '#F59E0B', desc: 'Curioso e engraçado' },
-            { id: 'cabra', nome: 'Cabrinhaz', emoji: '🐐', corBase: '#F5E6D3', desc: 'Alegre e saltitante' }
+            { id: 'pipoca', nome: 'Pipoca', emoji: '🐱', desc: 'Gatinho fofinho' },
+            { id: 'cachorrinha', nome: 'Cachorrinha', emoji: '🐶', desc: 'Filhote brincalhão' },
+            { id: 'frango', nome: 'Franguinho', emoji: '🐔', desc: 'Curioso e engraçado' },
+            { id: 'cabra', nome: 'Cabrinhaz', emoji: '🐐', desc: 'Alegre e saltitante' }
         ];
 
         const estadoPadrao = {
@@ -516,7 +522,6 @@
             localStorage.setItem(STORAGE_KEY, JSON.stringify(dados));
         }
 
-        // MIADO REALISTA (WEB AUDIO API)
         function tocarMiado() {
             try {
                 const AudioContext = window.AudioContext || window.webkitAudioContext;
@@ -576,7 +581,6 @@
             alert('💚 Pet curado com sucesso!');
         }
 
-        // GERADOR DE SVG DOS PETS COM EVOLUÇÃO (BASEADO NO NÍVEL INDIVIDUAL)
         function renderizarSvgPet(tipoPet, level) {
             let acessorioExtra = '';
             if (level >= 10 && level < 25) {
@@ -619,7 +623,6 @@
                   ${acessorioExtra}
                 </svg>`;
             } else {
-                // Pipoca e Cachorrinha (Gato base)
                 return `
                 <svg width="155" height="155" viewBox="0 0 260 260" xmlns="http://www.w3.org/2000/svg">
                     <ellipse cx="130" cy="235" rx="75" ry="12" fill="rgba(0,0,0,0.06)"/>
@@ -669,7 +672,6 @@
             renderizarAlbumPets();
         }
 
-        // SELEÇÃO E ÁLBUM DE PETS
         function renderizarAlbumPets() {
             const container = document.getElementById('grid-pets-album');
             if (!container) return;
@@ -740,7 +742,6 @@
             const t = dados.tarefas.find(x => x.id === id); if(!t) return;
             t.status = 'aprovada'; dados.moedas += t.recompensa; dados.pet.comidas = (dados.pet.comidas || 0) + 1;
             
-            // Adiciona XP para o pet atualmente selecionado!
             const ativo = dados.petAtivo || 'pipoca';
             dados.petsXp[ativo] = (dados.petsXp[ativo] || 0) + 20;
 
