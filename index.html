@@ -59,20 +59,20 @@ body{
 /* ===== ÁREA DO PET CENTRAL COMPACTA ===== */
 .cat-section{display:flex;flex-direction:column;align-items:center;justify-content:center;flex-shrink:0;margin:2px 0;}
 .cat-wrapper{
-  width:130px;height:130px;display:flex;align-items:center;justify-content:center;
+  width:120px;height:120px;display:flex;align-items:center;justify-content:center;
   cursor:pointer;position:relative;animation:catFloat 4s ease-in-out infinite;
 }
 @keyframes catFloat{0%,100%{transform:translateY(0);}50%{transform:translateY(-4px);}}
-#pet-svg-container{width:120px;height:120px;display:flex;align-items:center;justify-content:center;}
+#pet-svg-container{width:110px;height:110px;display:flex;align-items:center;justify-content:center;}
 #pet-svg-container svg{width:100%;height:100%;filter:drop-shadow(0 4px 8px rgba(0,0,0,0.15));}
 
-.level-number{font-size:28px;font-weight:900;color:#7c3aed;line-height:1;margin-top:-2px;}
+.level-number{font-size:24px;font-weight:900;color:#7c3aed;line-height:1;margin-top:0px;}
 .xp-bar-bg{
   width:75%;max-width:200px;height:18px;background:rgba(255,255,255,0.7);
   border-radius:9px;display:flex;align-items:center;justify-content:center;
   margin-top:2px;overflow:hidden;position:relative;
 }
-.xp-bar-fill{position:absolute;left:0;top:0;bottom:0;background:linear-gradient(90deg,#9C27B0,#E040FB);border-radius:9px;transition:width .5s ease;z-index:1;}
+.xp-bar-fill{position:absolute;left:0;top:0;bottom:0;width:0%;background:linear-gradient(90deg,#9C27B0,#E040FB);border-radius:9px;transition:width .5s ease;z-index:1;}
 .xp-text{font-weight:800;font-size:10px;color:#fff;z-index:2;text-shadow:0 1px 2px rgba(0,0,0,0.4);}
 
 /* ===== TAREFAS DIÁRIAS COMPACTAS ===== */
@@ -299,29 +299,29 @@ body{
 const BANCO_PETS = {
   gato: {
     nome: "Gato", emoji: "🐱", som: "miau", somFrequencia: 440,
-    svg: `<svg width="150" height="150" viewBox="0 0 260 260" xmlns="http://www.w3.org/2000/svg"><ellipse cx="130" cy="235" rx="75" ry="12" fill="rgba(0,0,0,0.06)"/><path d="M195 180 Q240 140 225 95" stroke="#FF9F29" stroke-width="28" stroke-linecap="round" fill="none"/><ellipse cx="130" cy="190" rx="65" ry="55" fill="#FF9F29"/><ellipse cx="95" cy="230" rx="18" ry="15" fill="#FFE8CC"/><ellipse cx="165" cy="230" rx="18" ry="15" fill="#FFE8CC"/><circle cx="130" cy="110" r="75" fill="#FF9F29"/><path d="M55 45 L85 85 L50 80 Z" fill="#FF9F29"/><path d="M205 45 L175 85 L210 80 Z" fill="#FF9F29"/><ellipse cx="130" cy="125" rx="48" ry="45" fill="#FFE8CC"/><ellipse cx="95" cy="100" rx="18" ry="22" fill="#2D1B10"/><ellipse cx="165" cy="100" rx="18" ry="22" fill="#2D1B10"/><path d="M130 125 L122 138 L138 138 Z" fill="#FF9AAA"/></svg>`,
+    svg: `<svg width="120" height="120" viewBox="0 0 260 260" xmlns="http://www.w3.org/2000/svg"><ellipse cx="130" cy="235" rx="75" ry="12" fill="rgba(0,0,0,0.06)"/><path d="M195 180 Q240 140 225 95" stroke="#FF9F29" stroke-width="28" stroke-linecap="round" fill="none"/><ellipse cx="130" cy="190" rx="65" ry="55" fill="#FF9F29"/><ellipse cx="95" cy="230" rx="18" ry="15" fill="#FFE8CC"/><ellipse cx="165" cy="230" rx="18" ry="15" fill="#FFE8CC"/><circle cx="130" cy="110" r="75" fill="#FF9F29"/><path d="M55 45 L85 85 L50 80 Z" fill="#FF9F29"/><path d="M205 45 L175 85 L210 80 Z" fill="#FF9F29"/><ellipse cx="130" cy="125" rx="48" ry="45" fill="#FFE8CC"/><ellipse cx="95" cy="100" rx="18" ry="22" fill="#2D1B10"/><ellipse cx="165" cy="100" rx="18" ry="22" fill="#2D1B10"/><path d="M130 125 L122 138 L138 138 Z" fill="#FF9AAA"/></svg>`,
     evolucoes: [{nivel:1,nome:"Filhote",emoji:"🐱"},{nivel:5,nome:"Jovem",emoji:"😺"},{nivel:10,nome:"Adulto",emoji:"😸"},{nivel:20,nome:"Sábio",emoji:"🐈"},{nivel:50,nome:"Lendário",emoji:"🦁"}]
   },
   cachorra: {
     nome: "Cachorrinha", emoji: "🐶", som: "au au", somFrequencia: 220,
-    svg: `<svg width="150" height="150" viewBox="0 0 270 285" xmlns="http://www.w3.org/2000/svg"><ellipse cx="135" cy="270" rx="52" ry="10" fill="rgba(0,0,0,0.08)"/><path d="M195 190 Q235 165 220 135" stroke="#D97706" stroke-width="22" stroke-linecap="round" fill="none"/><ellipse cx="135" cy="205" rx="60" ry="50" fill="#D97706"/><circle cx="135" cy="120" r="70" fill="#D97706"/><ellipse cx="105" cy="110" rx="15" ry="19" fill="#2D1B10"/><ellipse cx="165" cy="110" rx="15" ry="19" fill="#2D1B10"/><circle cx="135" cy="175" r="18" fill="#F59E0B" opacity="0.9"/></svg>`,
+    svg: `<svg width="120" height="120" viewBox="0 0 270 285" xmlns="http://www.w3.org/2000/svg"><ellipse cx="135" cy="270" rx="52" ry="10" fill="rgba(0,0,0,0.08)"/><path d="M195 190 Q235 165 220 135" stroke="#D97706" stroke-width="22" stroke-linecap="round" fill="none"/><ellipse cx="135" cy="205" rx="60" ry="50" fill="#D97706"/><circle cx="135" cy="120" r="70" fill="#D97706"/><ellipse cx="105" cy="110" rx="15" ry="19" fill="#2D1B10"/><ellipse cx="165" cy="110" rx="15" ry="19" fill="#2D1B10"/><circle cx="135" cy="175" r="18" fill="#F59E0B" opacity="0.9"/></svg>`,
     evolucoes: [{nivel:1,nome:"Filhote",emoji:"🐶"},{nivel:5,nome:"Jovem",emoji:"🐩"},{nivel:10,nome:"Adulto",emoji:"🦮"},{nivel:20,nome:"Protetora",emoji:"🐕‍🦺"},{nivel:50,nome:"Lendária",emoji:"🐺"}]
   },
   cabra: {
     nome: "Cabra", emoji: "🐐", som: "béé", somFrequencia: 330,
-    svg: `<svg width="150" height="150" viewBox="0 0 270 285" xmlns="http://www.w3.org/2000/svg"><ellipse cx="135" cy="270" rx="55" ry="12" fill="rgba(0,0,0,0.08)"/><path d="M90 60 Q70 25 85 15 Q100 25 95 55" fill="#2D1B10"/><path d="M180 60 Q200 25 185 15 Q170 25 175 55" fill="#2D1B10"/><ellipse cx="135" cy="125" rx="60" ry="65" fill="#F5E6D3"/><circle cx="105" cy="110" r="16" fill="#FFFFFF" stroke="#2D1B10" stroke-width="3"/><circle cx="165" cy="110" r="16" fill="#FFFFFF" stroke="#2D1B10" stroke-width="3"/></svg>`,
+    svg: `<svg width="120" height="120" viewBox="0 0 270 285" xmlns="http://www.w3.org/2000/svg"><ellipse cx="135" cy="270" rx="55" ry="12" fill="rgba(0,0,0,0.08)"/><path d="M90 60 Q70 25 85 15 Q100 25 95 55" fill="#2D1B10"/><path d="M180 60 Q200 25 185 15 Q170 25 175 55" fill="#2D1B10"/><ellipse cx="135" cy="125" rx="60" ry="65" fill="#F5E6D3"/><circle cx="105" cy="110" r="16" fill="#FFFFFF" stroke="#2D1B10" stroke-width="3"/><circle cx="165" cy="110" r="16" fill="#FFFFFF" stroke="#2D1B10" stroke-width="3"/></svg>`,
     evolucoes: [{nivel:1,nome:"Cabrinha",emoji:"🐐"},{nivel:5,nome:"Jovem",emoji:"🐏"},{nivel:10,nome:"Adulto",emoji:"🐐"},{nivel:20,nome:"Montanhesa",emoji:"🦌"},{nivel:50,nome:"Lendária",emoji:"🦄"}]
   },
   frango: {
     nome: "Frango", emoji: "🐔", som: "có có", somFrequencia: 520,
-    svg: `<svg width="150" height="150" viewBox="0 0 270 285" xmlns="http://www.w3.org/2000/svg"><ellipse cx="135" cy="270" rx="52" ry="10" fill="rgba(0,0,0,0.08)"/><path d="M135 48 Q120 28 108 42 Q95 18 110 35 Q125 12 135 28 Q145 12 160 35 Q175 18 162 42 Q150 28 135 48 Z" fill="#FF3344"/><circle cx="135" cy="120" r="68" fill="#FFF9E6"/><path d="M135 138 L112 152 L158 152 Z" fill="#FFCC00"/></svg>`,
+    svg: `<svg width="120" height="120" viewBox="0 0 270 285" xmlns="http://www.w3.org/2000/svg"><ellipse cx="135" cy="270" rx="52" ry="10" fill="rgba(0,0,0,0.08)"/><path d="M135 48 Q120 28 108 42 Q95 18 110 35 Q125 12 135 28 Q145 12 160 35 Q175 18 162 42 Q150 28 135 48 Z" fill="#FF3344"/><circle cx="135" cy="120" r="68" fill="#FFF9E6"/><path d="M135 138 L112 152 L158 152 Z" fill="#FFCC00"/></svg>`,
     evolucoes: [{nivel:1,nome:"Pintinho",emoji:"🐣"},{nivel:5,nome:"Jovem",emoji:"🐤"},{nivel:10,nome:"Adulto",emoji:"🐥"},{nivel:20,nome:"Galinha",emoji:"🐔"},{nivel:50,nome:"Galo Lendário",emoji:"🐓"}]
   }
 };
 
 let estado = {
   petAtual: 'gato', moedas: 15, taxaCambio: 0.01, pinPais: '1234',
-  nivel: 1, xp: 0, xpMax: 100, felicidade: 70, saude: 100,
+  nivel: 1, xp: 40, xpMax: 100, felicidade: 100, saude: 100,
   tarefas: [
     {id: 1, texto: 'Escovar os dentes', recompensa: 5, xp: 20, status: 'pendente', foto: null},
     {id: 2, texto: 'Arrumar a cama', recompensa: 5, xp: 20, status: 'pendente', foto: null}
@@ -329,10 +329,10 @@ let estado = {
   recompensas: [{id:1, texto:'15 min de tela', custo:10}]
 };
 
-let salvo = localStorage.getItem('ROTINAPET_SAVE_V35');
+let salvo = localStorage.getItem('ROTINAPET_SAVE_V36');
 if (salvo) estado = JSON.parse(salvo);
 
-function salvar() { localStorage.setItem('ROTINAPET_SAVE_V35', JSON.stringify(estado)); }
+function salvar() { localStorage.setItem('ROTINAPET_SAVE_V36', JSON.stringify(estado)); }
 
 function atualizarTela() {
     document.getElementById('txt-moedas').innerText = estado.moedas;
@@ -385,14 +385,8 @@ function ganharXP(qtd) {
         estado.nivel++;
         mostrarToast(`🎉 Subiu para o Nível ${estado.nivel}!`);
     }
-    atualizarInterface();
-}
-
-function atualizarInterface() {
-    document.getElementById('txt-moedas').innerText = estado.moedas;
-    document.getElementById('numero-nivel').innerText = estado.nivel;
-    document.getElementById('texto-xp').innerText = `${estado.xp}/100`;
-    document.getElementById('barra-xp').style.width = `${estado.xp}%`;
+    atualizarTela();
+    salvar();
 }
 
 // TAREFAS E FOTO
