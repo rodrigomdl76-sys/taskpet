@@ -57,7 +57,7 @@ body{
 .bar-fill{height:100%;width:70%;border-radius:8px;background:linear-gradient(90deg,#42C95E,#FFD000,#FF9500);transition:width .5s ease;}
 
 /* ===== ÁREA DO PET CENTRAL COMPACTA ===== */
-.cat-section{display:flex;flex-direction:column;align-items:center;justify-content:center;flex-shrink:0;margin:2px 0;}
+.cat-section{display:flex;flex-direction:column;align-items:center;justify-content:center;flex-shrink:0;margin:2px 0;position:relative;}
 .cat-wrapper{
   width:120px;height:120px;display:flex;align-items:center;justify-content:center;
   cursor:pointer;position:relative;animation:catFloat 4s ease-in-out infinite;
@@ -74,6 +74,22 @@ body{
 }
 .xp-bar-fill{position:absolute;left:0;top:0;bottom:0;width:0%;background:linear-gradient(90deg,#9C27B0,#E040FB);border-radius:9px;transition:width .5s ease;z-index:1;}
 .xp-text{font-weight:800;font-size:10px;color:#fff;z-index:2;text-shadow:0 1px 2px rgba(0,0,0,0.4);}
+
+/* ===== ANIMAÇÕES FLUTUANTES DE XP/MOEDAS ===== */
+.floating-text {
+  position: absolute;
+  font-weight: 900;
+  font-size: 18px;
+  color: #10b981;
+  text-shadow: 0 2px 4px rgba(0,0,0,0.3);
+  pointer-events: none;
+  animation: floatUp 1s ease-out forwards;
+  z-index: 50;
+}
+@keyframes floatUp {
+  0% { transform: translateY(0) scale(0.8); opacity: 1; }
+  100% { transform: translateY(-50px) scale(1.2); opacity: 0; }
+}
 
 /* ===== TAREFAS DIÁRIAS COMPACTAS ===== */
 .tasks-section{background:rgba(255,255,255,0.92);border-radius:14px;padding:8px 10px;flex-shrink:0;max-height:110px;overflow-y:auto;box-shadow:0 2px 6px rgba(0,0,0,0.05);}
@@ -114,18 +130,16 @@ body{
 
 <input type="file" id="camera-input" accept="image/*" capture="environment" class="hidden" onchange="processarFotoCapturada(event)">
 
-<div class="app">
+<div class="app" id="app-container">
 
     <!-- ===== TOPO: MOEDAS, PAIS E EVOLUÇÕES ===== -->
     <div class="top-row">
-        <!-- Moedas -->
         <div class="top-pill" onclick="alternarModoPais()">
             <div style="width: 10px; height: 16px; background: linear-gradient(180deg, #FFD300, #F9B800); border-radius: 3px; flex-shrink: 0;"></div>
             <div>
                 <div class="top-pill-text"><span id="txt-moedas">15</span> moedas</div>
             </div>
         </div>
-        <!-- Dinheiro / Pais -->
         <div class="top-pill" onclick="alternarModoPais()">
             <div style="width: 8px; height: 8px; background: #10B981; border-radius: 50%; flex-shrink: 0;"></div>
             <div>
@@ -133,7 +147,6 @@ body{
                 <div class="top-pill-sub">🔒 pais</div>
             </div>
         </div>
-        <!-- Evoluções -->
         <div class="top-pill" onclick="abrirModal('modal-evolucoes')">
             <span style="font-size: 11px;">🔥</span>
             <div>
@@ -172,8 +185,8 @@ body{
     </div>
 
     <!-- ===== PET CENTRAL SVG ===== -->
-    <div class="cat-section">
-        <div class="cat-wrapper" onclick="somDoPet()" id="pet-principal">
+    <div class="cat-section" id="pet-section-area">
+        <div class="cat-wrapper" onclick="somDoPet(event)" id="pet-principal">
             <div id="pet-svg-container"></div>
         </div>
         
@@ -184,7 +197,7 @@ body{
         </div>
     </div>
 
-    <!-- TAREFAS DIÁRIAS (BEM POSICIONADAS) -->
+    <!-- TAREFAS DIÁRIAS -->
     <div class="tasks-section">
         <div style="font-size: 10px; font-weight: 800; color: #555; margin-bottom: 4px; display: flex; justify-content: space-between;">
             <span>🛡️ TAREFAS DIÁRIAS</span>
@@ -284,11 +297,21 @@ body{
     </div>
 </div>
 
-<!-- MODAL PRÊMIOS -->
+<!-- MODAL PRÊMIOS COM META DE POUPANÇA -->
 <div class="modal-overlay" id="modal-recompensas">
     <div class="modal" style="text-align: center;">
-        <h3 style="font-size: 16px; font-weight: 900; color: #e11d48; margin-bottom: 10px;">🎁 Resgatar Prêmios</h3>
-        <div id="lista-itens-loja" style="display: flex; flex-direction: column; gap: 6px; max-height: 150px; overflow-y: auto; margin-bottom: 12px; text-align: left;"></div>
+        <h3 style="font-size: 16px; font-weight: 900; color: #e11d48; margin-bottom: 6px;">🎁 Resgatar Prêmios</h3>
+        <div style="background:#fef2f2; border:1px solid #fecaca; border-radius:10px; padding:8px; margin-bottom:12px; text-align:left;">
+            <span style="font-size:10px; font-weight:800; color:#b91c1c;">🎯 Meta Especial: Passeio no Parque</span>
+            <div style="display:flex; justify-content:space-between; font-size:10px; font-weight:700; margin-top:2px;">
+                <span>Progresso</span>
+                <span id="texto-meta-progresso">0 / 50 🪙</span>
+            </div>
+            <div style="height:6px; background:#e2e8f0; border-radius:3px; overflow:hidden; margin-top:3px;">
+                <div id="barra-meta-progresso" style="height:100%; width:0%; background:#ef4444; border-radius:3px; transition:width 0.3s;"></div>
+            </div>
+        </div>
+        <div id="lista-itens-loja" style="display: flex; flex-direction: column; gap: 6px; max-height: 130px; overflow-y: auto; margin-bottom: 12px; text-align: left;"></div>
         <button onclick="fecharModal('modal-recompensas')" style="background: none; border: none; color: #64748b; font-weight: bold; cursor: pointer;">Fechar</button>
     </div>
 </div>
@@ -298,22 +321,22 @@ body{
 <script>
 const BANCO_PETS = {
   gato: {
-    nome: "Gato", emoji: "🐱", som: "miau", somFrequencia: 440,
+    nome: "Gato", emoji: "🐱", som: "Miau!", somFrequencia: 440,
     svg: `<svg width="120" height="120" viewBox="0 0 260 260" xmlns="http://www.w3.org/2000/svg"><ellipse cx="130" cy="235" rx="75" ry="12" fill="rgba(0,0,0,0.06)"/><path d="M195 180 Q240 140 225 95" stroke="#FF9F29" stroke-width="28" stroke-linecap="round" fill="none"/><ellipse cx="130" cy="190" rx="65" ry="55" fill="#FF9F29"/><ellipse cx="95" cy="230" rx="18" ry="15" fill="#FFE8CC"/><ellipse cx="165" cy="230" rx="18" ry="15" fill="#FFE8CC"/><circle cx="130" cy="110" r="75" fill="#FF9F29"/><path d="M55 45 L85 85 L50 80 Z" fill="#FF9F29"/><path d="M205 45 L175 85 L210 80 Z" fill="#FF9F29"/><ellipse cx="130" cy="125" rx="48" ry="45" fill="#FFE8CC"/><ellipse cx="95" cy="100" rx="18" ry="22" fill="#2D1B10"/><ellipse cx="165" cy="100" rx="18" ry="22" fill="#2D1B10"/><path d="M130 125 L122 138 L138 138 Z" fill="#FF9AAA"/></svg>`,
     evolucoes: [{nivel:1,nome:"Filhote",emoji:"🐱"},{nivel:5,nome:"Jovem",emoji:"😺"},{nivel:10,nome:"Adulto",emoji:"😸"},{nivel:20,nome:"Sábio",emoji:"🐈"},{nivel:50,nome:"Lendário",emoji:"🦁"}]
   },
   cachorra: {
-    nome: "Cachorrinha", emoji: "🐶", som: "au au", somFrequencia: 220,
+    nome: "Cachorrinha", emoji: "🐶", som: "Au Au!", somFrequencia: 220,
     svg: `<svg width="120" height="120" viewBox="0 0 270 285" xmlns="http://www.w3.org/2000/svg"><ellipse cx="135" cy="270" rx="52" ry="10" fill="rgba(0,0,0,0.08)"/><path d="M195 190 Q235 165 220 135" stroke="#D97706" stroke-width="22" stroke-linecap="round" fill="none"/><ellipse cx="135" cy="205" rx="60" ry="50" fill="#D97706"/><circle cx="135" cy="120" r="70" fill="#D97706"/><ellipse cx="105" cy="110" rx="15" ry="19" fill="#2D1B10"/><ellipse cx="165" cy="110" rx="15" ry="19" fill="#2D1B10"/><circle cx="135" cy="175" r="18" fill="#F59E0B" opacity="0.9"/></svg>`,
     evolucoes: [{nivel:1,nome:"Filhote",emoji:"🐶"},{nivel:5,nome:"Jovem",emoji:"🐩"},{nivel:10,nome:"Adulto",emoji:"🦮"},{nivel:20,nome:"Protetora",emoji:"🐕‍🦺"},{nivel:50,nome:"Lendária",emoji:"🐺"}]
   },
   cabra: {
-    nome: "Cabra", emoji: "🐐", som: "béé", somFrequencia: 330,
+    nome: "Cabra", emoji: "🐐", som: "Bééé!", somFrequencia: 330,
     svg: `<svg width="120" height="120" viewBox="0 0 270 285" xmlns="http://www.w3.org/2000/svg"><ellipse cx="135" cy="270" rx="55" ry="12" fill="rgba(0,0,0,0.08)"/><path d="M90 60 Q70 25 85 15 Q100 25 95 55" fill="#2D1B10"/><path d="M180 60 Q200 25 185 15 Q170 25 175 55" fill="#2D1B10"/><ellipse cx="135" cy="125" rx="60" ry="65" fill="#F5E6D3"/><circle cx="105" cy="110" r="16" fill="#FFFFFF" stroke="#2D1B10" stroke-width="3"/><circle cx="165" cy="110" r="16" fill="#FFFFFF" stroke="#2D1B10" stroke-width="3"/></svg>`,
     evolucoes: [{nivel:1,nome:"Cabrinha",emoji:"🐐"},{nivel:5,nome:"Jovem",emoji:"🐏"},{nivel:10,nome:"Adulto",emoji:"🐐"},{nivel:20,nome:"Montanhesa",emoji:"🦌"},{nivel:50,nome:"Lendária",emoji:"🦄"}]
   },
   frango: {
-    nome: "Frango", emoji: "🐔", som: "có có", somFrequencia: 520,
+    nome: "Frango", emoji: "🐔", som: "Cocoricó!", somFrequencia: 580,
     svg: `<svg width="120" height="120" viewBox="0 0 270 285" xmlns="http://www.w3.org/2000/svg"><ellipse cx="135" cy="270" rx="52" ry="10" fill="rgba(0,0,0,0.08)"/><path d="M135 48 Q120 28 108 42 Q95 18 110 35 Q125 12 135 28 Q145 12 160 35 Q175 18 162 42 Q150 28 135 48 Z" fill="#FF3344"/><circle cx="135" cy="120" r="68" fill="#FFF9E6"/><path d="M135 138 L112 152 L158 152 Z" fill="#FFCC00"/></svg>`,
     evolucoes: [{nivel:1,nome:"Pintinho",emoji:"🐣"},{nivel:5,nome:"Jovem",emoji:"🐤"},{nivel:10,nome:"Adulto",emoji:"🐥"},{nivel:20,nome:"Galinha",emoji:"🐔"},{nivel:50,nome:"Galo Lendário",emoji:"🐓"}]
   }
@@ -322,6 +345,7 @@ const BANCO_PETS = {
 let estado = {
   petAtual: 'gato', moedas: 15, taxaCambio: 0.01, pinPais: '1234',
   nivel: 1, xp: 40, xpMax: 100, felicidade: 100, saude: 100,
+  metaMoedas: 50,
   tarefas: [
     {id: 1, texto: 'Escovar os dentes', recompensa: 5, xp: 20, status: 'pendente', foto: null},
     {id: 2, texto: 'Arrumar a cama', recompensa: 5, xp: 20, status: 'pendente', foto: null}
@@ -329,10 +353,10 @@ let estado = {
   recompensas: [{id:1, texto:'15 min de tela', custo:10}]
 };
 
-let salvo = localStorage.getItem('ROTINAPET_SAVE_V36');
+let salvo = localStorage.getItem('ROTINAPET_SAVE_V37');
 if (salvo) estado = JSON.parse(salvo);
 
-function salvar() { localStorage.setItem('ROTINAPET_SAVE_V36', JSON.stringify(estado)); }
+function salvar() { localStorage.setItem('ROTINAPET_SAVE_V37', JSON.stringify(estado)); }
 
 function atualizarTela() {
     document.getElementById('txt-moedas').innerText = estado.moedas;
@@ -356,10 +380,25 @@ function atualizarTela() {
     renderizarEvolucoes();
 }
 
-function somDoPet() {
+// 1. SOM PERSONALIZADO POR PET
+let contextoAudio = null;
+function somDoPet(event) {
+    if (!contextoAudio) contextoAudio = new (window.AudioContext || window.webkitAudioContext)();
+    const pet = BANCO_PETS[estado.petAtual];
+    const osc = contextoAudio.createOscillator();
+    const gain = contextoAudio.createGain();
+    osc.connect(gain); gain.connect(contextoAudio.destination);
+    
+    osc.frequency.value = pet.somFrequencia;
+    osc.type = estado.petAtual === 'frango' ? 'square' : 'sine';
+    
+    gain.gain.setValueAtTime(0.2, contextoAudio.currentTime);
+    gain.gain.exponentialRampToValueAtTime(0.001, contextoAudio.currentTime + 0.3);
+    osc.start(contextoAudio.currentTime); osc.stop(contextoAudio.currentTime + 0.3);
+
     estado.felicidade = Math.min(100, estado.felicidade + 5);
-    mostrarToast(`🔊 ${BANCO_PETS[estado.petAtual].som}! ❤️`);
-    ganharXP(5);
+    mostrarToast(`🔊 ${pet.som} ❤️`);
+    ganharXP(5, event);
     salvar(); atualizarTela();
 }
 
@@ -378,8 +417,30 @@ function darRemedio() {
     alert('💚 Pet com saúde 100%!');
 }
 
-function ganharXP(qtd) {
+// 2. ANIMAÇÕES FLUTUANTES DE XP E MOEDAS
+function criarTextoFlutuante(texto, evento) {
+    const area = document.getElementById('pet-section-area');
+    if (!area) return;
+    const span = document.createElement('div');
+    span.className = 'floating-text';
+    span.innerText = texto;
+    
+    let x = 120, y = 40;
+    if (evento && evento.clientX) {
+        const rect = area.getBoundingClientRect();
+        x = evento.clientX - rect.left - 20;
+        y = evento.clientY - rect.top - 20;
+    }
+    span.style.left = x + 'px';
+    span.style.top = y + 'px';
+    
+    area.appendChild(span);
+    setTimeout(() => span.remove(), 1000);
+}
+
+function ganharXP(qtd, evento) {
     estado.xp += qtd;
+    criarTextoFlutuante(`+${qtd} XP`, evento);
     if (estado.xp >= 100) {
         estado.xp -= 100;
         estado.nivel++;
@@ -514,8 +575,13 @@ function testarMath(op) {
     else alert('❌ Tente de novo!');
 }
 
-// LOJA PRÊMIOS
+// 3. LOJA PRÊMIOS COM META DE POUPANÇA
 function abrirLojaRecompensas() {
+    const meta = estado.metaMoedas || 50;
+    const progresso = Math.min(100, Math.round((estado.moedas / meta) * 100));
+    document.getElementById('texto-meta-progresso').innerText = `${estado.moedas} / ${meta} 🪙`;
+    document.getElementById('barra-meta-progresso').style.width = `${progresso}%`;
+
     const c = document.getElementById('lista-itens-loja'); c.innerHTML = '';
     estado.recompensas.forEach(r => {
         c.innerHTML += `<div style="display:flex;justify-content:space-between;align-items:center;background:#f8fafc;padding:6px;border-radius:8px;font-size:11px;"><span>📱 ${r.texto}</span><button onclick="comprarPremio(${r.custo})" style="background:#f59e0b;color:white;border:none;padding:3px 6px;border-radius:4px;font-weight:bold;cursor:pointer;">${r.custo}🪙</button></div>`;
