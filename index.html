@@ -90,7 +90,7 @@
             }
         }
 
-        /* ===== TOPO — ESCALA PROPORCIONAL ===== */
+        /* ===== TOPO ===== */
         .top-row {
             display: flex;
             justify-content: space-between;
@@ -140,7 +140,7 @@
             white-space: nowrap;
         }
 
-        /* ===== ÍCONES + BARRA FELICIDADE (ESCALA REDUZIDA) ===== */
+        /* ===== ÍCONES + BARRA FELICIDADE ===== */
         .icons-row {
             display: flex;
             justify-content: space-between;
@@ -222,7 +222,7 @@
             text-transform: lowercase;
         }
 
-        /* ===== GATO CENTRAL SVG (ESCALA ENCAIXADA) ===== */
+        /* ===== GATO CENTRAL SVG ===== */
         .cat-section {
             display: flex;
             flex-direction: column;
@@ -239,6 +239,7 @@
             justify-content: center;
             animation: catFloat 5s ease-in-out infinite;
             cursor: pointer;
+            position: relative;
         }
         @keyframes catFloat {
             0%, 100% { transform: translateY(0); }
@@ -341,7 +342,6 @@
 </head>
 <body id="corpo-pagina">
 
-    <!-- Nuvens e Fundo -->
     <div class="cloud cloud1"></div>
     <div class="cloud cloud2"></div>
     <div class="cloud cloud3"></div>
@@ -355,13 +355,10 @@
 
         <!-- ===== TOPO ===== -->
         <div class="top-row">
-            <!-- Moedas -->
             <div class="top-btn" onclick="alternarModoPais()">
                 <div class="coin-icon"></div>
                 <span class="top-btn-text-main"><span id="txt-moedas">15</span> moedas</span>
             </div>
-            
-            <!-- Dinheiro / Pais -->
             <div class="top-btn" onclick="alternarModoPais()">
                 <div class="coin-icon" style="background: linear-gradient(180deg, #34D399, #059669);"></div>
                 <div>
@@ -369,8 +366,6 @@
                     <div class="top-btn-text-main" style="font-size: 11px;">🔒 Pais</div>
                 </div>
             </div>
-
-            <!-- Dias / Ofensiva -->
             <div class="top-btn" onclick="abrirBibliotecaPets()">
                 <div class="coin-icon" style="background: linear-gradient(180deg, #F43F5E, #BE123C);"></div>
                 <div>
@@ -397,42 +392,11 @@
             </div>
         </div>
 
-        <!-- ===== GATO SVG CENTRAL (ESCALA PERFEITA) ===== -->
+        <!-- ===== GATO CENTRAL SVG COM EVOLUÇÃO DINÂMICA ===== -->
         <div class="cat-section">
             <div class="cat-wrapper" onclick="fazerCarinho(event)" id="bg-pet-visual">
-                <svg width="170" height="170" viewBox="0 0 260 260" xmlns="http://www.w3.org/2000/svg">
-                    <ellipse cx="130" cy="235" rx="75" ry="12" fill="rgba(0,0,0,0.06)"/>
-                    <path d="M195 180 Q240 140 225 95" stroke="#FF9F29" stroke-width="28" stroke-linecap="round" fill="none"/>
-                    <path d="M195 180 Q240 140 225 95" stroke="#FFB84D" stroke-width="12" stroke-linecap="round" fill="none" opacity="0.6"/>
-                    <ellipse cx="130" cy="190" rx="65" ry="55" fill="#FF9F29"/>
-                    <ellipse cx="95" cy="230" rx="18" ry="15" fill="#FFE8CC"/>
-                    <ellipse cx="165" cy="230" rx="18" ry="15" fill="#FFE8CC"/>
-                    <circle cx="130" cy="110" r="75" fill="#FF9F29"/>
-                    <path d="M55 45 L85 85 L50 80 Z" fill="#FF9F29"/>
-                    <path d="M60 52 L80 82 L55 78 Z" fill="#FFB84D"/>
-                    <circle cx="70" cy="55" r="6" fill="#FFE8CC" opacity="0.8"/>
-                    <path d="M205 45 L175 85 L210 80 Z" fill="#FF9F29"/>
-                    <path d="M200 52 L180 82 L205 78 Z" fill="#FFB84D"/>
-                    <circle cx="190" cy="55" r="6" fill="#FFE8CC" opacity="0.8"/>
-                    <rect x="115" y="45" width="10" height="25" rx="4" fill="#E88A1C"/>
-                    <rect x="95" y="55" width="8" height="20" rx="4" fill="#E88A1C" transform="rotate(-12 95 55)"/>
-                    <rect x="137" y="55" width="8" height="20" rx="4" fill="#E88A1C" transform="rotate(12 137 55)"/>
-                    <circle cx="130" cy="40" r="7" fill="#FFE8CC" opacity="0.7"/>
-                    <ellipse cx="130" cy="125" rx="48" ry="45" fill="#FFE8CC"/>
-                    <ellipse cx="95" cy="100" rx="18" ry="22" fill="#2D1B10"/>
-                    <ellipse cx="165" cy="100" rx="18" ry="22" fill="#2D1B10"/>
-                    <ellipse cx="100" cy="92" rx="7" ry="9" fill="white"/>
-                    <ellipse cx="170" cy="92" rx="7" ry="9" fill="white"/>
-                    <path d="M130 125 L122 138 L138 138 Z" fill="#FF9AAA"/>
-                    <path d="M130 138 Q124 145 115 143" stroke="#2D1B10" stroke-width="2.5" fill="none" stroke-linecap="round"/>
-                    <path d="M130 138 Q136 145 145 143" stroke="#2D1B10" stroke-width="2.5" fill="none" stroke-linecap="round"/>
-                    <line x1="55" y1="110" x2="85" y2="115" stroke="#2D1B10" stroke-width="2" opacity="0.7"/>
-                    <line x1="50" y1="125" x2="85" y2="125" stroke="#2D1B10" stroke-width="2" opacity="0.7"/>
-                    <line x1="55" y1="140" x2="85" y2="135" stroke="#2D1B10" stroke-width="2" opacity="0.7"/>
-                    <line x1="205" y1="110" x2="175" y2="115" stroke="#2D1B10" stroke-width="2" opacity="0.7"/>
-                    <line x1="210" y1="125" x2="175" y2="125" stroke="#2D1B10" stroke-width="2" opacity="0.7"/>
-                    <line x1="205" y1="140" x2="175" y2="135" stroke="#2D1B10" stroke-width="2" opacity="0.7"/>
-                </svg>
+                <!-- SVG gerado dinamicamente com base no nível -->
+                <div id="svg-gato-container"></div>
             </div>
             
             <div class="level-number" id="txt-level-num">1</div>
@@ -546,17 +510,23 @@
         </div>
     </div>
 
-    <!-- MODAL ÁLBUM / PETS -->
+    <!-- MODAL ÁLBUM / EVOLUÇÕES -->
     <div id="modal-biblioteca" class="modal-overlay hidden">
         <div style="background: white; border-radius: 28px; padding: 20px; width: 100%; max-width: 320px; text-align: center;">
-            <h3 style="font-size: 18px; font-weight: 800; color: #0284c7; margin-bottom: 10px;">📖 Álbum de Mascotes</h3>
-            <p style="font-size: 12px; color: #64748b; margin-bottom: 14px;">Suba de nível para desbloquear novas fases do seu pet!</p>
+            <h3 style="font-size: 18px; font-weight: 800; color: #0284c7; margin-bottom: 10px;">📖 Fases da Evolução</h3>
+            <div style="font-size: 12px; color: #475569; text-align: left; display: flex; flex-direction: column; gap: 8px; margin-bottom: 14px;">
+                <div style="background:#f1f5f9; padding:8px; border-radius:8px;">🥉 <b>Fase 1 (Nível 1 a 9):</b> Gatinho Filhote</div>
+                <div style="background:#f1f5f9; padding:8px; border-radius:8px;">🥈 <b>Fase 2 (Nível 10 a 24):</b> Gatinho Aventureiro (com gravata)</div>
+                <div style="background:#f1f5f9; padding:8px; border-radius:8px;">🥇 <b>Fase 3 (Nível 25 a 49):</b> Gato Mestre (com óculos escuros)</div>
+                <div style="background:#f1f5f9; padding:8px; border-radius:8px;">💎 <b>Fase 4 (Nível 50 a 99):</b> Gato Lendário (com capa mágica)</div>
+                <div style="background:#fef3c7; padding:8px; border-radius:8px; border: 1px solid #f59e0b;">👑 <b>Fase 5 (Nível 100):</b> Titã Supremo (com Coroa Real Dourada)</div>
+            </div>
             <button onclick="fecharBibliotecaPets()" style="width: 100%; background: #0284c7; color: white; border: none; padding: 10px; border-radius: 10px; font-weight: bold; cursor: pointer;">Fechar</button>
         </div>
     </div>
 
     <script>
-        const STORAGE_KEY = 'ROTINAPET_SAVE_V26';
+        const STORAGE_KEY = 'ROTINAPET_SAVE_V27';
 
         const estadoPadrao = {
             pet: { tipo: 'pipoca', nome: 'Pipoca', fome: 80, saude: 90, felicidade: 70, doente: false, comidas: 3, xp: 0 },
@@ -623,6 +593,93 @@
             alert('💚 Pet curado com sucesso!');
         }
 
+        // GERADOR DO GATO SVG COM BASE NA EVOLUÇÃO (NÍVEL)
+        function renderizarSvgGato(level) {
+            // Acessórios dinâmicos por fase de evolução
+            let acessorioExtra = '';
+            
+            if (level >= 10 && level < 25) {
+                // Fase 2: Gravatinha Borboleta Azul
+                acessorioExtra = `<polygon points="130,150 115,165 130,180 145,165" fill="#38BDF8"/><circle cx="130" cy="165" r="5" fill="#0284C7"/>`;
+            } else if (level >= 25 && level < 50) {
+                // Fase 3: Óculos Escuros de Estilo
+                acessorioExtra = `<rect x="80" y="88" width="35" height="22" rx="4" fill="#1e293b"/><rect x="145" y="88" width="35" height="22" rx="4" fill="#1e293b"/><line x1="115" y1="96" x2="145" y2="96" stroke="#1e293b" stroke-width="4"/><circle cx="90" cy="95" r="4" fill="white" opacity="0.6"/>`;
+            } else if (level >= 50 && level < 100) {
+                // Fase 4: Capa Mágica Roxa nas costas + Brilho
+                acessorioExtra = `<path d="M90 170 L65 230 L130 215 L195 230 L170 170 Z" fill="#9333EA"/><circle cx="130" cy="100" r="90" fill="none" stroke="#C084FC" stroke-width="3" stroke-dasharray="8 6" opacity="0.7"/>`;
+            } else if (level >= 100) {
+                // Fase 5: Coroa Real Dourada Suprema + Capa Suprema
+                acessorioExtra = `<path d="M90 170 L60 235 L130 220 L200 235 L170 170 Z" fill="#D97706"/><path d="M100 35 L110 55 L130 30 L150 55 L160 35 L165 65 L95 65 Z" fill="#FBBF24"/><circle cx="130" cy="48" r="4" fill="#EF4444"/><circle cx="110" cy="52" r="3" fill="#3B82F6"/><circle cx="150" cy="52" r="3" fill="#10B981"/>`;
+            }
+
+            return `
+                <svg width="170" height="170" viewBox="0 0 260 260" xmlns="http://www.w3.org/2000/svg">
+                    <!-- Sombra -->
+                    <ellipse cx="130" cy="235" rx="75" ry="12" fill="rgba(0,0,0,0.06)"/>
+                    
+                    <!-- Capa/Acessório traseiro se houver -->
+                    ${level >= 50 ? '<path d="M90 170 L60 235 L130 220 L200 235 L170 170 Z" fill="#7C3AED"/>' : ''}
+
+                    <!-- Rabo -->
+                    <path d="M195 180 Q240 140 225 95" stroke="#FF9F29" stroke-width="28" stroke-linecap="round" fill="none"/>
+                    <path d="M195 180 Q240 140 225 95" stroke="#FFB84D" stroke-width="12" stroke-linecap="round" fill="none" opacity="0.6"/>
+                    
+                    <!-- Corpo -->
+                    <ellipse cx="130" cy="190" rx="65" ry="55" fill="#FF9F29"/>
+                    
+                    <!-- Patinhas -->
+                    <ellipse cx="95" cy="230" rx="18" ry="15" fill="#FFE8CC"/>
+                    <ellipse cx="165" cy="230" rx="18" ry="15" fill="#FFE8CC"/>
+                    
+                    <!-- Cabeça -->
+                    <circle cx="130" cy="110" r="75" fill="#FF9F29"/>
+                    
+                    <!-- Orelha esquerda -->
+                    <path d="M55 45 L85 85 L50 80 Z" fill="#FF9F29"/>
+                    <path d="M60 52 L80 82 L55 78 Z" fill="#FFB84D"/>
+                    <circle cx="70" cy="55" r="6" fill="#FFE8CC" opacity="0.8"/>
+                    
+                    <!-- Orelha direita -->
+                    <path d="M205 45 L175 85 L210 80 Z" fill="#FF9F29"/>
+                    <path d="M200 52 L180 82 L205 78 Z" fill="#FFB84D"/>
+                    <circle cx="190" cy="55" r="6" fill="#FFE8CC" opacity="0.8"/>
+                    
+                    <!-- Listras testa -->
+                    <rect x="115" y="45" width="10" height="25" rx="4" fill="#E88A1C"/>
+                    <rect x="95" y="55" width="8" height="20" rx="4" fill="#E88A1C" transform="rotate(-12 95 55)"/>
+                    <rect x="137" y="55" width="8" height="20" rx="4" fill="#E88A1C" transform="rotate(12 137 55)"/>
+                    <circle cx="130" cy="40" r="7" fill="#FFE8CC" opacity="0.7"/>
+                    
+                    <!-- Rosto branco -->
+                    <ellipse cx="130" cy="125" rx="48" ry="45" fill="#FFE8CC"/>
+                    
+                    <!-- Olhos grandes -->
+                    <ellipse cx="95" cy="100" rx="18" ry="22" fill="#2D1B10"/>
+                    <ellipse cx="165" cy="100" rx="18" ry="22" fill="#2D1B10"/>
+                    <ellipse cx="100" cy="92" rx="7" ry="9" fill="white"/>
+                    <ellipse cx="170" cy="92" rx="7" ry="9" fill="white"/>
+                    
+                    <!-- Nariz -->
+                    <path d="M130 125 L122 138 L138 138 Z" fill="#FF9AAA"/>
+                    
+                    <!-- Boca -->
+                    <path d="M130 138 Q124 145 115 143" stroke="#2D1B10" stroke-width="2.5" fill="none" stroke-linecap="round"/>
+                    <path d="M130 138 Q136 145 145 143" stroke="#2D1B10" stroke-width="2.5" fill="none" stroke-linecap="round"/>
+                    
+                    <!-- Bigodes -->
+                    <line x1="55" y1="110" x2="85" y2="115" stroke="#2D1B10" stroke-width="2" opacity="0.7"/>
+                    <line x1="50" y1="125" x2="85" y2="125" stroke="#2D1B10" stroke-width="2" opacity="0.7"/>
+                    <line x1="55" y1="140" x2="85" y2="135" stroke="#2D1B10" stroke-width="2" opacity="0.7"/>
+                    <line x1="205" y1="110" x2="175" y2="115" stroke="#2D1B10" stroke-width="2" opacity="0.7"/>
+                    <line x1="210" y1="125" x2="175" y2="125" stroke="#2D1B10" stroke-width="2" opacity="0.7"/>
+                    <line x1="205" y1="140" x2="175" y2="135" stroke="#2D1B10" stroke-width="2" opacity="0.7"/>
+
+                    <!-- EVOLUÇÃO / ACESSÓRIO ATUAL -->
+                    ${acessorioExtra}
+                </svg>
+            `;
+        }
+
         function atualizarTela() {
             const xp = dados.pet.xp || 0;
             const level = Math.floor(xp / 100) + 1;
@@ -643,6 +700,9 @@
 
             document.getElementById('input-taxa-cambio').value = dados.taxaCambio;
             document.getElementById('input-idade-crianca').value = dados.idadeCrianca || 8;
+
+            // Atualiza o SVG do gato baseado no nível atual de evolução
+            document.getElementById('svg-gato-container').innerHTML = renderizarSvgGato(level);
 
             renderizarTarefas();
             renderizarPainelAprovacao();
@@ -729,7 +789,6 @@
         function atualizarTaxaCambio(v) { dados.taxaCambio = parseFloat(v) || 0.01; salvar(); }
         function atualizarIdadeCrianca(v) { dados.idadeCrianca = parseInt(v) || 8; salvar(); }
 
-        // PAINEL PAIS TOGGLE
         function alternarModoPais() {
             const vP = document.getElementById('view-pais');
             if (vP.classList.contains('hidden')) {
@@ -744,7 +803,6 @@
             }
         }
 
-        // MINIGAME DESAFIO
         let respCerta = 0;
         function abrirMinigame() {
             const idade = dados.idadeCrianca || 8; let a, b, operacao = '+';
@@ -764,7 +822,6 @@
         }
         function fecharJogo() { document.getElementById('modal-jogo').classList.add('hidden'); }
 
-        // VOZ TALKING TOM
         async function gravarVoz() {
             try {
                 const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
@@ -785,7 +842,6 @@
             } catch(e) { alert('⚠️ Permita o uso do microfone para falar com o pet!'); }
         }
 
-        // RECOMPENSAS
         function abrirLojaRecompensas() { document.getElementById('modal-recompensas').classList.remove('hidden'); }
         function fecharLojaRecompensas() { document.getElementById('modal-recompensas').classList.add('hidden'); }
         function renderizarLojaCrianca() {
