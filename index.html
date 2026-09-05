@@ -11,10 +11,18 @@
 html,body{width:100%;height:100%;overflow:hidden;}
 
 body{
-  background:linear-gradient(180deg,#4facfe 0%,#00f2fe 100%);
   min-height:100vh;
   color:#1e293b;
+  transition:background 0.6s ease;
 }
+
+body.cenario-ceu{background:linear-gradient(180deg,#4facfe 0%,#00f2fe 100%);}
+body.cenario-noite{background:linear-gradient(180deg,#0f172a 0%,#1e3a8a 100%);color:#f8fafc;}
+body.cenario-chuva{background:linear-gradient(180deg,#475569 0%,#94a3b8 100%);}
+body.cenario-arcoiris{background:linear-gradient(180deg,#f87171 0%,#fbbf24 20%,#4ade80 50%,#60a5fa 75%,#a78bfa 100%);}
+body.cenario-praia{background:linear-gradient(180deg,#fef08a 0%,#fcd34d 30%,#38bdf8 65%,#0ea5e9 100%);}
+body.cenario-floresta{background:linear-gradient(180deg,#166534 0%,#15803d 45%,#84cc16 100%);}
+body.cenario-festa{background:linear-gradient(180deg,#f472b6 0%,#a78bfa 50%,#60a5fa 100%);}
 
 .app{width:100%;max-width:400px;height:100vh;margin:0 auto;position:relative;display:flex;flex-direction:column;justify-content:space-between;padding:8px 12px;}
 
@@ -72,14 +80,14 @@ body{
 .xp-bar-fill{position:absolute;left:0;top:0;bottom:0;width:0%;background:linear-gradient(90deg,#9C27B0,#E040FB);border-radius:8px;transition:width .5s ease;z-index:1;}
 .xp-text{font-weight:800;font-size:9px;color:#fff;z-index:2;text-shadow:0 1px 2px rgba(0,0,0,0.4);}
 
-.floating-text {
-  position: absolute; font-weight: 900; font-size: 16px; color: #10b981;
-  text-shadow: 0 2px 4px rgba(0,0,0,0.3); pointer-events: none;
-  animation: floatUp 0.9s ease-out forwards; z-index: 50;
+.floating-text{
+  position:absolute;font-weight:900;font-size:16px;color:#10b981;
+  text-shadow:0 2px 4px rgba(0,0,0,0.3);pointer-events:none;
+  animation:floatUp 0.9s ease-out forwards;z-index:50;
 }
-@keyframes floatUp {
-  0% { transform: translateY(0) scale(0.8); opacity: 1; }
-  100% { transform: translateY(-40px) scale(1.2); opacity: 0; }
+@keyframes floatUp{
+  0%{transform:translateY(0) scale(0.8);opacity:1;}
+  100%{transform:translateY(-40px) scale(1.2);opacity:0;}
 }
 
 .tasks-section{background:rgba(255,255,255,0.92);border-radius:14px;padding:6px 10px;flex-shrink:0;max-height:100px;overflow-y:auto;box-shadow:0 2px 6px rgba(0,0,0,0.05);}
@@ -91,29 +99,39 @@ body{
 .task-btn{padding:2px 6px;border-radius:6px;border:none;font-weight:800;font-size:9px;cursor:pointer;}
 .btn-ok{background:#22c55e;color:#fff;}
 
-.bottom-buttons{display:grid;grid-template-columns:repeat(4,1fr);gap:6px;flex-shrink:0;margin-bottom:2px;}
+.bottom-buttons{display:grid;grid-template-columns:repeat(5,1fr);gap:4px;flex-shrink:0;margin-bottom:2px;}
 .bottom-btn{
-  aspect-ratio:1;border-radius:16px;border:none;display:flex;flex-direction:column;
-  align-items:center;justify-content:center;gap:1px;font-size:9px;font-weight:800;
+  aspect-ratio:1;border-radius:14px;border:none;display:flex;flex-direction:column;
+  align-items:center;justify-content:center;gap:1px;font-size:8px;font-weight:800;
   color:white;cursor:pointer;box-shadow:0 3px 8px rgba(0,0,0,0.1);transition:transform .2s;
 }
 .bottom-btn:active{transform:scale(0.92);}
 .btn-food{background:linear-gradient(135deg,#FFC107,#FF9800);}
 .btn-voice{background:linear-gradient(135deg,#4CAF50,#00BFA5);}
 .btn-game{background:linear-gradient(135deg,#9C27B0,#7B1FA2);}
+.btn-fundos{background:linear-gradient(135deg,#0284c7,#2563eb);}
 .btn-premios{background:linear-gradient(135deg,#FF5252,#FF3D00);}
-.btn-icon{font-size:16px;line-height:1;}
+.btn-icon{font-size:15px;line-height:1;}
 
 .modal-overlay{position:fixed;inset:0;background:rgba(0,0,0,0.6);display:flex;align-items:center;justify-content:center;padding:14px;z-index:100;backdrop-filter:blur(4px);opacity:0;visibility:hidden;transition:.3s;}
 .modal-overlay.mostrar{opacity:1;visibility:visible;}
 .modal{background:#fff;border-radius:24px;padding:18px;width:100%;max-width:340px;max-height:85vh;overflow-y:auto;box-shadow:0 15px 35px rgba(0,0,0,0.25);}
 .hidden{display:none!important;}
 
+.grid-fundos{display:grid;grid-template-columns:repeat(2,1fr);gap:8px;}
+.fundo-card{
+  border-radius:12px;padding:8px;display:flex;flex-direction:column;align-items:center;
+  justify-content:center;color:#fff;text-shadow:0 1px 2px rgba(0,0,0,0.5);cursor:pointer;
+  border:2px solid transparent;transition:transform 0.15s;min-height:74px;
+}
+.fundo-card:active{transform:scale(0.96);}
+.fundo-card.ativo{border-color:#22c55e;box-shadow:0 0 0 2px rgba(34,197,94,0.3);}
+
 .toast{position:fixed;bottom:65px;left:50%;transform:translateX(-50%) translateY(20px);background:rgba(15,23,42,0.9);color:#fff;padding:6px 14px;border-radius:20px;font-weight:800;font-size:11px;z-index:200;opacity:0;transition:all .3s ease;pointer-events:none;}
 .toast.mostrar{opacity:1;transform:translateX(-50%) translateY(0);}
 </style>
 </head>
-<body class="cenario-dia">
+<body class="cenario-ceu">
 
 <input type="file" id="camera-input" accept="image/*" capture="environment" class="hidden" onchange="processarFotoCapturada(event)">
 
@@ -194,11 +212,26 @@ body{
         <button class="bottom-btn btn-game" onclick="abrirDesafioMatematica()">
             <span class="btn-icon">🎮</span>Desafio
         </button>
+        <button class="bottom-btn btn-fundos" onclick="abrirLojaFundos()">
+            <span class="btn-icon">🖼️</span>Fundos
+        </button>
         <button class="bottom-btn btn-premios" onclick="abrirLojaRecompensas()">
             <span class="btn-icon">🎁</span>Prêmios
         </button>
     </div>
 
+</div>
+
+<!-- MODAL LOJA DE FUNDOS -->
+<div id="modal-fundos" class="modal-overlay">
+    <div class="modal" style="text-align:center;">
+        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:10px;">
+            <h3 style="font-size:16px; font-weight:900; color:#0284c7;">🖼️ Loja de Fundos</h3>
+            <button onclick="fecharModal('modal-fundos')" style="background:#e2e8f0; border:none; padding:4px 8px; border-radius:6px; font-weight:bold; cursor:pointer;">X</button>
+        </div>
+        <p style="font-size:10px; color:#64748b; margin-bottom:10px;">Compre novos papéis de parede com suas moedas!</p>
+        <div class="grid-fundos" id="grid-fundos"></div>
+    </div>
 </div>
 
 <!-- MODAL TIMER TELA -->
@@ -406,9 +439,19 @@ const BANCO_PETS = {
   frango: { nome: "Frango", emoji: "🐔", som: "Cocoricó!", freq: 580, evolucoes: [{nivel:1,nome:"Pintinho"},{nivel:5,nome:"Jovem"},{nivel:10,nome:"Adulto"},{nivel:20,nome:"Galinha"},{nivel:50,nome:"Galo Lendário"}] }
 };
 
+const BANCO_FUNDOS = [
+  {id:'ceu',nome:'Céu Azul',emoji:'☀️',preco:0,bg:'linear-gradient(180deg,#4facfe,#00f2fe)'},
+  {id:'chuva',nome:'Chuva',emoji:'🌧️',preco:12,bg:'linear-gradient(180deg,#475569,#94a3b8)'},
+  {id:'noite',nome:'Noite Estrelada',emoji:'🌙',preco:20,bg:'linear-gradient(180deg,#0f172a,#1e3a8a)'},
+  {id:'arcoiris',nome:'Arco-Íris',emoji:'🌈',preco:30,bg:'linear-gradient(180deg,#f87171,#fbbf24 30%,#4ade80 60%,#60a5fa 100%)'},
+  {id:'praia',nome:'Praia Tropical',emoji:'🏖️',preco:25,bg:'linear-gradient(180deg,#fef08a,#38bdf8)'},
+  {id:'floresta',nome:'Floresta Mágica',emoji:'🌲',preco:22,bg:'linear-gradient(180deg,#166534,#84cc16)'},
+  {id:'festa',nome:'Balada Neon',emoji:'🎉',preco:35,bg:'linear-gradient(180deg,#f472b6,#a78bfa 50%,#60a5fa)'}
+];
+
 let estado = {
   petAtual: 'gato', moedas: 15, dinheiroAcumulado: 0.15, taxaCambio: 0.01, pinPais: '1234',
-  idadeCrianca: 7,
+  idadeCrianca: 7, fundoAtual: 'ceu', fundosComprados: ['ceu'],
   nivel: 1, xp: 40, xpMax: 100, felicidade: 100, saude: 100,
   metaMoedas: 50, totalSacado: 0, ultimoDiaAcesso: new Date().toISOString().slice(0,10),
   tarefas: [
@@ -427,6 +470,8 @@ if (salvo) {
   if (typeof estado.dinheiroAcumulado !== 'number') {
     estado.dinheiroAcumulado = (estado.moedas || 0) * (estado.taxaCambio || 0.01);
   }
+  if (!Array.isArray(estado.fundosComprados)) estado.fundosComprados = ['ceu'];
+  if (!estado.fundoAtual) estado.fundoAtual = 'ceu';
 }
 
 const hoje = new Date().toISOString().slice(0,10);
@@ -436,6 +481,10 @@ if (estado.ultimoDiaAcesso !== hoje) {
 }
 
 function salvar() { localStorage.setItem('ROTINAPET_SAVE_FINAL', JSON.stringify(estado)); }
+
+function aplicarFundoTela(id) {
+  document.body.className = `cenario-${id}`;
+}
 
 function atualizarTela() {
     document.getElementById('txt-moedas').innerText = estado.moedas;
@@ -461,6 +510,7 @@ function atualizarTela() {
     const inputIdade = document.getElementById('input-idade-crianca');
     if (inputIdade) inputIdade.value = estado.idadeCrianca || 7;
 
+    aplicarFundoTela(estado.fundoAtual || 'ceu');
     renderizarTarefas();
     renderizarEvolucoes();
 }
@@ -743,6 +793,50 @@ function testarMath(op) {
       salvar();
       atualizarTela();
     } else alert('❌ Tente de novo!');
+}
+
+function abrirLojaFundos() {
+  const c = document.getElementById('grid-fundos');
+  c.innerHTML = '';
+  BANCO_FUNDOS.forEach(f => {
+    const comprado = estado.fundosComprados.includes(f.id);
+    const ativo = estado.fundoAtual === f.id;
+    const card = document.createElement('div');
+    card.className = `fundo-card ${ativo ? 'ativo' : ''}`;
+    card.style.background = f.bg;
+    card.innerHTML = `
+      <span style="font-size:20px;">${f.emoji}</span>
+      <b style="font-size:11px;margin-top:2px;">${f.nome}</b>
+      <span style="font-size:9px;font-weight:800;margin-top:2px;background:rgba(0,0,0,0.3);padding:2px 6px;border-radius:6px;">
+        ${ativo ? '✓ Em uso' : comprado ? 'Usar' : `${f.preco} 🪙`}
+      </span>
+    `;
+    card.onclick = () => selecionarOuComprarFundo(f);
+    c.appendChild(card);
+  });
+  abrirModal('modal-fundos');
+}
+
+function selecionarOuComprarFundo(f) {
+  if (estado.fundosComprados.includes(f.id)) {
+    estado.fundoAtual = f.id;
+    aplicarFundoTela(f.id);
+    salvar();
+    abrirLojaFundos();
+    mostrarToast(`🎨 Fundo "${f.nome}" aplicado!`);
+  } else if (estado.moedas >= f.preco) {
+    estado.moedas -= f.preco;
+    estado.fundosComprados.push(f.id);
+    estado.fundoAtual = f.id;
+    aplicarFundoTela(f.id);
+    dispararConfetes();
+    salvar();
+    atualizarTela();
+    abrirLojaFundos();
+    alert(`🎉 Você desbloqueou o fundo "${f.nome}"!`);
+  } else {
+    alert(`🪙 Moedas insuficientes! Você precisa de ${f.preco} moedas.`);
+  }
 }
 
 let intervaloTimer = null;
