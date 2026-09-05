@@ -1,8 +1,8 @@
-<!DOCTYPE html>
+TYPE html>
 <html lang="pt-BR">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0">
 <title>RotinaPet — Seu Pet Virtual</title>
 <style>
 @import url('https://fonts.googleapis.com/css2?family=Nunito:wght@500;600;700;800;900&display=swap');
@@ -109,6 +109,11 @@ body.cenario-arcoiris{background:linear-gradient(180deg,#f87171 0%,#fbbf24 20%,#
 .task-btn{width:36px;height:36px;border-radius:10px;border:none;font-weight:900;cursor:pointer;transition:.2s;}
 .btn-ok{background:#22c55e;color:#fff;}
 .btn-del{background:#f1f5f9;color:#ef4444;}
+.task-row.concluida{opacity:.55;background:#f8fafc;}
+.task-row.concluida .task-name{text-decoration:line-through;}
+.task-btn:disabled{cursor:not-allowed;opacity:.7;}
+button:focus-visible,[role="button"]:focus-visible{outline:4px solid #facc15;outline-offset:3px;}
+@media (prefers-reduced-motion:reduce){*,*::before,*::after{animation-duration:.01ms!important;transition-duration:.01ms!important;animation-iteration-count:1!important;}}
 
 .modal-overlay{position:fixed;inset:0;background:rgba(15,23,42,.6);backdrop-filter:blur(6px);z-index:50;display:flex;align-items:center;justify-content:center;padding:20px;opacity:0;visibility:hidden;transition:.3s;}
 .modal-overlay.mostrar{opacity:1;visibility:visible;}
@@ -179,8 +184,8 @@ input[type="range"]::-webkit-slider-thumb{-webkit-appearance:none;width:24px;hei
     <!-- Status -->
     <div class="status-row">
       <div class="health-wrap">
-        <div class="health-icon">💚</div>
-        <span class="health-label">Saúde</span>
+        <div class="health-icon" id="icone-saude" aria-label="Saúde do pet">💚</div>
+        <span class="health-label" id="texto-saude">Saúde 100%</span>
       </div>
       <div class="happiness-wrap">
         <span class="happiness-label">Felicidade</span>
@@ -226,38 +231,7 @@ input[type="range"]::-webkit-slider-thumb{-webkit-appearance:none;width:24px;hei
         <span class="tasks-title">✅ Minhas Tarefas</span>
         <span class="tasks-count" id="qtd-tarefas">3 tarefas</span>
       </div>
-      <div id="lista-tarefas">
-        <div class="task-row">
-          <div class="task-info">
-            <span class="task-name">Alimentar o pet</span>
-            <span class="task-reward">+10 moedas • +20 XP</span>
-          </div>
-          <div class="task-actions">
-            <button class="task-btn btn-ok" onclick="concluirTarefa(this,10,20)">✓</button>
-            <button class="task-btn btn-del" onclick="removerTarefa(this)">✕</button>
-          </div>
-        </div>
-        <div class="task-row">
-          <div class="task-info">
-            <span class="task-name">Gravar mensagem</span>
-            <span class="task-reward">+15 moedas • +30 XP</span>
-          </div>
-          <div class="task-actions">
-            <button class="task-btn btn-ok" onclick="concluirTarefa(this,15,30)">✓</button>
-            <button class="task-btn btn-del" onclick="removerTarefa(this)">✕</button>
-          </div>
-        </div>
-        <div class="task-row">
-          <div class="task-info">
-            <span class="task-name">Brincar com o pet</span>
-            <span class="task-reward">+20 moedas • +40 XP</span>
-          </div>
-          <div class="task-actions">
-            <button class="task-btn btn-ok" onclick="concluirTarefa(this,20,40)">✓</button>
-            <button class="task-btn btn-del" onclick="removerTarefa(this)">✕</button>
-          </div>
-        </div>
-      </div>
+      <div id="lista-tarefas" aria-live="polite"></div>
     </div>
   </div>
 
@@ -383,17 +357,19 @@ const BANCO_CENARIOS = [
   {id:'arcoiris',nome:'Arco-Íris',emoji:'🌈',preco:100}
 ];
 
-let estado = {
-  petAtual: 'gato',
-  moedas: 15,
-  nivel: 1,
-  xp: 0,
-  xpMax: 100,
-  felicidade: 80,
-  idade: 6,
-  cenariosComprados: ['dia'],
-  cenarioAtual: 'dia'
+const ESTADO_PADRAO = {
+  petAtual: 'gato', moedas: 15, nivel: 1, xp: 0, xpMax: 100,
+  felicidade: 80, saude: 100, fome: 20, idade: 6,
+  cenariosComprados: ['dia'], cenarioAtual: 'dia',
+  vozPet: null, ultimoAcesso: Date.now(),
+  tarefas: [
+    {id: 1, nome: 'Alimentar o pet', moedas: 10, xp: 20, concluida: false},
+    {id: 2, nome: 'Gravar mensagem', moedas: 15, xp: 30, concluida: false},
+    {id: 3, nome: 'Brincar com o pet', moedas: 20, xp: 40, concluida: false}
+  ]
 };
+
+let estado = structuredClone(ESTADO_PADRAO);
 
 let gravacaoAtiva = false;
 let mediaRecorder = null;
@@ -404,15 +380,73 @@ let contextoAudio = null;
 let contaCorreta = 0;
 
 document.addEventListener('DOMContentLoaded', () => {
+  carregarEstado();
+  aplicarPassagemDeTempo();
   carregarPet();
   atualizarInterface();
+  renderizarTarefas();
   renderizarCenarios();
   atualizarBarraFelicidade();
   renderizarEvolucoes();
 });
 
+function copiarPadrao() {
+  return JSON.parse(JSON.stringify(ESTADO_PADRAO));
+}
+
+function normalizarEstado(dados) {
+  const base = copiarPadrao();
+  const resultado = {...base, ...(dados && typeof dados === 'object' ? dados : {})};
+  resultado.petAtual = BANCO_PETS[resultado.petAtual] ? resultado.petAtual : 'gato';
+  resultado.cenarioAtual = BANCO_CENARIOS.some(c => c.id === resultado.cenarioAtual) ? resultado.cenarioAtual : 'dia';
+  resultado.cenariosComprados = Array.isArray(resultado.cenariosComprados)
+    ? resultado.cenariosComprados.filter(id => BANCO_CENARIOS.some(c => c.id === id))
+    : ['dia'];
+  if (!resultado.cenariosComprados.includes('dia')) resultado.cenariosComprados.unshift('dia');
+  resultado.moedas = Math.max(0, Math.floor(Number(resultado.moedas) || 0));
+  resultado.nivel = Math.max(1, Math.floor(Number(resultado.nivel) || 1));
+  resultado.xpMax = Math.max(1, Math.floor(Number(resultado.xpMax) || 100));
+  resultado.xp = Math.max(0, Math.min(resultado.xpMax - 1, Math.floor(Number(resultado.xp) || 0)));
+  resultado.felicidade = Math.min(100, Math.max(0, Number(resultado.felicidade) || 0));
+  resultado.saude = Math.min(100, Math.max(0, Number(resultado.saude) || 0));
+  resultado.fome = Math.min(100, Math.max(0, Number(resultado.fome) || 0));
+  resultado.tarefas = Array.isArray(resultado.tarefas) ? resultado.tarefas
+    .filter(t => t && Number.isFinite(Number(t.id)) && typeof t.nome === 'string')
+    .map(t => ({id: Number(t.id), nome: t.nome.slice(0, 80), moedas: Math.max(0, Number(t.moedas) || 0), xp: Math.max(0, Number(t.xp) || 0), concluida: Boolean(t.concluida)})) : copiarPadrao().tarefas;
+  resultado.ultimoAcesso = Number(resultado.ultimoAcesso) || Date.now();
+  resultado.vozPet = typeof resultado.vozPet === 'string' && resultado.vozPet.startsWith('data:audio/') ? resultado.vozPet : null;
+  return resultado;
+}
+
 function salvarProgresso() {
-  localStorage.setItem('rotina_pet', JSON.stringify(estado));
+  try {
+    localStorage.setItem('rotina_pet', JSON.stringify(estado));
+  } catch (erro) {
+    console.error('Não foi possível salvar o progresso:', erro);
+    mostrarToast('⚠️ Não foi possível salvar o progresso');
+  }
+}
+
+function carregarEstado() {
+  try {
+    const salvo = localStorage.getItem('rotina_pet');
+    estado = normalizarEstado(salvo ? JSON.parse(salvo) : null);
+  } catch (erro) {
+    console.error('Progresso inválido. Restaurando estado seguro:', erro);
+    estado = copiarPadrao();
+    salvarProgresso();
+  }
+}
+
+function aplicarPassagemDeTempo() {
+  const horas = Math.max(0, Math.min(720, (Date.now() - estado.ultimoAcesso) / 3600000));
+  if (horas >= 1) {
+    estado.felicidade = Math.max(0, estado.felicidade - Math.floor(horas * 2));
+    estado.saude = Math.max(0, estado.saude - Math.floor(horas * 0.5));
+    estado.fome = Math.min(100, estado.fome + Math.floor(horas * 3));
+  }
+  estado.ultimoAcesso = Date.now();
+  salvarProgresso();
 }
 
 function carregarPet() {
@@ -465,6 +499,14 @@ document.addEventListener('click', (e) => {
 });
 
 function somDoPet() {
+  if (estado.vozPet) {
+    const audio = new Audio(estado.vozPet);
+    audio.playbackRate = taxaTom;
+    audio.play().catch(() => mostrarToast('⚠️ Toque novamente para reproduzir a voz'));
+    mostrarToast(`🔊 ${BANCO_PETS[estado.petAtual].som}!`);
+    ganharXP(5);
+    return;
+  }
   if (!contextoAudio) contextoAudio = new (window.AudioContext || window.webkitAudioContext)();
   const pet = BANCO_PETS[estado.petAtual];
   const osc = contextoAudio.createOscillator();
@@ -484,6 +526,8 @@ function somDoPet() {
 function darLanche() {
   mostrarToast('🍎 Comida dada! +15 Felicidade');
   estado.felicidade = Math.min(100, estado.felicidade + 15);
+  estado.saude = Math.min(100, estado.saude + 5);
+  estado.fome = Math.max(0, estado.fome - 20);
   atualizarBarraFelicidade();
   ganharXP(10);
   salvarProgresso();
@@ -497,6 +541,8 @@ function atualizarInterface() {
   const porcentagemXP = (estado.xp / estado.xpMax) * 100;
   document.getElementById('barra-xp').style.width = `${porcentagemXP}%`;
   document.getElementById('texto-xp').textContent = `XP ${estado.xp}/${estado.xpMax}`;
+  document.getElementById('texto-saude').textContent = `Saúde ${Math.round(estado.saude)}%`;
+  document.getElementById('icone-saude').textContent = estado.saude >= 60 ? '💚' : estado.saude >= 30 ? '💛' : '❤️';
   
   const pet = BANCO_PETS[estado.petAtual];
   const evolucaoAtual = pet.evolucoes.reduce((a, b) => estado.nivel >= b.nivel ? b : a, pet.evolucoes[0]);
@@ -520,32 +566,47 @@ function ganharXP(quantidade) {
   salvarProgresso();
 }
 
-function concluirTarefa(botao, moedas, xp) {
-  estado.moedas += moedas;
-  ganharXP(xp);
-  mostrarToast(`✅ Tarefa concluída! +${moedas} moedas +${xp} XP`);
-  if (botao) {
-    const linha = botao.closest('.task-row');
-    if (linha) {
-      linha.style.opacity = '0.5';
-      botao.disabled = true;
+function renderizarTarefas() {
+  const lista = document.getElementById('lista-tarefas');
+  lista.innerHTML = '';
+  estado.tarefas.forEach(tarefa => {
+    const linha = document.createElement('div');
+    linha.className = `task-row ${tarefa.concluida ? 'concluida' : ''}`;
+    linha.innerHTML = `<div class="task-info"><span class="task-name"></span><span class="task-reward"></span></div><div class="task-actions"></div>`;
+    linha.querySelector('.task-name').textContent = tarefa.nome;
+    linha.querySelector('.task-reward').textContent = `+${tarefa.moedas} moedas • +${tarefa.xp} XP`;
+    const acoes = linha.querySelector('.task-actions');
+    if (tarefa.concluida) {
+      const ok = document.createElement('span'); ok.textContent = '✅'; ok.setAttribute('aria-label', 'Concluída'); acoes.appendChild(ok);
+    } else {
+      const btn = document.createElement('button'); btn.className = 'task-btn btn-ok'; btn.textContent = '✓'; btn.setAttribute('aria-label', `Concluir ${tarefa.nome}`); btn.onclick = () => concluirTarefaPorId(tarefa.id); acoes.appendChild(btn);
     }
-  }
-  atualizarInterface();
-  salvarProgresso();
+    const del = document.createElement('button'); del.className = 'task-btn btn-del'; del.textContent = '✕'; del.setAttribute('aria-label', `Remover ${tarefa.nome}`); del.onclick = () => removerTarefaPorId(tarefa.id); acoes.appendChild(del);
+    lista.appendChild(linha);
+  });
+  document.getElementById('qtd-tarefas').textContent = `${estado.tarefas.length} tarefas`;
 }
 
-function removerTarefa(botao) {
-  const linha = botao.closest('.task-row');
-  if (!linha) return;
-  linha.style.transform = 'translateX(100%)';
-  linha.style.opacity = '0';
-  linha.style.transition = 'all 0.3s ease';
-  setTimeout(() => {
-    linha.remove();
-    document.getElementById('qtd-tarefas').textContent = `${document.querySelectorAll('.task-row').length} tarefas`;
-  }, 300);
+function concluirTarefaPorId(id) {
+  const tarefa = estado.tarefas.find(t => t.id === id);
+  if (!tarefa || tarefa.concluida) return;
+  tarefa.concluida = true;
+  estado.moedas += tarefa.moedas;
+  ganharXP(tarefa.xp);
+  salvarProgresso();
+  renderizarTarefas();
+  mostrarToast(`✅ Tarefa concluída! +${tarefa.moedas} moedas +${tarefa.xp} XP`);
 }
+
+function removerTarefaPorId(id) {
+  const indice = estado.tarefas.findIndex(t => t.id === id);
+  if (indice < 0) return;
+  estado.tarefas.splice(indice, 1);
+  salvarProgresso();
+  renderizarTarefas();
+  mostrarToast('🗑️ Tarefa removida');
+}
+
 
 function alternarGravador() {
   abrirModal('modal-gravador');
@@ -560,6 +621,7 @@ async function iniciarGravacao() {
     mediaRecorder.ondataavailable = e => dadosGravacao.push(e.data);
     mediaRecorder.onstop = () => {
       const blob = new Blob(dadosGravacao, {type:'audio/webm'});
+      if (audioUrl) URL.revokeObjectURL(audioUrl);
       audioUrl = URL.createObjectURL(blob);
       document.getElementById('audio-original').src = audioUrl;
       document.getElementById('grav-result').style.display = 'block';
@@ -599,9 +661,29 @@ function reproduzirModificado() {
   mostrarToast('▶️ Reproduzindo...');
 }
 
-function salvarVoz() {
-  mostrarToast('✅ Voz salva no Pet!');
-  fecharModal('modal-gravador');
+async function salvarVoz() {
+  if (!audioUrl) { mostrarToast('❌ Nenhuma gravação disponível!'); return; }
+  try {
+    const resposta = await fetch(audioUrl);
+    const blob = await resposta.blob();
+    if (blob.size > 2 * 1024 * 1024) { mostrarToast('⚠️ Gravação muito grande para salvar'); return; }
+    estado.vozPet = await blobParaDataURL(blob);
+    salvarProgresso();
+    mostrarToast('✅ Voz salva no Pet!');
+    fecharModal('modal-gravador');
+  } catch (erro) {
+    console.error('Erro ao salvar voz:', erro);
+    mostrarToast('❌ Não foi possível salvar a gravação');
+  }
+}
+
+function blobParaDataURL(blob) {
+  return new Promise((resolve, reject) => {
+    const leitor = new FileReader();
+    leitor.onloadend = () => resolve(leitor.result);
+    leitor.onerror = reject;
+    leitor.readAsDataURL(blob);
+  });
 }
 
 function renderizarCenarios() {
@@ -730,11 +812,17 @@ function renderizarEvolucoes() {
 
 function abrirModal(id) {
   document.getElementById(id).classList.add('mostrar');
+  document.body.style.overflow = 'hidden';
 }
 
 function fecharModal(id) {
   document.getElementById(id).classList.remove('mostrar');
+  if (!document.querySelector('.modal-overlay.mostrar')) document.body.style.overflow = '';
 }
+
+document.addEventListener('keydown', e => {
+  if (e.key === 'Escape') document.querySelectorAll('.modal-overlay.mostrar').forEach(m => fecharModal(m.id));
+});
 
 document.querySelectorAll('.modal-overlay').forEach(m => {
   m.addEventListener('click', e => {
