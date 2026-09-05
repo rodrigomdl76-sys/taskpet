@@ -127,7 +127,7 @@
             text-transform: lowercase;
         }
 
-        /* ===== STATUS E FELICIDADE COMPACTOS ===== */
+        /* ===== STATUS E FELICIDADE COMPACTOS (SEM BOTÃO DE CORAÇÃO) ===== */
         .status-row {
             display: flex;
             align-items: center;
@@ -171,7 +171,7 @@
             transition: width 0.5s ease;
         }
 
-        /* ===== GATO CENTRAL SVG ===== */
+        /* ===== PET CENTRAL SVG ===== */
         .cat-section {
             display: flex;
             flex-direction: column;
@@ -319,21 +319,21 @@
                     <div class="top-pill-sub">🔒 pais</div>
                 </div>
             </div>
-            <!-- Ofensiva -->
+            <!-- Ofensiva / Álbum de Pets -->
             <div class="top-pill" onclick="abrirBibliotecaPets()">
-                <span style="font-size: 12px;">🔥</span>
+                <span style="font-size: 12px;">🐾</span>
                 <div>
-                    <div class="top-pill-text"><span id="txt-ofensiva">1</span> dias</div>
-                    <div class="top-pill-sub">ofensiva</div>
+                    <div class="top-pill-text" id="txt-pet-ativo">Pipoca</div>
+                    <div class="top-pill-sub">trocar pet</div>
                 </div>
             </div>
         </div>
 
-        <!-- ===== STATUS E FELICIDADE COMPACTOS ===== -->
+        <!-- ===== STATUS E FELICIDADE COMPACTOS (SEM CORAÇÃO) ===== -->
         <div class="status-row">
             <!-- Fome / Lanche -->
             <div class="mini-card" onclick="alimentarPet(event)" title="Fome">
-                <span style="font-size: 16px;">❤️</span>
+                <span style="font-size: 14px;">🍎</span>
                 <span id="txt-comidas" style="font-size: 11px; font-weight: 800; background:#f43f5e; color:white; padding:1px 6px; border-radius:10px;">3</span>
             </div>
             <!-- Saúde -->
@@ -353,10 +353,10 @@
             </div>
         </div>
 
-        <!-- ===== GATO CENTRAL SVG COM EVOLUÇÃO E MIADO REALISTA ===== -->
+        <!-- ===== PET CENTRAL SVG COM EVOLUÇÃO E MIADO REALISTA ===== -->
         <div class="cat-section">
             <div class="cat-wrapper" onclick="fazerCarinho(event)" id="bg-pet-visual">
-                <div id="svg-gato-container"></div>
+                <div id="svg-pet-container"></div>
             </div>
             
             <div class="level-number" id="txt-level-num">1</div>
@@ -369,7 +369,7 @@
         <!-- Lista de Tarefas Compacta -->
         <div class="tarefas-box">
             <div style="font-size: 9px; font-weight: 800; color: #555; margin-bottom: 3px; display: flex; justify-content: space-between;">
-                <span>🛡️ TAREFAS DIÁRIAS</span>
+                <span>🛡️ TAREFAS DIÁRIAS (XP vai pro pet selecionado!)</span>
                 <span style="color: #0284c7;">Enviar Foto 📸</span>
             </div>
             <div id="lista-todas-tarefas" style="display: flex; flex-direction: column; gap: 4px;"></div>
@@ -470,26 +470,31 @@
         </div>
     </div>
 
-    <!-- MODAL ÁLBUM / EVOLUÇÕES -->
+    <!-- MODAL ÁLBUM DE SELEÇÃO E EVOLUÇÃO DOS PETS -->
     <div id="modal-biblioteca" class="modal-overlay hidden">
-        <div style="background: white; border-radius: 28px; padding: 20px; width: 100%; max-width: 320px; text-align: center;">
-            <h3 style="font-size: 18px; font-weight: 800; color: #0284c7; margin-bottom: 10px;">📖 Fases da Evolução</h3>
-            <div style="font-size: 12px; color: #475569; text-align: left; display: flex; flex-direction: column; gap: 8px; margin-bottom: 14px;">
-                <div style="background:#f1f5f9; padding:8px; border-radius:8px;">🥉 <b>Fase 1 (Nível 1-9):</b> Filhote</div>
-                <div style="background:#f1f5f9; padding:8px; border-radius:8px;">🥈 <b>Fase 2 (Nível 10-24):</b> Aventureiro (Gravata)</div>
-                <div style="background:#f1f5f9; padding:8px; border-radius:8px;">🥇 <b>Fase 3 (Nível 25-49):</b> Mestre (Óculos)</div>
-                <div style="background:#f1f5f9; padding:8px; border-radius:8px;">💎 <b>Fase 4 (Nível 50-99):</b> Lendário (Capa)</div>
-                <div style="background:#fef3c7; padding:8px; border-radius:8px; border: 1px solid #f59e0b;">👑 <b>Fase 5 (Nível 100):</b> Titã Supremo (Coroa)</div>
-            </div>
-            <button onclick="fecharBibliotecaPets()" style="width: 100%; background: #0284c7; color: white; border: none; padding: 10px; border-radius: 10px; font-weight: bold; cursor: pointer;">Fechar</button>
+        <div style="background: white; border-radius: 28px; padding: 20px; width: 100%; max-width: 340px; text-align: center; max-height: 85vh; overflow-y: auto;">
+            <h3 style="font-size: 18px; font-weight: 800; color: #0284c7; margin-bottom: 4px;">📖 Escolha seu Pet</h3>
+            <p style="font-size: 11px; color: #64748b; margin-bottom: 14px;">Selecione qual mascote vai receber o XP das tarefas!</p>
+            <div id="grid-pets-album" style="display: flex; flex-direction: column; gap: 10px; margin-bottom: 14px; text-align: left;"></div>
+            <button onclick="fecharBibliotecaPets()" style="width: 100%; background: #0284c7; color: white; border: none; padding: 10px; border-radius: 10px; font-weight: bold; cursor: pointer;">Fechar Álbum</button>
         </div>
     </div>
 
     <script>
-        const STORAGE_KEY = 'ROTINAPET_SAVE_V29';
+        const STORAGE_KEY = 'ROTINAPET_SAVE_V30';
+
+        // LISTA DE PETS DISPONÍVEIS COM XP INDIVIDUAL
+        const LISTA_PETS = [
+            { id: 'pipoca', nome: 'Pipoca', emoji: '🐱', corBase: '#FF9F29', desc: 'Gatinho fofinho' },
+            { id: 'cachorrinha', nome: 'Cachorrinha', emoji: '🐶', corBase: '#D97706', desc: 'Filhote brincalhão' },
+            { id: 'frango', nome: 'Franguinho', emoji: '🐔', corBase: '#F59E0B', desc: 'Curioso e engraçado' },
+            { id: 'cabra', nome: 'Cabrinhaz', emoji: '🐐', corBase: '#F5E6D3', desc: 'Alegre e saltitante' }
+        ];
 
         const estadoPadrao = {
-            pet: { tipo: 'pipoca', nome: 'Pipoca', fome: 80, saude: 90, felicidade: 70, doente: false, comidas: 3, xp: 0 },
+            petAtivo: 'pipoca',
+            petsXp: { pipoca: 0, cachorrinha: 0, frango: 0, cabra: 0 },
+            pet: { fome: 80, saude: 90, felicidade: 70, doente: false, comidas: 3 },
             moedas: 15, taxaCambio: 0.01, pinPais: '1234', idadeCrianca: 8,
             ofensivaDias: 1, ultimoDiaAcesso: '', tempoTelaSegundos: 0, modoNoiteForcado: null,
             tarefas: [
@@ -504,12 +509,14 @@
         };
 
         let dados = JSON.parse(localStorage.getItem(STORAGE_KEY)) || estadoPadrao;
+        if (!dados.petsXp) dados.petsXp = { pipoca: 0, cachorrinha: 0, frango: 0, cabra: 0 };
+        if (!dados.petAtivo) dados.petAtivo = 'pipoca';
 
         function salvar() {
             localStorage.setItem(STORAGE_KEY, JSON.stringify(dados));
         }
 
-        // MIADO REALISTA SINTETIZADO (WEB AUDIO API)
+        // MIADO REALISTA (WEB AUDIO API)
         function tocarMiado() {
             try {
                 const AudioContext = window.AudioContext || window.webkitAudioContext;
@@ -569,60 +576,70 @@
             alert('💚 Pet curado com sucesso!');
         }
 
-        function renderizarSvgGato(level) {
+        // GERADOR DE SVG DOS PETS COM EVOLUÇÃO (BASEADO NO NÍVEL INDIVIDUAL)
+        function renderizarSvgPet(tipoPet, level) {
             let acessorioExtra = '';
-            
             if (level >= 10 && level < 25) {
                 acessorioExtra = `<polygon points="130,150 115,165 130,180 145,165" fill="#38BDF8"/><circle cx="130" cy="165" r="5" fill="#0284C7"/>`;
             } else if (level >= 25 && level < 50) {
-                acessorioExtra = `<rect x="80" y="88" width="35" height="22" rx="4" fill="#1e293b"/><rect x="145" y="88" width="35" height="22" rx="4" fill="#1e293b"/><line x1="115" y1="96" x2="145" y2="96" stroke="#1e293b" stroke-width="4"/><circle cx="90" cy="95" r="4" fill="white" opacity="0.6"/>`;
+                acessorioExtra = `<rect x="80" y="88" width="35" height="22" rx="4" fill="#1e293b"/><rect x="145" y="88" width="35" height="22" rx="4" fill="#1e293b"/><line x1="115" y1="96" x2="145" y2="96" stroke="#1e293b" stroke-width="4"/>`;
             } else if (level >= 50 && level < 100) {
                 acessorioExtra = `<path d="M90 170 L65 230 L130 215 L195 230 L170 170 Z" fill="#9333EA"/><circle cx="130" cy="100" r="90" fill="none" stroke="#C084FC" stroke-width="3" stroke-dasharray="8 6" opacity="0.7"/>`;
             } else if (level >= 100) {
-                acessorioExtra = `<path d="M90 170 L60 235 L130 220 L200 235 L170 170 Z" fill="#D97706"/><path d="M100 35 L110 55 L130 30 L150 55 L160 35 L165 65 L95 65 Z" fill="#FBBF24"/><circle cx="130" cy="48" r="4" fill="#EF4444"/><circle cx="110" cy="52" r="3" fill="#3B82F6"/><circle cx="150" cy="52" r="3" fill="#10B981"/>`;
+                acessorioExtra = `<path d="M90 170 L60 235 L130 220 L200 235 L170 170 Z" fill="#D97706"/><path d="M100 35 L110 55 L130 30 L150 55 L160 35 L165 65 L95 65 Z" fill="#FBBF24"/>`;
             }
 
-            return `
+            if (tipoPet === 'frango') {
+                return `
+                <svg width="155" height="155" viewBox="0 0 270 285" xmlns="http://www.w3.org/2000/svg">
+                  <ellipse cx="135" cy="270" rx="52" ry="10" fill="rgba(0,0,0,0.08)"/>
+                  <path d="M135 48 Q120 28 108 42 Q95 18 110 35 Q90 15 110 32 Q125 12 135 28 Q145 12 135 32 Q160 15 140 35 Q165 25 155 45 Q142 38 135 48 Z" fill="#FF3344"/>
+                  <circle cx="135" cy="120" r="68" fill="#FFF9E6"/>
+                  <path d="M135 138 L112 152 L158 152 Z" fill="#FFCC00"/>
+                  <ellipse cx="135" cy="150" rx="12" ry="8" fill="#552200"/>
+                  <circle cx="100" cy="105" r="22" fill="#FFFFFF" stroke="#2D1B10" stroke-width="3.5"/>
+                  <circle cx="170" cy="105" r="22" fill="#FFFFFF" stroke="#2D1B10" stroke-width="3.5"/>
+                  <circle cx="95" cy="100" r="11" fill="#2D1B10"/>
+                  <circle cx="175" cy="100" r="11" fill="#2D1B10"/>
+                  <ellipse cx="135" cy="205" rx="62" ry="52" fill="#FFF9E6"/>
+                  ${acessorioExtra}
+                </svg>`;
+            } else if (tipoPet === 'cabra') {
+                return `
+                <svg width="155" height="155" viewBox="0 0 270 285" xmlns="http://www.w3.org/2000/svg">
+                  <ellipse cx="135" cy="270" rx="55" ry="12" fill="rgba(0,0,0,0.08)"/>
+                  <ellipse cx="135" cy="200" rx="58" ry="52" fill="#F5E6D3"/>
+                  <path d="M90 60 Q70 25 85 15 Q100 25 95 55" fill="#2D1B10"/>
+                  <path d="M180 60 Q200 25 185 15 Q170 25 175 55" fill="#2D1B10"/>
+                  <ellipse cx="135" cy="125" rx="60" ry="65" fill="#F5E6D3"/>
+                  <circle cx="105" cy="110" r="16" fill="#FFFFFF" stroke="#2D1B10" stroke-width="3"/>
+                  <circle cx="165" cy="110" r="16" fill="#FFFFFF" stroke="#2D1B10" stroke-width="3"/>
+                  <circle cx="108" cy="108" r="8" fill="#2D1B10"/>
+                  <circle cx="162" cy="108" r="8" fill="#2D1B10"/>
+                  ${acessorioExtra}
+                </svg>`;
+            } else {
+                // Pipoca e Cachorrinha (Gato base)
+                return `
                 <svg width="155" height="155" viewBox="0 0 260 260" xmlns="http://www.w3.org/2000/svg">
                     <ellipse cx="130" cy="235" rx="75" ry="12" fill="rgba(0,0,0,0.06)"/>
-                    ${level >= 50 ? '<path d="M90 170 L60 235 L130 220 L200 235 L170 170 Z" fill="#7C3AED"/>' : ''}
-                    <path d="M195 180 Q240 140 225 95" stroke="#FF9F29" stroke-width="28" stroke-linecap="round" fill="none"/>
-                    <path d="M195 180 Q240 140 225 95" stroke="#FFB84D" stroke-width="12" stroke-linecap="round" fill="none" opacity="0.6"/>
-                    <ellipse cx="130" cy="190" rx="65" ry="55" fill="#FF9F29"/>
-                    <ellipse cx="95" cy="230" rx="18" ry="15" fill="#FFE8CC"/>
-                    <ellipse cx="165" cy="230" rx="18" ry="15" fill="#FFE8CC"/>
-                    <circle cx="130" cy="110" r="75" fill="#FF9F29"/>
-                    <path d="M55 45 L85 85 L50 80 Z" fill="#FF9F29"/>
-                    <path d="M60 52 L80 82 L55 78 Z" fill="#FFB84D"/>
-                    <circle cx="70" cy="55" r="6" fill="#FFE8CC" opacity="0.8"/>
-                    <path d="M205 45 L175 85 L210 80 Z" fill="#FF9F29"/>
-                    <path d="M200 52 L180 82 L205 78 Z" fill="#FFB84D"/>
-                    <circle cx="190" cy="55" r="6" fill="#FFE8CC" opacity="0.8"/>
-                    <rect x="115" y="45" width="10" height="25" rx="4" fill="#E88A1C"/>
-                    <rect x="95" y="55" width="8" height="20" rx="4" fill="#E88A1C" transform="rotate(-12 95 55)"/>
-                    <rect x="137" y="55" width="8" height="20" rx="4" fill="#E88A1C" transform="rotate(12 137 55)"/>
-                    <circle cx="130" cy="40" r="7" fill="#FFE8CC" opacity="0.7"/>
+                    <ellipse cx="130" cy="190" rx="65" ry="55" fill="${tipoPet === 'cachorrinha' ? '#D97706' : '#FF9F29'}"/>
+                    <circle cx="130" cy="110" r="75" fill="${tipoPet === 'cachorrinha' ? '#D97706' : '#FF9F29'}"/>
+                    <path d="M55 45 L85 85 L50 80 Z" fill="${tipoPet === 'cachorrinha' ? '#D97706' : '#FF9F29'}"/>
+                    <path d="M205 45 L175 85 L210 80 Z" fill="${tipoPet === 'cachorrinha' ? '#D97706' : '#FF9F29'}"/>
                     <ellipse cx="130" cy="125" rx="48" ry="45" fill="#FFE8CC"/>
                     <ellipse cx="95" cy="100" rx="18" ry="22" fill="#2D1B10"/>
                     <ellipse cx="165" cy="100" rx="18" ry="22" fill="#2D1B10"/>
-                    <ellipse cx="100" cy="92" rx="7" ry="9" fill="white"/>
-                    <ellipse cx="170" cy="92" rx="7" ry="9" fill="white"/>
                     <path d="M130 125 L122 138 L138 138 Z" fill="#FF9AAA"/>
-                    <path d="M130 138 Q124 145 115 143" stroke="#2D1B10" stroke-width="2.5" fill="none" stroke-linecap="round"/>
-                    <path d="M130 138 Q136 145 145 143" stroke="#2D1B10" stroke-width="2.5" fill="none" stroke-linecap="round"/>
-                    <line x1="55" y1="110" x2="85" y2="115" stroke="#2D1B10" stroke-width="2" opacity="0.7"/>
-                    <line x1="50" y1="125" x2="85" y2="125" stroke="#2D1B10" stroke-width="2" opacity="0.7"/>
-                    <line x1="55" y1="140" x2="85" y2="135" stroke="#2D1B10" stroke-width="2" opacity="0.7"/>
-                    <line x1="205" y1="110" x2="175" y2="115" stroke="#2D1B10" stroke-width="2" opacity="0.7"/>
-                    <line x1="210" y1="125" x2="175" y2="125" stroke="#2D1B10" stroke-width="2" opacity="0.7"/>
-                    <line x1="205" y1="140" x2="175" y2="135" stroke="#2D1B10" stroke-width="2" opacity="0.7"/>
                     ${acessorioExtra}
-                </svg>
-            `;
+                </svg>`;
+            }
         }
 
         function atualizarTela() {
-            const xp = dados.pet.xp || 0;
+            const ativo = dados.petAtivo || 'pipoca';
+            const petInfo = LISTA_PETS.find(p => p.id === ativo) || LISTA_PETS[0];
+            const xp = dados.petsXp[ativo] || 0;
             const level = Math.floor(xp / 100) + 1;
             const xpAtual = xp % 100;
 
@@ -630,6 +647,7 @@
             document.getElementById('txt-dinheiro').innerText = (dados.moedas * dados.taxaCambio).toFixed(2).replace('.', ',');
             document.getElementById('txt-ofensiva').innerText = dados.ofensivaDias || 1;
             document.getElementById('txt-comidas').innerText = dados.pet.comidas || 0;
+            document.getElementById('txt-pet-ativo').innerText = petInfo.nome;
             
             document.getElementById('txt-level-num').innerText = level;
             document.getElementById('txt-xp-atual').innerText = xpAtual;
@@ -642,12 +660,46 @@
             document.getElementById('input-taxa-cambio').value = dados.taxaCambio;
             document.getElementById('input-idade-crianca').value = dados.idadeCrianca || 8;
 
-            document.getElementById('svg-gato-container').innerHTML = renderizarSvgGato(level);
+            document.getElementById('svg-pet-container').innerHTML = renderizarSvgPet(ativo, level);
 
             renderizarTarefas();
             renderizarPainelAprovacao();
             renderizarEdicaoTarefas();
             renderizarLojaCrianca();
+            renderizarAlbumPets();
+        }
+
+        // SELEÇÃO E ÁLBUM DE PETS
+        function renderizarAlbumPets() {
+            const container = document.getElementById('grid-pets-album');
+            if (!container) return;
+            container.innerHTML = '';
+            LISTA_PETS.forEach(p => {
+                const xpPet = dados.petsXp[p.id] || 0;
+                const lvlPet = Math.floor(xpPet / 100) + 1;
+                const selecionado = dados.petAtivo === p.id;
+                
+                container.innerHTML += `
+                    <div style="background:${selecionado ? '#e0f2fe' : '#f8fafc'}; border:2px solid ${selecionado ? '#0284c7' : '#cbd5e1'}; border-radius:12px; padding:10px; display:flex; justify-content:space-between; align-items:center;">
+                        <div>
+                            <span style="font-size:24px;">${p.emoji}</span>
+                            <b style="font-size:13px; margin-left:6px;">${p.nome}</b>
+                            <span style="font-size:10px; color:#64748b; display:block;">Nível ${lvlPet} • ${xpPet} XP</span>
+                        </div>
+                        <div>
+                            ${selecionado ? '<span style="font-size:11px; background:#0284c7; color:white; padding:4px 8px; border-radius:6px; font-weight:bold;">Ativo</span>' : 
+                            `<button onclick="trocarPetAtivo('${p.id}')" style="background:#10b981; color:white; border:none; padding:6px 12px; border-radius:6px; font-size:11px; font-weight:bold; cursor:pointer;">Selecionar</button>`}
+                        </div>
+                    </div>`;
+            });
+        }
+
+        function trocarPetAtivo(id) {
+            dados.petAtivo = id;
+            salvar();
+            atualizarTela();
+            alert(`✨ Você agora está cuidando do ${LISTA_PETS.find(p => p.id === id).nome}! O XP das tarefas irá para ele.`);
+            fecharBibliotecaPets();
         }
 
         function renderizarTarefas() {
@@ -659,7 +711,7 @@
                     <div style="display:flex; justify-content:space-between; align-items:center; background:white; padding:5px 7px; border-radius:6px; border:1px solid #e2e8f0; font-size:10px;">
                         <div>
                             <span style="font-weight:700; ${apr ? 'text-decoration:line-through; color:#888;' : ''}">${t.texto}</span>
-                            <span style="font-size:8px; color:#6366f1; display:block;">+20 XP • ${t.recompensa} 🪙</span>
+                            <span style="font-size:8px; color:#6366f1; display:block;">+20 XP para o pet • ${t.recompensa} 🪙</span>
                         </div>
                         <div>
                             ${apr ? '<span style="color:#10b981; font-weight:800;">✓</span>' : 
@@ -687,7 +739,12 @@
         function aprovarTarefa(id) {
             const t = dados.tarefas.find(x => x.id === id); if(!t) return;
             t.status = 'aprovada'; dados.moedas += t.recompensa; dados.pet.comidas = (dados.pet.comidas || 0) + 1;
-            dados.pet.xp = (dados.pet.xp || 0) + 20; salvar(); atualizarTela(); alert('🎉 Tarefa aprovada! Moedas e XP adicionados!');
+            
+            // Adiciona XP para o pet atualmente selecionado!
+            const ativo = dados.petAtivo || 'pipoca';
+            dados.petsXp[ativo] = (dados.petsXp[ativo] || 0) + 20;
+
+            salvar(); atualizarTela(); alert('🎉 Tarefa aprovada! Moedas e XP adicionados ao pet ativo!');
         }
         function recusarTarefa(id) { const t = dados.tarefas.find(x => x.id === id); if(t) { t.status = 'pendente'; t.foto = null; salvar(); atualizarTela(); } }
 
@@ -744,7 +801,7 @@
 
         let respCerta = 0;
         function abrirMinigame() {
-            const idade = dados.idadeCrianca || 8; let a, b, operacao = '+';
+            const idade = dados.idadeCrianca || 8; let a, b;
             if (idade <= 6) { a = Math.floor(Math.random() * 5) + 1; b = Math.floor(Math.random() * 5) + 1; respCerta = a + b; }
             else { a = Math.floor(Math.random() * 10) + 2; b = Math.floor(Math.random() * 10) + 2; respCerta = a + b; }
             
@@ -795,7 +852,7 @@
             salvar(); atualizarTela();
         }
 
-        function abrirBibliotecaPets() { document.getElementById('modal-biblioteca').classList.remove('hidden'); }
+        function abrirBibliotecaPets() { renderizarAlbumPets(); document.getElementById('modal-biblioteca').classList.remove('hidden'); }
         function fecharBibliotecaPets() { document.getElementById('modal-biblioteca').classList.add('hidden'); }
         function fecharFotoPreview() { document.getElementById('modal-foto-preview').classList.add('hidden'); }
 
