@@ -1,959 +1,1063 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
-  <title>RotinaPet - Gamificação de Rotina</title>
-  <style>
-    :root {
-      --primary: #4f46e5;
-      --primary-hover: #4338ca;
-      --bg-padrao: #e0f2fe;
-      --text-main: #1e293b;
-      --text-muted: #64748b;
-      --card-bg: rgba(255, 255, 255, 0.94);
-      --border-color: #e2e8f0;
-      --danger: #ef4444;
-      --success: #10b981;
-    }
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>RotinaPet — Seu Pet Virtual</title>
+<script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.9.3/dist/confetti.browser.min.js" defer></script>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Nunito:wght@600;700;800;900&display=swap');
+*{margin:0;padding:0;box-sizing:border-box;font-family:'Nunito',sans-serif;-webkit-tap-highlight-color:transparent;}
+html,body{width:100%;height:100%;overflow:hidden;}
 
-    * {
-      box-sizing: border-box;
-      margin: 0;
-      padding: 0;
-      font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
-    }
+body{
+  min-height:100vh;
+  color:#1e293b;
+  transition:background 0.6s ease;
+}
 
-    /* 1. Cenários de Fundo */
-    body {
-      min-height: 100vh;
-      color: var(--text-main);
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      padding: 16px 16px 100px;
-      transition: background 0.4s ease;
-    }
+body.cenario-ceu{background:linear-gradient(180deg,#4facfe 0%,#00f2fe 100%);}
+body.cenario-noite{background:linear-gradient(180deg,#0f172a 0%,#1e3a8a 100%);color:#f8fafc;}
+body.cenario-chuva{background:linear-gradient(180deg,#475569 0%,#94a3b8 100%);}
+body.cenario-arcoiris{background:linear-gradient(180deg,#f87171 0%,#fbbf24 20%,#4ade80 50%,#60a5fa 75%,#a78bfa 100%);}
+body.cenario-praia{background:linear-gradient(180deg,#fef08a 0%,#fcd34d 30%,#38bdf8 65%,#0ea5e9 100%);}
+body.cenario-floresta{background:linear-gradient(180deg,#166534 0%,#15803d 45%,#84cc16 100%);}
+body.cenario-festa{background:linear-gradient(180deg,#f472b6 0%,#a78bfa 50%,#60a5fa 100%);}
 
-    body.cenario-ceu {
-      background: linear-gradient(180deg, #7dd3fc 0%, #bae6fd 60%, #e0f2fe 100%);
-    }
+.app{width:100%;max-width:400px;height:100vh;margin:0 auto;position:relative;display:flex;flex-direction:column;justify-content:space-between;padding:8px 12px;}
 
-    body.cenario-floresta {
-      background: linear-gradient(180deg, #86efac 0%, #4ade80 60%, #166534 100%);
-    }
+.top-row{display:flex;align-items:center;justify-content:space-between;gap:6px;flex-shrink:0;}
+.top-pill{
+  background:rgba(255,255,255,0.95);border-radius:20px;padding:5px 8px;
+  display:flex;align-items:center;gap:5px;box-shadow:0 2px 6px rgba(0,0,0,0.06);
+  cursor:pointer;flex:1;justify-content:center;border:1px solid rgba(255,255,255,0.9);
+}
+.top-pill-text{font-size:11px;font-weight:800;color:#1e293b;line-height:1.1;}
+.top-pill-sub{font-size:8px;font-weight:700;color:#64748b;line-height:1;text-transform:lowercase;}
 
-    body.cenario-espaco {
-      background: linear-gradient(180deg, #0f172a 0%, #1e1b4b 60%, #312e81 100%);
-      color: #f8fafc;
-    }
+.pet-selector{display:flex;justify-content:center;position:relative;z-index:20;margin:2px 0;}
+.pet-unico-btn{
+  width:46px;height:46px;border-radius:50%;background:rgba(255,255,255,0.95);
+  border:3px solid #7c3aed;display:flex;align-items:center;justify-content:center;
+  font-size:22px;cursor:pointer;box-shadow:0 3px 10px rgba(124,58,237,0.3);
+}
+.lista-pet-dropdown{
+  position:absolute;top:52px;left:50%;transform:translateX(-50%) translateY(-10px);
+  background:#fff;border-radius:16px;padding:8px;box-shadow:0 10px 25px rgba(0,0,0,0.2);z-index:30;
+  display:flex;gap:6px;opacity:0;visibility:hidden;transition:all .2s ease;
+}
+.lista-pet-dropdown.abrir{opacity:1;visibility:visible;transform:translateX(-50%) translateY(0);}
+.opcao-pet{width:42px;height:42px;border-radius:50%;background:#f3f4f6;display:flex;align-items:center;justify-content:center;font-size:20px;cursor:pointer;transition:.2s;}
+.opcao-pet:hover,.opcao-pet.ativo{background:#ede9fe;border:2px solid #7c3aed;}
 
-    body.cenario-praia {
-      background: linear-gradient(180deg, #38bdf8 0%, #fed7aa 60%, #fde047 100%);
-    }
+.status-row{display:flex;align-items:center;gap:6px;flex-shrink:0;margin:1px 0;}
+.mini-card{
+  background:rgba(255,255,255,0.9);border-radius:12px;padding:4px 8px;
+  display:flex;align-items:center;gap:4px;box-shadow:0 2px 5px rgba(0,0,0,0.05);cursor:pointer;
+}
+.happiness-box{
+  flex:1;background:rgba(255,255,255,0.9);padding:4px 8px;border-radius:12px;
+  box-shadow:0 2px 5px rgba(0,0,0,0.05);
+}
+.bar-bg{height:7px;background:#e2e8f0;border-radius:8px;overflow:hidden;margin-top:2px;}
+.bar-fill{height:100%;width:70%;border-radius:8px;background:linear-gradient(90deg,#42C95E,#FFD000,#FF9500);transition:width .5s ease;}
 
-    /* Layout Principal */
-    .app-container {
-      width: 100%;
-      max-width: 480px;
-      display: flex;
-      flex-direction: column;
-      gap: 16px;
-    }
+.cat-section{display:flex;flex-direction:column;align-items:center;justify-content:center;flex-shrink:0;margin:1px 0;position:relative;}
+.cat-wrapper{
+  width:115px;height:115px;display:flex;align-items:center;justify-content:center;
+  cursor:pointer;position:relative;animation:catFloat 4s ease-in-out infinite;
+}
+@keyframes catFloat{0%,100%{transform:translateY(0);}50%{transform:translateY(-4px);}}
+#pet-svg-container{width:110px;height:110px;display:flex;align-items:center;justify-content:center;}
+#pet-svg-container svg{width:100%;height:100%;filter:drop-shadow(0 4px 8px rgba(0,0,0,0.15));}
 
-    .topo-barra {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      background: var(--card-bg);
-      padding: 12px 18px;
-      border-radius: 16px;
-      box-shadow: 0 4px 12px rgba(0,0,0,0.06);
-      backdrop-filter: blur(8px);
-      color: var(--text-main);
-    }
+.level-number{font-size:22px;font-weight:900;color:#7c3aed;line-height:1;margin-top:0px;}
+.xp-bar-bg{
+  width:70%;max-width:190px;height:16px;background:rgba(255,255,255,0.7);
+  border-radius:8px;display:flex;align-items:center;justify-content:center;
+  margin-top:2px;overflow:hidden;position:relative;
+}
+.xp-bar-fill{position:absolute;left:0;top:0;bottom:0;width:0%;background:linear-gradient(90deg,#9C27B0,#E040FB);border-radius:8px;transition:width .5s ease;z-index:1;}
+.xp-text{font-weight:800;font-size:9px;color:#fff;z-index:2;text-shadow:0 1px 2px rgba(0,0,0,0.4);}
 
-    .moedas-box {
-      font-weight: 700;
-      font-size: 1.1rem;
-      display: flex;
-      align-items: center;
-      gap: 6px;
-    }
+.floating-text{
+  position:absolute;font-weight:900;font-size:16px;color:#10b981;
+  text-shadow:0 2px 4px rgba(0,0,0,0.3);pointer-events:none;
+  animation:floatUp 0.9s ease-out forwards;z-index:50;
+}
+@keyframes floatUp{
+  0%{transform:translateY(0) scale(0.8);opacity:1;}
+  100%{transform:translateY(-40px) scale(1.2);opacity:0;}
+}
 
-    .botoes-topo {
-      display: flex;
-      gap: 8px;
-    }
+.tasks-section{background:rgba(255,255,255,0.92);border-radius:14px;padding:6px 10px;flex-shrink:0;max-height:100px;overflow-y:auto;box-shadow:0 2px 6px rgba(0,0,0,0.05);}
+.task-row{display:flex;align-items:center;justify-content:space-between;padding:3px 0;border-bottom:1px solid #f1f5f9;font-size:10px;}
+.task-row:last-child{border-bottom:none;}
+.task-name{font-weight:700;}
+.task-reward{font-size:8px;color:#6366f1;}
+.task-actions{display:flex;gap:4px;}
+.task-btn{padding:2px 6px;border-radius:6px;border:none;font-weight:800;font-size:9px;cursor:pointer;}
+.btn-ok{background:#22c55e;color:#fff;}
 
-    .btn-icone {
-      background: #f1f5f9;
-      border: none;
-      font-size: 1.1rem;
-      padding: 8px 12px;
-      border-radius: 10px;
-      cursor: pointer;
-      transition: background 0.2s;
-    }
+.bottom-buttons{display:grid;grid-template-columns:repeat(5,1fr);gap:4px;flex-shrink:0;margin-bottom:2px;}
+.bottom-btn{
+  aspect-ratio:1;border-radius:14px;border:none;display:flex;flex-direction:column;
+  align-items:center;justify-content:center;gap:1px;font-size:8px;font-weight:800;
+  color:white;cursor:pointer;box-shadow:0 3px 8px rgba(0,0,0,0.1);transition:transform .2s;
+}
+.bottom-btn:active{transform:scale(0.92);}
+.btn-food{background:linear-gradient(135deg,#FFC107,#FF9800);}
+.btn-voice{background:linear-gradient(135deg,#4CAF50,#00BFA5);}
+.btn-game{background:linear-gradient(135deg,#9C27B0,#7B1FA2);}
+.btn-fundos{background:linear-gradient(135deg,#0284c7,#2563eb);}
+.btn-premios{background:linear-gradient(135deg,#FF5252,#FF3D00);}
+.btn-icon{font-size:15px;line-height:1;}
 
-    .btn-icone:hover {
-      background: #e2e8f0;
-    }
+.modal-overlay{position:fixed;inset:0;background:rgba(0,0,0,0.6);display:flex;align-items:center;justify-content:center;padding:14px;z-index:100;backdrop-filter:blur(4px);opacity:0;visibility:hidden;transition:.3s;}
+.modal-overlay.mostrar{opacity:1;visibility:visible;}
+.modal{background:#fff;border-radius:24px;padding:18px;width:100%;max-width:340px;max-height:85vh;overflow-y:auto;box-shadow:0 15px 35px rgba(0,0,0,0.25);}
+.hidden{display:none!important;}
 
-    /* Área do Pet */
-    .pet-card {
-      background: var(--card-bg);
-      border-radius: 24px;
-      padding: 24px;
-      text-align: center;
-      box-shadow: 0 8px 24px rgba(0,0,0,0.08);
-      color: var(--text-main);
-    }
+.grid-fundos{display:grid;grid-template-columns:repeat(2,1fr);gap:8px;}
+.fundo-card{
+  border-radius:12px;padding:8px;display:flex;flex-direction:column;align-items:center;
+  justify-content:center;color:#fff;text-shadow:0 1px 2px rgba(0,0,0,0.5);cursor:pointer;
+  border:2px solid transparent;transition:transform 0.15s;min-height:74px;
+}
+.fundo-card:active{transform:scale(0.96);}
+.fundo-card.ativo{border-color:#22c55e;box-shadow:0 0 0 2px rgba(34,197,94,0.3);}
 
-    .pet-avatar {
-      font-size: 5rem;
-      margin: 8px 0;
-      user-select: none;
-      animation: flutuar 3s ease-in-out infinite alternate;
-    }
-
-    @keyframes flutuar {
-      from { transform: translateY(0); }
-      to { transform: translateY(-8px); }
-    }
-
-    /* Seções e Cards */
-    .secao-card {
-      background: var(--card-bg);
-      border-radius: 20px;
-      padding: 18px;
-      box-shadow: 0 6px 18px rgba(0,0,0,0.06);
-      color: var(--text-main);
-    }
-
-    .secao-titulo {
-      font-size: 1.1rem;
-      font-weight: 700;
-      margin-bottom: 12px;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-    }
-
-    /* Lista de Tarefas & Empty State */
-    .lista-tarefas {
-      display: flex;
-      flex-direction: column;
-      gap: 10px;
-    }
-
-    .tarefa-item {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      padding: 12px;
-      background: #f8fafc;
-      border-radius: 12px;
-      border: 1px solid var(--border-color);
-    }
-
-    .tarefa-item.concluida {
-      opacity: 0.6;
-      text-decoration: line-through;
-    }
-
-    .empty-state-tarefas {
-      text-align: center;
-      padding: 24px 12px;
-      color: var(--text-muted);
-    }
-
-    .empty-state-tarefas p {
-      font-weight: 600;
-      font-size: 0.95rem;
-      margin-bottom: 4px;
-    }
-
-    .empty-state-tarefas small {
-      font-size: 0.8rem;
-    }
-
-    /* Botões Padrão */
-    .btn-acao {
-      background: var(--primary);
-      color: #fff;
-      border: none;
-      padding: 8px 14px;
-      border-radius: 8px;
-      font-weight: 600;
-      cursor: pointer;
-      font-size: 0.85rem;
-    }
-
-    .btn-acao:hover {
-      background: var(--primary-hover);
-    }
-
-    .btn-acao:disabled {
-      background: #cbd5e1;
-      cursor: not-allowed;
-    }
-
-    /* Modais */
-    .modal-overlay {
-      position: fixed;
-      inset: 0;
-      background: rgba(15, 23, 42, 0.7);
-      backdrop-filter: blur(4px);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      z-index: 999;
-      padding: 16px;
-    }
-
-    .modal-oculto {
-      display: none !important;
-    }
-
-    .modal-conteudo {
-      background: #fff;
-      border-radius: 20px;
-      width: 100%;
-      max-width: 440px;
-      max-height: 90vh;
-      overflow-y: auto;
-      padding: 24px;
-      position: relative;
-      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
-    }
-
-    .btn-fechar {
-      position: absolute;
-      top: 14px;
-      right: 14px;
-      background: none;
-      border: none;
-      font-size: 1.25rem;
-      color: var(--text-muted);
-      cursor: pointer;
-    }
-
-    /* Teclado PIN */
-    .card-pin {
-      max-width: 320px;
-      text-align: center;
-    }
-
-    .pin-dots {
-      display: flex;
-      justify-content: center;
-      gap: 14px;
-      margin: 16px 0;
-    }
-
-    .pin-dots .dot {
-      width: 14px;
-      height: 14px;
-      border-radius: 50%;
-      border: 2px solid #cbd5e1;
-      transition: all 0.2s;
-    }
-
-    .pin-dots .dot.ativo {
-      background: var(--primary);
-      border-color: var(--primary);
-      transform: scale(1.2);
-    }
-
-    .pin-erro {
-      color: var(--danger);
-      font-size: 0.8rem;
-      height: 18px;
-      margin-bottom: 8px;
-    }
-
-    .pin-teclado {
-      display: grid;
-      grid-template-columns: repeat(3, 1fr);
-      gap: 10px;
-    }
-
-    .btn-digito {
-      height: 50px;
-      border: 1px solid var(--border-color);
-      border-radius: 12px;
-      background: #f8fafc;
-      font-size: 1.25rem;
-      font-weight: 600;
-      cursor: pointer;
-    }
-
-    .btn-digito:active {
-      background: #e2e8f0;
-    }
-
-    .animar-shake {
-      animation: shake 0.35s ease-in-out;
-    }
-
-    @keyframes shake {
-      0%, 100% { transform: translateX(0); }
-      20%, 60% { transform: translateX(-8px); }
-      40%, 80% { transform: translateX(8px); }
-    }
-
-    /* Formulários e Tabelas do Painel */
-    .form-grupo {
-      margin-bottom: 16px;
-    }
-
-    .form-grupo label {
-      display: block;
-      font-size: 0.85rem;
-      font-weight: 600;
-      margin-bottom: 6px;
-    }
-
-    .input-com-botao {
-      display: flex;
-      gap: 8px;
-    }
-
-    .input-com-botao input {
-      flex: 1;
-      padding: 10px 12px;
-      border: 1.5px solid #cbd5e1;
-      border-radius: 8px;
-      font-size: 0.9rem;
-    }
-
-    .tabela-cenarios {
-      width: 100%;
-      border-collapse: collapse;
-      font-size: 0.85rem;
-      margin-top: 10px;
-    }
-
-    .tabela-cenarios th, .tabela-cenarios td {
-      padding: 8px 6px;
-      border-bottom: 1px solid var(--border-color);
-      text-align: left;
-    }
-
-    .input-preco {
-      width: 60px;
-      padding: 4px;
-      border: 1px solid #cbd5e1;
-      border-radius: 6px;
-      text-align: center;
-    }
-
-    /* 6. Toast Safe Area */
-    .toast-notificacao {
-      position: fixed;
-      left: 50%;
-      transform: translateX(-50%);
-      bottom: calc(24px + env(safe-area-inset-bottom, 0px));
-      background: #1e293b;
-      color: #fff;
-      padding: 10px 18px;
-      border-radius: 30px;
-      font-size: 0.85rem;
-      font-weight: 500;
-      box-shadow: 0 4px 16px rgba(0,0,0,0.25);
-      z-index: 10000;
-      max-width: 90vw;
-      text-align: center;
-      transition: opacity 0.3s, transform 0.3s;
-    }
-
-    /* Loja de Cenários */
-    .loja-grid {
-      display: grid;
-      grid-template-columns: repeat(2, 1fr);
-      gap: 10px;
-      margin-top: 12px;
-    }
-
-    .card-loja-item {
-      background: #f8fafc;
-      border: 1px solid var(--border-color);
-      border-radius: 12px;
-      padding: 12px;
-      text-align: center;
-    }
-
-    .btn-em-uso {
-      background: #10b981 !important;
-      color: #fff !important;
-      cursor: default;
-    }
-  </style>
+.toast{position:fixed;bottom:65px;left:50%;transform:translateX(-50%) translateY(20px);background:rgba(15,23,42,0.9);color:#fff;padding:6px 14px;border-radius:20px;font-weight:800;font-size:11px;z-index:200;opacity:0;transition:all .3s ease;pointer-events:none;}
+.toast.mostrar{opacity:1;transform:translateX(-50%) translateY(0);}
+</style>
 </head>
-<body class="cenario-ceu">
+<body>
 
-  <div class="app-container">
-    <!-- Cabeçalho Superior -->
-    <header class="topo-barra">
-      <div class="moedas-box">
-        🪙 <span id="contador-moedas">15</span>
-      </div>
-      <div class="botoes-topo">
-        <button type="button" class="btn-icone" onclick="abrirModal('modal-ajuda')" title="Como funciona">❓</button>
-        <button type="button" class="btn-icone" onclick="abrirModalLoja()" title="Loja de Cenários">🎨</button>
-        <button type="button" class="btn-icone" onclick="requisitarAcessoPais()" title="Painel dos Pais">⚙️</button>
-      </div>
-    </header>
+<input type="file" id="camera-input" accept="image/*" capture="environment" class="hidden" onchange="processarFotoCapturada(event)">
 
-    <!-- Card do Mascote -->
-    <section class="pet-card">
-      <h2 id="texto-boas-vindas">Olá, Bernardo!</h2>
-      <div class="pet-avatar" id="pet-avatar">🐱</div>
-      <p id="pet-status" style="font-size: 0.9rem; color: var(--text-muted);">Seu companheiro está feliz e descansado!</p>
-      <div style="margin-top: 14px; display: flex; gap: 8px; justify-content: center;">
-        <button class="btn-acao" onclick="alimentarPet()">🍎 Alimentar (-2 🪙)</button>
-        <button class="btn-acao" onclick="gravarMensagemVoz()">🎙️ Falar com Pet</button>
-      </div>
-    </section>
+<div class="app">
 
-    <!-- Lista de Tarefas -->
-    <section class="secao-card">
-      <div class="secao-titulo">
-        <span>Tarefas de Hoje</span>
-        <button class="btn-acao" onclick="abrirModalSaque()">🎁 Resgate</button>
-      </div>
-      <div class="lista-tarefas" id="lista-tarefas">
-        <!-- Inserido dinamicamente via JavaScript -->
-      </div>
-    </section>
-  </div>
-
-  <!-- MODAL: Ajuda (7) -->
-  <div id="modal-ajuda" class="modal-overlay modal-oculto">
-    <div class="modal-conteudo">
-      <button class="btn-fechar" onclick="fecharModal('modal-ajuda')">✕</button>
-      <h3 style="margin-bottom: 12px;">Como Funciona o App? 💡</h3>
-      <ul style="padding-left: 20px; line-height: 1.6; font-size: 0.9rem; color: #475569;">
-        <li><strong>Cumpra Tarefas:</strong> Marque suas atividades diárias concluídas para receber moedas.</li>
-        <li><strong>Cuide do Pet:</strong> Use suas moedas para alimentar seu companheiro.</li>
-        <li><strong>Loja de Cenários:</strong> Personalize o fundo do seu aplicativo.</li>
-        <li><strong>Resgate:</strong> Junte moedas para aprovar recompensas reais com seus pais!</li>
-      </ul>
-    </div>
-  </div>
-
-  <!-- MODAL: Saque Dinâmico (8) -->
-  <div id="modal-saque" class="modal-overlay modal-oculto">
-    <div class="modal-conteudo">
-      <button class="btn-fechar" onclick="fecharModal('modal-saque')">✕</button>
-      <h3 id="titulo-saque" style="margin-bottom: 8px;">Aprovar resgate</h3>
-      <p style="font-size: 0.85rem; color: var(--text-muted); margin-bottom: 16px;">
-        Troque moedas acumuladas por recompensas combinadas com seus responsáveis.
-      </p>
-      <div style="text-align: center; padding: 16px; background: #f8fafc; border-radius: 12px; margin-bottom: 16px;">
-        <span style="font-size: 2rem;">🎉</span>
-        <p style="font-weight: 600; margin-top: 4px;">Saldo disponível: <span id="saque-saldo-moedas">15</span> 🪙</p>
-      </div>
-      <button class="btn-acao" style="width: 100%; padding: 12px;" onclick="solicitarSaque()">Confirmar com os Pais</button>
-    </div>
-  </div>
-
-  <!-- MODAL: Loja de Cenários (3) -->
-  <div id="modal-loja" class="modal-overlay modal-oculto">
-    <div class="modal-conteudo">
-      <button class="btn-fechar" onclick="fecharModal('modal-loja')">✕</button>
-      <h3>Loja de Cenários 🎨</h3>
-      <div class="loja-grid" id="loja-grid">
-        <!-- Renderizado dinamicamente -->
-      </div>
-    </div>
-  </div>
-
-  <!-- MODAL: Trava de PIN (Proteção) -->
-  <div id="modal-pin-pais" class="modal-overlay modal-oculto">
-    <div class="modal-conteudo card-pin">
-      <button class="btn-fechar" onclick="fecharModalPin()">✕</button>
-      <div style="font-size: 2rem;">🔒</div>
-      <h3 style="margin-top: 6px;">Área dos Pais</h3>
-      <p style="font-size: 0.85rem; color: var(--text-muted);">Digite seu PIN de 4 números</p>
-      
-      <div class="pin-dots" id="pin-dots">
-        <span class="dot"></span>
-        <span class="dot"></span>
-        <span class="dot"></span>
-        <span class="dot"></span>
-      </div>
-
-      <div id="pin-mensagem-erro" class="pin-erro"></div>
-
-      <div class="pin-teclado">
-        <button type="button" class="btn-digito" onclick="digitarPin('1')">1</button>
-        <button type="button" class="btn-digito" onclick="digitarPin('2')">2</button>
-        <button type="button" class="btn-digito" onclick="digitarPin('3')">3</button>
-        <button type="button" class="btn-digito" onclick="digitarPin('4')">4</button>
-        <button type="button" class="btn-digito" onclick="digitarPin('5')">5</button>
-        <button type="button" class="btn-digito" onclick="digitarPin('6')">6</button>
-        <button type="button" class="btn-digito" onclick="digitarPin('7')">7</button>
-        <button type="button" class="btn-digito" onclick="digitarPin('8')">8</button>
-        <button type="button" class="btn-digito" onclick="digitarPin('9')">9</button>
-        <button type="button" class="btn-digito" onclick="limparPin()" style="font-size: 0.9rem;">C</button>
-        <button type="button" class="btn-digito" onclick="digitarPin('0')">0</button>
-        <button type="button" class="btn-digito" onclick="apagarDigitoPin()">⌫</button>
-      </div>
-    </div>
-  </div>
-
-  <!-- MODAL: Painel dos Pais -->
-  <div id="modal-painel-pais" class="modal-overlay modal-oculto">
-    <div class="modal-conteudo">
-      <button class="btn-fechar" onclick="fecharModal('modal-painel-pais')">✕</button>
-      <h3 style="margin-bottom: 16px;">Painel de Controle dos Pais</h3>
-
-      <!-- 8. Configurar Nome da Criança -->
-      <form onsubmit="salvarPerfilCrianca(event)" class="form-grupo">
-        <label for="input-nome-crianca">Nome da Criança</label>
-        <div class="input-com-botao">
-          <input type="text" id="input-nome-crianca" maxlength="25" required />
-          <button type="submit" class="btn-acao">Salvar</button>
+    <div class="top-row">
+        <div class="top-pill" onclick="alternarModoPais()">
+            <div style="width: 10px; height: 16px; background: linear-gradient(180deg, #FFD300, #F9B800); border-radius: 3px; flex-shrink: 0;"></div>
+            <div><div class="top-pill-text"><span id="txt-moedas">0</span> moedas</div></div>
         </div>
-      </form>
-
-      <!-- Alterar Senha/PIN -->
-      <form onsubmit="salvarNovoPin(event)" class="form-grupo">
-        <label for="input-novo-pin">Alterar PIN (4 números)</label>
-        <div class="input-com-botao">
-          <input type="password" id="input-novo-pin" maxlength="4" pattern="\d{4}" inputmode="numeric" placeholder="••••" required />
-          <button type="submit" class="btn-acao">Atualizar</button>
+        <div class="top-pill" onclick="alternarModoPais()">
+            <div style="width: 8px; height: 8px; background: #10B981; border-radius: 50%; flex-shrink: 0;"></div>
+            <div>
+                <div class="top-pill-text">R$ <span id="txt-dinheiro">0,00</span></div>
+                <div class="top-pill-sub">🔒 pais</div>
+            </div>
         </div>
-      </form>
-
-      <!-- Gerenciar Cenários -->
-      <div style="margin-top: 20px;">
-        <label style="font-size: 0.85rem; font-weight: 600;">Preços & Liberação de Cenários</label>
-        <table class="tabela-cenarios">
-          <thead>
-            <tr>
-              <th>Cenário</th>
-              <th>🪙 Preço</th>
-              <th>Ação</th>
-            </tr>
-          </thead>
-          <tbody id="tabela-cenarios-pais">
-            <!-- Dinâmico -->
-          </tbody>
-        </table>
-      </div>
-
-      <!-- Gestão Rápida de Tarefas (Para testar o empty state) -->
-      <div style="margin-top: 24px;">
-        <label style="font-size: 0.85rem; font-weight: 600;">Ações Rápidas de Tarefas</label>
-        <div style="display: flex; gap: 8px; margin-top: 8px;">
-          <button class="btn-acao" onclick="adicionarTarefaExemplo()">+ Adicionar Tarefa</button>
-          <button class="btn-acao" style="background: var(--danger);" onclick="limparTodasTarefas()">Apagar Todas</button>
+        <div class="top-pill" onclick="abrirModal('modal-evolucoes')">
+            <span style="font-size: 11px;">🔥</span>
+            <div>
+                <div class="top-pill-text">Evoluções</div>
+                <div class="top-pill-sub">ver fases</div>
+            </div>
         </div>
-      </div>
     </div>
-  </div>
 
-  <!-- Toast Notificação (6) -->
-  <div id="toast" class="toast-notificacao modal-oculto"></div>
+    <div class="pet-selector">
+        <button class="pet-unico-btn" id="btn-pet-atual" onclick="alternarListaPets(event)">🐱</button>
+        <div class="lista-pet-dropdown" id="lista-pets">
+            <div class="opcao-pet ativo" data-pet="gato" onclick="escolherPet('gato')">🐱</div>
+            <div class="opcao-pet" data-pet="cachorra" onclick="escolherPet('cachorra')">🐶</div>
+            <div class="opcao-pet" data-pet="cabra" onclick="escolherPet('cabra')">🐐</div>
+            <div class="opcao-pet" data-pet="frango" onclick="escolherPet('frango')">🐔</div>
+        </div>
+    </div>
 
-  <script>
-    // Estado Padrão e Persistência
-    const estadoInicial = {
-      nomeCrianca: 'Bernardo',
-      moedas: 15,
-      pinPais: '1234',
-      cenarioAtivo: 'cenario-ceu',
-      cenariosDesbloqueados: ['cenario-ceu'],
-      cenarios: [
-        { id: 'cenario-ceu', nome: 'Céu Azul', preco: 0, padrao: true },
-        { id: 'cenario-floresta', nome: 'Floresta Mágica', preco: 20, padrao: false },
-        { id: 'cenario-espaco', nome: 'Espaço Sideral', preco: 40, padrao: false },
-        { id: 'cenario-praia', nome: 'Praia de Verão', preco: 30, padrao: false }
-      ],
-      tarefas: [
-        { id: 1, titulo: 'Escovar os dentes', recompensa: 2, concluida: false },
-        { id: 2, titulo: 'Arrumar a cama', recompensa: 3, concluida: false },
-        { id: 3, titulo: 'Fazer o dever de casa', recompensa: 5, concluida: false }
-      ]
-    };
+    <div class="status-row">
+        <div class="mini-card" onclick="darRemedio()" title="Saúde">
+            <span style="font-size: 13px;">💚</span>
+            <span style="font-size: 9px; font-weight: 800; color:#059669;" id="txt-saude">100%</span>
+        </div>
+        <div class="happiness-box">
+            <div style="display: flex; justify-content: space-between; align-items: center;">
+                <span style="font-size: 8px; font-weight: 800; color: #555; text-transform: lowercase;">felicidade</span>
+                <span style="font-size: 8px; font-weight: 800; color: #333;"><span id="val-felicidade">100</span>%</span>
+            </div>
+            <div class="bar-bg"><div class="bar-fill" id="barra-felicidade" style="width: 100%;"></div></div>
+        </div>
+    </div>
 
-    let estado = JSON.parse(localStorage.getItem('rotinapet_estado')) || estadoInicial;
+    <div class="cat-section" id="pet-section-area">
+        <div class="cat-wrapper" onclick="somDoPet(event)" id="pet-principal">
+            <div id="pet-svg-container"></div>
+        </div>
+        
+        <div class="level-number" id="numero-nivel">1</div>
+        <div class="xp-bar-bg">
+            <div class="xp-bar-fill" id="barra-xp" style="width: 0%;"></div>
+            <span class="xp-text">XP <span id="texto-xp">0/100</span></span>
+        </div>
+    </div>
 
-    function salvarEstado() {
-      localStorage.setItem('rotinapet_estado', JSON.stringify(estado));
+    <div class="tasks-section">
+        <div style="font-size: 9px; font-weight: 800; color: #555; margin-bottom: 2px; display: flex; justify-content: space-between;">
+            <span>🛡️ TAREFAS DE HOJE</span>
+            <span style="color: #0284c7;" id="qtd-tarefas">2 tarefas</span>
+        </div>
+        <div id="lista-tarefas" style="display: flex; flex-direction: column; gap: 3px;"></div>
+    </div>
+
+    <div class="bottom-buttons">
+        <button class="bottom-btn btn-food" onclick="darLanche(event)">
+            <span class="btn-icon">🍎</span>Comida
+        </button>
+        <button class="bottom-btn btn-voice" onclick="alternarGravador()">
+            <span class="btn-icon">🎙️</span>Gravar
+        </button>
+        <button class="bottom-btn btn-game" onclick="abrirDesafioMatematica()">
+            <span class="btn-icon">🎮</span>Desafio
+        </button>
+        <button class="bottom-btn btn-fundos" onclick="abrirLojaFundos()">
+            <span class="btn-icon">🖼️</span>Fundos
+        </button>
+        <button class="bottom-btn btn-premios" onclick="abrirLojaRecompensas()">
+            <span class="btn-icon">🎁</span>Prêmios
+        </button>
+    </div>
+
+</div>
+
+<!-- MODAL LOJA DE FUNDOS -->
+<div id="modal-fundos" class="modal-overlay">
+    <div class="modal" style="text-align:center;">
+        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:10px;">
+            <h3 style="font-size:16px; font-weight:900; color:#0284c7;">🖼️ Loja de Fundos</h3>
+            <button onclick="fecharModal('modal-fundos')" style="background:#e2e8f0; border:none; padding:4px 8px; border-radius:6px; font-weight:bold; cursor:pointer;">X</button>
+        </div>
+        <p style="font-size:10px; color:#64748b; margin-bottom:10px;">Toque para aplicar ou comprar fundos com suas moedas:</p>
+        <div class="grid-fundos" id="grid-fundos"></div>
+    </div>
+</div>
+
+<!-- MODAL TIMER TELA -->
+<div id="modal-timer" class="modal-overlay">
+    <div class="modal" style="text-align:center;">
+        <h3 style="font-size:16px; font-weight:900; color:#0284c7; margin-bottom:8px;">⏳ Tempo de Tela Ativo!</h3>
+        <div id="relogio-timer" style="font-size:38px; font-weight:900; color:#1e293b; background:#f1f5f9; border-radius:14px; padding:12px; margin-bottom:12px;">00:00</div>
+        <button onclick="pausarFecharTimer()" style="background:#ef4444; color:white; border:none; padding:8px 16px; border-radius:10px; font-weight:bold; cursor:pointer;">Encerrar Tempo</button>
+    </div>
+</div>
+
+<!-- PAINEL DOS PAIS -->
+<div id="modal-pais" class="modal-overlay">
+    <div class="modal">
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px;">
+            <h3 style="font-size: 15px; font-weight: 900;">⚙️ Painel dos Pais</h3>
+            <button onclick="fecharModal('modal-pais')" style="background: #e2e8f0; border: none; padding: 4px 8px; border-radius: 6px; font-weight: bold; cursor: pointer;">X</button>
+        </div>
+        
+        <div style="background:#f8fafc; border:1px solid #e2e8f0; border-radius:10px; padding:8px; margin-bottom:10px;">
+            <div style="display:flex; justify-content:space-between; align-items:center; font-size:11px;">
+                <span>Disponível: <b>R$ <span id="txt-painel-disponivel">0,00</span></b></span>
+                <button onclick="sacarDinheiro()" style="background:#10b981; color:white; border:none; padding:3px 8px; border-radius:6px; font-weight:bold; cursor:pointer;">💸 Pagar / Sacar</button>
+            </div>
+            <div style="font-size:10px; color:#64748b; margin-top:4px;">Total pago no histórico: R$ <span id="txt-total-pago">0,00</span></div>
+        </div>
+
+        <div style="margin-bottom: 10px;">
+            <label style="font-size: 11px; font-weight: 700; color: #555;">👶 Idade da Criança (Dificuldade da Matemática)</label>
+            <input type="number" id="input-idade-crianca" min="3" max="15" style="width: 100%; border: 1px solid #cbd5e1; border-radius: 6px; padding: 5px; margin-top: 2px; font-weight: bold; font-size:11px;" onchange="atualizarIdadeCrianca(this.value)">
+        </div>
+
+        <div style="margin-bottom: 10px;">
+            <label style="font-size: 11px; font-weight: 700; color: #555;">🔑 Alterar PIN (4 dígitos)</label>
+            <div style="display: flex; gap: 4px; margin-top: 2px;">
+                <input type="password" id="novo-pin-pais" maxlength="4" placeholder="PIN" style="flex:1; border: 1px solid #cbd5e1; border-radius: 6px; padding: 5px; text-align: center; font-weight: bold; font-size:11px;">
+                <button onclick="salvarNovoPin()" style="background: #1e293b; color: white; border: none; padding: 5px 8px; border-radius: 6px; font-weight: bold; font-size:11px; cursor: pointer;">Salvar</button>
+            </div>
+        </div>
+        <div style="margin-bottom: 10px;">
+            <label style="font-size: 11px; font-weight: 700; color: #555;">💵 Valor por Moeda (R$)</label>
+            <input type="number" step="0.01" id="input-taxa-cambio" style="width: 100%; border: 1px solid #cbd5e1; border-radius: 6px; padding: 5px; margin-top: 2px; font-weight: bold; font-size:11px;" onchange="atualizarTaxaCambio(this.value)">
+        </div>
+        <div style="margin-bottom: 10px;">
+            <h4 style="font-size: 11px; font-weight: 800; margin-bottom: 3px;">✅ Aprovações Pendentes</h4>
+            <div id="lista-aprovacao-pais" style="display: flex; flex-direction: column; gap: 4px; max-height: 90px; overflow-y: auto;"></div>
+        </div>
+        <div>
+            <h4 style="font-size: 11px; font-weight: 800; margin-bottom: 3px;">✏️ Gerenciar Tarefas</h4>
+            <div id="lista-edicao-tarefas" style="display: flex; flex-direction: column; gap: 3px; max-height: 80px; overflow-y: auto; margin-bottom: 6px;"></div>
+            <div style="display: flex; gap: 4px;">
+                <input type="text" id="nova-tarefa-texto" placeholder="Nova tarefa..." style="flex:1; border: 1px solid #cbd5e1; border-radius: 6px; padding: 5px; font-size: 10px;">
+                <input type="number" id="nova-tarefa-moedas" value="5" style="width: 40px; border: 1px solid #cbd5e1; border-radius: 6px; padding: 5px; text-align: center; font-size: 10px;">
+                <button onclick="adicionarTarefa()" style="background: #0284c7; color: white; border: none; padding: 5px 8px; border-radius: 6px; font-weight: bold; cursor: pointer;">+</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- MODAL EVOLUÇÕES -->
+<div class="modal-overlay" id="modal-evolucoes">
+    <div class="modal">
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px;">
+            <h3 style="font-size: 15px; font-weight: 900;">🔥 Evoluções — <span id="pet-evol-nome">Gato</span></h3>
+            <button onclick="fecharModal('modal-evolucoes')" style="background: #e2e8f0; border: none; padding: 4px 8px; border-radius: 6px; font-weight: bold; cursor: pointer;">X</button>
+        </div>
+        <div id="lista-evolucoes" style="display: flex; flex-direction: column; gap: 6px;"></div>
+    </div>
+</div>
+
+<!-- MODAL GRAVADOR -->
+<div class="modal-overlay" id="modal-gravador">
+    <div class="modal" style="text-align: center;">
+        <h3 style="font-size: 15px; font-weight: 900; margin-bottom: 10px;">🎙️ Gravar Voz</h3>
+        <button id="btn-iniciar-grav" onclick="iniciarGravacao()" style="background:#ef4444; color:white; border:none; padding:8px 14px; border-radius:10px; font-weight:bold; cursor:pointer;">🔴 Começar Gravação</button>
+        <button id="btn-parar-grav" onclick="pararGravacao()" style="display:none; background:#4b5563; color:white; border:none; padding:8px 14px; border-radius:10px; font-weight:bold; cursor:pointer;">⏹️ Parar Gravação</button>
+        <div id="grav-result" style="display:none; margin-top:10px;">
+            <audio id="audio-original" controls style="width:100%; margin-bottom:6px;"></audio>
+            <button onclick="salvarVoz()" style="background:#7c3aed; color:white; border:none; padding:6px 12px; border-radius:8px; font-weight:bold; cursor:pointer;">💾 Usar no Pet</button>
+        </div>
+        <button onclick="fecharModal('modal-gravador')" style="margin-top:10px; background:none; border:none; color:#64748b; font-weight:bold; cursor:pointer;">Fechar</button>
+    </div>
+</div>
+
+<!-- MODAL MATEMÁTICA -->
+<div class="modal-overlay" id="modal-matematica">
+    <div class="modal" style="text-align: center;">
+        <h3 style="font-size: 16px; font-weight: 900; color: #059669; margin-bottom: 4px;">🎮 Desafio Matemático</h3>
+        <p style="font-size:10px; color:#64748b; margin-bottom:8px;">Acerte e ganhe: +1 🪙 e +1 XP</p>
+        <div id="conta-math" style="font-size: 24px; font-weight: 900; background: #f1f5f9; padding: 8px; border-radius: 12px; margin-bottom: 10px;">?</div>
+        <div id="opcoes-math" style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 6px; margin-bottom: 10px;"></div>
+        <button onclick="fecharModal('modal-matematica')" style="background: none; border: none; color: #64748b; font-weight: bold; cursor: pointer;">Fechar</button>
+    </div>
+</div>
+
+<!-- MODAL PRÊMIOS COM META -->
+<div class="modal-overlay" id="modal-recompensas">
+    <div class="modal" style="text-align: center;">
+        <h3 style="font-size: 15px; font-weight: 900; color: #e11d48; margin-bottom: 6px;">🎁 Resgatar Prêmios</h3>
+        <div style="background:#fef2f2; border:1px solid #fecaca; border-radius:10px; padding:6px 8px; margin-bottom:10px; text-align:left;">
+            <span style="font-size:9px; font-weight:800; color:#b91c1c;">🎯 Meta: Passeio Especial</span>
+            <div style="display:flex; justify-content:space-between; font-size:9px; font-weight:700; margin-top:2px;">
+                <span>Progresso</span>
+                <span id="texto-meta-progresso">0 / 50 🪙</span>
+            </div>
+            <div style="height:5px; background:#e2e8f0; border-radius:3px; overflow:hidden; margin-top:2px;">
+                <div id="barra-meta-progresso" style="height:100%; width:0%; background:#ef4444; border-radius:3px; transition:width 0.3s;"></div>
+            </div>
+        </div>
+        <div id="lista-itens-loja" style="display: flex; flex-direction: column; gap: 5px; max-height: 120px; overflow-y: auto; margin-bottom: 10px; text-align: left;"></div>
+        <button onclick="fecharModal('modal-recompensas')" style="background: none; border: none; color: #64748b; font-weight: bold; cursor: pointer;">Fechar</button>
+    </div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+function obterSvgPetComEvolucao(tipo, level) {
+  let acessorio = '';
+  if (level >= 5 && level < 10) {
+    acessorio = `<polygon points="130,150 115,165 130,180 145,165" fill="#38BDF8"/><circle cx="130" cy="165" r="5" fill="#0284C7"/>`;
+  } else if (level >= 10 && level < 20) {
+    acessorio = `<rect x="75" y="92" width="40" height="24" rx="4" fill="#1e293b"/><rect x="145" y="92" width="40" height="24" rx="4" fill="#1e293b"/><line x1="115" y1="102" x2="145" y2="102" stroke="#1e293b" stroke-width="4"/><circle cx="85" cy="98" r="4" fill="white" opacity="0.6"/>`;
+  } else if (level >= 20 && level < 50) {
+    acessorio = `<path d="M85 170 L55 240 L130 220 L205 240 L175 170 Z" fill="#9333EA"/><circle cx="130" cy="110" r="95" fill="none" stroke="#C084FC" stroke-width="3" stroke-dasharray="8 6" opacity="0.7"/>`;
+  } else if (level >= 50) {
+    acessorio = `<path d="M85 170 L55 240 L130 220 L205 240 L175 170 Z" fill="#D97706"/><path d="M100 35 L110 55 L130 30 L150 55 L160 35 L165 65 L95 65 Z" fill="#FBBF24"/><circle cx="130" cy="48" r="4" fill="#EF4444"/><circle cx="110" cy="52" r="3" fill="#3B82F6"/><circle cx="150" cy="52" r="3" fill="#10B981"/>`;
+  }
+
+  if (tipo === 'frango') {
+    return `<svg width="120" height="120" viewBox="0 0 270 285" xmlns="http://www.w3.org/2000/svg">
+      <ellipse cx="135" cy="270" rx="52" ry="10" fill="rgba(0,0,0,0.08)"/>
+      <path d="M135 48 Q120 28 108 42 Q95 18 110 35 Q90 15 110 32 Q125 12 135 28 Q145 12 135 32 Q160 15 140 35 Q165 25 155 45 Q142 38 135 48 Z" fill="#FF3344"/>
+      <circle cx="135" cy="120" r="68" fill="#FFF9E6"/>
+      <path d="M135 138 L112 152 L158 152 Z" fill="#FFCC00"/>
+      <path d="M120 152 Q135 162 150 152" fill="#FF9933"/>
+      <ellipse cx="135" cy="150" rx="12" ry="8" fill="#552200"/>
+      <circle cx="100" cy="105" r="22" fill="#FFFFFF" stroke="#2D1B10" stroke-width="3.5"/>
+      <circle cx="170" cy="105" r="22" fill="#FFFFFF" stroke="#2D1B10" stroke-width="3.5"/>
+      <circle cx="95" cy="100" r="11" fill="#2D1B10"/>
+      <circle cx="175" cy="100" r="11" fill="#2D1B10"/>
+      <circle cx="90" cy="92" r="5" fill="white"/>
+      <circle cx="170" cy="92" r="5" fill="white"/>
+      <line x1="82" y1="90" x2="75" y2="78" stroke="#2D1B10" stroke-width="2.5" stroke-linecap="round"/>
+      <line x1="88" y1="85" x2="80" y2="72" stroke="#2D1B10" stroke-width="2.5" stroke-linecap="round"/>
+      <line x1="188" y1="90" x2="195" y2="78" stroke="#2D1B10" stroke-width="2.5" stroke-linecap="round"/>
+      <line x1="182" y1="85" x2="190" y2="72" stroke="#2D1B10" stroke-width="2.5" stroke-linecap="round"/>
+      <ellipse cx="72" cy="130" rx="10" ry="6" fill="#FFB6C1" opacity=".5"/>
+      <ellipse cx="198" cy="130" rx="10" ry="6" fill="#FFB6C1" opacity=".5"/>
+      <ellipse cx="135" cy="205" rx="62" ry="52" fill="#FFF9E6"/>
+      ${acessorio}
+    </svg>`;
+  } else if (tipo === 'cachorra') {
+    return `<svg width="120" height="120" viewBox="0 0 270 285" xmlns="http://www.w3.org/2000/svg">
+      <ellipse cx="135" cy="270" rx="52" ry="10" fill="rgba(0,0,0,0.08)"/>
+      <path d="M195 190 Q235 165 220 135" stroke="#D97706" stroke-width="22" stroke-linecap="round" fill="none"/>
+      <ellipse cx="135" cy="205" rx="60" ry="50" fill="#D97706"/>
+      <circle cx="135" cy="120" r="70" fill="#D97706"/>
+      <ellipse cx="105" cy="110" rx="15" ry="19" fill="#2D1B10"/>
+      <ellipse cx="165" cy="110" rx="15" ry="19" fill="#2D1B10"/>
+      <circle cx="100" cy="104" r="5" fill="white"/>
+      <circle cx="160" cy="104" r="5" fill="white"/>
+      <circle cx="135" cy="175" r="18" fill="#F59E0B" opacity="0.9"/>
+      ${acessorio}
+    </svg>`;
+  } else if (tipo === 'cabra') {
+    return `<svg width="120" height="120" viewBox="0 0 270 285" xmlns="http://www.w3.org/2000/svg">
+      <ellipse cx="135" cy="270" rx="55" ry="12" fill="rgba(0,0,0,0.08)"/>
+      <path d="M90 60 Q70 25 85 15 Q100 25 95 55" fill="#2D1B10"/>
+      <path d="M180 60 Q200 25 185 15 Q170 25 175 55" fill="#2D1B10"/>
+      <ellipse cx="135" cy="125" rx="60" ry="65" fill="#F5E6D3"/>
+      <circle cx="105" cy="110" r="16" fill="#FFFFFF" stroke="#2D1B10" stroke-width="3"/>
+      <circle cx="165" cy="110" r="16" fill="#FFFFFF" stroke="#2D1B10" stroke-width="3"/>
+      <circle cx="108" cy="108" r="8" fill="#2D1B10"/>
+      <circle cx="162" cy="108" r="8" fill="#2D1B10"/>
+      <circle cx="104" cy="104" r="3" fill="white"/>
+      <circle cx="158" cy="104" r="3" fill="white"/>
+      ${acessorio}
+    </svg>`;
+  } else {
+    return `<svg width="120" height="120" viewBox="0 0 260 260" xmlns="http://www.w3.org/2000/svg">
+      <ellipse cx="130" cy="235" rx="75" ry="12" fill="rgba(0,0,0,0.06)"/>
+      <path d="M195 180 Q240 140 225 95" stroke="#FF9F29" stroke-width="28" stroke-linecap="round" fill="none"/>
+      <ellipse cx="130" cy="190" rx="65" ry="55" fill="#FF9F29"/>
+      <ellipse cx="95" cy="230" rx="18" ry="15" fill="#FFE8CC"/>
+      <ellipse cx="165" cy="230" rx="18" ry="15" fill="#FFE8CC"/>
+      <circle cx="130" cy="110" r="75" fill="#FF9F29"/>
+      <path d="M55 45 L85 85 L50 80 Z" fill="#FF9F29"/>
+      <path d="M205 45 L175 85 L210 80 Z" fill="#FF9F29"/>
+      <ellipse cx="130" cy="125" rx="48" ry="45" fill="#FFE8CC"/>
+      <ellipse cx="95" cy="100" rx="18" ry="22" fill="#2D1B10"/>
+      <ellipse cx="165" cy="100" rx="18" ry="22" fill="#2D1B10"/>
+      <circle cx="100" cy="92" rx="7" ry="9" fill="white"/>
+      <circle cx="170" cy="92" rx="7" ry="9" fill="white"/>
+      <path d="M130 125 L122 138 L138 138 Z" fill="#FF9AAA"/>
+      ${acessorio}
+    </svg>`;
+  }
+}
+
+const BANCO_PETS = {
+  gato: { nome: "Gato", emoji: "🐱", som: "Miau!", freq: 440, evolucoes: [{nivel:1,nome:"Filhote"},{nivel:5,nome:"Jovem"},{nivel:10,nome:"Adulto"},{nivel:20,nome:"Sábio"},{nivel:50,nome:"Lendário"}] },
+  cachorra: { nome: "Cachorrinha", emoji: "🐶", som: "Au Au!", freq: 220, evolucoes: [{nivel:1,nome:"Filhote"},{nivel:5,nome:"Jovem"},{nivel:10,nome:"Adulta"},{nivel:20,nome:"Protetora"},{nivel:50,nome:"Lendária"}] },
+  cabra: { nome: "Cabra", emoji: "🐐", som: "Bééé!", freq: 330, evolucoes: [{nivel:1,nome:"Cabrinha"},{nivel:5,nome:"Jovem"},{nivel:10,nome:"Adulta"},{nivel:20,nome:"Montanhesa"},{nivel:50,nome:"Lendária"}] },
+  frango: { nome: "Frango", emoji: "🐔", som: "Cocoricó!", freq: 580, evolucoes: [{nivel:1,nome:"Pintinho"},{nivel:5,nome:"Jovem"},{nivel:10,nome:"Adulto"},{nivel:20,nome:"Galinha"},{nivel:50,nome:"Galo Lendário"}] }
+};
+
+const BANCO_FUNDOS = [
+  {id:'ceu',nome:'Céu Azul',emoji:'☀️',preco:0,bg:'linear-gradient(180deg,#4facfe,#00f2fe)'},
+  {id:'chuva',nome:'Chuva',emoji:'🌧️',preco:12,bg:'linear-gradient(180deg,#475569,#94a3b8)'},
+  {id:'noite',nome:'Noite Estrelada',emoji:'🌙',preco:20,bg:'linear-gradient(180deg,#0f172a,#1e3a8a)'},
+  {id:'arcoiris',nome:'Arco-Íris',emoji:'🌈',preco:30,bg:'linear-gradient(180deg,#f87171,#fbbf24 30%,#4ade80 60%,#60a5fa 100%)'},
+  {id:'praia',nome:'Praia Tropical',emoji:'🏖️',preco:25,bg:'linear-gradient(180deg,#fef08a,#38bdf8)'},
+  {id:'floresta',nome:'Floresta Mágica',emoji:'🌲',preco:22,bg:'linear-gradient(180deg,#166534,#84cc16)'},
+  {id:'festa',nome:'Balada Neon',emoji:'🎉',preco:35,bg:'linear-gradient(180deg,#f472b6,#a78bfa 50%,#60a5fa)'}
+];
+
+let estado = {
+  petAtual: 'gato', moedas: 15, taxaCambio: 0.01, pinPais: '1234',
+  dinheiroAcumulado: 0.15,
+  idadeCrianca: 7, fundoAtual: 'ceu', fundosComprados: ['ceu'],
+  nivel: 1, xp: 0, xpMax: 100, felicidade: 100, saude: 100,
+  metaMoedas: 50, totalSacado: 0, ultimoDiaAcesso: new Date().toISOString().slice(0,10),
+  timerFim: null,
+  tarefas: [
+    {id: 1, texto: 'Escovar os dentes', recompensa: 5, xp: 20, status: 'pendente', foto: null},
+    {id: 2, texto: 'Arrumar a cama', recompensa: 5, xp: 20, status: 'pendente', foto: null}
+  ],
+  recompensas: [
+    {id:1, texto:'15 min de tela', custo:10, tipo:'timer', minutos:15},
+    {id:2, texto:'30 min de tela', custo:18, tipo:'timer', minutos:30}
+  ]
+};
+
+const salvo = localStorage.getItem('ROTINAPET_SAVE_FINAL');
+if (salvo) {
+  try {
+    const dadosCarregados = JSON.parse(salvo);
+    estado = {...estado, ...dadosCarregados};
+    if (typeof estado.dinheiroAcumulado !== 'number') {
+      estado.dinheiroAcumulado = (estado.moedas || 0) * (estado.taxaCambio || 0.01);
+    }
+    if (!Array.isArray(estado.fundosComprados)) estado.fundosComprados = ['ceu'];
+    if (!estado.fundoAtual) estado.fundoAtual = 'ceu';
+  } catch(e) {}
+}
+
+const hoje = new Date().toISOString().slice(0,10);
+if (estado.ultimoDiaAcesso !== hoje) {
+  estado.tarefas.forEach(t => { t.status = 'pendente'; t.foto = null; });
+  estado.ultimoDiaAcesso = hoje;
+}
+
+function salvar() { localStorage.setItem('ROTINAPET_SAVE_FINAL', JSON.stringify(estado)); }
+
+function aplicarFundoTela(id) {
+  document.body.className = `cenario-${id || 'ceu'}`;
+}
+
+function atualizarTela() {
+    document.getElementById('txt-moedas').innerText = estado.moedas;
+    const valorDisponivel = (estado.dinheiroAcumulado || 0).toFixed(2).replace('.', ',');
+    document.getElementById('txt-dinheiro').innerText = valorDisponivel;
+    document.getElementById('txt-painel-disponivel').innerText = valorDisponivel;
+    document.getElementById('txt-total-pago').innerText = (estado.totalSacado || 0).toFixed(2).replace('.', ',');
+    document.getElementById('val-felicidade').innerText = estado.felicidade;
+    document.getElementById('barra-felicidade').style.width = estado.felicidade + '%';
+    document.getElementById('txt-saude').innerText = estado.saude + '%';
+    
+    const level = estado.nivel || 1;
+    const xp = estado.xp || 0;
+    document.getElementById('numero-nivel').innerText = level;
+    document.getElementById('texto-xp').innerText = `${xp}/100`;
+    document.getElementById('barra-xp').style.width = `${xp}%`;
+
+    const pet = BANCO_PETS[estado.petAtual];
+    document.getElementById('btn-pet-atual').textContent = pet.emoji;
+    document.getElementById('pet-svg-container').innerHTML = obterSvgPetComEvolucao(estado.petAtual, level);
+    document.getElementById('pet-evol-nome').textContent = pet.nome;
+
+    const inputIdade = document.getElementById('input-idade-crianca');
+    if (inputIdade) inputIdade.value = estado.idadeCrianca || 7;
+    const inputTaxa = document.getElementById('input-taxa-cambio');
+    if (inputTaxa) inputTaxa.value = estado.taxaCambio;
+
+    aplicarFundoTela(estado.fundoAtual || 'ceu');
+    renderizarTarefas();
+    renderizarEvolucoes();
+}
+
+let ctxAudio = null;
+let debounceAcao = false;
+
+function obterContextoAudio() {
+  try {
+    const AudioContext = window.AudioContext || window.webkitAudioContext;
+    if (!AudioContext) return null;
+    if (!ctxAudio) ctxAudio = new AudioContext();
+    if (ctxAudio.state === 'suspended') ctxAudio.resume();
+    return ctxAudio;
+  } catch(e) {
+    return null;
+  }
+}
+
+function somDoPet(event) {
+    if (debounceAcao) return;
+    debounceAcao = true;
+    setTimeout(() => { debounceAcao = false; }, 250);
+
+    const ctx = obterContextoAudio();
+    const pet = BANCO_PETS[estado.petAtual];
+
+    if (ctx) {
+      try {
+        const osc = ctx.createOscillator();
+        const gain = ctx.createGain();
+        osc.connect(gain);
+        gain.connect(ctx.destination);
+        
+        osc.frequency.value = pet.freq;
+        osc.type = estado.petAtual === 'frango' ? 'triangle' : 'sine';
+        
+        const tempo = ctx.currentTime;
+        gain.gain.setValueAtTime(0.2, tempo);
+        gain.gain.exponentialRampToValueAtTime(0.001, tempo + 0.25);
+        osc.start(tempo);
+        osc.stop(tempo + 0.25);
+      } catch(e) {}
     }
 
-    // Inicialização da Aplicação
-    document.addEventListener('DOMContentLoaded', () => {
-      aplicarCenario(estado.cenarioAtivo);
-      atualizarContadorMoedas();
-      atualizarTextosCrianca();
-      renderizarTarefas();
+    try {
+      if (navigator.vibrate) navigator.vibrate(30);
+    } catch(e) {}
+
+    estado.felicidade = Math.min(100, estado.felicidade + 5);
+    mostrarToast(`🔊 ${pet.som} ❤️`);
+    ganharXP(5, event);
+    salvar();
+    atualizarTela();
+}
+
+function darLanche(event) {
+    if (debounceAcao) return;
+    debounceAcao = true;
+    setTimeout(() => { debounceAcao = false; }, 250);
+
+    if (estado.moedas >= 5) {
+      estado.moedas -= 5;
+      estado.felicidade = Math.min(100, estado.felicidade + 20);
+      ganharXP(5, event);
+      salvar();
+      atualizarTela();
+      mostrarToast('🍎 Lanche delicioso! +5 XP');
+    } else {
+      estado.felicidade = Math.min(100, estado.felicidade + 5);
+      ganharXP(1, event);
+      salvar();
+      atualizarTela();
+      mostrarToast('🍎 Petisco simples! (Junte 5 moedas para o lanche completo)');
+    }
+}
+
+function darRemedio() {
+    estado.saude = 100;
+    salvar();
+    atualizarTela();
+    mostrarToast('💚 Pet com saúde 100%!');
+}
+
+function criarTextoFlutuante(texto, evento) {
+    const area = document.getElementById('pet-section-area');
+    if (!area) return;
+    const span = document.createElement('div');
+    span.className = 'floating-text';
+    span.innerText = texto;
+    let x = 120, y = 30;
+    if (evento && evento.clientX) {
+        const rect = area.getBoundingClientRect();
+        x = Math.max(10, evento.clientX - rect.left - 20);
+        y = Math.max(10, evento.clientY - rect.top - 20);
+    }
+    span.style.left = x + 'px';
+    span.style.top = y + 'px';
+    area.appendChild(span);
+    setTimeout(() => span.remove(), 900);
+}
+
+function ganharXP(qtd, evento) {
+    estado.xp += qtd;
+    criarTextoFlutuante(`+${qtd} XP`, evento);
+    if (estado.xp >= 100) {
+        estado.xp -= 100;
+        estado.nivel++;
+        dispararConfetes();
+        try {
+          if (navigator.vibrate) navigator.vibrate([100, 50, 100]);
+        } catch(e) {}
+        mostrarToast(`🎉 Subiu para o Nível ${estado.nivel}!`);
+    }
+    atualizarTela();
+    salvar();
+}
+
+function dispararConfetes() {
+  try {
+    if (typeof window.confetti === 'function') {
+      window.confetti({ particleCount: 70, spread: 60, origin: { y: 0.6 } });
+    }
+  } catch(e) {}
+}
+
+let tarefaIdFoto = null;
+function dispararCamera(id) { tarefaIdFoto = id; document.getElementById('camera-input').click(); }
+function processarFotoCapturada(e) {
+    const file = e.target.files[0]; if (!file || !tarefaIdFoto) return;
+    const reader = new FileReader();
+    reader.onload = ev => {
+        const t = estado.tarefas.find(x => x.id === tarefaIdFoto);
+        if (t) { t.foto = ev.target.result; salvar(); renderizarTarefas(); alert('📸 Foto capturada!'); }
+    }; reader.readAsDataURL(file); e.target.value = '';
+}
+
+function enviarParaAprovacao(id) {
+    const t = estado.tarefas.find(x => x.id === id);
+    if(t) { t.status = 'aguardando_aprovacao'; salvar(); renderizarTarefas(); mostrarToast('⏳ Enviado para os pais!'); }
+}
+
+function renderizarTarefas() {
+    const c = document.getElementById('lista-tarefas'); c.innerHTML = '';
+    document.getElementById('qtd-tarefas').textContent = `${estado.tarefas.length} tarefas`;
+    estado.tarefas.forEach(t => {
+        const pend = t.status === 'aguardando_aprovacao', apr = t.status === 'aprovada';
+        c.innerHTML += `
+            <div class="task-row">
+                <div>
+                    <span class="task-name" style="${apr ? 'text-decoration:line-through;color:#888;' : ''}">${t.texto}</span>
+                    <span class="task-reward">+${t.xp} XP • +${t.recompensa} 🪙</span>
+                </div>
+                <div class="task-actions">
+                    ${apr ? '<span style="color:#10b981;font-weight:bold;">✓ Feito</span>' :
+                      pend ? '<span style="color:#f59e0b;font-weight:bold;">Avaliando</span>' :
+                      `<button class="task-btn" style="background:${t.foto?'#d1fae5':'#f1f5f9'}" onclick="dispararCamera(${t.id})">📷</button>
+                       <button class="task-btn btn-ok" onclick="enviarParaAprovacao(${t.id})">Enviar</button>`}
+                </div>
+            </div>`;
+    });
+}
+
+function alternarModoPais() {
+    const pin = prompt('🔑 Digite o PIN dos pais (padrão: 1234):');
+    if (pin === estado.pinPais) {
+        renderizarPainelPais();
+        abrirModal('modal-pais');
+    } else if (pin !== null) {
+        alert('❌ PIN incorreto!');
+    }
+}
+
+function renderizarPainelPais() {
+    document.getElementById('input-taxa-cambio').value = estado.taxaCambio;
+    const inputIdade = document.getElementById('input-idade-crianca');
+    if (inputIdade) inputIdade.value = estado.idadeCrianca || 7;
+    const ap = document.getElementById('lista-aprovacao-pais'); ap.innerHTML = '';
+    const pendentes = estado.tarefas.filter(t => t.status === 'aguardando_aprovacao');
+    if(pendentes.length === 0) ap.innerHTML = '<span style="font-size:10px;color:#888;">Nenhuma pendente.</span>';
+    pendentes.forEach(t => {
+        ap.innerHTML += `<div style="display:flex;justify-content:space-between;align-items:center;font-size:10px;background:#f8fafc;padding:4px;border-radius:6px;"><span><b>${t.texto}</b></span><button onclick="aprovarTarefaPais(${t.id})" style="background:#10b981;color:white;border:none;padding:2px 6px;border-radius:4px;cursor:pointer;">Aprovar</button></div>`;
     });
 
-    // 1 & 3. Cenários e Loja
-    function aplicarCenario(idCenario) {
-      document.body.className = idCenario;
-      estado.cenarioAtivo = idCenario;
-      salvarEstado();
-    }
+    const ed = document.getElementById('lista-edicao-tarefas'); ed.innerHTML = '';
+    estado.tarefas.forEach(t => {
+        ed.innerHTML += `<div style="display:flex;justify-content:space-between;align-items:center;font-size:10px;"><span>${t.texto}</span><button onclick="removerTarefa(${t.id})" style="color:red;border:none;background:none;font-weight:bold;cursor:pointer;">Excluir</button></div>`;
+    });
+}
 
-    function abrirModalLoja() {
-      renderizarLoja();
-      abrirModal('modal-loja');
-    }
+function aprovarTarefaPais(id) {
+    const t = estado.tarefas.find(x => x.id === id); if(!t) return;
+    t.status = 'aprovada';
+    estado.moedas += t.recompensa;
+    estado.dinheiroAcumulado = (estado.dinheiroAcumulado || 0) + (t.recompensa * (estado.taxaCambio || 0.01));
+    ganharXP(t.xp);
+    dispararConfetes();
+    salvar();
+    renderizarPainelPais();
+    atualizarTela();
+    alert('🎉 Tarefa Aprovada com Sucesso!');
+}
 
-    function renderizarLoja() {
-      const container = document.getElementById('loja-grid');
-      container.innerHTML = '';
+function sacarDinheiro() {
+  const valor = estado.dinheiroAcumulado || 0;
+  if (valor <= 0) return alert('Sem saldo para saque!');
+  if (confirm(`Confirmar o pagamento de R$ ${valor.toFixed(2).replace('.', ',')} ao Bernardo?`)) {
+    estado.totalSacado = (estado.totalSacado || 0) + valor;
+    estado.dinheiroAcumulado = 0;
+    salvar();
+    renderizarPainelPais();
+    atualizarTela();
+    alert('💸 Saque registrado com sucesso!');
+  }
+}
 
-      estado.cenarios.forEach(cenario => {
-        const desbloqueado = estado.cenariosDesbloqueados.includes(cenario.id);
-        const emUso = estado.cenarioAtivo === cenario.id;
+function adicionarTarefa() {
+    const txt = document.getElementById('nova-tarefa-texto').value;
+    const moedas = parseInt(document.getElementById('nova-tarefa-moedas').value) || 5;
+    if(!txt) return;
+    const id = estado.tarefas.length > 0 ? Math.max(...estado.tarefas.map(t => t.id)) + 1 : 1;
+    estado.tarefas.push({id, texto: txt, recompensa: moedas, xp: 20, status: 'pendente', foto: null});
+    document.getElementById('nova-tarefa-texto').value = '';
+    salvar();
+    renderizarPainelPais();
+    renderizarTarefas();
+}
 
-        const card = document.createElement('div');
-        card.className = 'card-loja-item';
-        card.innerHTML = `
-          <strong style="display: block; font-size: 0.9rem; margin-bottom: 4px;">${cenario.nome}</strong>
-          <small style="color: var(--text-muted); display: block; margin-bottom: 8px;">
-            ${cenario.preco === 0 ? 'Grátis' : cenario.preco + ' 🪙'}
-          </small>
-          <button 
-            class="btn-acao ${emUso ? 'btn-em-uso' : ''}" 
-            style="width: 100%; font-size: 0.75rem;"
-            ${emUso ? 'disabled' : ''}
-            onclick="processarCliqueLoja('${cenario.id}', ${cenario.preco})">
-            ${emUso ? 'Em Uso' : desbloqueado ? 'Usar' : 'Comprar'}
-          </button>
-        `;
-        container.appendChild(card);
-      });
-    }
+function removerTarefa(id) {
+  estado.tarefas = estado.tarefas.filter(t => t.id !== id);
+  salvar();
+  renderizarPainelPais();
+  renderizarTarefas();
+}
 
-    function processarCliqueLoja(idCenario, preco) {
-      if (estado.cenariosDesbloqueados.includes(idCenario)) {
-        aplicarCenario(idCenario);
-        renderizarLoja();
-        exibirToast('Cenário ativado!');
-        return;
-      }
+function salvarNovoPin() {
+    const p = document.getElementById('novo-pin-pais').value;
+    if(p.length === 4) {
+      estado.pinPais = p;
+      salvar();
+      alert('🔑 PIN alterado!');
+    } else alert('Precisa de 4 dígitos.');
+}
 
-      if (estado.moedas >= preco) {
-        estado.moedas -= preco;
-        estado.cenariosDesbloqueados.push(idCenario);
-        aplicarCenario(idCenario);
-        atualizarContadorMoedas();
-        renderizarLoja();
-        exibirToast('Novo cenário desbloqueado!');
-      } else {
-        exibirToast('Moedas insuficientes!');
-      }
-    }
+function atualizarTaxaCambio(v) {
+  estado.taxaCambio = parseFloat(v) || 0.01;
+  salvar();
+  atualizarTela();
+}
 
-    // 2. Moedas
-    function atualizarContadorMoedas() {
-      document.getElementById('contador-moedas').textContent = estado.moedas;
-      const elSaldoSaque = document.getElementById('saque-saldo-moedas');
-      if (elSaldoSaque) elSaldoSaque.textContent = estado.moedas;
-    }
+function atualizarIdadeCrianca(v) {
+    estado.idadeCrianca = Math.max(3, Math.min(15, parseInt(v) || 7));
+    salvar();
+    mostrarToast(`Idade definida: ${estado.idadeCrianca} anos`);
+}
 
-    // 4. Renderizar Tarefas (com Empty State)
-    function renderizarTarefas() {
-      const container = document.getElementById('lista-tarefas');
-      container.innerHTML = '';
+function alternarListaPets(e) { if(e) e.stopPropagation(); document.getElementById('lista-pets').classList.toggle('abrir'); }
+function escolherPet(tipo) {
+    estado.petAtual = tipo;
+    salvar();
+    atualizarTela();
+    document.getElementById('lista-pets').classList.remove('abrir');
+}
+document.addEventListener('click', (e) => {
+    const lista = document.getElementById('lista-pets'); const btn = document.getElementById('btn-pet-atual');
+    if (!lista.contains(e.target) && e.target !== btn) lista.classList.remove('abrir');
+});
 
-      if (!estado.tarefas || estado.tarefas.length === 0) {
-        container.innerHTML = `
-          <div class="empty-state-tarefas">
-            <p>🎉 Nenhuma tarefa pendente por aqui!</p>
-            <small>Adicione novas atividades no painel dos pais.</small>
-          </div>
-        `;
-        return;
-      }
+function renderizarEvolucoes() {
+    const pet = BANCO_PETS[estado.petAtual];
+    const c = document.getElementById('lista-evolucoes'); c.innerHTML = '';
+    pet.evolucoes.forEach(ev => {
+        const desbloq = estado.nivel >= ev.nivel;
+        c.innerHTML += `<div style="display:flex;align-items:center;gap:8px;padding:6px;background:${desbloq?'#faf5ff':'#f8fafc'};border-radius:8px;border:1px solid #e2e8f0;font-size:11px;"><span>${desbloq?'⭐':'🔒'}</span><div><b>${ev.nome}</b><p style="color:#666;font-size:9px;">Nível ${ev.nivel}</p></div></div>`;
+    });
+}
 
-      estado.tarefas.forEach(t => {
-        const item = document.createElement('div');
-        item.className = `tarefa-item ${t.concluida ? 'concluida' : ''}`;
-        item.innerHTML = `
-          <div>
-            <strong>${t.titulo}</strong>
-            <div style="font-size: 0.8rem; color: #10b981;">+${t.recompensa} 🪙</div>
-          </div>
-          <button 
-            class="btn-acao" 
-            ${t.concluida ? 'disabled' : ''} 
-            onclick="concluirTarefa(${t.id})">
-            ${t.concluida ? 'Concluída' : 'Feito!'}
-          </button>
-        `;
-        container.appendChild(item);
-      });
-    }
+let contaCorreta = 0;
+function abrirDesafioMatematica() {
+    const idade = estado.idadeCrianca || 7;
+    let a, b, op;
 
-    function concluirTarefa(id) {
-      const tarefa = estado.tarefas.find(t => t.id === id);
-      if (tarefa && !tarefa.concluida) {
-        tarefa.concluida = true;
-        estado.moedas += tarefa.recompensa;
-        salvarEstado();
-        atualizarContadorMoedas();
-        renderizarTarefas();
-        exibirToast(`Parabéns! Você ganhou +${tarefa.recompensa} moedas!`);
-      }
-    }
-
-    // 5. Gravador de Áudio com Permissão Explicada
-    async function gravarMensagemVoz() {
-      if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) {
-        exibirToast('Seu navegador não suporta gravação de voz.');
-        return;
-      }
-
-      try {
-        const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
-        exibirToast('🎙️ Ouvindo você... (gravação iniciada)');
-        setTimeout(() => {
-          stream.getTracks().forEach(track => track.stop());
-          exibirToast('🐱 O Pet adorou ouvir você!');
-        }, 3000);
-      } catch (erro) {
-        if (erro.name === 'NotAllowedError' || erro.name === 'PermissionDeniedError') {
-          exibirToast('Permissão necessária: Libere o acesso ao microfone no topo do navegador.');
+    if (idade <= 5) {
+        a = Math.floor(Math.random() * 5) + 1;
+        b = Math.floor(Math.random() * 5) + 1;
+        op = '+';
+        contaCorreta = a + b;
+    } else if (idade <= 7) {
+        a = Math.floor(Math.random() * 10) + 1;
+        b = Math.floor(Math.random() * 10) + 1;
+        op = Math.random() > 0.5 ? '+' : '-';
+        if (op === '-' && b > a) [a, b] = [b, a];
+        contaCorreta = op === '+' ? a + b : a - b;
+    } else if (idade <= 9) {
+        const tipo = Math.random();
+        if (tipo < 0.4) {
+            a = Math.floor(Math.random() * 20) + 5;
+            b = Math.floor(Math.random() * 20) + 5;
+            op = '+';
+            contaCorreta = a + b;
+        } else if (tipo < 0.7) {
+            a = Math.floor(Math.random() * 25) + 5;
+            b = Math.floor(Math.random() * 20) + 1;
+            if (b > a) [a, b] = [b, a];
+            op = '-';
+            contaCorreta = a - b;
         } else {
-          exibirToast('Erro ao ligar o microfone.');
+            a = Math.floor(Math.random() * 6) + 2;
+            b = Math.floor(Math.random() * 6) + 2;
+            op = '×';
+            contaCorreta = a * b;
         }
-      }
-    }
-
-    // Pet Interações
-    function alimentarPet() {
-      if (estado.moedas >= 2) {
-        estado.moedas -= 2;
-        salvarEstado();
-        atualizarContadorMoedas();
-        exibirToast('Pet alimentado com sucesso! 🍎');
-      } else {
-        exibirToast('Moedas insuficientes para alimentar o pet!');
-      }
-    }
-
-    // 8. Nome Dinâmico
-    function atualizarTextosCrianca() {
-      const nome = estado.nomeCrianca || 'Bernardo';
-      document.getElementById('texto-boas-vindas').textContent = `Olá, ${nome}!`;
-      document.getElementById('titulo-saque').textContent = `Aprovar resgate de ${nome}`;
-      const inputNome = document.getElementById('input-nome-crianca');
-      if (inputNome) inputNome.value = nome;
-    }
-
-    function abrirModalSaque() {
-      atualizarTextosCrianca();
-      abrirModal('modal-saque');
-    }
-
-    function solicitarSaque() {
-      fecharModal('modal-saque');
-      requisitarAcessoPais();
-    }
-
-    // Sistema de Trava por PIN
-    let bufferPin = '';
-
-    function requisitarAcessoPais() {
-      bufferPin = '';
-      atualizarDotsPin();
-      document.getElementById('pin-mensagem-erro').textContent = '';
-      abrirModal('modal-pin-pais');
-      window.addEventListener('keydown', lidarTecladoFisicoPin);
-    }
-
-    function fecharModalPin() {
-      fecharModal('modal-pin-pais');
-      bufferPin = '';
-      window.removeEventListener('keydown', lidarTecladoFisicoPin);
-    }
-
-    function digitarPin(digito) {
-      if (bufferPin.length < 4) {
-        bufferPin += digito;
-        atualizarDotsPin();
-        if (bufferPin.length === 4) {
-          setTimeout(verificarPin, 150);
+    } else {
+        const tipo = Math.random();
+        if (tipo < 0.35) {
+            a = Math.floor(Math.random() * 9) + 2;
+            b = Math.floor(Math.random() * 9) + 2;
+            op = '×';
+            contaCorreta = a * b;
+        } else if (tipo < 0.7) {
+            b = Math.floor(Math.random() * 7) + 2;
+            contaCorreta = Math.floor(Math.random() * 8) + 2;
+            a = b * contaCorreta;
+            op = '÷';
+        } else {
+            b = Math.floor(Math.random() * 5) + 2;
+            const quociente = Math.floor(Math.random() * 5) + 1;
+            const resto = Math.floor(Math.random() * (b - 1)) + 1;
+            a = (b * quociente) + resto;
+            op = 'divisão: resto de';
+            contaCorreta = resto;
         }
-      }
     }
 
-    function apagarDigitoPin() {
-      if (bufferPin.length > 0) {
-        bufferPin = bufferPin.slice(0, -1);
-        atualizarDotsPin();
-      }
+    const textoConta = op.includes('resto') ? `${op} ${a} ÷ ${b} = ?` : `${a} ${op} ${b} = ?`;
+    document.getElementById('conta-math').innerText = textoConta;
+
+    const opcoes = [contaCorreta];
+    while (opcoes.length < 4) {
+        const delta = (Math.floor(Math.random() * 5) + 1) * (Math.random() > 0.5 ? 1 : -1);
+        const falsa = Math.max(0, contaCorreta + delta);
+        if (!opcoes.includes(falsa)) opcoes.push(falsa);
     }
+    opcoes.sort(() => Math.random() - 0.5);
 
-    function limparPin() {
-      bufferPin = '';
-      atualizarDotsPin();
+    const c = document.getElementById('opcoes-math'); c.innerHTML = '';
+    opcoes.forEach(op => {
+        c.innerHTML += `<button onclick="testarMath(${op})" style="padding:8px;background:#e0e7ff;border:none;border-radius:8px;font-weight:900;font-size:15px;cursor:pointer;">${op}</button>`;
+    });
+    abrirModal('modal-matematica');
+}
+
+function testarMath(op) {
+    if (debounceAcao) return;
+    debounceAcao = true;
+    setTimeout(() => { debounceAcao = false; }, 250);
+
+    if(op === contaCorreta) {
+      estado.moedas += 1;
+      estado.dinheiroAcumulado = (estado.dinheiroAcumulado || 0) + (1 * (estado.taxaCambio || 0.01));
+      ganharXP(1);
+      dispararConfetes();
+      alert('🎉 Acertou! +1 🪙 e +1 XP');
+      fecharModal('modal-matematica');
+      salvar();
+      atualizarTela();
+    } else {
+      alert('❌ Tente de novo!');
     }
+}
 
-    function atualizarDotsPin() {
-      const dots = document.querySelectorAll('#pin-dots .dot');
-      dots.forEach((dot, index) => {
-        dot.classList.toggle('ativo', index < bufferPin.length);
-      });
+function abrirLojaFundos() {
+  const c = document.getElementById('grid-fundos');
+  c.innerHTML = '';
+  BANCO_FUNDOS.forEach(f => {
+    const comprado = estado.fundosComprados.includes(f.id);
+    const ativo = estado.fundoAtual === f.id;
+    const card = document.createElement('div');
+    card.className = `fundo-card ${ativo ? 'ativo' : ''}`;
+    card.style.background = f.bg;
+    card.innerHTML = `
+      <span style="font-size:20px;">${f.emoji}</span>
+      <b style="font-size:11px;margin-top:2px;">${f.nome}</b>
+      <span style="font-size:9px;font-weight:800;margin-top:2px;background:rgba(0,0,0,0.3);padding:2px 6px;border-radius:6px;">
+        ${ativo ? '✓ Em uso' : comprado ? 'Usar' : `${f.preco} 🪙`}
+      </span>
+    `;
+    card.onclick = () => selecionarOuComprarFundo(f);
+    c.appendChild(card);
+  });
+  abrirModal('modal-fundos');
+}
+
+function selecionarOuComprarFundo(f) {
+  if (estado.fundosComprados.includes(f.id)) {
+    estado.fundoAtual = f.id;
+    aplicarFundoTela(f.id);
+    salvar();
+    abrirLojaFundos();
+    mostrarToast(`🎨 Fundo "${f.nome}" aplicado!`);
+  } else if (estado.moedas >= f.preco) {
+    if (confirm(`Comprar o fundo "${f.nome}" por ${f.preco} moedas?`)) {
+      estado.moedas -= f.preco;
+      estado.fundosComprados.push(f.id);
+      estado.fundoAtual = f.id;
+      aplicarFundoTela(f.id);
+      dispararConfetes();
+      salvar();
+      atualizarTela();
+      abrirLojaFundos();
+      alert(`🎉 Você desbloqueou o fundo "${f.nome}"!`);
     }
+  } else {
+    alert(`🪙 Moedas insuficientes! Você precisa de ${f.preco} moedas.`);
+  }
+}
 
-    function verificarPin() {
-      const card = document.querySelector('.card-pin');
-      const erro = document.getElementById('pin-mensagem-erro');
+let intervaloTimer = null;
 
-      if (bufferPin === estado.pinPais) {
-        fecharModalPin();
-        abrirPainelPais();
+function iniciarTimerTela(minutos) {
+  fecharModal('modal-recompensas');
+  abrirModal('modal-timer');
+  const agora = Date.now();
+  estado.timerFim = agora + (minutos * 60 * 1000);
+  salvar();
+  executarTickTimer();
+}
+
+function executarTickTimer() {
+  clearInterval(intervaloTimer);
+  const relogio = document.getElementById('relogio-timer');
+
+  const atualizarContador = () => {
+    if (!estado.timerFim) {
+      clearInterval(intervaloTimer);
+      return;
+    }
+    const restanteMs = estado.timerFim - Date.now();
+    if (restanteMs <= 0) {
+      clearInterval(intervaloTimer);
+      estado.timerFim = null;
+      salvar();
+      relogio.innerText = "00:00";
+      alert('🔔 O TEMPO DE TELA ACABOU! Mostre aos seus pais.');
+      return;
+    }
+    const totalSegundos = Math.floor(restanteMs / 1000);
+    const m = Math.floor(totalSegundos / 60);
+    const s = totalSegundos % 60;
+    relogio.innerText = `${m.toString().padStart(2,'0')}:${s.toString().padStart(2,'0')}`;
+  };
+
+  atualizarContador();
+  intervaloTimer = setInterval(atualizarContador, 1000);
+}
+
+function recuperarTimerAtivo() {
+  if (estado.timerFim) {
+    if (Date.now() >= estado.timerFim) {
+      estado.timerFim = null;
+      salvar();
+    } else {
+      abrirModal('modal-timer');
+      executarTickTimer();
+    }
+  }
+}
+
+function pausarFecharTimer() {
+  clearInterval(intervaloTimer);
+  estado.timerFim = null;
+  salvar();
+  fecharModal('modal-timer');
+}
+
+function abrirLojaRecompensas() {
+    const meta = estado.metaMoedas || 50;
+    const progresso = Math.min(100, Math.round((estado.moedas / meta) * 100));
+    document.getElementById('texto-meta-progresso').innerText = `${estado.moedas} / ${meta} 🪙`;
+    document.getElementById('barra-meta-progresso').style.width = `${progresso}%`;
+
+    const c = document.getElementById('lista-itens-loja'); c.innerHTML = '';
+    estado.recompensas.forEach(r => {
+        c.innerHTML += `<div style="display:flex;justify-content:space-between;align-items:center;background:#f8fafc;padding:5px;border-radius:6px;font-size:10px;"><span>📱 ${r.texto}</span><button onclick="comprarPremio(${r.id})" style="background:#f59e0b;color:white;border:none;padding:2px 6px;border-radius:4px;font-weight:bold;cursor:pointer;">${r.custo}🪙</button></div>`;
+    });
+    abrirModal('modal-recompensas');
+}
+
+function comprarPremio(id) {
+    const r = estado.recompensas.find(x => x.id === id);
+    if (!r) return;
+    if(estado.moedas < r.custo) return alert('🪙 Moedas insuficientes!');
+    
+    if (confirm(`Deseja resgatar "${r.texto}" por ${r.custo} moedas?`)) {
+      estado.moedas -= r.custo;
+      salvar();
+      atualizarTela();
+      if (r.tipo === 'timer') {
+        iniciarTimerTela(r.minutos);
       } else {
-        erro.textContent = 'PIN incorreto. Tente novamente.';
-        card.classList.add('animar-shake');
-        setTimeout(() => {
-          card.classList.remove('animar-shake');
-          limparPin();
-        }, 400);
+        fecharModal('modal-recompensas');
+        alert('🎉 Resgatado com sucesso!');
       }
     }
+}
 
-    function lidarTecladoFisicoPin(e) {
-      if (e.key >= '0' && e.key <= '9') digitarPin(e.key);
-      else if (e.key === 'Backspace') apagarDigitoPin();
-      else if (e.key === 'Escape') fecharModalPin();
-    }
+function alternarGravador() { abrirModal('modal-gravador'); }
+async function iniciarGravacao() {
+    try {
+        const stream = await navigator.mediaDevices.getUserMedia({audio:true});
+        window.mediaRecorder = new MediaRecorder(stream); let chunks = [];
+        window.mediaRecorder.ondataavailable = e => chunks.push(e.data);
+        window.mediaRecorder.onstop = () => {
+            const blob = new Blob(chunks, {type:'audio/webm'});
+            document.getElementById('audio-original').src = URL.createObjectURL(blob);
+            document.getElementById('grav-result').style.display = 'block';
+            stream.getTracks().forEach(t => t.stop());
+        };
+        window.mediaRecorder.start();
+        document.getElementById('btn-iniciar-grav').style.display = 'none';
+        document.getElementById('btn-parar-grav').style.display = 'block';
+        mostrarToast('🎙️ Gravando...');
+    } catch(e) { alert('Permita o microfone!'); }
+}
+function pararGravacao() {
+    if(window.mediaRecorder) { window.mediaRecorder.stop(); document.getElementById('btn-iniciar-grav').style.display = 'block'; document.getElementById('btn-parar-grav').style.display = 'none'; }
+}
+function salvarVoz() { mostrarToast('✅ Voz salva!'); fecharModal('modal-gravador'); }
 
-    // Painel dos Pais
-    function abrirPainelPais() {
-      renderizarTabelaCenariosPais();
-      abrirModal('modal-painel-pais');
-    }
+function abrirModal(id) { document.getElementById(id).classList.add('mostrar'); }
+function fecharModal(id) { document.getElementById(id).classList.remove('mostrar'); }
 
-    function salvarPerfilCrianca(e) {
-      e.preventDefault();
-      const novoNome = document.getElementById('input-nome-crianca').value.trim();
-      if (novoNome) {
-        estado.nomeCrianca = novoNome;
-        salvarEstado();
-        atualizarTextosCrianca();
-        exibirToast('Nome atualizado com sucesso!');
-      }
-    }
+function mostrarToast(texto) {
+  const t = document.getElementById('toast');
+  t.textContent = texto; t.classList.add('mostrar');
+  setTimeout(() => t.classList.remove('mostrar'), 1800);
+}
 
-    function salvarNovoPin(e) {
-      e.preventDefault();
-      const input = document.getElementById('input-novo-pin');
-      if (/^\d{4}$/.test(input.value)) {
-        estado.pinPais = input.value;
-        salvarEstado();
-        input.value = '';
-        exibirToast('Novo PIN configurado!');
-      } else {
-        exibirToast('O PIN deve conter exatamente 4 números.');
-      }
-    }
-
-    function renderizarTabelaCenariosPais() {
-      const tbody = document.getElementById('tabela-cenarios-pais');
-      tbody.innerHTML = '';
-
-      estado.cenarios.forEach(c => {
-        const desbloqueado = estado.cenariosDesbloqueados.includes(c.id);
-        const tr = document.createElement('tr');
-        tr.innerHTML = `
-          <td><strong>${c.nome}</strong></td>
-          <td>
-            <input 
-              type="number" 
-              class="input-preco" 
-              value="${c.preco}" 
-              min="0"
-              ${c.padrao ? 'disabled' : ''} 
-              onchange="alterarPrecoCenario('${c.id}', this.value)" 
-            />
-          </td>
-          <td>
-            ${!c.padrao ? `
-              <button 
-                type="button" 
-                class="btn-acao" 
-                style="font-size: 0.75rem; padding: 4px 8px; background: ${desbloqueado ? '#94a3b8' : 'var(--primary)'};"
-                onclick="alternarDesbloqueioCenario('${c.id}')">
-                ${desbloqueado ? 'Revogar' : 'Liberar'}
-              </button>
-            ` : '<small style="color: var(--text-muted)">Padrão</small>'}
-          </td>
-        `;
-        tbody.appendChild(tr);
-      });
-    }
-
-    function alterarPrecoCenario(id, novoPreco) {
-      const item = estado.cenarios.find(c => c.id === id);
-      if (item) {
-        item.preco = Math.max(0, parseInt(novoPreco, 10) || 0);
-        salvarEstado();
-        exibirToast('Preço atualizado!');
-      }
-    }
-
-    function alternarDesbloqueioCenario(id) {
-      const idx = estado.cenariosDesbloqueados.indexOf(id);
-      if (idx > -1) {
-        if (estado.cenarioAtivo === id) aplicarCenario('cenario-ceu');
-        estado.cenariosDesbloqueados.splice(idx, 1);
-      } else {
-        estado.cenariosDesbloqueados.push(id);
-      }
-      salvarEstado();
-      renderizarTabelaCenariosPais();
-    }
-
-    function adicionarTarefaExemplo() {
-      const id = Date.now();
-      estado.tarefas.push({
-        id,
-        titulo: `Nova Tarefa #${estado.tarefas.length + 1}`,
-        recompensa: 3,
-        concluida: false
-      });
-      salvarEstado();
-      renderizarTarefas();
-      exibirToast('Tarefa adicionada!');
-    }
-
-    function limparTodasTarefas() {
-      estado.tarefas = [];
-      salvarEstado();
-      renderizarTarefas();
-      exibirToast('Todas as tarefas foram removidas.');
-    }
-
-    // Modais e Utilitários
-    function abrirModal(id) {
-      document.getElementById(id).classList.remove('modal-oculto');
-    }
-
-    function fecharModal(id) {
-      document.getElementById(id).classList.add('modal-oculto');
-    }
-
-    let toastTimer;
-    function exibirToast(msg) {
-      const t = document.getElementById('toast');
-      t.textContent = msg;
-      t.classList.remove('modal-oculto');
-      clearTimeout(toastTimer);
-      toastTimer = setTimeout(() => {
-        t.classList.add('modal-oculto');
-      }, 3000);
-    }
-  </script>
+atualizarTela();
+recuperarTimerAtivo();
+</script>
 </body>
 </html>
