@@ -144,13 +144,6 @@ input[type="range"]{width:100%;height:8px;border-radius:4px;background:#e5e7eb;o
 input[type="range"]::-webkit-slider-thumb{-webkit-appearance:none;width:24px;height:24px;border-radius:50%;background:linear-gradient(135deg,#ef4444,#dc2626);cursor:pointer;border:2px solid #fff;box-shadow:0 2px 6px rgba(0,0,0,.2);}
 .toast{position:fixed;bottom:100px;left:50%;transform:translateX(-50%) translateY(20px);background:rgba(15,23,42,.9);color:#fff;padding:12px 24px;border-radius:30px;font-weight:800;z-index:100;opacity:0;transition:all .3s ease;pointer-events:none;}
 .toast.mostrar{opacity:1;transform:translateX(-50%) translateY(0);}
-
-@media(max-height:700px){
-  .pet-wrapper{width:230px;height:250px;}
-  .level-num{font-size:44px;}
-  .bottom-btn{height:85px;font-size:12px;}
-  .bottom-btn span:first-child{font-size:24px;}
-}
 </style>
 </head>
 <body class="cenario-dia">
@@ -165,7 +158,7 @@ input[type="range"]::-webkit-slider-thumb{-webkit-appearance:none;width:24px;hei
     <!-- Topo -->
     <div class="top-row">
       <div class="coins-card">
-        <div class="coin-icon">1</div>
+        <div class="coin-icon">💰</div>
         <span class="coins-text" id="txt-moedas">15 moedas</span>
       </div>
       <div class="info-badges">
@@ -281,7 +274,7 @@ input[type="range"]::-webkit-slider-thumb{-webkit-appearance:none;width:24px;hei
       <button id="btn-iniciar-grav" class="btn-primary" onclick="iniciarGravacao()">🔴 Começar Gravação</button>
       <button id="btn-parar-grav" class="btn-primary" style="display:none;background:linear-gradient(135deg,#6b7280,#4b5563);" onclick="pararGravacao()">⏹️ Parar Gravação</button>
       <div id="grav-result" class="grav-result" style="display:none;">
-        <audio id="audio-original" controls style="width:100%;margin-bottom:12px;">
+        <audio id="audio-original" controls style="width:100%;margin-bottom:12px;"></audio>
         <div class="slider-wrap">
           <div class="slider-label">🔊 Tom de Voz: <span id="valor-tom">1.0x</span></div>
           <input type="range" id="slider-tom" min="0.5" max="2" step="0.1" value="1" oninput="atualizarTom(this.value)">
@@ -331,7 +324,6 @@ input[type="range"]::-webkit-slider-thumb{-webkit-appearance:none;width:24px;hei
 </div>
 
 <script>
-// 🐾 BANCO DE DADOS DOS PETS
 const BANCO_PETS = {
   gato: {
     nome: "Gato", emoji: "🐱", som: "miau", somFrequencia: 440,
@@ -392,7 +384,6 @@ const BANCO_CENARIOS = [
   {id:'arcoiris',nome:'Arco-Íris',emoji:'🌈',preco:100}
 ];
 
-// 📊 ESTADO GLOBAL
 let estado = {
   petAtual: 'gato',
   moedas: 15,
@@ -413,7 +404,6 @@ let taxaTom = 1.0;
 let contextoAudio = null;
 let contaCorreta = 0;
 
-// 🚀 INICIALIZAÇÃO
 document.addEventListener('DOMContentLoaded', () => {
   carregarPet();
   atualizarInterface();
@@ -422,10 +412,10 @@ document.addEventListener('DOMContentLoaded', () => {
   renderizarEvolucoes();
 });
 
-// 💾 SALVAR E CARREGAR
 function salvarProgresso() {
   localStorage.setItem('rotina_pet', JSON.stringify(estado));
 }
+
 function carregarPet() {
   const salvo = localStorage.getItem('rotina_pet');
   if (salvo) {
@@ -441,7 +431,6 @@ function carregarPet() {
   document.body.className = `cenario-${estado.cenarioAtual}`;
 }
 
-// 🐾 SELETOR DE PET
 function alternarListaPets(e) {
   if (e) e.stopPropagation();
   document.getElementById('lista-pets').classList.toggle('abrir');
@@ -460,7 +449,6 @@ function escolherPet(tipo) {
   
   document.getElementById('lista-pets').classList.remove('abrir');
   
-  // Atualizar evolução
   const evolucaoAtual = pet.evolucoes.reduce((a, b) => estado.nivel >= b.nivel ? b : a, pet.evolucoes[0]);
   document.getElementById('nome-evolucao').textContent = evolucaoAtual.nome;
   
@@ -469,7 +457,6 @@ function escolherPet(tipo) {
   mostrarToast(`✅ ${pet.nome} selecionado!`);
 }
 
-// Fechar ao clicar fora
 document.addEventListener('click', (e) => {
   const lista = document.getElementById('lista-pets');
   const btn = document.getElementById('btn-pet-atual');
@@ -478,7 +465,6 @@ document.addEventListener('click', (e) => {
   }
 });
 
-// 🎵 SOM DO PET
 function somDoPet() {
   if (!contextoAudio) contextoAudio = new (window.AudioContext || window.webkitAudioContext)();
   const pet = BANCO_PETS[estado.petAtual];
@@ -496,7 +482,6 @@ function somDoPet() {
   ganharXP(5);
 }
 
-// 🍎 DAR COMIDA
 function darLanche() {
   mostrarToast('🍎 Comida dada! +15 Felicidade');
   estado.felicidade = Math.min(100, estado.felicidade + 15);
@@ -505,7 +490,6 @@ function darLanche() {
   salvarProgresso();
 }
 
-// 📊 ATUALIZAR INTERFACE
 function atualizarInterface() {
   document.getElementById('txt-moedas').textContent = `${estado.moedas} moedas`;
   document.getElementById('numero-nivel').textContent = estado.nivel;
@@ -524,7 +508,6 @@ function atualizarBarraFelicidade() {
   document.getElementById('barra-felicidade').style.width = `${estado.felicidade}%`;
 }
 
-// ⬆️ GANHAR XP E SUBIR DE NÍVEL
 function ganharXP(quantidade) {
   estado.xp += quantidade;
   while (estado.xp >= estado.xpMax) {
@@ -538,15 +521,16 @@ function ganharXP(quantidade) {
   salvarProgresso();
 }
 
-// ✅ TAREFAS
 function concluirTarefa(botao, moedas, xp) {
   estado.moedas += moedas;
   ganharXP(xp);
   mostrarToast(`✅ Tarefa concluída! +${moedas} moedas +${xp} XP`);
   if (botao) {
     const linha = botao.closest('.task-row');
-    linha.style.opacity = '0.5';
-    botao.disabled = true;
+    if (linha) {
+      linha.style.opacity = '0.5';
+      botao.disabled = true;
+    }
   }
   atualizarInterface();
   salvarProgresso();
@@ -554,6 +538,7 @@ function concluirTarefa(botao, moedas, xp) {
 
 function removerTarefa(botao) {
   const linha = botao.closest('.task-row');
+  if (!linha) return;
   linha.style.transform = 'translateX(100%)';
   linha.style.opacity = '0';
   linha.style.transition = 'all 0.3s ease';
@@ -563,7 +548,6 @@ function removerTarefa(botao) {
   }, 300);
 }
 
-// 🎙️ GRAVADOR DE VOZ
 function alternarGravador() {
   abrirModal('modal-gravador');
 }
@@ -600,7 +584,10 @@ function pararGravacao() {
     document.getElementById('btn-iniciar-grav').style.display = 'block';
     document.getElementById('btn-parar-grav').style.display = 'none';
     mostrarToast('✅ Gravação salva!');
-      function atualizarTom(valor) {
+  }
+}
+
+function atualizarTom(valor) {
   taxaTom = parseFloat(valor);
   document.getElementById('valor-tom').textContent = taxaTom.toFixed(1) + 'x';
 }
@@ -618,7 +605,6 @@ function salvarVoz() {
   fecharModal('modal-gravador');
 }
 
-// 🖼️ CENÁRIOS
 function renderizarCenarios() {
   const container = document.getElementById('grade-cenarios');
   container.innerHTML = '';
@@ -626,12 +612,12 @@ function renderizarCenarios() {
     const comprado = estado.cenariosComprados.includes(c.id);
     const selecionado = estado.cenarioAtual === c.id;
     const div = document.createElement('div');
-    div.className = `bg-item ${selecionado?'selecionado':''}`;
+    div.className = `bg-item ${selecionado ? 'selecionado' : ''}`;
     div.style.background = `linear-gradient(135deg, ${getCenarioCor(c.id)})`;
     div.innerHTML = `
       <span class="bg-emoji">${c.emoji}</span>
       <span class="bg-name">${c.nome}</span>
-      <span class="bg-price">${comprado?'✓ Grátis':c.preco+' 💰'}</span>
+      <span class="bg-price">${comprado ? '✓ Grátis' : c.preco + ' 💰'}</span>
     `;
     div.onclick = () => selecionarCenario(c.id, c.preco, comprado);
     container.appendChild(div);
@@ -674,7 +660,6 @@ function selecionarCenario(id, preco, comprado) {
   }
 }
 
-// 🎮 DESAFIO DE MATEMÁTICA
 function abrirDesafioMatematica() {
   gerarConta();
   abrirModal('modal-matematica');
@@ -725,7 +710,6 @@ function verificarResposta(resp) {
   salvarProgresso();
 }
 
-// 🔥 EVOLUÇÕES
 function renderizarEvolucoes() {
   const pet = BANCO_PETS[estado.petAtual];
   const container = document.getElementById('lista-evolucoes');
@@ -733,19 +717,18 @@ function renderizarEvolucoes() {
   pet.evolucoes.forEach(ev => {
     const desbloqueada = estado.nivel >= ev.nivel;
     const div = document.createElement('div');
-    div.className = `evol-item ${desbloqueada?'desbloqueada':''}`;
+    div.className = `evol-item ${desbloqueada ? 'desbloqueada' : ''}`;
     div.innerHTML = `
-      <span class="evol-emoji">${desbloqueada?ev.emoji:'🔒'}</span>
+      <span class="evol-emoji">${desbloqueada ? ev.emoji : '🔒'}</span>
       <div class="evol-info">
         <h4>${ev.nome}</h4>
-        <p>Nível ${ev.nivel} — ${desbloqueada?'✅ Desbloqueado':'🔒 Bloqueado'}</p>
+        <p>Nível ${ev.nivel} — ${desbloqueada ? '✅ Desbloqueado' : '🔒 Bloqueado'}</p>
       </div>
     `;
     container.appendChild(div);
   });
 }
 
-// 🔄 MODAIS
 function abrirModal(id) {
   document.getElementById(id).classList.add('mostrar');
 }
@@ -754,14 +737,12 @@ function fecharModal(id) {
   document.getElementById(id).classList.remove('mostrar');
 }
 
-// Fechar modal clicando fora
 document.querySelectorAll('.modal-overlay').forEach(m => {
   m.addEventListener('click', e => {
     if (e.target === m) m.classList.remove('mostrar');
   });
 });
 
-// 🔔 TOAST
 function mostrarToast(texto) {
   const t = document.getElementById('toast');
   t.textContent = texto;
@@ -771,5 +752,3 @@ function mostrarToast(texto) {
 </script>
 </body>
 </html>
-
-  }
