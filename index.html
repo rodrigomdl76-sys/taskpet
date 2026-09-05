@@ -122,8 +122,6 @@ body.cenario-arcoiris{background:linear-gradient(180deg,#f87171 0%,#fbbf24 20%,#
 .bg-emoji{font-size:36px;}
 .bg-name{font-size:13px;font-weight:700;margin-top:6px;}
 .bg-price{font-size:12px;font-weight:800;color:#f59e0b;margin-top:2px;}
-.input-field{width:100%;padding:14px;border-radius:12px;border:2px solid #e2e8f0;font-size:16px;text-align:center;font-weight:700;outline:none;transition:.2s;}
-.input-field:focus{border-color:#7c3aed;}
 .btn-primary{width:100%;padding:14px;border-radius:12px;border:none;background:linear-gradient(135deg,#7c3aed,#6d28d9);color:#fff;font-size:17px;font-weight:900;cursor:pointer;margin-top:16px;transition:.2s;}
 .btn-primary:active{transform:scale(.97);}
 .evol-list{display:flex;flex-direction:column;gap:10px;}
@@ -324,10 +322,11 @@ input[type="range"]::-webkit-slider-thumb{-webkit-appearance:none;width:24px;hei
 </div>
 
 <script>
+// 🐾 BANCO DE DADOS DOS PETS COM OS GRÁFICOS ORIGINAIS E OS NOVOS QUE VOCÊ ENVIOU
 const BANCO_PETS = {
   gato: {
     nome: "Gato", emoji: "🐱", som: "miau", somFrequencia: 440,
-    svg: `<svg width="260" height="285" viewBox="0 0 270 285" xmlns="http://www.w3.org/2000/svg"><path d="M200 195 Q245 155 230 110" stroke="#FF9F29" stroke-width="28" stroke-linecap="round" fill="none"/><ellipse cx="135" cy="205" rx="65" ry="55" fill="#FF9F29"/><ellipse cx="100" cy="245" rx="18" ry="15" fill="#FFE8CC"/><ellipse cx="170" cy="245" rx="18" ry="15" fill="#FFE8CC"/><circle cx="135" cy="120" r="75" fill="#FF9F29"/><path d="M60 55 L90 95 L55 90 Z" fill="#FF9F29"/><path d="M210 55 L180 95 L215 90 Z" fill="#FF9F29"/><ellipse cx="100" cy="110" rx="18" ry="22" fill="#2D1B10"/><ellipse cx="170" cy="110" rx="18" ry="22" fill="#2D1B10"/><ellipse cx="105" cy="102" rx="7" ry="9" fill="white"/><ellipse cx="175" cy="102" rx="7" ry="9" fill="white"/></svg>`,
+    svg: `<svg width="260" height="285" viewBox="0 0 260 260" xmlns="http://www.w3.org/2000/svg"><ellipse cx="130" cy="235" rx="75" ry="12" fill="rgba(0,0,0,0.06)"/><path d="M195 180 Q240 140 225 95" stroke="#FF9F29" stroke-width="28" stroke-linecap="round" fill="none"/><path d="M195 180 Q240 140 225 95" stroke="#FFB84D" stroke-width="12" stroke-linecap="round" fill="none" opacity="0.6"/><ellipse cx="130" cy="190" rx="65" ry="55" fill="#FF9F29"/><ellipse cx="95" cy="230" rx="18" ry="15" fill="#FFE8CC"/><ellipse cx="165" cy="230" rx="18" ry="15" fill="#FFE8CC"/><circle cx="130" cy="110" r="75" fill="#FF9F29"/><path d="M55 45 L85 85 L50 80 Z" fill="#FF9F29"/><path d="M60 52 L80 82 L55 78 Z" fill="#FFB84D"/><path d="M205 45 L175 85 L210 80 Z" fill="#FF9F29"/><path d="M200 52 L180 82 L205 78 Z" fill="#FFB84D"/><ellipse cx="130" cy="125" rx="48" ry="45" fill="#FFE8CC"/><ellipse cx="95" cy="100" rx="18" ry="22" fill="#2D1B10"/><ellipse cx="165" cy="100" rx="18" ry="22" fill="#2D1B10"/><ellipse cx="100" cy="92" rx="7" ry="9" fill="white"/><ellipse cx="170" cy="92" rx="7" ry="9" fill="white"/><path d="M130 125 L122 138 L138 138 Z" fill="#FF9AAA"/></svg>`,
     evolucoes: [
       {nivel:1,nome:"Filhote",emoji:"🐱"},
       {nivel:5,nome:"Jovem",emoji:"😺"},
@@ -338,7 +337,7 @@ const BANCO_PETS = {
   },
   cachorra: {
     nome: "Cachorrinha", emoji: "🐶", som: "au au", somFrequencia: 220,
-    svg: `<svg width="260" height="285" viewBox="0 0 270 285" xmlns="http://www.w3.org/2000/svg"><ellipse cx="135" cy="270" rx="52" ry="10" fill="rgba(0,0,0,0.08)"/><path d="M195 190 Q235 165 220 135" stroke="#F2C6D9" stroke-width="22" stroke-linecap="round" fill="none"/><ellipse cx="135" cy="205" rx="60" ry="50" fill="#F2C6D9"/><circle cx="135" cy="120" r="70" fill="#F2C6D9"/><ellipse cx="105" cy="110" rx="15" ry="19" fill="#2D1B10"/><ellipse cx="165" cy="110" rx="15" ry="19" fill="#2D1B10"/><circle cx="135" cy="175" r="18" fill="#FF9BB3" opacity="0.9"/></svg>`,
+    svg: `<svg width="260" height="285" viewBox="0 0 270 285" xmlns="http://www.w3.org/2000/svg"><ellipse cx="135" cy="270" rx="52" ry="10" fill="rgba(0,0,0,0.08)"/><path d="M195 190 Q235 165 220 135" stroke="#D97706" stroke-width="22" stroke-linecap="round" fill="none"/><ellipse cx="135" cy="205" rx="60" ry="50" fill="#D97706"/><circle cx="135" cy="120" r="70" fill="#D97706"/><ellipse cx="105" cy="110" rx="15" ry="19" fill="#2D1B10"/><ellipse cx="165" cy="110" rx="15" ry="19" fill="#2D1B10"/><circle cx="135" cy="175" r="18" fill="#F59E0B" opacity="0.9"/></svg>`,
     evolucoes: [
       {nivel:1,nome:"Filhote",emoji:"🐶"},
       {nivel:5,nome:"Jovem",emoji:"🐩"},
@@ -349,7 +348,7 @@ const BANCO_PETS = {
   },
   cabra: {
     nome: "Cabra", emoji: "🐐", som: "béé", somFrequencia: 330,
-    svg: `<svg width="260" height="285" viewBox="0 0 270 285" xmlns="http://www.w3.org/2000/svg"><ellipse cx="135" cy="270" rx="52" ry="10" fill="rgba(0,0,0,0.08)"/><path d="M90 60 Q70 25 85 15 Q100 25 95 55" fill="#2D1B10"/><path d="M180 60 Q200 25 185 15 Q170 25 175 55" fill="#2D1B10"/><ellipse cx="135" cy="125" rx="60" ry="65" fill="#F5E6D3"/><circle cx="105" cy="110" r="16" fill="#FFFFFF" stroke="#2D1B10" stroke-width="3"/><circle cx="165" cy="110" r="16" fill="#FFFFFF" stroke="#2D1B10" stroke-width="3"/><path d="M115 155 Q125 168 135 168 Q145 168 155 155" stroke="#2D1B10" stroke-width="3.5" fill="none"/></svg>`,
+    svg: `<svg width="270" height="285" viewBox="0 0 270 285" xmlns="http://www.w3.org/2000/svg"><ellipse cx="135" cy="270" rx="55" ry="12" fill="rgba(0,0,0,0.08)"/><path d="M90 60 Q70 25 85 15 Q100 25 95 55" fill="#2D1B10"/><path d="M180 60 Q200 25 185 15 Q170 25 175 55" fill="#2D1B10"/><ellipse cx="135" cy="125" rx="60" ry="65" fill="#F5E6D3"/><circle cx="105" cy="110" r="16" fill="#FFFFFF" stroke="#2D1B10" stroke-width="3"/><circle cx="165" cy="110" r="16" fill="#FFFFFF" stroke="#2D1B10" stroke-width="3"/><path d="M115 155 Q125 168 135 168 Q145 168 155 155" stroke="#2D1B10" stroke-width="3.5" fill="none"/></svg>`,
     evolucoes: [
       {nivel:1,nome:"Cabrinha",emoji:"🐐"},
       {nivel:5,nome:"Jovem",emoji:"🐏"},
@@ -360,7 +359,7 @@ const BANCO_PETS = {
   },
   frango: {
     nome: "Frango", emoji: "🐔", som: "có có", somFrequencia: 520,
-    svg: `<svg width="260" height="285" viewBox="0 0 270 285" xmlns="http://www.w3.org/2000/svg"><ellipse cx="135" cy="270" rx="52" ry="10" fill="rgba(0,0,0,0.08)"/><path d="M135 48 Q120 28 108 42 Q95 18 110 35 Q125 12 135 28 Q145 12 160 35 Q175 18 162 42 Q150 28 135 48 Z" fill="#FF3344"/><circle cx="135" cy="120" r="68" fill="#FFF9E6"/><path d="M135 138 L112 152 L158 152 Z" fill="#FFCC00"/><circle cx="100" cy="105" r="22" fill="#FFFFFF" stroke="#2D1B10" stroke-width="3.5"/><circle cx="170" cy="105" r="22" fill="#FFFFFF" stroke="#2D1B10" stroke-width="3.5"/><ellipse cx="135" cy="205" rx="62" ry="52" fill="#FFF9E6"/></svg>`,
+    svg: `<svg width="270" height="285" viewBox="0 0 270 285" xmlns="http://www.w3.org/2000/svg"><ellipse cx="135" cy="270" rx="52" ry="10" fill="rgba(0,0,0,0.08)"/><path d="M135 48 Q120 28 108 42 Q95 18 110 35 Q125 12 135 28 Q145 12 160 35 Q175 18 162 42 Q150 28 135 48 Z" fill="#FF3344"/><circle cx="135" cy="120" r="68" fill="#FFF9E6"/><path d="M135 138 L112 152 L158 152 Z" fill="#FFCC00"/><circle cx="100" cy="105" r="22" fill="#FFFFFF" stroke="#2D1B10" stroke-width="3.5"/><circle cx="170" cy="105" r="22" fill="#FFFFFF" stroke="#2D1B10" stroke-width="3.5"/><ellipse cx="135" cy="205" rx="62" ry="52" fill="#FFF9E6"/></svg>`,
     evolucoes: [
       {nivel:1,nome:"Pintinho",emoji:"🐣"},
       {nivel:5,nome:"Jovem",emoji:"🐤"},
