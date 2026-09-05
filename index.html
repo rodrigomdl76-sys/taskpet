@@ -4,6 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 <title>RotinaPet — Seu Pet Virtual</title>
+<script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.9.3/dist/confetti.browser.min.js"></script>
 <style>
 @import url('https://fonts.googleapis.com/css2?family=Nunito:wght@500;600;700;800;900&display=swap');
 *{margin:0;padding:0;box-sizing:border-box;font-family:'Nunito',sans-serif;-webkit-tap-highlight-color:transparent;}
@@ -15,13 +16,13 @@ body{
   color:#1e293b;
 }
 
-.app{width:100%;max-width:400px;height:100vh;margin:0 auto;position:relative;display:flex;flex-direction:column;justify-content:space-between;padding:10px 14px;}
+.app{width:100%;max-width:400px;height:100vh;margin:0 auto;position:relative;display:flex;flex-direction:column;justify-content:space-between;padding:8px 12px;}
 
 /* ===== TOPO COMPACTO ===== */
 .top-row{display:flex;align-items:center;justify-content:space-between;gap:6px;flex-shrink:0;}
 .top-pill{
-  background:rgba(255,255,255,0.95);border-radius:20px;padding:6px 10px;
-  display:flex;align-items:center;gap:6px;box-shadow:0 2px 6px rgba(0,0,0,0.06);
+  background:rgba(255,255,255,0.95);border-radius:20px;padding:5px 8px;
+  display:flex;align-items:center;gap:5px;box-shadow:0 2px 6px rgba(0,0,0,0.06);
   cursor:pointer;flex:1;justify-content:center;border:1px solid rgba(255,255,255,0.9);
 }
 .top-pill-text{font-size:11px;font-weight:800;color:#1e293b;line-height:1.1;}
@@ -30,83 +31,77 @@ body{
 /* ===== SELETOR DE PET ===== */
 .pet-selector{display:flex;justify-content:center;position:relative;z-index:20;margin:2px 0;}
 .pet-unico-btn{
-  width:50px;height:50px;border-radius:50%;background:rgba(255,255,255,0.95);
+  width:46px;height:46px;border-radius:50%;background:rgba(255,255,255,0.95);
   border:3px solid #7c3aed;display:flex;align-items:center;justify-content:center;
-  font-size:24px;cursor:pointer;box-shadow:0 3px 10px rgba(124,58,237,0.3);
+  font-size:22px;cursor:pointer;box-shadow:0 3px 10px rgba(124,58,237,0.3);
 }
 .lista-pet-dropdown{
-  position:absolute;top:55px;left:50%;transform:translateX(-50%) translateY(-10px);
-  background:#fff;border-radius:16px;padding:10px;box-shadow:0 10px 25px rgba(0,0,0,0.2);z-index:30;
-  display:flex;gap:8px;opacity:0;visibility:hidden;transition:all .2s ease;
+  position:absolute;top:52px;left:50%;transform:translateX(-50%) translateY(-10px);
+  background:#fff;border-radius:16px;padding:8px;box-shadow:0 10px 25px rgba(0,0,0,0.2);z-index:30;
+  display:flex;gap:6px;opacity:0;visibility:hidden;transition:all .2s ease;
 }
 .lista-pet-dropdown.abrir{opacity:1;visibility:visible;transform:translateX(-50%) translateY(0);}
-.opcao-pet{width:45px;height:45px;border-radius:50%;background:#f3f4f6;display:flex;align-items:center;justify-content:center;font-size:22px;cursor:pointer;transition:.2s;}
+.opcao-pet{width:42px;height:42px;border-radius:50%;background:#f3f4f6;display:flex;align-items:center;justify-content:center;font-size:20px;cursor:pointer;transition:.2s;}
 .opcao-pet:hover,.opcao-pet.ativo{background:#ede9fe;border:2px solid #7c3aed;}
 
 /* ===== STATUS ===== */
-.status-row{display:flex;align-items:center;gap:8px;flex-shrink:0;margin:2px 0;}
+.status-row{display:flex;align-items:center;gap:6px;flex-shrink:0;margin:1px 0;}
 .mini-card{
-  background:rgba(255,255,255,0.9);border-radius:12px;padding:5px 8px;
-  display:flex;align-items:center;gap:5px;box-shadow:0 2px 5px rgba(0,0,0,0.05);cursor:pointer;
+  background:rgba(255,255,255,0.9);border-radius:12px;padding:4px 8px;
+  display:flex;align-items:center;gap:4px;box-shadow:0 2px 5px rgba(0,0,0,0.05);cursor:pointer;
 }
 .happiness-box{
-  flex:1;background:rgba(255,255,255,0.9);padding:5px 10px;border-radius:12px;
+  flex:1;background:rgba(255,255,255,0.9);padding:4px 8px;border-radius:12px;
   box-shadow:0 2px 5px rgba(0,0,0,0.05);
 }
-.bar-bg{height:8px;background:#e2e8f0;border-radius:8px;overflow:hidden;margin-top:2px;}
+.bar-bg{height:7px;background:#e2e8f0;border-radius:8px;overflow:hidden;margin-top:2px;}
 .bar-fill{height:100%;width:70%;border-radius:8px;background:linear-gradient(90deg,#42C95E,#FFD000,#FF9500);transition:width .5s ease;}
 
 /* ===== ÁREA DO PET CENTRAL COMPACTA ===== */
-.cat-section{display:flex;flex-direction:column;align-items:center;justify-content:center;flex-shrink:0;margin:2px 0;position:relative;}
+.cat-section{display:flex;flex-direction:column;align-items:center;justify-content:center;flex-shrink:0;margin:1px 0;position:relative;}
 .cat-wrapper{
-  width:120px;height:120px;display:flex;align-items:center;justify-content:center;
+  width:115px;height:115px;display:flex;align-items:center;justify-content:center;
   cursor:pointer;position:relative;animation:catFloat 4s ease-in-out infinite;
 }
 @keyframes catFloat{0%,100%{transform:translateY(0);}50%{transform:translateY(-4px);}}
 #pet-svg-container{width:110px;height:110px;display:flex;align-items:center;justify-content:center;}
 #pet-svg-container svg{width:100%;height:100%;filter:drop-shadow(0 4px 8px rgba(0,0,0,0.15));}
 
-.level-number{font-size:24px;font-weight:900;color:#7c3aed;line-height:1;margin-top:0px;}
+.level-number{font-size:22px;font-weight:900;color:#7c3aed;line-height:1;margin-top:0px;}
 .xp-bar-bg{
-  width:75%;max-width:200px;height:18px;background:rgba(255,255,255,0.7);
-  border-radius:9px;display:flex;align-items:center;justify-content:center;
+  width:70%;max-width:190px;height:16px;background:rgba(255,255,255,0.7);
+  border-radius:8px;display:flex;align-items:center;justify-content:center;
   margin-top:2px;overflow:hidden;position:relative;
 }
-.xp-bar-fill{position:absolute;left:0;top:0;bottom:0;width:0%;background:linear-gradient(90deg,#9C27B0,#E040FB);border-radius:9px;transition:width .5s ease;z-index:1;}
-.xp-text{font-weight:800;font-size:10px;color:#fff;z-index:2;text-shadow:0 1px 2px rgba(0,0,0,0.4);}
+.xp-bar-fill{position:absolute;left:0;top:0;bottom:0;width:0%;background:linear-gradient(90deg,#9C27B0,#E040FB);border-radius:8px;transition:width .5s ease;z-index:1;}
+.xp-text{font-weight:800;font-size:9px;color:#fff;z-index:2;text-shadow:0 1px 2px rgba(0,0,0,0.4);}
 
-/* ===== ANIMAÇÕES FLUTUANTES DE XP/MOEDAS ===== */
+/* ANIMAÇÃO FLUTUANTE */
 .floating-text {
-  position: absolute;
-  font-weight: 900;
-  font-size: 18px;
-  color: #10b981;
-  text-shadow: 0 2px 4px rgba(0,0,0,0.3);
-  pointer-events: none;
-  animation: floatUp 1s ease-out forwards;
-  z-index: 50;
+  position: absolute; font-weight: 900; font-size: 16px; color: #10b981;
+  text-shadow: 0 2px 4px rgba(0,0,0,0.3); pointer-events: none;
+  animation: floatUp 0.9s ease-out forwards; z-index: 50;
 }
 @keyframes floatUp {
   0% { transform: translateY(0) scale(0.8); opacity: 1; }
-  100% { transform: translateY(-50px) scale(1.2); opacity: 0; }
+  100% { transform: translateY(-40px) scale(1.2); opacity: 0; }
 }
 
 /* ===== TAREFAS DIÁRIAS COMPACTAS ===== */
-.tasks-section{background:rgba(255,255,255,0.92);border-radius:14px;padding:8px 10px;flex-shrink:0;max-height:110px;overflow-y:auto;box-shadow:0 2px 6px rgba(0,0,0,0.05);}
-.task-row{display:flex;align-items:center;justify-content:space-between;padding:4px 0;border-bottom:1px solid #f1f5f9;font-size:11px;}
+.tasks-section{background:rgba(255,255,255,0.92);border-radius:14px;padding:6px 10px;flex-shrink:0;max-height:100px;overflow-y:auto;box-shadow:0 2px 6px rgba(0,0,0,0.05);}
+.task-row{display:flex;align-items:center;justify-content:space-between;padding:3px 0;border-bottom:1px solid #f1f5f9;font-size:10px;}
 .task-row:last-child{border-bottom:none;}
 .task-name{font-weight:700;}
-.task-reward{font-size:9px;color:#6366f1;}
+.task-reward{font-size:8px;color:#6366f1;}
 .task-actions{display:flex;gap:4px;}
-.task-btn{padding:2px 6px;border-radius:6px;border:none;font-weight:800;font-size:10px;cursor:pointer;}
+.task-btn{padding:2px 6px;border-radius:6px;border:none;font-weight:800;font-size:9px;cursor:pointer;}
 .btn-ok{background:#22c55e;color:#fff;}
-.btn-foto{background:#38bdf8;color:#fff;}
 
 /* ===== BOTÕES INFERIORES ===== */
-.bottom-buttons{display:grid;grid-template-columns:repeat(4,1fr);gap:6px;flex-shrink:0;margin-bottom:4px;}
+.bottom-buttons{display:grid;grid-template-columns:repeat(4,1fr);gap:6px;flex-shrink:0;margin-bottom:2px;}
 .bottom-btn{
   aspect-ratio:1;border-radius:16px;border:none;display:flex;flex-direction:column;
-  align-items:center;justify-content:center;gap:1px;font-size:10px;font-weight:800;
+  align-items:center;justify-content:center;gap:1px;font-size:9px;font-weight:800;
   color:white;cursor:pointer;box-shadow:0 3px 8px rgba(0,0,0,0.1);transition:transform .2s;
 }
 .bottom-btn:active{transform:scale(0.92);}
@@ -117,12 +112,12 @@ body{
 .btn-icon{font-size:16px;line-height:1;}
 
 /* ===== MODAIS ===== */
-.modal-overlay{position:fixed;inset:0;background:rgba(0,0,0,0.6);display:flex;align-items:center;justify-content:center;padding:16px;z-index:100;backdrop-filter:blur(4px);opacity:0;visibility:hidden;transition:.3s;}
+.modal-overlay{position:fixed;inset:0;background:rgba(0,0,0,0.6);display:flex;align-items:center;justify-content:center;padding:14px;z-index:100;backdrop-filter:blur(4px);opacity:0;visibility:hidden;transition:.3s;}
 .modal-overlay.mostrar{opacity:1;visibility:visible;}
-.modal{background:#fff;border-radius:24px;padding:20px;width:100%;max-width:340px;max-height:85vh;overflow-y:auto;box-shadow:0 15px 35px rgba(0,0,0,0.25);}
+.modal{background:#fff;border-radius:24px;padding:18px;width:100%;max-width:340px;max-height:85vh;overflow-y:auto;box-shadow:0 15px 35px rgba(0,0,0,0.25);}
 .hidden{display:none!important;}
 
-.toast{position:fixed;bottom:70px;left:50%;transform:translateX(-50%) translateY(20px);background:rgba(15,23,42,0.9);color:#fff;padding:8px 16px;border-radius:20px;font-weight:800;font-size:12px;z-index:200;opacity:0;transition:all .3s ease;pointer-events:none;}
+.toast{position:fixed;bottom:65px;left:50%;transform:translateX(-50%) translateY(20px);background:rgba(15,23,42,0.9);color:#fff;padding:6px 14px;border-radius:20px;font-weight:800;font-size:11px;z-index:200;opacity:0;transition:all .3s ease;pointer-events:none;}
 .toast.mostrar{opacity:1;transform:translateX(-50%) translateY(0);}
 </style>
 </head>
@@ -130,15 +125,13 @@ body{
 
 <input type="file" id="camera-input" accept="image/*" capture="environment" class="hidden" onchange="processarFotoCapturada(event)">
 
-<div class="app" id="app-container">
+<div class="app">
 
     <!-- ===== TOPO: MOEDAS, PAIS E EVOLUÇÕES ===== -->
     <div class="top-row">
         <div class="top-pill" onclick="alternarModoPais()">
             <div style="width: 10px; height: 16px; background: linear-gradient(180deg, #FFD300, #F9B800); border-radius: 3px; flex-shrink: 0;"></div>
-            <div>
-                <div class="top-pill-text"><span id="txt-moedas">15</span> moedas</div>
-            </div>
+            <div><div class="top-pill-text"><span id="txt-moedas">15</span> moedas</div></div>
         </div>
         <div class="top-pill" onclick="alternarModoPais()">
             <div style="width: 8px; height: 8px; background: #10B981; border-radius: 50%; flex-shrink: 0;"></div>
@@ -170,17 +163,15 @@ body{
     <!-- STATUS (SAÚDE E FELICIDADE) -->
     <div class="status-row">
         <div class="mini-card" onclick="darRemedio()" title="Saúde">
-            <span style="font-size: 14px;">💚</span>
-            <span style="font-size: 10px; font-weight: 800; color:#059669;" id="txt-saude">100%</span>
+            <span style="font-size: 13px;">💚</span>
+            <span style="font-size: 9px; font-weight: 800; color:#059669;" id="txt-saude">100%</span>
         </div>
         <div class="happiness-box">
             <div style="display: flex; justify-content: space-between; align-items: center;">
-                <span style="font-size: 9px; font-weight: 800; color: #555; text-transform: lowercase;">felicidade</span>
-                <span style="font-size: 9px; font-weight: 800; color: #333;"><span id="val-felicidade">70</span>%</span>
+                <span style="font-size: 8px; font-weight: 800; color: #555; text-transform: lowercase;">felicidade</span>
+                <span style="font-size: 8px; font-weight: 800; color: #333;"><span id="val-felicidade">100</span>%</span>
             </div>
-            <div class="bar-bg">
-                <div class="bar-fill" id="barra-felicidade" style="width: 70%;"></div>
-            </div>
+            <div class="bar-bg"><div class="bar-fill" id="barra-felicidade" style="width: 100%;"></div></div>
         </div>
     </div>
 
@@ -197,66 +188,81 @@ body{
         </div>
     </div>
 
-    <!-- TAREFAS DIÁRIAS -->
+    <!-- TAREFAS DIÁRIAS (COM RESET AUTOMÁTICO) -->
     <div class="tasks-section">
-        <div style="font-size: 10px; font-weight: 800; color: #555; margin-bottom: 4px; display: flex; justify-content: space-between;">
-            <span>🛡️ TAREFAS DIÁRIAS</span>
-            <span style="color: #0284c7;" id="qtd-tarefas">3 tarefas</span>
+        <div style="font-size: 9px; font-weight: 800; color: #555; margin-bottom: 2px; display: flex; justify-content: space-between;">
+            <span>🛡️ TAREFAS DE HOJE</span>
+            <span style="color: #0284c7;" id="qtd-tarefas">2 tarefas</span>
         </div>
-        <div id="lista-tarefas" style="display: flex; flex-direction: column; gap: 4px;"></div>
+        <div id="lista-tarefas" style="display: flex; flex-direction: column; gap: 3px;"></div>
     </div>
 
     <!-- ===== BOTÕES INFERIORES ===== -->
     <div class="bottom-buttons">
-        <button class="bottom-btn btn-food" onclick="darLanche()">
-            <span class="btn-icon">🍎</span>
-            Comida
+        <button class="bottom-btn btn-food" onclick="darLanche(event)">
+            <span class="btn-icon">🍎</span>Comida
         </button>
         <button class="bottom-btn btn-voice" onclick="alternarGravador()">
-            <span class="btn-icon">🎙️</span>
-            Gravar
+            <span class="btn-icon">🎙️</span>Gravar
         </button>
         <button class="bottom-btn btn-game" onclick="abrirDesafioMatematica()">
-            <span class="btn-icon">🎮</span>
-            Desafio
+            <span class="btn-icon">🎮</span>Desafio
         </button>
         <button class="bottom-btn btn-premios" onclick="abrirLojaRecompensas()">
-            <span class="btn-icon">🎁</span>
-            Prêmios
+            <span class="btn-icon">🎁</span>Prêmios
         </button>
     </div>
 
 </div>
 
+<!-- ===== MODAL TIMER TELA ===== -->
+<div id="modal-timer" class="modal-overlay">
+    <div class="modal" style="text-align:center;">
+        <h3 style="font-size:16px; font-weight:900; color:#0284c7; margin-bottom:8px;">⏳ Tempo de Tela Ativo!</h3>
+        <div id="relogio-timer" style="font-size:38px; font-weight:900; color:#1e293b; background:#f1f5f9; border-radius:14px; padding:12px; margin-bottom:12px;">15:00</div>
+        <button onclick="pausarFecharTimer()" style="background:#ef4444; color:white; border:none; padding:8px 16px; border-radius:10px; font-weight:bold; cursor:pointer;">Fechar Alarme</button>
+    </div>
+</div>
+
 <!-- ===== PAINEL DOS PAIS ===== -->
 <div id="modal-pais" class="modal-overlay">
     <div class="modal">
-        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 14px;">
-            <h3 style="font-size: 16px; font-weight: 900;">⚙️ Painel dos Pais</h3>
-            <button onclick="fecharModal('modal-pais')" style="background: #e2e8f0; border: none; padding: 4px 10px; border-radius: 8px; font-weight: bold; cursor: pointer;">X</button>
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px;">
+            <h3 style="font-size: 15px; font-weight: 900;">⚙️ Painel dos Pais</h3>
+            <button onclick="fecharModal('modal-pais')" style="background: #e2e8f0; border: none; padding: 4px 8px; border-radius: 6px; font-weight: bold; cursor: pointer;">X</button>
         </div>
-        <div style="margin-bottom: 12px;">
+        
+        <!-- SAQUE E HISTÓRICO -->
+        <div style="background:#f8fafc; border:1px solid #e2e8f0; border-radius:10px; padding:8px; margin-bottom:10px;">
+            <div style="display:flex; justify-content:space-between; align-items:center; font-size:11px;">
+                <span>Disponível: <b>R$ <span id="txt-painel-disponivel">0,00</span></b></span>
+                <button onclick="sacarDinheiro()" style="background:#10b981; color:white; border:none; padding:3px 8px; border-radius:6px; font-weight:bold; cursor:pointer;">💸 Pagar / Sacar</button>
+            </div>
+            <div style="font-size:10px; color:#64748b; margin-top:4px;">Total pago no histórico: R$ <span id="txt-total-pago">0,00</span></div>
+        </div>
+
+        <div style="margin-bottom: 10px;">
             <label style="font-size: 11px; font-weight: 700; color: #555;">🔑 Alterar PIN (4 dígitos)</label>
-            <div style="display: flex; gap: 6px; margin-top: 4px;">
-                <input type="password" id="novo-pin-pais" maxlength="4" placeholder="PIN" style="flex:1; border: 1px solid #cbd5e1; border-radius: 8px; padding: 6px; text-align: center; font-weight: bold;">
-                <button onclick="salvarNovoPin()" style="background: #1e293b; color: white; border: none; padding: 6px 10px; border-radius: 8px; font-weight: bold; cursor: pointer;">Salvar</button>
+            <div style="display: flex; gap: 4px; margin-top: 2px;">
+                <input type="password" id="novo-pin-pais" maxlength="4" placeholder="PIN" style="flex:1; border: 1px solid #cbd5e1; border-radius: 6px; padding: 5px; text-align: center; font-weight: bold; font-size:11px;">
+                <button onclick="salvarNovoPin()" style="background: #1e293b; color: white; border: none; padding: 5px 8px; border-radius: 6px; font-weight: bold; font-size:11px; cursor: pointer;">Salvar</button>
             </div>
         </div>
-        <div style="margin-bottom: 12px;">
+        <div style="margin-bottom: 10px;">
             <label style="font-size: 11px; font-weight: 700; color: #555;">💵 Valor por Moeda (R$)</label>
-            <input type="number" step="0.01" id="input-taxa-cambio" style="width: 100%; border: 1px solid #cbd5e1; border-radius: 8px; padding: 6px; margin-top: 4px; font-weight: bold;" onchange="atualizarTaxaCambio(this.value)">
+            <input type="number" step="0.01" id="input-taxa-cambio" style="width: 100%; border: 1px solid #cbd5e1; border-radius: 6px; padding: 5px; margin-top: 2px; font-weight: bold; font-size:11px;" onchange="atualizarTaxaCambio(this.value)">
         </div>
-        <div style="margin-bottom: 12px;">
-            <h4 style="font-size: 12px; font-weight: 800; margin-bottom: 4px;">✅ Aprovações Pendentes</h4>
-            <div id="lista-aprovacao-pais" style="display: flex; flex-direction: column; gap: 6px; max-height: 100px; overflow-y: auto;"></div>
+        <div style="margin-bottom: 10px;">
+            <h4 style="font-size: 11px; font-weight: 800; margin-bottom: 3px;">✅ Aprovações Pendentes</h4>
+            <div id="lista-aprovacao-pais" style="display: flex; flex-direction: column; gap: 4px; max-height: 90px; overflow-y: auto;"></div>
         </div>
         <div>
-            <h4 style="font-size: 12px; font-weight: 800; margin-bottom: 4px;">✏️ Gerenciar Tarefas</h4>
-            <div id="lista-edicao-tarefas" style="display: flex; flex-direction: column; gap: 4px; max-height: 90px; overflow-y: auto; margin-bottom: 6px;"></div>
+            <h4 style="font-size: 11px; font-weight: 800; margin-bottom: 3px;">✏️ Gerenciar Tarefas</h4>
+            <div id="lista-edicao-tarefas" style="display: flex; flex-direction: column; gap: 3px; max-height: 80px; overflow-y: auto; margin-bottom: 6px;"></div>
             <div style="display: flex; gap: 4px;">
-                <input type="text" id="nova-tarefa-texto" placeholder="Nova tarefa..." style="flex:1; border: 1px solid #cbd5e1; border-radius: 8px; padding: 6px; font-size: 11px;">
-                <input type="number" id="nova-tarefa-moedas" value="5" style="width: 45px; border: 1px solid #cbd5e1; border-radius: 8px; padding: 6px; text-align: center; font-size: 11px;">
-                <button onclick="adicionarTarefa()" style="background: #0284c7; color: white; border: none; padding: 6px 10px; border-radius: 8px; font-weight: bold; cursor: pointer;">+</button>
+                <input type="text" id="nova-tarefa-texto" placeholder="Nova tarefa..." style="flex:1; border: 1px solid #cbd5e1; border-radius: 6px; padding: 5px; font-size: 10px;">
+                <input type="number" id="nova-tarefa-moedas" value="5" style="width: 40px; border: 1px solid #cbd5e1; border-radius: 6px; padding: 5px; text-align: center; font-size: 10px;">
+                <button onclick="adicionarTarefa()" style="background: #0284c7; color: white; border: none; padding: 5px 8px; border-radius: 6px; font-weight: bold; cursor: pointer;">+</button>
             </div>
         </div>
     </div>
@@ -265,53 +271,53 @@ body{
 <!-- MODAL EVOLUÇÕES -->
 <div class="modal-overlay" id="modal-evolucoes">
     <div class="modal">
-        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 14px;">
-            <h3 style="font-size: 16px; font-weight: 900;">🔥 Evoluções — <span id="pet-evol-nome">Gato</span></h3>
-            <button onclick="fecharModal('modal-evolucoes')" style="background: #e2e8f0; border: none; padding: 4px 10px; border-radius: 8px; font-weight: bold; cursor: pointer;">X</button>
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px;">
+            <h3 style="font-size: 15px; font-weight: 900;">🔥 Evoluções — <span id="pet-evol-nome">Gato</span></h3>
+            <button onclick="fecharModal('modal-evolucoes')" style="background: #e2e8f0; border: none; padding: 4px 8px; border-radius: 6px; font-weight: bold; cursor: pointer;">X</button>
         </div>
-        <div id="lista-evolucoes" style="display: flex; flex-direction: column; gap: 8px;"></div>
+        <div id="lista-evolucoes" style="display: flex; flex-direction: column; gap: 6px;"></div>
     </div>
 </div>
 
 <!-- MODAL GRAVADOR -->
 <div class="modal-overlay" id="modal-gravador">
     <div class="modal" style="text-align: center;">
-        <h3 style="font-size: 16px; font-weight: 900; margin-bottom: 10px;">🎙️ Gravar Voz</h3>
-        <button id="btn-iniciar-grav" onclick="iniciarGravacao()" style="background:#ef4444; color:white; border:none; padding:10px 16px; border-radius:10px; font-weight:bold; cursor:pointer;">🔴 Começar Gravação</button>
-        <button id="btn-parar-grav" onclick="pararGravacao()" style="display:none; background:#4b5563; color:white; border:none; padding:10px 16px; border-radius:10px; font-weight:bold; cursor:pointer;">⏹️ Parar Gravação</button>
-        <div id="grav-result" style="display:none; margin-top:12px;">
-            <audio id="audio-original" controls style="width:100%; margin-bottom:8px;"></audio>
-            <button onclick="salvarVoz()" style="background:#7c3aed; color:white; border:none; padding:8px 14px; border-radius:8px; font-weight:bold; cursor:pointer;">💾 Usar no Pet</button>
+        <h3 style="font-size: 15px; font-weight: 900; margin-bottom: 10px;">🎙️ Gravar Voz</h3>
+        <button id="btn-iniciar-grav" onclick="iniciarGravacao()" style="background:#ef4444; color:white; border:none; padding:8px 14px; border-radius:10px; font-weight:bold; cursor:pointer;">🔴 Começar Gravação</button>
+        <button id="btn-parar-grav" onclick="pararGravacao()" style="display:none; background:#4b5563; color:white; border:none; padding:8px 14px; border-radius:10px; font-weight:bold; cursor:pointer;">⏹️ Parar Gravação</button>
+        <div id="grav-result" style="display:none; margin-top:10px;">
+            <audio id="audio-original" controls style="width:100%; margin-bottom:6px;"></audio>
+            <button onclick="salvarVoz()" style="background:#7c3aed; color:white; border:none; padding:6px 12px; border-radius:8px; font-weight:bold; cursor:pointer;">💾 Usar no Pet</button>
         </div>
-        <button onclick="fecharModal('modal-gravador')" style="margin-top:12px; background:none; border:none; color:#64748b; font-weight:bold; cursor:pointer;">Fechar</button>
+        <button onclick="fecharModal('modal-gravador')" style="margin-top:10px; background:none; border:none; color:#64748b; font-weight:bold; cursor:pointer;">Fechar</button>
     </div>
 </div>
 
 <!-- MODAL MATEMÁTICA -->
 <div class="modal-overlay" id="modal-matematica">
     <div class="modal" style="text-align: center;">
-        <h3 style="font-size: 16px; font-weight: 900; color: #059669; margin-bottom: 10px;">🎮 Desafio Matemático</h3>
-        <div id="conta-math" style="font-size: 28px; font-weight: 900; background: #f1f5f9; padding: 10px; border-radius: 12px; margin-bottom: 12px;">?</div>
-        <div id="opcoes-math" style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 8px; margin-bottom: 12px;"></div>
+        <h3 style="font-size: 16px; font-weight: 900; color: #059669; margin-bottom: 8px;">🎮 Desafio Matemático</h3>
+        <div id="conta-math" style="font-size: 24px; font-weight: 900; background: #f1f5f9; padding: 8px; border-radius: 12px; margin-bottom: 10px;">?</div>
+        <div id="opcoes-math" style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 6px; margin-bottom: 10px;"></div>
         <button onclick="fecharModal('modal-matematica')" style="background: none; border: none; color: #64748b; font-weight: bold; cursor: pointer;">Fechar</button>
     </div>
 </div>
 
-<!-- MODAL PRÊMIOS COM META DE POUPANÇA -->
+<!-- MODAL PRÊMIOS COM META -->
 <div class="modal-overlay" id="modal-recompensas">
     <div class="modal" style="text-align: center;">
-        <h3 style="font-size: 16px; font-weight: 900; color: #e11d48; margin-bottom: 6px;">🎁 Resgatar Prêmios</h3>
-        <div style="background:#fef2f2; border:1px solid #fecaca; border-radius:10px; padding:8px; margin-bottom:12px; text-align:left;">
-            <span style="font-size:10px; font-weight:800; color:#b91c1c;">🎯 Meta Especial: Passeio no Parque</span>
-            <div style="display:flex; justify-content:space-between; font-size:10px; font-weight:700; margin-top:2px;">
+        <h3 style="font-size: 15px; font-weight: 900; color: #e11d48; margin-bottom: 6px;">🎁 Resgatar Prêmios</h3>
+        <div style="background:#fef2f2; border:1px solid #fecaca; border-radius:10px; padding:6px 8px; margin-bottom:10px; text-align:left;">
+            <span style="font-size:9px; font-weight:800; color:#b91c1c;">🎯 Meta: Passeio Especial</span>
+            <div style="display:flex; justify-content:space-between; font-size:9px; font-weight:700; margin-top:2px;">
                 <span>Progresso</span>
                 <span id="texto-meta-progresso">0 / 50 🪙</span>
             </div>
-            <div style="height:6px; background:#e2e8f0; border-radius:3px; overflow:hidden; margin-top:3px;">
+            <div style="height:5px; background:#e2e8f0; border-radius:3px; overflow:hidden; margin-top:2px;">
                 <div id="barra-meta-progresso" style="height:100%; width:0%; background:#ef4444; border-radius:3px; transition:width 0.3s;"></div>
             </div>
         </div>
-        <div id="lista-itens-loja" style="display: flex; flex-direction: column; gap: 6px; max-height: 130px; overflow-y: auto; margin-bottom: 12px; text-align: left;"></div>
+        <div id="lista-itens-loja" style="display: flex; flex-direction: column; gap: 5px; max-height: 120px; overflow-y: auto; margin-bottom: 10px; text-align: left;"></div>
         <button onclick="fecharModal('modal-recompensas')" style="background: none; border: none; color: #64748b; font-weight: bold; cursor: pointer;">Fechar</button>
     </div>
 </div>
@@ -319,48 +325,135 @@ body{
 <div class="toast" id="toast"></div>
 
 <script>
-const BANCO_PETS = {
-  gato: {
-    nome: "Gato", emoji: "🐱", som: "Miau!", somFrequencia: 440,
-    svg: `<svg width="120" height="120" viewBox="0 0 260 260" xmlns="http://www.w3.org/2000/svg"><ellipse cx="130" cy="235" rx="75" ry="12" fill="rgba(0,0,0,0.06)"/><path d="M195 180 Q240 140 225 95" stroke="#FF9F29" stroke-width="28" stroke-linecap="round" fill="none"/><ellipse cx="130" cy="190" rx="65" ry="55" fill="#FF9F29"/><ellipse cx="95" cy="230" rx="18" ry="15" fill="#FFE8CC"/><ellipse cx="165" cy="230" rx="18" ry="15" fill="#FFE8CC"/><circle cx="130" cy="110" r="75" fill="#FF9F29"/><path d="M55 45 L85 85 L50 80 Z" fill="#FF9F29"/><path d="M205 45 L175 85 L210 80 Z" fill="#FF9F29"/><ellipse cx="130" cy="125" rx="48" ry="45" fill="#FFE8CC"/><ellipse cx="95" cy="100" rx="18" ry="22" fill="#2D1B10"/><ellipse cx="165" cy="100" rx="18" ry="22" fill="#2D1B10"/><path d="M130 125 L122 138 L138 138 Z" fill="#FF9AAA"/></svg>`,
-    evolucoes: [{nivel:1,nome:"Filhote",emoji:"🐱"},{nivel:5,nome:"Jovem",emoji:"😺"},{nivel:10,nome:"Adulto",emoji:"😸"},{nivel:20,nome:"Sábio",emoji:"🐈"},{nivel:50,nome:"Lendário",emoji:"🦁"}]
-  },
-  cachorra: {
-    nome: "Cachorrinha", emoji: "🐶", som: "Au Au!", somFrequencia: 220,
-    svg: `<svg width="120" height="120" viewBox="0 0 270 285" xmlns="http://www.w3.org/2000/svg"><ellipse cx="135" cy="270" rx="52" ry="10" fill="rgba(0,0,0,0.08)"/><path d="M195 190 Q235 165 220 135" stroke="#D97706" stroke-width="22" stroke-linecap="round" fill="none"/><ellipse cx="135" cy="205" rx="60" ry="50" fill="#D97706"/><circle cx="135" cy="120" r="70" fill="#D97706"/><ellipse cx="105" cy="110" rx="15" ry="19" fill="#2D1B10"/><ellipse cx="165" cy="110" rx="15" ry="19" fill="#2D1B10"/><circle cx="135" cy="175" r="18" fill="#F59E0B" opacity="0.9"/></svg>`,
-    evolucoes: [{nivel:1,nome:"Filhote",emoji:"🐶"},{nivel:5,nome:"Jovem",emoji:"🐩"},{nivel:10,nome:"Adulto",emoji:"🦮"},{nivel:20,nome:"Protetora",emoji:"🐕‍🦺"},{nivel:50,nome:"Lendária",emoji:"🐺"}]
-  },
-  cabra: {
-    nome: "Cabra", emoji: "🐐", som: "Bééé!", somFrequencia: 330,
-    svg: `<svg width="120" height="120" viewBox="0 0 270 285" xmlns="http://www.w3.org/2000/svg"><ellipse cx="135" cy="270" rx="55" ry="12" fill="rgba(0,0,0,0.08)"/><path d="M90 60 Q70 25 85 15 Q100 25 95 55" fill="#2D1B10"/><path d="M180 60 Q200 25 185 15 Q170 25 175 55" fill="#2D1B10"/><ellipse cx="135" cy="125" rx="60" ry="65" fill="#F5E6D3"/><circle cx="105" cy="110" r="16" fill="#FFFFFF" stroke="#2D1B10" stroke-width="3"/><circle cx="165" cy="110" r="16" fill="#FFFFFF" stroke="#2D1B10" stroke-width="3"/></svg>`,
-    evolucoes: [{nivel:1,nome:"Cabrinha",emoji:"🐐"},{nivel:5,nome:"Jovem",emoji:"🐏"},{nivel:10,nome:"Adulto",emoji:"🐐"},{nivel:20,nome:"Montanhesa",emoji:"🦌"},{nivel:50,nome:"Lendária",emoji:"🦄"}]
-  },
-  frango: {
-    nome: "Frango", emoji: "🐔", som: "Cocoricó!", somFrequencia: 580,
-    svg: `<svg width="120" height="120" viewBox="0 0 270 285" xmlns="http://www.w3.org/2000/svg"><ellipse cx="135" cy="270" rx="52" ry="10" fill="rgba(0,0,0,0.08)"/><path d="M135 48 Q120 28 108 42 Q95 18 110 35 Q125 12 135 28 Q145 12 160 35 Q175 18 162 42 Q150 28 135 48 Z" fill="#FF3344"/><circle cx="135" cy="120" r="68" fill="#FFF9E6"/><path d="M135 138 L112 152 L158 152 Z" fill="#FFCC00"/></svg>`,
-    evolucoes: [{nivel:1,nome:"Pintinho",emoji:"🐣"},{nivel:5,nome:"Jovem",emoji:"🐤"},{nivel:10,nome:"Adulto",emoji:"🐥"},{nivel:20,nome:"Galinha",emoji:"🐔"},{nivel:50,nome:"Galo Lendário",emoji:"🐓"}]
+// GERADOR SVG DINÂMICO COM EVOLUÇÕES PARA TODOS OS PETS
+function obterSvgPetComEvolucao(tipo, level) {
+  let acessorio = '';
+  if (level >= 5 && level < 10) {
+    // Gravata borboleta azul
+    acessorio = `<polygon points="130,150 115,165 130,180 145,165" fill="#38BDF8"/><circle cx="130" cy="165" r="5" fill="#0284C7"/>`;
+  } else if (level >= 10 && level < 20) {
+    // Óculos escuros
+    acessorio = `<rect x="75" y="92" width="40" height="24" rx="4" fill="#1e293b"/><rect x="145" y="92" width="40" height="24" rx="4" fill="#1e293b"/><line x1="115" y1="102" x2="145" y2="102" stroke="#1e293b" stroke-width="4"/><circle cx="85" cy="98" r="4" fill="white" opacity="0.6"/>`;
+  } else if (level >= 20 && level < 50) {
+    // Capa roxa mágica
+    acessorio = `<path d="M85 170 L55 240 L130 220 L205 240 L175 170 Z" fill="#9333EA"/><circle cx="130" cy="110" r="95" fill="none" stroke="#C084FC" stroke-width="3" stroke-dasharray="8 6" opacity="0.7"/>`;
+  } else if (level >= 50) {
+    // Coroa real dourada
+    acessorio = `<path d="M85 170 L55 240 L130 220 L205 240 L175 170 Z" fill="#D97706"/><path d="M100 35 L110 55 L130 30 L150 55 L160 35 L165 65 L95 65 Z" fill="#FBBF24"/><circle cx="130" cy="48" r="4" fill="#EF4444"/><circle cx="110" cy="52" r="3" fill="#3B82F6"/><circle cx="150" cy="52" r="3" fill="#10B981"/>`;
   }
+
+  if (tipo === 'frango') {
+    return `<svg width="120" height="120" viewBox="0 0 270 285" xmlns="http://www.w3.org/2000/svg">
+      <ellipse cx="135" cy="270" rx="52" ry="10" fill="rgba(0,0,0,0.08)"/>
+      <path d="M135 48 Q120 28 108 42 Q95 18 110 35 Q90 15 110 32 Q125 12 135 28 Q145 12 135 32 Q160 15 140 35 Q165 25 155 45 Q142 38 135 48 Z" fill="#FF3344"/>
+      <circle cx="135" cy="120" r="68" fill="#FFF9E6"/>
+      <path d="M135 138 L112 152 L158 152 Z" fill="#FFCC00"/>
+      <path d="M120 152 Q135 162 150 152" fill="#FF9933"/>
+      <ellipse cx="135" cy="150" rx="12" ry="8" fill="#552200"/>
+      <!-- OLHOS VIVOS E BRILHANTES -->
+      <circle cx="100" cy="105" r="22" fill="#FFFFFF" stroke="#2D1B10" stroke-width="3.5"/>
+      <circle cx="170" cy="105" r="22" fill="#FFFFFF" stroke="#2D1B10" stroke-width="3.5"/>
+      <circle cx="95" cy="100" r="11" fill="#2D1B10"/>
+      <circle cx="175" cy="100" r="11" fill="#2D1B10"/>
+      <circle cx="90" cy="92" r="5" fill="white"/>
+      <circle cx="170" cy="92" r="5" fill="white"/>
+      <line x1="82" y1="90" x2="75" y2="78" stroke="#2D1B10" stroke-width="2.5" stroke-linecap="round"/>
+      <line x1="88" y1="85" x2="80" y2="72" stroke="#2D1B10" stroke-width="2.5" stroke-linecap="round"/>
+      <line x1="188" y1="90" x2="195" y2="78" stroke="#2D1B10" stroke-width="2.5" stroke-linecap="round"/>
+      <line x1="182" y1="85" x2="190" y2="72" stroke="#2D1B10" stroke-width="2.5" stroke-linecap="round"/>
+      <ellipse cx="72" cy="130" rx="10" ry="6" fill="#FFB6C1" opacity=".5"/>
+      <ellipse cx="198" cy="130" rx="10" ry="6" fill="#FFB6C1" opacity=".5"/>
+      <ellipse cx="135" cy="205" rx="62" ry="52" fill="#FFF9E6"/>
+      ${acessorio}
+    </svg>`;
+  } else if (tipo === 'cachorra') {
+    return `<svg width="120" height="120" viewBox="0 0 270 285" xmlns="http://www.w3.org/2000/svg">
+      <ellipse cx="135" cy="270" rx="52" ry="10" fill="rgba(0,0,0,0.08)"/>
+      <path d="M195 190 Q235 165 220 135" stroke="#D97706" stroke-width="22" stroke-linecap="round" fill="none"/>
+      <ellipse cx="135" cy="205" rx="60" ry="50" fill="#D97706"/>
+      <circle cx="135" cy="120" r="70" fill="#D97706"/>
+      <ellipse cx="105" cy="110" rx="15" ry="19" fill="#2D1B10"/>
+      <ellipse cx="165" cy="110" rx="15" ry="19" fill="#2D1B10"/>
+      <circle cx="100" cy="104" r="5" fill="white"/>
+      <circle cx="160" cy="104" r="5" fill="white"/>
+      <circle cx="135" cy="175" r="18" fill="#F59E0B" opacity="0.9"/>
+      ${acessorio}
+    </svg>`;
+  } else if (tipo === 'cabra') {
+    return `<svg width="120" height="120" viewBox="0 0 270 285" xmlns="http://www.w3.org/2000/svg">
+      <ellipse cx="135" cy="270" rx="55" ry="12" fill="rgba(0,0,0,0.08)"/>
+      <path d="M90 60 Q70 25 85 15 Q100 25 95 55" fill="#2D1B10"/>
+      <path d="M180 60 Q200 25 185 15 Q170 25 175 55" fill="#2D1B10"/>
+      <ellipse cx="135" cy="125" rx="60" ry="65" fill="#F5E6D3"/>
+      <circle cx="105" cy="110" r="16" fill="#FFFFFF" stroke="#2D1B10" stroke-width="3"/>
+      <circle cx="165" cy="110" r="16" fill="#FFFFFF" stroke="#2D1B10" stroke-width="3"/>
+      <circle cx="108" cy="108" r="8" fill="#2D1B10"/>
+      <circle cx="162" cy="108" r="8" fill="#2D1B10"/>
+      <circle cx="104" cy="104" r="3" fill="white"/>
+      <circle cx="158" cy="104" r="3" fill="white"/>
+      ${acessorio}
+    </svg>`;
+  } else {
+    // Gato
+    return `<svg width="120" height="120" viewBox="0 0 260 260" xmlns="http://www.w3.org/2000/svg">
+      <ellipse cx="130" cy="235" rx="75" ry="12" fill="rgba(0,0,0,0.06)"/>
+      <path d="M195 180 Q240 140 225 95" stroke="#FF9F29" stroke-width="28" stroke-linecap="round" fill="none"/>
+      <ellipse cx="130" cy="190" rx="65" ry="55" fill="#FF9F29"/>
+      <ellipse cx="95" cy="230" rx="18" ry="15" fill="#FFE8CC"/>
+      <ellipse cx="165" cy="230" rx="18" ry="15" fill="#FFE8CC"/>
+      <circle cx="130" cy="110" r="75" fill="#FF9F29"/>
+      <path d="M55 45 L85 85 L50 80 Z" fill="#FF9F29"/>
+      <path d="M205 45 L175 85 L210 80 Z" fill="#FF9F29"/>
+      <ellipse cx="130" cy="125" rx="48" ry="45" fill="#FFE8CC"/>
+      <ellipse cx="95" cy="100" rx="18" ry="22" fill="#2D1B10"/>
+      <ellipse cx="165" cy="100" rx="18" ry="22" fill="#2D1B10"/>
+      <circle cx="100" cy="92" rx="7" ry="9" fill="white"/>
+      <circle cx="170" cy="92" rx="7" ry="9" fill="white"/>
+      <path d="M130 125 L122 138 L138 138 Z" fill="#FF9AAA"/>
+      ${acessorio}
+    </svg>`;
+  }
+}
+
+const BANCO_PETS = {
+  gato: { nome: "Gato", emoji: "🐱", som: "Miau!", freq: 440, evolucoes: [{nivel:1,nome:"Filhote"},{nivel:5,nome:"Jovem"},{nivel:10,nome:"Adulto"},{nivel:20,nome:"Sábio"},{nivel:50,nome:"Lendário"}] },
+  cachorra: { nome: "Cachorrinha", emoji: "🐶", som: "Au Au!", freq: 220, evolucoes: [{nivel:1,nome:"Filhote"},{nivel:5,nome:"Jovem"},{nivel:10,nome:"Adulta"},{nivel:20,nome:"Protetora"},{nivel:50,nome:"Lendária"}] },
+  cabra: { nome: "Cabra", emoji: "🐐", som: "Bééé!", freq: 330, evolucoes: [{nivel:1,nome:"Cabrinha"},{nivel:5,nome:"Jovem"},{nivel:10,nome:"Adulta"},{nivel:20,nome:"Montanhesa"},{nivel:50,nome:"Lendária"}] },
+  frango: { nome: "Frango", emoji: "🐔", som: "Cocoricó!", freq: 580, evolucoes: [{nivel:1,nome:"Pintinho"},{nivel:5,nome:"Jovem"},{nivel:10,nome:"Adulto"},{nivel:20,nome:"Galinha"},{nivel:50,nome:"Galo Lendário"}] }
 };
 
 let estado = {
   petAtual: 'gato', moedas: 15, taxaCambio: 0.01, pinPais: '1234',
   nivel: 1, xp: 40, xpMax: 100, felicidade: 100, saude: 100,
-  metaMoedas: 50,
+  metaMoedas: 50, totalSacado: 0, ultimoDiaAcesso: new Date().toISOString().slice(0,10),
   tarefas: [
     {id: 1, texto: 'Escovar os dentes', recompensa: 5, xp: 20, status: 'pendente', foto: null},
     {id: 2, texto: 'Arrumar a cama', recompensa: 5, xp: 20, status: 'pendente', foto: null}
   ],
-  recompensas: [{id:1, texto:'15 min de tela', custo:10}]
+  recompensas: [
+    {id:1, texto:'15 min de tela', custo:10, tipo:'timer', minutos:15},
+    {id:2, texto:'30 min de tela', custo:18, tipo:'timer', minutos:30}
+  ]
 };
 
-let salvo = localStorage.getItem('ROTINAPET_SAVE_V37');
+const salvo = localStorage.getItem('ROTINAPET_SAVE_FINAL');
 if (salvo) estado = JSON.parse(salvo);
 
-function salvar() { localStorage.setItem('ROTINAPET_SAVE_V37', JSON.stringify(estado)); }
+// RESET DIÁRIO AUTOMÁTICO
+const hoje = new Date().toISOString().slice(0,10);
+if (estado.ultimoDiaAcesso !== hoje) {
+  estado.tarefas.forEach(t => { t.status = 'pendente'; t.foto = null; });
+  estado.ultimoDiaAcesso = hoje;
+}
+
+function salvar() { localStorage.setItem('ROTINAPET_SAVE_FINAL', JSON.stringify(estado)); }
 
 function atualizarTela() {
     document.getElementById('txt-moedas').innerText = estado.moedas;
-    document.getElementById('txt-dinheiro').innerText = (estado.moedas * estado.taxaCambio).toFixed(2).replace('.', ',');
+    const valorReais = (estado.moedas * estado.taxaCambio).toFixed(2).replace('.', ',');
+    document.getElementById('txt-dinheiro').innerText = valorReais;
+    document.getElementById('txt-painel-disponivel').innerText = valorReais;
+    document.getElementById('txt-total-pago').innerText = (estado.totalSacado || 0).toFixed(2).replace('.', ',');
     document.getElementById('val-felicidade').innerText = estado.felicidade;
     document.getElementById('barra-felicidade').style.width = estado.felicidade + '%';
     document.getElementById('txt-saude').innerText = estado.saude + '%';
@@ -373,40 +466,41 @@ function atualizarTela() {
 
     const pet = BANCO_PETS[estado.petAtual];
     document.getElementById('btn-pet-atual').textContent = pet.emoji;
-    document.getElementById('pet-svg-container').innerHTML = pet.svg;
+    document.getElementById('pet-svg-container').innerHTML = obterSvgPetComEvolucao(estado.petAtual, level);
     document.getElementById('pet-evol-nome').textContent = pet.nome;
 
     renderizarTarefas();
     renderizarEvolucoes();
 }
 
-// 1. SOM PERSONALIZADO POR PET
-let contextoAudio = null;
+// SOM E VIBRAÇÃO
+let ctxAudio = null;
 function somDoPet(event) {
-    if (!contextoAudio) contextoAudio = new (window.AudioContext || window.webkitAudioContext)();
+    if (!ctxAudio) ctxAudio = new (window.AudioContext || window.webkitAudioContext)();
     const pet = BANCO_PETS[estado.petAtual];
-    const osc = contextoAudio.createOscillator();
-    const gain = contextoAudio.createGain();
-    osc.connect(gain); gain.connect(contextoAudio.destination);
+    const osc = ctxAudio.createOscillator();
+    const gain = ctxAudio.createGain();
+    osc.connect(gain); gain.connect(ctxAudio.destination);
     
-    osc.frequency.value = pet.somFrequencia;
-    osc.type = estado.petAtual === 'frango' ? 'square' : 'sine';
+    osc.frequency.value = pet.freq;
+    osc.type = estado.petAtual === 'frango' ? 'triangle' : 'sine';
     
-    gain.gain.setValueAtTime(0.2, contextoAudio.currentTime);
-    gain.gain.exponentialRampToValueAtTime(0.001, contextoAudio.currentTime + 0.3);
-    osc.start(contextoAudio.currentTime); osc.stop(contextoAudio.currentTime + 0.3);
+    gain.gain.setValueAtTime(0.2, ctxAudio.currentTime);
+    gain.gain.exponentialRampToValueAtTime(0.001, ctxAudio.currentTime + 0.25);
+    osc.start(ctxAudio.currentTime); osc.stop(ctxAudio.currentTime + 0.25);
 
+    if (navigator.vibrate) navigator.vibrate(30);
     estado.felicidade = Math.min(100, estado.felicidade + 5);
     mostrarToast(`🔊 ${pet.som} ❤️`);
     ganharXP(5, event);
     salvar(); atualizarTela();
 }
 
-function darLanche() {
+function darLanche(event) {
     if (estado.moedas < 5) return alert('🪙 Moedas insuficientes para lanche!');
     estado.moedas -= 5;
     estado.felicidade = Math.min(100, estado.felicidade + 20);
-    ganharXP(10);
+    ganharXP(10, event);
     salvar(); atualizarTela();
     mostrarToast('🍎 Pet alimentado!');
 }
@@ -417,25 +511,22 @@ function darRemedio() {
     alert('💚 Pet com saúde 100%!');
 }
 
-// 2. ANIMAÇÕES FLUTUANTES DE XP E MOEDAS
 function criarTextoFlutuante(texto, evento) {
     const area = document.getElementById('pet-section-area');
     if (!area) return;
     const span = document.createElement('div');
     span.className = 'floating-text';
     span.innerText = texto;
-    
-    let x = 120, y = 40;
+    let x = 120, y = 30;
     if (evento && evento.clientX) {
         const rect = area.getBoundingClientRect();
-        x = evento.clientX - rect.left - 20;
-        y = evento.clientY - rect.top - 20;
+        x = Math.max(10, evento.clientX - rect.left - 20);
+        y = Math.max(10, evento.clientY - rect.top - 20);
     }
     span.style.left = x + 'px';
     span.style.top = y + 'px';
-    
     area.appendChild(span);
-    setTimeout(() => span.remove(), 1000);
+    setTimeout(() => span.remove(), 900);
 }
 
 function ganharXP(qtd, evento) {
@@ -444,21 +535,29 @@ function ganharXP(qtd, evento) {
     if (estado.xp >= 100) {
         estado.xp -= 100;
         estado.nivel++;
+        dispararConfetes();
+        if (navigator.vibrate) navigator.vibrate([100, 50, 100]);
         mostrarToast(`🎉 Subiu para o Nível ${estado.nivel}!`);
     }
     atualizarTela();
     salvar();
 }
 
+function dispararConfetes() {
+  if (window.confetti) {
+    window.confetti({ particleCount: 70, spread: 60, origin: { y: 0.6 } });
+  }
+}
+
 // TAREFAS E FOTO
-let tarefaIdParaFoto = null;
-function dispararCamera(id) { tarefaIdParaFoto = id; document.getElementById('camera-input').click(); }
+let tarefaIdFoto = null;
+function dispararCamera(id) { tarefaIdFoto = id; document.getElementById('camera-input').click(); }
 function processarFotoCapturada(e) {
-    const file = e.target.files[0]; if (!file || !tarefaIdParaFoto) return;
+    const file = e.target.files[0]; if (!file || !tarefaIdFoto) return;
     const reader = new FileReader();
     reader.onload = ev => {
-        const t = estado.tarefas.find(x => x.id === tarefaIdParaFoto);
-        if (t) { t.foto = ev.target.result; salvar(); renderizarTarefas(); alert('📸 Foto salva com sucesso!'); }
+        const t = estado.tarefas.find(x => x.id === tarefaIdFoto);
+        if (t) { t.foto = ev.target.result; salvar(); renderizarTarefas(); alert('📸 Foto capturada!'); }
     }; reader.readAsDataURL(file); e.target.value = '';
 }
 
@@ -479,7 +578,7 @@ function renderizarTarefas() {
                     <span class="task-reward">+${t.xp} XP • +${t.recompensa} 🪙</span>
                 </div>
                 <div class="task-actions">
-                    ${apr ? '<span style="color:#10b981;font-weight:bold;">✓ Aprovado</span>' :
+                    ${apr ? '<span style="color:#10b981;font-weight:bold;">✓ Feito</span>' :
                       pend ? '<span style="color:#f59e0b;font-weight:bold;">Avaliando</span>' :
                       `<button class="task-btn" style="background:${t.foto?'#d1fae5':'#f1f5f9'}" onclick="dispararCamera(${t.id})">📷</button>
                        <button class="task-btn btn-ok" onclick="enviarParaAprovacao(${t.id})">Enviar</button>`}
@@ -488,7 +587,7 @@ function renderizarTarefas() {
     });
 }
 
-// PAINEL DOS PAIS COM PIN
+// PAINEL DOS PAIS
 function alternarModoPais() {
     const pin = prompt('🔑 Digite o PIN dos pais (padrão: 1234):');
     if (pin === estado.pinPais) {
@@ -503,21 +602,33 @@ function renderizarPainelPais() {
     document.getElementById('input-taxa-cambio').value = estado.taxaCambio;
     const ap = document.getElementById('lista-aprovacao-pais'); ap.innerHTML = '';
     const pendentes = estado.tarefas.filter(t => t.status === 'aguardando_aprovacao');
-    if(pendentes.length === 0) ap.innerHTML = '<span style="font-size:11px;color:#888;">Nenhuma pendente.</span>';
+    if(pendentes.length === 0) ap.innerHTML = '<span style="font-size:10px;color:#888;">Nenhuma pendente.</span>';
     pendentes.forEach(t => {
-        ap.innerHTML += `<div style="display:flex;justify-content:space-between;align-items:center;font-size:11px;background:#f8fafc;padding:4px;border-radius:6px;"><span><b>${t.texto}</b></span><button onclick="aprovarTarefaPais(${t.id})" style="background:#10b981;color:white;border:none;padding:2px 6px;border-radius:4px;cursor:pointer;">Aprovar</button></div>`;
+        ap.innerHTML += `<div style="display:flex;justify-content:space-between;align-items:center;font-size:10px;background:#f8fafc;padding:4px;border-radius:6px;"><span><b>${t.texto}</b></span><button onclick="aprovarTarefaPais(${t.id})" style="background:#10b981;color:white;border:none;padding:2px 6px;border-radius:4px;cursor:pointer;">Aprovar</button></div>`;
     });
 
     const ed = document.getElementById('lista-edicao-tarefas'); ed.innerHTML = '';
     estado.tarefas.forEach(t => {
-        ed.innerHTML += `<div style="display:flex;justify-content:space-between;align-items:center;font-size:11px;"><span>${t.texto}</span><button onclick="removerTarefa(${t.id})" style="color:red;border:none;background:none;font-weight:bold;cursor:pointer;">Excluir</button></div>`;
+        ed.innerHTML += `<div style="display:flex;justify-content:space-between;align-items:center;font-size:10px;"><span>${t.texto}</span><button onclick="removerTarefa(${t.id})" style="color:red;border:none;background:none;font-weight:bold;cursor:pointer;">Excluir</button></div>`;
     });
 }
 
 function aprovarTarefaPais(id) {
     const t = estado.tarefas.find(x => x.id === id); if(!t) return;
     t.status = 'aprovada'; estado.moedas += t.recompensa; ganharXP(t.xp);
-    salvar(); renderizarPainelPais(); atualizarTela(); alert('🎉 Aprovado!');
+    dispararConfetes();
+    salvar(); renderizarPainelPais(); atualizarTela(); alert('🎉 Tarefa Aprovada com Sucesso!');
+}
+
+function sacarDinheiro() {
+  const valor = estado.moedas * estado.taxaCambio;
+  if (valor <= 0) return alert('Sem saldo para saque!');
+  if (confirm(`Confirmar o pagamento de R$ ${valor.toFixed(2)} ao Bernardo?`)) {
+    estado.totalSacado = (estado.totalSacado || 0) + valor;
+    estado.moedas = 0;
+    salvar(); renderizarPainelPais(); atualizarTela();
+    alert('💸 Saque registrado com sucesso!');
+  }
 }
 
 function adicionarTarefa() {
@@ -535,9 +646,9 @@ function salvarNovoPin() {
     const p = document.getElementById('novo-pin-pais').value;
     if(p.length === 4) { estado.pinPais = p; salvar(); alert('🔑 PIN alterado!'); } else alert('Precisa de 4 dígitos.');
 }
-function atualizarTaxaCambio(v) { estado.taxaCambio = parseFloat(v) || 0.01; salvar(); }
+function atualizarTaxaCambio(v) { estado.taxaCambio = parseFloat(v) || 0.01; salvar(); atualizarTela(); }
 
-// SELETOR PET DROPDOWN
+// SELETOR DE PET
 function alternarListaPets(e) { if(e) e.stopPropagation(); document.getElementById('lista-pets').classList.toggle('abrir'); }
 function escolherPet(tipo) {
     estado.petAtual = tipo; salvar(); atualizarTela();
@@ -553,29 +664,57 @@ function renderizarEvolucoes() {
     const pet = BANCO_PETS[estado.petAtual];
     const c = document.getElementById('lista-evolucoes'); c.innerHTML = '';
     pet.evolucoes.forEach(ev => {
-        const desbloqueada = estado.nivel >= ev.nivel;
-        c.innerHTML += `<div style="display:flex;align-items:center;gap:10px;padding:8px;background:${desbloqueada?'#faf5ff':'#f8fafc'};border-radius:10px;border:1px solid #e2e8f0;font-size:12px;"><span style="font-size:24px;">${desbloqueada?ev.emoji:'🔒'}</span><div><b>${ev.nome}</b><p style="color:#666;">Nível ${ev.nivel}</p></div></div>`;
+        const desbloq = estado.nivel >= ev.nivel;
+        c.innerHTML += `<div style="display:flex;align-items:center;gap:8px;padding:6px;background:${desbloq?'#faf5ff':'#f8fafc'};border-radius:8px;border:1px solid #e2e8f0;font-size:11px;"><span>${desbloq?'⭐':'🔒'}</span><div><b>${ev.nome}</b><p style="color:#666;font-size:9px;">Nível ${ev.nivel}</p></div></div>`;
     });
 }
 
 // MINIGAME MATEMÁTICA
 let contaCorreta = 0;
 function abrirDesafioMatematica() {
-    const a = Math.floor(Math.random()*5)+1; const b = Math.floor(Math.random()*5)+1;
+    const a = Math.floor(Math.random()*6)+1; const b = Math.floor(Math.random()*6)+1;
     contaCorreta = a + b;
     document.getElementById('conta-math').innerText = `${a} + ${b} = ?`;
     const c = document.getElementById('opcoes-math'); c.innerHTML = '';
     [contaCorreta, contaCorreta+1, Math.max(0, contaCorreta-1)].sort(()=>Math.random()-0.5).forEach(op=>{
-        c.innerHTML += `<button onclick="testarMath(${op})" style="padding:10px;background:#e0e7ff;border:none;border-radius:10px;font-weight:900;font-size:16px;cursor:pointer;">${op}</button>`;
+        c.innerHTML += `<button onclick="testarMath(${op})" style="padding:8px;background:#e0e7ff;border:none;border-radius:8px;font-weight:900;font-size:15px;cursor:pointer;">${op}</button>`;
     });
     abrirModal('modal-matematica');
 }
 function testarMath(op) {
-    if(op === contaCorreta) { estado.moedas += 2; ganharXP(15); alert('🎉 Acertou! +2 Moedas'); fecharModal('modal-matematica'); salvar(); atualizarTela(); }
-    else alert('❌ Tente de novo!');
+    if(op === contaCorreta) {
+      estado.moedas += 2; ganharXP(15); dispararConfetes();
+      alert('🎉 Acertou! +2 Moedas'); fecharModal('modal-matematica'); salvar(); atualizarTela();
+    } else alert('❌ Tente de novo!');
 }
 
-// 3. LOJA PRÊMIOS COM META DE POUPANÇA
+// TIMER DE TELA
+let intervaloTimer = null;
+function iniciarTimerTela(minutos) {
+  fecharModal('modal-recompensas');
+  abrirModal('modal-timer');
+  let tempoSegundos = minutos * 60;
+  clearInterval(intervaloTimer);
+  const relogio = document.getElementById('relogio-timer');
+  
+  intervaloTimer = setInterval(() => {
+    tempoSegundos--;
+    const m = Math.floor(tempoSegundos / 60);
+    const s = tempoSegundos % 60;
+    relogio.innerText = `${m.toString().padStart(2,'0')}:${s.toString().padStart(2,'0')}`;
+    if (tempoSegundos <= 0) {
+      clearInterval(intervaloTimer);
+      alert('🔔 O TEMPO DE TELA ACABOU! Mostre aos seus pais.');
+    }
+  }, 1000);
+}
+
+function pausarFecharTimer() {
+  clearInterval(intervaloTimer);
+  fecharModal('modal-timer');
+}
+
+// LOJA DE PRÊMIOS
 function abrirLojaRecompensas() {
     const meta = estado.metaMoedas || 50;
     const progresso = Math.min(100, Math.round((estado.moedas / meta) * 100));
@@ -584,16 +723,25 @@ function abrirLojaRecompensas() {
 
     const c = document.getElementById('lista-itens-loja'); c.innerHTML = '';
     estado.recompensas.forEach(r => {
-        c.innerHTML += `<div style="display:flex;justify-content:space-between;align-items:center;background:#f8fafc;padding:6px;border-radius:8px;font-size:11px;"><span>📱 ${r.texto}</span><button onclick="comprarPremio(${r.custo})" style="background:#f59e0b;color:white;border:none;padding:3px 6px;border-radius:4px;font-weight:bold;cursor:pointer;">${r.custo}🪙</button></div>`;
+        c.innerHTML += `<div style="display:flex;justify-content:space-between;align-items:center;background:#f8fafc;padding:5px;border-radius:6px;font-size:10px;"><span>📱 ${r.texto}</span><button onclick="comprarPremio(${r.id})" style="background:#f59e0b;color:white;border:none;padding:2px 6px;border-radius:4px;font-weight:bold;cursor:pointer;">${r.custo}🪙</button></div>`;
     });
     abrirModal('modal-recompensas');
 }
-function comprarPremio(custo) {
-    if(estado.moedas < custo) return alert('🪙 Moedas insuficientes!');
-    estado.moedas -= custo; salvar(); atualizarTela(); fecharModal('modal-recompensas'); alert('🎉 Resgatado com sucesso!');
+
+function comprarPremio(id) {
+    const r = estado.recompensas.find(x => x.id === id);
+    if (!r) return;
+    if(estado.moedas < r.custo) return alert('🪙 Moedas insuficientes!');
+    estado.moedas -= r.custo; salvar(); atualizarTela();
+    if (r.tipo === 'timer') {
+      iniciarTimerTela(r.minutos);
+    } else {
+      fecharModal('modal-recompensas');
+      alert('🎉 Resgatado com sucesso!');
+    }
 }
 
-// GRAVADOR VOZ
+// GRAVADOR
 function alternarGravador() { abrirModal('modal-gravador'); }
 async function iniciarGravacao() {
     try {
@@ -617,14 +765,14 @@ function pararGravacao() {
 }
 function salvarVoz() { mostrarToast('✅ Voz salva!'); fecharModal('modal-gravador'); }
 
-// MODAIS HELPERS
+// HELPERS
 function abrirModal(id) { document.getElementById(id).classList.add('mostrar'); }
 function fecharModal(id) { document.getElementById(id).classList.remove('mostrar'); }
 
 function mostrarToast(texto) {
   const t = document.getElementById('toast');
   t.textContent = texto; t.classList.add('mostrar');
-  setTimeout(() => t.classList.remove('mostrar'), 2000);
+  setTimeout(() => t.classList.remove('mostrar'), 1800);
 }
 
 atualizarTela();
