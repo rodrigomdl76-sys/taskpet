@@ -486,7 +486,7 @@
     </div>
 
     <script>
-        const STORAGE_KEY = 'ROTINAPET_SAVE_V28';
+        const STORAGE_KEY = 'ROTINAPET_SAVE_V29';
 
         const estadoPadrao = {
             pet: { tipo: 'pipoca', nome: 'Pipoca', fome: 80, saude: 90, felicidade: 70, doente: false, comidas: 3, xp: 0 },
@@ -520,7 +520,6 @@
                 osc.type = 'sine';
                 const agora = ctx.currentTime;
                 
-                // Curva do miado (Miau: sobe o tom e depois desce)
                 osc.frequency.setValueAtTime(350, agora);
                 osc.frequency.exponentialRampToValueAtTime(650, agora + 0.15);
                 osc.frequency.exponentialRampToValueAtTime(300, agora + 0.45);
@@ -539,7 +538,7 @@
 
         function fazerCarinho(event) {
             dados.pet.felicidade = Math.min(100, (dados.pet.felicidade || 0) + 5);
-            tocarMiado(); // Toca o miado ao tocar no gato!
+            tocarMiado();
             
             const pet = document.getElementById('bg-pet-visual');
             pet.classList.add('pulsa-feliz');
@@ -570,7 +569,6 @@
             alert('💚 Pet curado com sucesso!');
         }
 
-        // GERADOR DO GATO SVG COM BASE NA EVOLUÇÃO (NÍVEL)
         function renderizarSvgGato(level) {
             let acessorioExtra = '';
             
