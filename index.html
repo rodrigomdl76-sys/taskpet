@@ -1,52 +1,959 @@
-<section class="painel-pais-configuracoes">
-  <header class="painel-header">
-    <h2>⚙️ Configurações da Criança e Loja</h2>
-    <p class="painel-descricao">Ajuste o nome do perfil e controle a disponibilidade dos cenários.</p>
-  </header>
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+  <title>RotinaPet - Gamificação de Rotina</title>
+  <style>
+    :root {
+      --primary: #4f46e5;
+      --primary-hover: #4338ca;
+      --bg-padrao: #e0f2fe;
+      --text-main: #1e293b;
+      --text-muted: #64748b;
+      --card-bg: rgba(255, 255, 255, 0.94);
+      --border-color: #e2e8f0;
+      --danger: #ef4444;
+      --success: #10b981;
+    }
 
-  <!-- Formulário de Perfil -->
-  <form id="form-perfil-crianca" class="painel-form" onsubmit="salvarPerfilCrianca(event)">
-    <div class="form-grupo">
-      <label for="input-nome-crianca">Nome da Criança</label>
-      <div class="input-com-botao">
-        <input 
-          type="text" 
-          id="input-nome-crianca" 
-          name="nomeCrianca" 
-          placeholder="Ex: Bernardo" 
-          maxlength="25" 
-          required 
-        />
-        <button type="submit" class="btn-primario">Salvar Nome</button>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+    }
+
+    /* 1. Cenários de Fundo */
+    body {
+      min-height: 100vh;
+      color: var(--text-main);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 16px 16px 100px;
+      transition: background 0.4s ease;
+    }
+
+    body.cenario-ceu {
+      background: linear-gradient(180deg, #7dd3fc 0%, #bae6fd 60%, #e0f2fe 100%);
+    }
+
+    body.cenario-floresta {
+      background: linear-gradient(180deg, #86efac 0%, #4ade80 60%, #166534 100%);
+    }
+
+    body.cenario-espaco {
+      background: linear-gradient(180deg, #0f172a 0%, #1e1b4b 60%, #312e81 100%);
+      color: #f8fafc;
+    }
+
+    body.cenario-praia {
+      background: linear-gradient(180deg, #38bdf8 0%, #fed7aa 60%, #fde047 100%);
+    }
+
+    /* Layout Principal */
+    .app-container {
+      width: 100%;
+      max-width: 480px;
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+    }
+
+    .topo-barra {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      background: var(--card-bg);
+      padding: 12px 18px;
+      border-radius: 16px;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.06);
+      backdrop-filter: blur(8px);
+      color: var(--text-main);
+    }
+
+    .moedas-box {
+      font-weight: 700;
+      font-size: 1.1rem;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .botoes-topo {
+      display: flex;
+      gap: 8px;
+    }
+
+    .btn-icone {
+      background: #f1f5f9;
+      border: none;
+      font-size: 1.1rem;
+      padding: 8px 12px;
+      border-radius: 10px;
+      cursor: pointer;
+      transition: background 0.2s;
+    }
+
+    .btn-icone:hover {
+      background: #e2e8f0;
+    }
+
+    /* Área do Pet */
+    .pet-card {
+      background: var(--card-bg);
+      border-radius: 24px;
+      padding: 24px;
+      text-align: center;
+      box-shadow: 0 8px 24px rgba(0,0,0,0.08);
+      color: var(--text-main);
+    }
+
+    .pet-avatar {
+      font-size: 5rem;
+      margin: 8px 0;
+      user-select: none;
+      animation: flutuar 3s ease-in-out infinite alternate;
+    }
+
+    @keyframes flutuar {
+      from { transform: translateY(0); }
+      to { transform: translateY(-8px); }
+    }
+
+    /* Seções e Cards */
+    .secao-card {
+      background: var(--card-bg);
+      border-radius: 20px;
+      padding: 18px;
+      box-shadow: 0 6px 18px rgba(0,0,0,0.06);
+      color: var(--text-main);
+    }
+
+    .secao-titulo {
+      font-size: 1.1rem;
+      font-weight: 700;
+      margin-bottom: 12px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    /* Lista de Tarefas & Empty State */
+    .lista-tarefas {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    .tarefa-item {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 12px;
+      background: #f8fafc;
+      border-radius: 12px;
+      border: 1px solid var(--border-color);
+    }
+
+    .tarefa-item.concluida {
+      opacity: 0.6;
+      text-decoration: line-through;
+    }
+
+    .empty-state-tarefas {
+      text-align: center;
+      padding: 24px 12px;
+      color: var(--text-muted);
+    }
+
+    .empty-state-tarefas p {
+      font-weight: 600;
+      font-size: 0.95rem;
+      margin-bottom: 4px;
+    }
+
+    .empty-state-tarefas small {
+      font-size: 0.8rem;
+    }
+
+    /* Botões Padrão */
+    .btn-acao {
+      background: var(--primary);
+      color: #fff;
+      border: none;
+      padding: 8px 14px;
+      border-radius: 8px;
+      font-weight: 600;
+      cursor: pointer;
+      font-size: 0.85rem;
+    }
+
+    .btn-acao:hover {
+      background: var(--primary-hover);
+    }
+
+    .btn-acao:disabled {
+      background: #cbd5e1;
+      cursor: not-allowed;
+    }
+
+    /* Modais */
+    .modal-overlay {
+      position: fixed;
+      inset: 0;
+      background: rgba(15, 23, 42, 0.7);
+      backdrop-filter: blur(4px);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      z-index: 999;
+      padding: 16px;
+    }
+
+    .modal-oculto {
+      display: none !important;
+    }
+
+    .modal-conteudo {
+      background: #fff;
+      border-radius: 20px;
+      width: 100%;
+      max-width: 440px;
+      max-height: 90vh;
+      overflow-y: auto;
+      padding: 24px;
+      position: relative;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+    }
+
+    .btn-fechar {
+      position: absolute;
+      top: 14px;
+      right: 14px;
+      background: none;
+      border: none;
+      font-size: 1.25rem;
+      color: var(--text-muted);
+      cursor: pointer;
+    }
+
+    /* Teclado PIN */
+    .card-pin {
+      max-width: 320px;
+      text-align: center;
+    }
+
+    .pin-dots {
+      display: flex;
+      justify-content: center;
+      gap: 14px;
+      margin: 16px 0;
+    }
+
+    .pin-dots .dot {
+      width: 14px;
+      height: 14px;
+      border-radius: 50%;
+      border: 2px solid #cbd5e1;
+      transition: all 0.2s;
+    }
+
+    .pin-dots .dot.ativo {
+      background: var(--primary);
+      border-color: var(--primary);
+      transform: scale(1.2);
+    }
+
+    .pin-erro {
+      color: var(--danger);
+      font-size: 0.8rem;
+      height: 18px;
+      margin-bottom: 8px;
+    }
+
+    .pin-teclado {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 10px;
+    }
+
+    .btn-digito {
+      height: 50px;
+      border: 1px solid var(--border-color);
+      border-radius: 12px;
+      background: #f8fafc;
+      font-size: 1.25rem;
+      font-weight: 600;
+      cursor: pointer;
+    }
+
+    .btn-digito:active {
+      background: #e2e8f0;
+    }
+
+    .animar-shake {
+      animation: shake 0.35s ease-in-out;
+    }
+
+    @keyframes shake {
+      0%, 100% { transform: translateX(0); }
+      20%, 60% { transform: translateX(-8px); }
+      40%, 80% { transform: translateX(8px); }
+    }
+
+    /* Formulários e Tabelas do Painel */
+    .form-grupo {
+      margin-bottom: 16px;
+    }
+
+    .form-grupo label {
+      display: block;
+      font-size: 0.85rem;
+      font-weight: 600;
+      margin-bottom: 6px;
+    }
+
+    .input-com-botao {
+      display: flex;
+      gap: 8px;
+    }
+
+    .input-com-botao input {
+      flex: 1;
+      padding: 10px 12px;
+      border: 1.5px solid #cbd5e1;
+      border-radius: 8px;
+      font-size: 0.9rem;
+    }
+
+    .tabela-cenarios {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 0.85rem;
+      margin-top: 10px;
+    }
+
+    .tabela-cenarios th, .tabela-cenarios td {
+      padding: 8px 6px;
+      border-bottom: 1px solid var(--border-color);
+      text-align: left;
+    }
+
+    .input-preco {
+      width: 60px;
+      padding: 4px;
+      border: 1px solid #cbd5e1;
+      border-radius: 6px;
+      text-align: center;
+    }
+
+    /* 6. Toast Safe Area */
+    .toast-notificacao {
+      position: fixed;
+      left: 50%;
+      transform: translateX(-50%);
+      bottom: calc(24px + env(safe-area-inset-bottom, 0px));
+      background: #1e293b;
+      color: #fff;
+      padding: 10px 18px;
+      border-radius: 30px;
+      font-size: 0.85rem;
+      font-weight: 500;
+      box-shadow: 0 4px 16px rgba(0,0,0,0.25);
+      z-index: 10000;
+      max-width: 90vw;
+      text-align: center;
+      transition: opacity 0.3s, transform 0.3s;
+    }
+
+    /* Loja de Cenários */
+    .loja-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 10px;
+      margin-top: 12px;
+    }
+
+    .card-loja-item {
+      background: #f8fafc;
+      border: 1px solid var(--border-color);
+      border-radius: 12px;
+      padding: 12px;
+      text-align: center;
+    }
+
+    .btn-em-uso {
+      background: #10b981 !important;
+      color: #fff !important;
+      cursor: default;
+    }
+  </style>
+</head>
+<body class="cenario-ceu">
+
+  <div class="app-container">
+    <!-- Cabeçalho Superior -->
+    <header class="topo-barra">
+      <div class="moedas-box">
+        🪙 <span id="contador-moedas">15</span>
       </div>
-      <small class="form-dica">Este nome aparecerá nos cabeçalhos, avisos e na aprovação de saques.</small>
-    </div>
-  </form>
+      <div class="botoes-topo">
+        <button type="button" class="btn-icone" onclick="abrirModal('modal-ajuda')" title="Como funciona">❓</button>
+        <button type="button" class="btn-icone" onclick="abrirModalLoja()" title="Loja de Cenários">🎨</button>
+        <button type="button" class="btn-icone" onclick="requisitarAcessoPais()" title="Painel dos Pais">⚙️</button>
+      </div>
+    </header>
 
-  <hr class="divisor-painel" />
+    <!-- Card do Mascote -->
+    <section class="pet-card">
+      <h2 id="texto-boas-vindas">Olá, Bernardo!</h2>
+      <div class="pet-avatar" id="pet-avatar">🐱</div>
+      <p id="pet-status" style="font-size: 0.9rem; color: var(--text-muted);">Seu companheiro está feliz e descansado!</p>
+      <div style="margin-top: 14px; display: flex; gap: 8px; justify-content: center;">
+        <button class="btn-acao" onclick="alimentarPet()">🍎 Alimentar (-2 🪙)</button>
+        <button class="btn-acao" onclick="gravarMensagemVoz()">🎙️ Falar com Pet</button>
+      </div>
+    </section>
 
-  <!-- Gerenciamento de Cenários -->
-  <div class="gerenciamento-cenarios">
-    <div class="cenarios-topo">
-      <h3>🎨 Cenários Disponíveis</h3>
-      <span class="tag-aviso">Alterações nos preços entram em vigor na hora</span>
-    </div>
+    <!-- Lista de Tarefas -->
+    <section class="secao-card">
+      <div class="secao-titulo">
+        <span>Tarefas de Hoje</span>
+        <button class="btn-acao" onclick="abrirModalSaque()">🎁 Resgate</button>
+      </div>
+      <div class="lista-tarefas" id="lista-tarefas">
+        <!-- Inserido dinamicamente via JavaScript -->
+      </div>
+    </section>
+  </div>
 
-    <!-- Tabela responsiva de cenários -->
-    <div class="tabela-cenarios-wrapper">
-      <table class="tabela-cenarios">
-        <thead>
-          <tr>
-            <th>Cenário</th>
-            <th>Preço (🪙)</th>
-            <th>Desbloqueado?</th>
-            <th>Ações</th>
-          </tr>
-        </thead>
-        <tbody id="lista-cenarios-pais">
-          <!-- Linhas renderizadas via JS -->
-        </tbody>
-      </table>
+  <!-- MODAL: Ajuda (7) -->
+  <div id="modal-ajuda" class="modal-overlay modal-oculto">
+    <div class="modal-conteudo">
+      <button class="btn-fechar" onclick="fecharModal('modal-ajuda')">✕</button>
+      <h3 style="margin-bottom: 12px;">Como Funciona o App? 💡</h3>
+      <ul style="padding-left: 20px; line-height: 1.6; font-size: 0.9rem; color: #475569;">
+        <li><strong>Cumpra Tarefas:</strong> Marque suas atividades diárias concluídas para receber moedas.</li>
+        <li><strong>Cuide do Pet:</strong> Use suas moedas para alimentar seu companheiro.</li>
+        <li><strong>Loja de Cenários:</strong> Personalize o fundo do seu aplicativo.</li>
+        <li><strong>Resgate:</strong> Junte moedas para aprovar recompensas reais com seus pais!</li>
+      </ul>
     </div>
   </div>
-</section>
+
+  <!-- MODAL: Saque Dinâmico (8) -->
+  <div id="modal-saque" class="modal-overlay modal-oculto">
+    <div class="modal-conteudo">
+      <button class="btn-fechar" onclick="fecharModal('modal-saque')">✕</button>
+      <h3 id="titulo-saque" style="margin-bottom: 8px;">Aprovar resgate</h3>
+      <p style="font-size: 0.85rem; color: var(--text-muted); margin-bottom: 16px;">
+        Troque moedas acumuladas por recompensas combinadas com seus responsáveis.
+      </p>
+      <div style="text-align: center; padding: 16px; background: #f8fafc; border-radius: 12px; margin-bottom: 16px;">
+        <span style="font-size: 2rem;">🎉</span>
+        <p style="font-weight: 600; margin-top: 4px;">Saldo disponível: <span id="saque-saldo-moedas">15</span> 🪙</p>
+      </div>
+      <button class="btn-acao" style="width: 100%; padding: 12px;" onclick="solicitarSaque()">Confirmar com os Pais</button>
+    </div>
+  </div>
+
+  <!-- MODAL: Loja de Cenários (3) -->
+  <div id="modal-loja" class="modal-overlay modal-oculto">
+    <div class="modal-conteudo">
+      <button class="btn-fechar" onclick="fecharModal('modal-loja')">✕</button>
+      <h3>Loja de Cenários 🎨</h3>
+      <div class="loja-grid" id="loja-grid">
+        <!-- Renderizado dinamicamente -->
+      </div>
+    </div>
+  </div>
+
+  <!-- MODAL: Trava de PIN (Proteção) -->
+  <div id="modal-pin-pais" class="modal-overlay modal-oculto">
+    <div class="modal-conteudo card-pin">
+      <button class="btn-fechar" onclick="fecharModalPin()">✕</button>
+      <div style="font-size: 2rem;">🔒</div>
+      <h3 style="margin-top: 6px;">Área dos Pais</h3>
+      <p style="font-size: 0.85rem; color: var(--text-muted);">Digite seu PIN de 4 números</p>
+      
+      <div class="pin-dots" id="pin-dots">
+        <span class="dot"></span>
+        <span class="dot"></span>
+        <span class="dot"></span>
+        <span class="dot"></span>
+      </div>
+
+      <div id="pin-mensagem-erro" class="pin-erro"></div>
+
+      <div class="pin-teclado">
+        <button type="button" class="btn-digito" onclick="digitarPin('1')">1</button>
+        <button type="button" class="btn-digito" onclick="digitarPin('2')">2</button>
+        <button type="button" class="btn-digito" onclick="digitarPin('3')">3</button>
+        <button type="button" class="btn-digito" onclick="digitarPin('4')">4</button>
+        <button type="button" class="btn-digito" onclick="digitarPin('5')">5</button>
+        <button type="button" class="btn-digito" onclick="digitarPin('6')">6</button>
+        <button type="button" class="btn-digito" onclick="digitarPin('7')">7</button>
+        <button type="button" class="btn-digito" onclick="digitarPin('8')">8</button>
+        <button type="button" class="btn-digito" onclick="digitarPin('9')">9</button>
+        <button type="button" class="btn-digito" onclick="limparPin()" style="font-size: 0.9rem;">C</button>
+        <button type="button" class="btn-digito" onclick="digitarPin('0')">0</button>
+        <button type="button" class="btn-digito" onclick="apagarDigitoPin()">⌫</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- MODAL: Painel dos Pais -->
+  <div id="modal-painel-pais" class="modal-overlay modal-oculto">
+    <div class="modal-conteudo">
+      <button class="btn-fechar" onclick="fecharModal('modal-painel-pais')">✕</button>
+      <h3 style="margin-bottom: 16px;">Painel de Controle dos Pais</h3>
+
+      <!-- 8. Configurar Nome da Criança -->
+      <form onsubmit="salvarPerfilCrianca(event)" class="form-grupo">
+        <label for="input-nome-crianca">Nome da Criança</label>
+        <div class="input-com-botao">
+          <input type="text" id="input-nome-crianca" maxlength="25" required />
+          <button type="submit" class="btn-acao">Salvar</button>
+        </div>
+      </form>
+
+      <!-- Alterar Senha/PIN -->
+      <form onsubmit="salvarNovoPin(event)" class="form-grupo">
+        <label for="input-novo-pin">Alterar PIN (4 números)</label>
+        <div class="input-com-botao">
+          <input type="password" id="input-novo-pin" maxlength="4" pattern="\d{4}" inputmode="numeric" placeholder="••••" required />
+          <button type="submit" class="btn-acao">Atualizar</button>
+        </div>
+      </form>
+
+      <!-- Gerenciar Cenários -->
+      <div style="margin-top: 20px;">
+        <label style="font-size: 0.85rem; font-weight: 600;">Preços & Liberação de Cenários</label>
+        <table class="tabela-cenarios">
+          <thead>
+            <tr>
+              <th>Cenário</th>
+              <th>🪙 Preço</th>
+              <th>Ação</th>
+            </tr>
+          </thead>
+          <tbody id="tabela-cenarios-pais">
+            <!-- Dinâmico -->
+          </tbody>
+        </table>
+      </div>
+
+      <!-- Gestão Rápida de Tarefas (Para testar o empty state) -->
+      <div style="margin-top: 24px;">
+        <label style="font-size: 0.85rem; font-weight: 600;">Ações Rápidas de Tarefas</label>
+        <div style="display: flex; gap: 8px; margin-top: 8px;">
+          <button class="btn-acao" onclick="adicionarTarefaExemplo()">+ Adicionar Tarefa</button>
+          <button class="btn-acao" style="background: var(--danger);" onclick="limparTodasTarefas()">Apagar Todas</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Toast Notificação (6) -->
+  <div id="toast" class="toast-notificacao modal-oculto"></div>
+
+  <script>
+    // Estado Padrão e Persistência
+    const estadoInicial = {
+      nomeCrianca: 'Bernardo',
+      moedas: 15,
+      pinPais: '1234',
+      cenarioAtivo: 'cenario-ceu',
+      cenariosDesbloqueados: ['cenario-ceu'],
+      cenarios: [
+        { id: 'cenario-ceu', nome: 'Céu Azul', preco: 0, padrao: true },
+        { id: 'cenario-floresta', nome: 'Floresta Mágica', preco: 20, padrao: false },
+        { id: 'cenario-espaco', nome: 'Espaço Sideral', preco: 40, padrao: false },
+        { id: 'cenario-praia', nome: 'Praia de Verão', preco: 30, padrao: false }
+      ],
+      tarefas: [
+        { id: 1, titulo: 'Escovar os dentes', recompensa: 2, concluida: false },
+        { id: 2, titulo: 'Arrumar a cama', recompensa: 3, concluida: false },
+        { id: 3, titulo: 'Fazer o dever de casa', recompensa: 5, concluida: false }
+      ]
+    };
+
+    let estado = JSON.parse(localStorage.getItem('rotinapet_estado')) || estadoInicial;
+
+    function salvarEstado() {
+      localStorage.setItem('rotinapet_estado', JSON.stringify(estado));
+    }
+
+    // Inicialização da Aplicação
+    document.addEventListener('DOMContentLoaded', () => {
+      aplicarCenario(estado.cenarioAtivo);
+      atualizarContadorMoedas();
+      atualizarTextosCrianca();
+      renderizarTarefas();
+    });
+
+    // 1 & 3. Cenários e Loja
+    function aplicarCenario(idCenario) {
+      document.body.className = idCenario;
+      estado.cenarioAtivo = idCenario;
+      salvarEstado();
+    }
+
+    function abrirModalLoja() {
+      renderizarLoja();
+      abrirModal('modal-loja');
+    }
+
+    function renderizarLoja() {
+      const container = document.getElementById('loja-grid');
+      container.innerHTML = '';
+
+      estado.cenarios.forEach(cenario => {
+        const desbloqueado = estado.cenariosDesbloqueados.includes(cenario.id);
+        const emUso = estado.cenarioAtivo === cenario.id;
+
+        const card = document.createElement('div');
+        card.className = 'card-loja-item';
+        card.innerHTML = `
+          <strong style="display: block; font-size: 0.9rem; margin-bottom: 4px;">${cenario.nome}</strong>
+          <small style="color: var(--text-muted); display: block; margin-bottom: 8px;">
+            ${cenario.preco === 0 ? 'Grátis' : cenario.preco + ' 🪙'}
+          </small>
+          <button 
+            class="btn-acao ${emUso ? 'btn-em-uso' : ''}" 
+            style="width: 100%; font-size: 0.75rem;"
+            ${emUso ? 'disabled' : ''}
+            onclick="processarCliqueLoja('${cenario.id}', ${cenario.preco})">
+            ${emUso ? 'Em Uso' : desbloqueado ? 'Usar' : 'Comprar'}
+          </button>
+        `;
+        container.appendChild(card);
+      });
+    }
+
+    function processarCliqueLoja(idCenario, preco) {
+      if (estado.cenariosDesbloqueados.includes(idCenario)) {
+        aplicarCenario(idCenario);
+        renderizarLoja();
+        exibirToast('Cenário ativado!');
+        return;
+      }
+
+      if (estado.moedas >= preco) {
+        estado.moedas -= preco;
+        estado.cenariosDesbloqueados.push(idCenario);
+        aplicarCenario(idCenario);
+        atualizarContadorMoedas();
+        renderizarLoja();
+        exibirToast('Novo cenário desbloqueado!');
+      } else {
+        exibirToast('Moedas insuficientes!');
+      }
+    }
+
+    // 2. Moedas
+    function atualizarContadorMoedas() {
+      document.getElementById('contador-moedas').textContent = estado.moedas;
+      const elSaldoSaque = document.getElementById('saque-saldo-moedas');
+      if (elSaldoSaque) elSaldoSaque.textContent = estado.moedas;
+    }
+
+    // 4. Renderizar Tarefas (com Empty State)
+    function renderizarTarefas() {
+      const container = document.getElementById('lista-tarefas');
+      container.innerHTML = '';
+
+      if (!estado.tarefas || estado.tarefas.length === 0) {
+        container.innerHTML = `
+          <div class="empty-state-tarefas">
+            <p>🎉 Nenhuma tarefa pendente por aqui!</p>
+            <small>Adicione novas atividades no painel dos pais.</small>
+          </div>
+        `;
+        return;
+      }
+
+      estado.tarefas.forEach(t => {
+        const item = document.createElement('div');
+        item.className = `tarefa-item ${t.concluida ? 'concluida' : ''}`;
+        item.innerHTML = `
+          <div>
+            <strong>${t.titulo}</strong>
+            <div style="font-size: 0.8rem; color: #10b981;">+${t.recompensa} 🪙</div>
+          </div>
+          <button 
+            class="btn-acao" 
+            ${t.concluida ? 'disabled' : ''} 
+            onclick="concluirTarefa(${t.id})">
+            ${t.concluida ? 'Concluída' : 'Feito!'}
+          </button>
+        `;
+        container.appendChild(item);
+      });
+    }
+
+    function concluirTarefa(id) {
+      const tarefa = estado.tarefas.find(t => t.id === id);
+      if (tarefa && !tarefa.concluida) {
+        tarefa.concluida = true;
+        estado.moedas += tarefa.recompensa;
+        salvarEstado();
+        atualizarContadorMoedas();
+        renderizarTarefas();
+        exibirToast(`Parabéns! Você ganhou +${tarefa.recompensa} moedas!`);
+      }
+    }
+
+    // 5. Gravador de Áudio com Permissão Explicada
+    async function gravarMensagemVoz() {
+      if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) {
+        exibirToast('Seu navegador não suporta gravação de voz.');
+        return;
+      }
+
+      try {
+        const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+        exibirToast('🎙️ Ouvindo você... (gravação iniciada)');
+        setTimeout(() => {
+          stream.getTracks().forEach(track => track.stop());
+          exibirToast('🐱 O Pet adorou ouvir você!');
+        }, 3000);
+      } catch (erro) {
+        if (erro.name === 'NotAllowedError' || erro.name === 'PermissionDeniedError') {
+          exibirToast('Permissão necessária: Libere o acesso ao microfone no topo do navegador.');
+        } else {
+          exibirToast('Erro ao ligar o microfone.');
+        }
+      }
+    }
+
+    // Pet Interações
+    function alimentarPet() {
+      if (estado.moedas >= 2) {
+        estado.moedas -= 2;
+        salvarEstado();
+        atualizarContadorMoedas();
+        exibirToast('Pet alimentado com sucesso! 🍎');
+      } else {
+        exibirToast('Moedas insuficientes para alimentar o pet!');
+      }
+    }
+
+    // 8. Nome Dinâmico
+    function atualizarTextosCrianca() {
+      const nome = estado.nomeCrianca || 'Bernardo';
+      document.getElementById('texto-boas-vindas').textContent = `Olá, ${nome}!`;
+      document.getElementById('titulo-saque').textContent = `Aprovar resgate de ${nome}`;
+      const inputNome = document.getElementById('input-nome-crianca');
+      if (inputNome) inputNome.value = nome;
+    }
+
+    function abrirModalSaque() {
+      atualizarTextosCrianca();
+      abrirModal('modal-saque');
+    }
+
+    function solicitarSaque() {
+      fecharModal('modal-saque');
+      requisitarAcessoPais();
+    }
+
+    // Sistema de Trava por PIN
+    let bufferPin = '';
+
+    function requisitarAcessoPais() {
+      bufferPin = '';
+      atualizarDotsPin();
+      document.getElementById('pin-mensagem-erro').textContent = '';
+      abrirModal('modal-pin-pais');
+      window.addEventListener('keydown', lidarTecladoFisicoPin);
+    }
+
+    function fecharModalPin() {
+      fecharModal('modal-pin-pais');
+      bufferPin = '';
+      window.removeEventListener('keydown', lidarTecladoFisicoPin);
+    }
+
+    function digitarPin(digito) {
+      if (bufferPin.length < 4) {
+        bufferPin += digito;
+        atualizarDotsPin();
+        if (bufferPin.length === 4) {
+          setTimeout(verificarPin, 150);
+        }
+      }
+    }
+
+    function apagarDigitoPin() {
+      if (bufferPin.length > 0) {
+        bufferPin = bufferPin.slice(0, -1);
+        atualizarDotsPin();
+      }
+    }
+
+    function limparPin() {
+      bufferPin = '';
+      atualizarDotsPin();
+    }
+
+    function atualizarDotsPin() {
+      const dots = document.querySelectorAll('#pin-dots .dot');
+      dots.forEach((dot, index) => {
+        dot.classList.toggle('ativo', index < bufferPin.length);
+      });
+    }
+
+    function verificarPin() {
+      const card = document.querySelector('.card-pin');
+      const erro = document.getElementById('pin-mensagem-erro');
+
+      if (bufferPin === estado.pinPais) {
+        fecharModalPin();
+        abrirPainelPais();
+      } else {
+        erro.textContent = 'PIN incorreto. Tente novamente.';
+        card.classList.add('animar-shake');
+        setTimeout(() => {
+          card.classList.remove('animar-shake');
+          limparPin();
+        }, 400);
+      }
+    }
+
+    function lidarTecladoFisicoPin(e) {
+      if (e.key >= '0' && e.key <= '9') digitarPin(e.key);
+      else if (e.key === 'Backspace') apagarDigitoPin();
+      else if (e.key === 'Escape') fecharModalPin();
+    }
+
+    // Painel dos Pais
+    function abrirPainelPais() {
+      renderizarTabelaCenariosPais();
+      abrirModal('modal-painel-pais');
+    }
+
+    function salvarPerfilCrianca(e) {
+      e.preventDefault();
+      const novoNome = document.getElementById('input-nome-crianca').value.trim();
+      if (novoNome) {
+        estado.nomeCrianca = novoNome;
+        salvarEstado();
+        atualizarTextosCrianca();
+        exibirToast('Nome atualizado com sucesso!');
+      }
+    }
+
+    function salvarNovoPin(e) {
+      e.preventDefault();
+      const input = document.getElementById('input-novo-pin');
+      if (/^\d{4}$/.test(input.value)) {
+        estado.pinPais = input.value;
+        salvarEstado();
+        input.value = '';
+        exibirToast('Novo PIN configurado!');
+      } else {
+        exibirToast('O PIN deve conter exatamente 4 números.');
+      }
+    }
+
+    function renderizarTabelaCenariosPais() {
+      const tbody = document.getElementById('tabela-cenarios-pais');
+      tbody.innerHTML = '';
+
+      estado.cenarios.forEach(c => {
+        const desbloqueado = estado.cenariosDesbloqueados.includes(c.id);
+        const tr = document.createElement('tr');
+        tr.innerHTML = `
+          <td><strong>${c.nome}</strong></td>
+          <td>
+            <input 
+              type="number" 
+              class="input-preco" 
+              value="${c.preco}" 
+              min="0"
+              ${c.padrao ? 'disabled' : ''} 
+              onchange="alterarPrecoCenario('${c.id}', this.value)" 
+            />
+          </td>
+          <td>
+            ${!c.padrao ? `
+              <button 
+                type="button" 
+                class="btn-acao" 
+                style="font-size: 0.75rem; padding: 4px 8px; background: ${desbloqueado ? '#94a3b8' : 'var(--primary)'};"
+                onclick="alternarDesbloqueioCenario('${c.id}')">
+                ${desbloqueado ? 'Revogar' : 'Liberar'}
+              </button>
+            ` : '<small style="color: var(--text-muted)">Padrão</small>'}
+          </td>
+        `;
+        tbody.appendChild(tr);
+      });
+    }
+
+    function alterarPrecoCenario(id, novoPreco) {
+      const item = estado.cenarios.find(c => c.id === id);
+      if (item) {
+        item.preco = Math.max(0, parseInt(novoPreco, 10) || 0);
+        salvarEstado();
+        exibirToast('Preço atualizado!');
+      }
+    }
+
+    function alternarDesbloqueioCenario(id) {
+      const idx = estado.cenariosDesbloqueados.indexOf(id);
+      if (idx > -1) {
+        if (estado.cenarioAtivo === id) aplicarCenario('cenario-ceu');
+        estado.cenariosDesbloqueados.splice(idx, 1);
+      } else {
+        estado.cenariosDesbloqueados.push(id);
+      }
+      salvarEstado();
+      renderizarTabelaCenariosPais();
+    }
+
+    function adicionarTarefaExemplo() {
+      const id = Date.now();
+      estado.tarefas.push({
+        id,
+        titulo: `Nova Tarefa #${estado.tarefas.length + 1}`,
+        recompensa: 3,
+        concluida: false
+      });
+      salvarEstado();
+      renderizarTarefas();
+      exibirToast('Tarefa adicionada!');
+    }
+
+    function limparTodasTarefas() {
+      estado.tarefas = [];
+      salvarEstado();
+      renderizarTarefas();
+      exibirToast('Todas as tarefas foram removidas.');
+    }
+
+    // Modais e Utilitários
+    function abrirModal(id) {
+      document.getElementById(id).classList.remove('modal-oculto');
+    }
+
+    function fecharModal(id) {
+      document.getElementById(id).classList.add('modal-oculto');
+    }
+
+    let toastTimer;
+    function exibirToast(msg) {
+      const t = document.getElementById('toast');
+      t.textContent = msg;
+      t.classList.remove('modal-oculto');
+      clearTimeout(toastTimer);
+      toastTimer = setTimeout(() => {
+        t.classList.add('modal-oculto');
+      }, 3000);
+    }
+  </script>
+</body>
+</html>
