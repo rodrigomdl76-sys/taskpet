@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Meu Gato - App</title>
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Nunito:wght@600;700;800&display=swap');
+        @import url('https://fonts.googleapis.com/css2?family=Nunito:wght@500;600;700;800&display=swap');
 
         * {
             margin: 0;
@@ -15,44 +15,51 @@
         }
 
         body {
-            background: linear-gradient(180deg, #64B5F6 0%, #B3E5FC 50%, #E1F5FE 100%);
+            background: linear-gradient(180deg, #60B4F8 0%, #90D0FB 100%);
             min-height: 100vh;
             position: relative;
             overflow-x: hidden;
             color: #333;
         }
 
-        /* Nuvens de fundo */
+        /* ===== NUVENS ===== */
         .cloud {
             position: absolute;
-            background: rgba(255,255,255,0.85);
+            background: rgba(255,255,255,0.9);
             border-radius: 50%;
             filter: blur(2px);
+            animation: cloudFloat 25s linear infinite;
         }
-        .cloud1 { width: 180px; height: 90px; top: 140px; left: -40px; }
-        .cloud2 { width: 220px; height: 110px; top: 180px; right: -50px; }
-        .cloud3 { width: 200px; height: 100px; bottom: 280px; right: 0; }
-        .cloud4 { width: 250px; height: 120px; bottom: 120px; left: -60px; }
+        .cloud1 { width: 200px; height: 100px; top: 280px; left: -50px; animation-delay: 0s; }
+        .cloud2 { width: 280px; height: 140px; top: 300px; right: -80px; animation-delay: -8s; }
+        .cloud3 { width: 320px; height: 160px; bottom: 200px; left: -100px; animation-delay: -15s; }
+        .cloud4 { width: 300px; height: 150px; bottom: 80px; right: -60px; animation-delay: -5s; }
 
-        /* Pontinhos brilhantes de fundo */
+        @keyframes cloudFloat {
+            0% { transform: translateX(0); }
+            50% { transform: translateX(30px); }
+            100% { transform: translateX(0); }
+        }
+
+        /* ===== PONTINHOS BRILHANTES ===== */
         .dot {
             position: absolute;
-            width: 6px;
-            height: 6px;
+            width: 5px;
+            height: 5px;
             background: white;
             border-radius: 50%;
-            opacity: 0.6;
+            opacity: 0.7;
             animation: twinkle 3s ease-in-out infinite;
         }
         @keyframes twinkle {
-            0%,100% { opacity: 0.3; }
-            50% { opacity: 0.8; }
+            0%,100% { opacity: 0.2; transform: scale(1); }
+            50% { opacity: 1; transform: scale(1.3); }
         }
 
         .container {
             max-width: 420px;
             margin: 0 auto;
-            padding: 16px 20px 30px;
+            padding: 16px 16px 30px;
             position: relative;
             z-index: 1;
             min-height: 100vh;
@@ -60,92 +67,103 @@
             flex-direction: column;
         }
 
-        /* ─── TOPO — Botões Moedas ─── */
+        /* ===== TOPO — BOTÕES MOEDAS (AJUSTADO PARA A REFERÊNCIA) ===== */
         .top-row {
             display: flex;
             justify-content: space-between;
             align-items: center;
             margin-bottom: 24px;
-            gap: 12px;
+            gap: 8px;
         }
 
         .top-btn {
             background: rgba(255,255,255,0.95);
             border-radius: 50px;
-            padding: 14px 24px;
+            padding: 10px 14px;
             display: flex;
             align-items: center;
-            gap: 10px;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+            gap: 8px;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.05);
             flex: 1;
+            min-width: 0; /* Impede que estoure o container flex */
         }
+        
         .coin-icon {
-            width: 20px;
-            height: 36px;
-            background: linear-gradient(180deg, #FFD700, #FFB800);
-            border-radius: 10px;
+            width: 14px;
+            height: 28px;
+            background: linear-gradient(180deg, #FFD300, #F9B800);
+            border-radius: 6px;
+            flex-shrink: 0;
+            animation: coinGlow 2s ease-in-out infinite;
         }
-        .top-btn-text {
-            font-size: 20px;
+        @keyframes coinGlow {
+            0%,100% { box-shadow: 0 0 4px rgba(255,211,0,0.4); }
+            50% { box-shadow: 0 0 12px rgba(255,211,0,0.7); }
+        }
+        
+        .top-btn-text-main {
+            font-size: 15px;
             font-weight: 700;
-            color: #222;
+            color: #111;
+            line-height: 1.1;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
         }
-        .top-btn-right {
-            flex: 1.3;
-        }
-        .top-btn-small {
-            font-size: 14px;
-            color: #777;
+        .top-btn-text-small {
+            font-size: 10px;
+            color: #888;
             font-weight: 600;
-            line-height: 1.4;
+            line-height: 1;
+            text-transform: lowercase;
+            white-space: nowrap;
         }
 
-        /* ─── Ícones Coração + Saúde + Barra Felicidade ─── */
+        /* ===== ÍCONES + BARRA FELICIDADE ===== */
         .icons-row {
             display: flex;
-            justify-content: space-between;
+            justify-content: flex-start;
             align-items: center;
-            margin-bottom: 40px;
-        }
-
-        .icon-group {
-            display: flex;
-            gap: 12px;
+            margin-bottom: 30px;
+            gap: 16px;
         }
 
         .icon-btn {
-            width: 90px;
-            height: 90px;
+            width: 80px;
+            height: 80px;
             border-radius: 20px;
             display: flex;
             align-items: center;
             justify-content: center;
             font-size: 36px;
             position: relative;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+            box-shadow: 0 4px 10px rgba(0,0,0,0.05);
+            flex-shrink: 0;
         }
         .heart {
-            background: linear-gradient(135deg, #FFE6EA, #FFCCD5);
-            animation: pulseHeart 1.5s ease-in-out infinite;
+            background: linear-gradient(135deg, #FFE6EA, #FFD6DD);
+            animation: heartBeat 1.2s ease-in-out infinite;
         }
-        @keyframes pulseHeart {
+        @keyframes heartBeat {
             0%,100% { transform: scale(1); }
-            50% { transform: scale(1.1); }
+            25% { transform: scale(1.08); }
+            50% { transform: scale(1); }
+            75% { transform: scale(1.05); }
         }
         .health {
             background: linear-gradient(135deg, #E8F5E9, #C8E6C9);
-            font-size: 32px;
+            font-size: 28px;
         }
         .badge {
             position: absolute;
-            top: -5px;
-            right: -5px;
+            top: -6px;
+            right: -6px;
             background: white;
             color: #FF3B30;
-            font-size: 15px;
+            font-size: 13px;
             font-weight: 800;
-            width: 28px;
-            height: 28px;
+            width: 24px;
+            height: 24px;
             border-radius: 50%;
             display: flex;
             align-items: center;
@@ -154,93 +172,95 @@
         }
 
         /* Barra de Felicidade */
-        .happiness-container {
+        .happiness-wrapper {
             flex: 1;
-            margin-left: 20px;
         }
         .bar-bg {
-            height: 14px;
-            background: rgba(255,255,255,0.5);
+            height: 12px;
+            background: rgba(255,255,255,0.35);
             border-radius: 10px;
             overflow: hidden;
         }
         .bar-fill {
             height: 100%;
             width: 75%;
-            background: linear-gradient(90deg, #4CAF50 0%, #FFC107 35%, #FF9800 60%, #9C27B0 85%);
+            background: linear-gradient(90deg, #42C95E 0%, #FFD000 35%, #FF9500 60%, #9C27B0 85%);
             border-radius: 10px;
-            animation: fillBar 2s ease-out forwards;
+            animation: barPulse 2.5s ease-in-out infinite;
         }
-        @keyframes fillBar {
-            0% { width: 0%; }
-            100% { width: 75%; }
+        @keyframes barPulse {
+            0%,100% { opacity: 0.9; }
+            50% { opacity: 1; }
         }
         .happiness-label {
-            text-align: center;
-            font-size: 18px;
-            font-weight: 600;
-            margin-top: 8px;
+            font-size: 16px;
+            font-weight: 700;
+            margin-top: 4px;
             color: #555;
         }
 
-        /* ─── GATO Central ─── */
+        /* ===== GATO CENTRAL ===== */
         .cat-section {
             flex: 1;
             display: flex;
             flex-direction: column;
             align-items: center;
             justify-content: center;
-            margin: 20px 0;
+            margin: 10px 0;
             position: relative;
         }
         .cat-wrapper {
-            width: 260px;
-            height: 260px;
+            width: 280px;
+            height: 280px;
             display: flex;
             align-items: center;
             justify-content: center;
-            animation: breathe 4s ease-in-out infinite, floatCat 6s ease-in-out infinite;
+            animation: catFloat 5s ease-in-out infinite;
         }
-        @keyframes breathe {
-            0%, 100% { transform: scale(1); }
-            50% { transform: scale(1.05); }
-        }
-        @keyframes floatCat {
-            0%, 100% { transform: translateY(0); }
-            50% { transform: translateY(-8px); }
+        @keyframes catFloat {
+            0%, 100% { transform: translateY(0) rotate(0deg); }
+            25% { transform: translateY(-6px) rotate(1deg); }
+            50% { transform: translateY(-3px) rotate(0deg); }
+            75% { transform: translateY(-8px) rotate(-1deg); }
         }
         .level-number {
-            font-size: 64px;
+            font-size: 72px;
             font-weight: 800;
             color: #9C27B0;
-            margin: 10px 0;
-            text-shadow: 0 0 15px rgba(156, 39, 176, 0.3);
+            margin: 0px 0 10px;
+            text-shadow: 0 0 20px rgba(156, 39, 176, 0.25);
+            animation: levelGlow 3s ease-in-out infinite;
+            line-height: 1;
+        }
+        @keyframes levelGlow {
+            0%,100% { text-shadow: 0 0 20px rgba(156, 39, 176, 0.25); }
+            50% { text-shadow: 0 0 30px rgba(156, 39, 176, 0.4), 0 0 40px rgba(156, 39, 176, 0.15); }
         }
 
         /* Barra de XP */
         .xp-bar-bg {
             width: 100%;
             height: 32px;
-            background: rgba(255,255,255,0.6);
+            background: rgba(255,255,255,0.35);
             border-radius: 16px;
             display: flex;
             align-items: center;
             justify-content: center;
-            margin-top: 10px;
+            margin-top: 5px;
         }
         .xp-text {
             font-weight: 700;
             font-size: 16px;
-            color: #888;
+            color: #666;
         }
 
-        /* ─── Botões Inferiores ─── */
+        /* ===== BOTÕES INFERIORES ===== */
         .bottom-buttons {
             display: grid;
             grid-template-columns: repeat(4, 1fr);
-            gap: 14px;
+            gap: 10px;
             margin-top: auto;
-            padding-bottom: 20px;
+            padding-bottom: 10px;
         }
         .bottom-btn {
             aspect-ratio: 1;
@@ -250,30 +270,23 @@
             flex-direction: column;
             align-items: center;
             justify-content: center;
-            gap: 6px;
-            font-size: 16px;
+            gap: 4px;
+            font-size: 13px;
             font-weight: 700;
             color: white;
             cursor: pointer;
             box-shadow: 0 4px 12px rgba(0,0,0,0.12);
-            transition: transform 0.2s, box-shadow 0.2s;
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
         }
-        .bottom-btn:hover {
-            transform: translateY(-3px);
-            box-shadow: 0 6px 16px rgba(0,0,0,0.15);
+        .bottom-btn:active {
+            transform: scale(0.92);
+            box-shadow: 0 2px 6px rgba(0,0,0,0.15);
         }
         .btn-lanche { background: linear-gradient(135deg, #FFC107, #FF9800); }
         .btn-voz { background: linear-gradient(135deg, #4CAF50, #00BFA5); }
         .btn-desafio { background: linear-gradient(135deg, #9C27B0, #7B1FA2); }
         .btn-premios { background: linear-gradient(135deg, #FF5252, #FF3D00); }
-        .btn-icon { font-size: 32px; }
-
-        /* Responsivo */
-        @media (max-width: 380px) {
-            .top-btn-text { font-size: 16px; }
-            .icon-btn { width: 75px; height: 75px; font-size: 28px; }
-            .bottom-btn { font-size: 13px; }
-        }
+        .btn-icon { font-size: 26px; line-height: 1; }
     </style>
 </head>
 <body>
@@ -285,39 +298,47 @@
     <div class="cloud cloud4"></div>
 
     <!-- Pontinhos brilhantes -->
-    <div class="dot" style="top: 300px; left: 30px;"></div>
-    <div class="dot" style="top: 350px; right: 40px; animation-delay: 1s;"></div>
-    <div class="dot" style="top: 420px; left: 60px; animation-delay: 2s;"></div>
+    <div class="dot" style="top: 220px; left: 25px;"></div>
+    <div class="dot" style="top: 340px; right: 30px; animation-delay: 1s;"></div>
+    <div class="dot" style="top: 480px; left: 40px; animation-delay: 2s;"></div>
+    <div class="dot" style="top: 560px; right: 50px; animation-delay: 0.5s;"></div>
 
     <div class="container">
 
-        <!-- ─── TOPO ─── -->
+        <!-- ===== TOPO (ALINHADO IGUAL À SUA REFERÊNCIA) ===== -->
         <div class="top-row">
+            <!-- Botão 1: Moedas -->
             <div class="top-btn">
                 <div class="coin-icon"></div>
-                <span class="top-btn-text">moedas</span>
+                <span class="top-btn-text-main">moedas</span>
             </div>
-            <div class="top-btn top-btn-right">
+            
+            <!-- Botão 2: Valor em dinheiro -->
+            <div class="top-btn">
+                <div class="coin-icon"></div>
+                <span class="top-btn-text-main">valor em dinheiro</span>
+            </div>
+
+            <!-- Botão 3: Contador de dias -->
+            <div class="top-btn">
                 <div class="coin-icon"></div>
                 <div>
-                    <div class="top-btn-small">valor em dinheiro</div>
-                    <div class="top-btn-text" style="font-size: 18px;">contador de dias</div>
+                    <div class="top-btn-text-small">contador de</div>
+                    <div class="top-btn-text-main" style="font-size: 13px;">dias</div>
                 </div>
             </div>
         </div>
 
-        <!-- ─── Ícones + Barra Felicidade ─── -->
+        <!-- ===== ÍCONES + BARRA FELICIDADE ===== -->
         <div class="icons-row">
-            <div class="icon-group">
-                <div class="icon-btn heart">
-                    ❤️
-                    <span class="badge">1</span>
-                </div>
-                <div class="icon-btn health">
-                    ⬇️
-                </div>
+            <div class="icon-btn heart">
+                ❤️
+                <span class="badge">1</span>
             </div>
-            <div class="happiness-container">
+            <div class="icon-btn health">
+                ⬇️
+            </div>
+            <div class="happiness-wrapper">
                 <div class="bar-bg">
                     <div class="bar-fill"></div>
                 </div>
@@ -325,72 +346,68 @@
             </div>
         </div>
 
-        <!-- ─── GATO SVG (não quebra nunca!) ─── -->
+        <!-- ===== GATO SVG ===== -->
         <div class="cat-section">
             <div class="cat-wrapper">
-                <svg width="240" height="240" viewBox="0 0 240 240" xmlns="http://www.w3.org/2000/svg">
-                    <!-- Sombra suave atrás -->
-                    <ellipse cx="120" cy="210" rx="80" ry="15" fill="rgba(0,0,0,0.08)"/>
-                    
-                    <!-- Corpo do gato -->
-                    <ellipse cx="120" cy="170" rx="55" ry="45" fill="#FF9F29"/>
-                    
-                    <!-- Cabeça -->
-                    <circle cx="120" cy="100" r="70" fill="#FF9F29"/>
-                    
-                    <!-- Orelha esquerda -->
-                    <path d="M60 50 L85 85 L50 80 Z" fill="#FF9F29" stroke="#E88A1C" stroke-width="2"/>
-                    <path d="M62 58 L80 82 L55 78 Z" fill="#FFC996"/>
-                    
-                    <!-- Orelha direita -->
-                    <path d="M180 50 L155 85 L190 80 Z" fill="#FF9F29" stroke="#E88A1C" stroke-width="2"/>
-                    <path d="M178 58 L160 82 L185 78 Z" fill="#FFC996"/>
-                    
-                    <!-- Rosto / Branco do rosto -->
-                    <ellipse cx="120" cy="115" rx="45" ry="40" fill="#FFE8D4"/>
-                    
-                    <!-- Olho esquerdo -->
-                    <ellipse cx="90" cy="90" rx="14" ry="16" fill="#2C1810"/>
-                    <ellipse cx="94" cy="86" rx="5" ry="7" fill="white" opacity="0.9"/>
-                    
-                    <!-- Olho direito -->
-                    <ellipse cx="150" cy="90" rx="14" ry="16" fill="#2C1810"/>
-                    <ellipse cx="154" cy="86" rx="5" ry="7" fill="white" opacity="0.9"/>
-                    
-                    <!-- Nariz -->
-                    <path d="M120 110 L112 120 L128 120 Z" fill="#FF9AAA"/>
-                    
-                    <!-- Boca -->
-                    <path d="M120 120 Q115 128 108 130" stroke="#2C1810" stroke-width="2" fill="none"/>
-                    <path d="M120 120 Q125 128 132 130" stroke="#2C1810" stroke-width="2" fill="none"/>
-                    
-                    <!-- Bigodes esquerdo -->
-                    <line x1="55" y1="105" x2="85" y2="110" stroke="#2C1810" stroke-width="1.5" opacity="0.6"/>
-                    <line x1="50" y1="115" x2="85" y2="118" stroke="#2C1810" stroke-width="1.5" opacity="0.6"/>
-                    <line x1="55" y1="125" x2="85" y2="125" stroke="#2C1810" stroke-width="1.5" opacity="0.6"/>
-                    
-                    <!-- Bigodes direito -->
-                    <line x1="185" y1="105" x2="155" y2="110" stroke="#2C1810" stroke-width="1.5" opacity="0.6"/>
-                    <line x1="190" y1="115" x2="155" y2="118" stroke="#2C1810" stroke-width="1.5" opacity="0.6"/>
-                    <line x1="185" y1="125" x2="155" y2="125" stroke="#2C1810" stroke-width="1.5" opacity="0.6"/>
-                    
-                    <!-- Listras na testa -->
-                    <path d="M120 45 L120 65" stroke="#E88A1C" stroke-width="5" stroke-linecap="round"/>
-                    <path d="M105 52 L100 70" stroke="#E88A1C" stroke-width="4" stroke-linecap="round"/>
-                    <path d="M135 52 L140 70" stroke="#E88A1C" stroke-width="4" stroke-linecap="round"/>
-                    
-                    <!-- Patinha da frente -->
-                    <ellipse cx="90" cy="200" rx="18" ry="12" fill="#FFE8D4"/>
-                    <ellipse cx="150" cy="200" rx="18" ry="12" fill="#FFE8D4"/>
+                <svg width="260" height="260" viewBox="0 0 260 260" xmlns="http://www.w3.org/2000/svg">
+                    <!-- Sombra -->
+                    <ellipse cx="130" cy="235" rx="75" ry="12" fill="rgba(0,0,0,0.06)"/>
                     
                     <!-- Rabo -->
-                    <path d="M170 180 Q220 140 210 100" stroke="#FF9F29" stroke-width="25" stroke-linecap="round" fill="none"/>
-                    <path d="M170 180 Q220 140 210 100" stroke="#FFC996" stroke-width="10" stroke-linecap="round" fill="none" opacity="0.5"/>
+                    <path d="M195 180 Q240 140 225 95" stroke="#FF9F29" stroke-width="28" stroke-linecap="round" fill="none"/>
+                    <path d="M195 180 Q240 140 225 95" stroke="#FFB84D" stroke-width="12" stroke-linecap="round" fill="none" opacity="0.6"/>
                     
-                    <!-- Brilhos -->
-                    <circle cx="70" cy="60" r="3" fill="white" opacity="0.8"/>
-                    <circle cx="175" cy="65" r="2" fill="white" opacity="0.6"/>
-                    <circle cx="120" cy="35" r="4" fill="white" opacity="0.5"/>
+                    <!-- Corpo -->
+                    <ellipse cx="130" cy="190" rx="65" ry="55" fill="#FF9F29"/>
+                    
+                    <!-- Patinhas -->
+                    <ellipse cx="95" cy="230" rx="18" ry="15" fill="#FFE8CC"/>
+                    <ellipse cx="165" cy="230" rx="18" ry="15" fill="#FFE8CC"/>
+                    
+                    <!-- Cabeça -->
+                    <circle cx="130" cy="110" r="75" fill="#FF9F29"/>
+                    
+                    <!-- Orelha esquerda -->
+                    <path d="M55 45 L85 85 L50 80 Z" fill="#FF9F29"/>
+                    <path d="M60 52 L80 82 L55 78 Z" fill="#FFB84D"/>
+                    <circle cx="70" cy="55" r="6" fill="#FFE8CC" opacity="0.8"/>
+                    
+                    <!-- Orelha direita -->
+                    <path d="M205 45 L175 85 L210 80 Z" fill="#FF9F29"/>
+                    <path d="M200 52 L180 82 L205 78 Z" fill="#FFB84D"/>
+                    <circle cx="190" cy="55" r="6" fill="#FFE8CC" opacity="0.8"/>
+                    
+                    <!-- Listras testa -->
+                    <rect x="115" y="45" width="10" height="25" rx="4" fill="#E88A1C"/>
+                    <rect x="95" y="55" width="8" height="20" rx="4" fill="#E88A1C" transform="rotate(-12 95 55)"/>
+                    <rect x="137" y="55" width="8" height="20" rx="4" fill="#E88A1C" transform="rotate(12 137 55)"/>
+                    <circle cx="130" cy="40" r="7" fill="#FFE8CC" opacity="0.7"/>
+                    
+                    <!-- Rosto branco -->
+                    <ellipse cx="130" cy="125" rx="48" ry="45" fill="#FFE8CC"/>
+                    
+                    <!-- Olhos grandes -->
+                    <ellipse cx="95" cy="100" rx="18" ry="22" fill="#2D1B10"/>
+                    <ellipse cx="165" cy="100" rx="18" ry="22" fill="#2D1B10"/>
+                    <ellipse cx="100" cy="92" rx="7" ry="9" fill="white"/>
+                    <ellipse cx="170" cy="92" rx="7" ry="9" fill="white"/>
+                    
+                    <!-- Nariz -->
+                    <path d="M130 125 L122 138 L138 138 Z" fill="#FF9AAA"/>
+                    
+                    <!-- Boca -->
+                    <path d="M130 138 Q124 145 115 143" stroke="#2D1B10" stroke-width="2.5" fill="none" stroke-linecap="round"/>
+                    <path d="M130 138 Q136 145 145 143" stroke="#2D1B10" stroke-width="2.5" fill="none" stroke-linecap="round"/>
+                    
+                    <!-- Bigodes esquerdo -->
+                    <line x1="55" y1="110" x2="85" y2="115" stroke="#2D1B10" stroke-width="2" opacity="0.7"/>
+                    <line x1="50" y1="125" x2="85" y2="125" stroke="#2D1B10" stroke-width="2" opacity="0.7"/>
+                    <line x1="55" y1="140" x2="85" y2="135" stroke="#2D1B10" stroke-width="2" opacity="0.7"/>
+                    
+                    <!-- Bigodes direito -->
+                    <line x1="205" y1="110" x2="175" y2="115" stroke="#2D1B10" stroke-width="2" opacity="0.7"/>
+                    <line x1="210" y1="125" x2="175" y2="125" stroke="#2D1B10" stroke-width="2" opacity="0.7"/>
+                    <line x1="205" y1="140" x2="175" y2="135" stroke="#2D1B10" stroke-width="2" opacity="0.7"/>
                 </svg>
             </div>
             
@@ -400,7 +417,7 @@
             </div>
         </div>
 
-        <!-- ─── Botões Inferiores ─── -->
+        <!-- ===== BOTÕES INFERIORES ===== -->
         <div class="bottom-buttons">
             <button class="bottom-btn btn-lanche">
                 <span class="btn-icon">🍎</span>
