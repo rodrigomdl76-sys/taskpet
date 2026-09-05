@@ -4,9 +4,9 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 <title>RotinaPet — Seu Pet Virtual</title>
-<script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.9.3/dist/confetti.browser.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.9.3/dist/confetti.browser.min.js" defer></script>
 <style>
-@import url('https://fonts.googleapis.com/css2?family=Nunito:wght@500;600;700;800;900&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Nunito:wght@600;700;800;900&display=swap');
 *{margin:0;padding:0;box-sizing:border-box;font-family:'Nunito',sans-serif;-webkit-tap-highlight-color:transparent;}
 html,body{width:100%;height:100%;overflow:hidden;}
 
@@ -131,7 +131,7 @@ body.cenario-festa{background:linear-gradient(180deg,#f472b6 0%,#a78bfa 50%,#60a
 .toast.mostrar{opacity:1;transform:translateX(-50%) translateY(0);}
 </style>
 </head>
-<body class="cenario-ceu">
+<body>
 
 <input type="file" id="camera-input" accept="image/*" capture="environment" class="hidden" onchange="processarFotoCapturada(event)">
 
@@ -140,7 +140,7 @@ body.cenario-festa{background:linear-gradient(180deg,#f472b6 0%,#a78bfa 50%,#60a
     <div class="top-row">
         <div class="top-pill" onclick="alternarModoPais()">
             <div style="width: 10px; height: 16px; background: linear-gradient(180deg, #FFD300, #F9B800); border-radius: 3px; flex-shrink: 0;"></div>
-            <div><div class="top-pill-text"><span id="txt-moedas">15</span> moedas</div></div>
+            <div><div class="top-pill-text"><span id="txt-moedas">0</span> moedas</div></div>
         </div>
         <div class="top-pill" onclick="alternarModoPais()">
             <div style="width: 8px; height: 8px; background: #10B981; border-radius: 50%; flex-shrink: 0;"></div>
@@ -229,7 +229,7 @@ body.cenario-festa{background:linear-gradient(180deg,#f472b6 0%,#a78bfa 50%,#60a
             <h3 style="font-size:16px; font-weight:900; color:#0284c7;">🖼️ Loja de Fundos</h3>
             <button onclick="fecharModal('modal-fundos')" style="background:#e2e8f0; border:none; padding:4px 8px; border-radius:6px; font-weight:bold; cursor:pointer;">X</button>
         </div>
-        <p style="font-size:10px; color:#64748b; margin-bottom:10px;">Compre novos papéis de parede com suas moedas!</p>
+        <p style="font-size:10px; color:#64748b; margin-bottom:10px;">Toque para aplicar ou comprar fundos com suas moedas:</p>
         <div class="grid-fundos" id="grid-fundos"></div>
     </div>
 </div>
@@ -238,8 +238,8 @@ body.cenario-festa{background:linear-gradient(180deg,#f472b6 0%,#a78bfa 50%,#60a
 <div id="modal-timer" class="modal-overlay">
     <div class="modal" style="text-align:center;">
         <h3 style="font-size:16px; font-weight:900; color:#0284c7; margin-bottom:8px;">⏳ Tempo de Tela Ativo!</h3>
-        <div id="relogio-timer" style="font-size:38px; font-weight:900; color:#1e293b; background:#f1f5f9; border-radius:14px; padding:12px; margin-bottom:12px;">15:00</div>
-        <button onclick="pausarFecharTimer()" style="background:#ef4444; color:white; border:none; padding:8px 16px; border-radius:10px; font-weight:bold; cursor:pointer;">Fechar Alarme</button>
+        <div id="relogio-timer" style="font-size:38px; font-weight:900; color:#1e293b; background:#f1f5f9; border-radius:14px; padding:12px; margin-bottom:12px;">00:00</div>
+        <button onclick="pausarFecharTimer()" style="background:#ef4444; color:white; border:none; padding:8px 16px; border-radius:10px; font-weight:bold; cursor:pointer;">Encerrar Tempo</button>
     </div>
 </div>
 
@@ -450,10 +450,12 @@ const BANCO_FUNDOS = [
 ];
 
 let estado = {
-  petAtual: 'gato', moedas: 15, dinheiroAcumulado: 0.15, taxaCambio: 0.01, pinPais: '1234',
+  petAtual: 'gato', moedas: 15, taxaCambio: 0.01, pinPais: '1234',
+  dinheiroAcumulado: 0.15,
   idadeCrianca: 7, fundoAtual: 'ceu', fundosComprados: ['ceu'],
-  nivel: 1, xp: 40, xpMax: 100, felicidade: 100, saude: 100,
+  nivel: 1, xp: 0, xpMax: 100, felicidade: 100, saude: 100,
   metaMoedas: 50, totalSacado: 0, ultimoDiaAcesso: new Date().toISOString().slice(0,10),
+  timerFim: null,
   tarefas: [
     {id: 1, texto: 'Escovar os dentes', recompensa: 5, xp: 20, status: 'pendente', foto: null},
     {id: 2, texto: 'Arrumar a cama', recompensa: 5, xp: 20, status: 'pendente', foto: null}
@@ -466,12 +468,15 @@ let estado = {
 
 const salvo = localStorage.getItem('ROTINAPET_SAVE_FINAL');
 if (salvo) {
-  estado = JSON.parse(salvo);
-  if (typeof estado.dinheiroAcumulado !== 'number') {
-    estado.dinheiroAcumulado = (estado.moedas || 0) * (estado.taxaCambio || 0.01);
-  }
-  if (!Array.isArray(estado.fundosComprados)) estado.fundosComprados = ['ceu'];
-  if (!estado.fundoAtual) estado.fundoAtual = 'ceu';
+  try {
+    const dadosCarregados = JSON.parse(salvo);
+    estado = {...estado, ...dadosCarregados};
+    if (typeof estado.dinheiroAcumulado !== 'number') {
+      estado.dinheiroAcumulado = (estado.moedas || 0) * (estado.taxaCambio || 0.01);
+    }
+    if (!Array.isArray(estado.fundosComprados)) estado.fundosComprados = ['ceu'];
+    if (!estado.fundoAtual) estado.fundoAtual = 'ceu';
+  } catch(e) {}
 }
 
 const hoje = new Date().toISOString().slice(0,10);
@@ -483,14 +488,14 @@ if (estado.ultimoDiaAcesso !== hoje) {
 function salvar() { localStorage.setItem('ROTINAPET_SAVE_FINAL', JSON.stringify(estado)); }
 
 function aplicarFundoTela(id) {
-  document.body.className = `cenario-${id}`;
+  document.body.className = `cenario-${id || 'ceu'}`;
 }
 
 function atualizarTela() {
     document.getElementById('txt-moedas').innerText = estado.moedas;
-    const valorReais = (estado.dinheiroAcumulado || 0).toFixed(2).replace('.', ',');
-    document.getElementById('txt-dinheiro').innerText = valorReais;
-    document.getElementById('txt-painel-disponivel').innerText = valorReais;
+    const valorDisponivel = (estado.dinheiroAcumulado || 0).toFixed(2).replace('.', ',');
+    document.getElementById('txt-dinheiro').innerText = valorDisponivel;
+    document.getElementById('txt-painel-disponivel').innerText = valorDisponivel;
     document.getElementById('txt-total-pago').innerText = (estado.totalSacado || 0).toFixed(2).replace('.', ',');
     document.getElementById('val-felicidade').innerText = estado.felicidade;
     document.getElementById('barra-felicidade').style.width = estado.felicidade + '%';
@@ -509,6 +514,8 @@ function atualizarTela() {
 
     const inputIdade = document.getElementById('input-idade-crianca');
     if (inputIdade) inputIdade.value = estado.idadeCrianca || 7;
+    const inputTaxa = document.getElementById('input-taxa-cambio');
+    if (inputTaxa) inputTaxa.value = estado.taxaCambio;
 
     aplicarFundoTela(estado.fundoAtual || 'ceu');
     renderizarTarefas();
@@ -516,40 +523,83 @@ function atualizarTela() {
 }
 
 let ctxAudio = null;
-function somDoPet(event) {
-    if (!ctxAudio) ctxAudio = new (window.AudioContext || window.webkitAudioContext)();
-    const pet = BANCO_PETS[estado.petAtual];
-    const osc = ctxAudio.createOscillator();
-    const gain = ctxAudio.createGain();
-    osc.connect(gain); gain.connect(ctxAudio.destination);
-    
-    osc.frequency.value = pet.freq;
-    osc.type = estado.petAtual === 'frango' ? 'triangle' : 'sine';
-    
-    gain.gain.setValueAtTime(0.2, ctxAudio.currentTime);
-    gain.gain.exponentialRampToValueAtTime(0.001, ctxAudio.currentTime + 0.25);
-    osc.start(ctxAudio.currentTime); osc.stop(ctxAudio.currentTime + 0.25);
+let debounceAcao = false;
 
-    if (navigator.vibrate) navigator.vibrate(30);
+function obterContextoAudio() {
+  try {
+    const AudioContext = window.AudioContext || window.webkitAudioContext;
+    if (!AudioContext) return null;
+    if (!ctxAudio) ctxAudio = new AudioContext();
+    if (ctxAudio.state === 'suspended') ctxAudio.resume();
+    return ctxAudio;
+  } catch(e) {
+    return null;
+  }
+}
+
+function somDoPet(event) {
+    if (debounceAcao) return;
+    debounceAcao = true;
+    setTimeout(() => { debounceAcao = false; }, 250);
+
+    const ctx = obterContextoAudio();
+    const pet = BANCO_PETS[estado.petAtual];
+
+    if (ctx) {
+      try {
+        const osc = ctx.createOscillator();
+        const gain = ctx.createGain();
+        osc.connect(gain);
+        gain.connect(ctx.destination);
+        
+        osc.frequency.value = pet.freq;
+        osc.type = estado.petAtual === 'frango' ? 'triangle' : 'sine';
+        
+        const tempo = ctx.currentTime;
+        gain.gain.setValueAtTime(0.2, tempo);
+        gain.gain.exponentialRampToValueAtTime(0.001, tempo + 0.25);
+        osc.start(tempo);
+        osc.stop(tempo + 0.25);
+      } catch(e) {}
+    }
+
+    try {
+      if (navigator.vibrate) navigator.vibrate(30);
+    } catch(e) {}
+
     estado.felicidade = Math.min(100, estado.felicidade + 5);
     mostrarToast(`🔊 ${pet.som} ❤️`);
     ganharXP(5, event);
-    salvar(); atualizarTela();
+    salvar();
+    atualizarTela();
 }
 
 function darLanche(event) {
-    if (estado.moedas < 5) return alert('🪙 Moedas insuficientes para lanche!');
-    estado.moedas -= 5;
-    estado.felicidade = Math.min(100, estado.felicidade + 20);
-    ganharXP(5, event);
-    salvar(); atualizarTela();
-    mostrarToast('🍎 Pet alimentado! +5 XP');
+    if (debounceAcao) return;
+    debounceAcao = true;
+    setTimeout(() => { debounceAcao = false; }, 250);
+
+    if (estado.moedas >= 5) {
+      estado.moedas -= 5;
+      estado.felicidade = Math.min(100, estado.felicidade + 20);
+      ganharXP(5, event);
+      salvar();
+      atualizarTela();
+      mostrarToast('🍎 Lanche delicioso! +5 XP');
+    } else {
+      estado.felicidade = Math.min(100, estado.felicidade + 5);
+      ganharXP(1, event);
+      salvar();
+      atualizarTela();
+      mostrarToast('🍎 Petisco simples! (Junte 5 moedas para o lanche completo)');
+    }
 }
 
 function darRemedio() {
     estado.saude = 100;
-    salvar(); atualizarTela();
-    alert('💚 Pet com saúde 100%!');
+    salvar();
+    atualizarTela();
+    mostrarToast('💚 Pet com saúde 100%!');
 }
 
 function criarTextoFlutuante(texto, evento) {
@@ -577,7 +627,9 @@ function ganharXP(qtd, evento) {
         estado.xp -= 100;
         estado.nivel++;
         dispararConfetes();
-        if (navigator.vibrate) navigator.vibrate([100, 50, 100]);
+        try {
+          if (navigator.vibrate) navigator.vibrate([100, 50, 100]);
+        } catch(e) {}
         mostrarToast(`🎉 Subiu para o Nível ${estado.nivel}!`);
     }
     atualizarTela();
@@ -585,9 +637,11 @@ function ganharXP(qtd, evento) {
 }
 
 function dispararConfetes() {
-  if (window.confetti) {
-    window.confetti({ particleCount: 70, spread: 60, origin: { y: 0.6 } });
-  }
+  try {
+    if (typeof window.confetti === 'function') {
+      window.confetti({ particleCount: 70, spread: 60, origin: { y: 0.6 } });
+    }
+  } catch(e) {}
 }
 
 let tarefaIdFoto = null;
@@ -661,7 +715,10 @@ function aprovarTarefaPais(id) {
     estado.dinheiroAcumulado = (estado.dinheiroAcumulado || 0) + (t.recompensa * (estado.taxaCambio || 0.01));
     ganharXP(t.xp);
     dispararConfetes();
-    salvar(); renderizarPainelPais(); atualizarTela(); alert('🎉 Tarefa Aprovada com Sucesso!');
+    salvar();
+    renderizarPainelPais();
+    atualizarTela();
+    alert('🎉 Tarefa Aprovada com Sucesso!');
 }
 
 function sacarDinheiro() {
@@ -670,7 +727,9 @@ function sacarDinheiro() {
   if (confirm(`Confirmar o pagamento de R$ ${valor.toFixed(2).replace('.', ',')} ao Bernardo?`)) {
     estado.totalSacado = (estado.totalSacado || 0) + valor;
     estado.dinheiroAcumulado = 0;
-    salvar(); renderizarPainelPais(); atualizarTela();
+    salvar();
+    renderizarPainelPais();
+    atualizarTela();
     alert('💸 Saque registrado com sucesso!');
   }
 }
@@ -682,15 +741,33 @@ function adicionarTarefa() {
     const id = estado.tarefas.length > 0 ? Math.max(...estado.tarefas.map(t => t.id)) + 1 : 1;
     estado.tarefas.push({id, texto: txt, recompensa: moedas, xp: 20, status: 'pendente', foto: null});
     document.getElementById('nova-tarefa-texto').value = '';
-    salvar(); renderizarPainelPais(); renderizarTarefas();
+    salvar();
+    renderizarPainelPais();
+    renderizarTarefas();
 }
 
-function removerTarefa(id) { estado.tarefas = estado.tarefas.filter(t => t.id !== id); salvar(); renderizarPainelPais(); renderizarTarefas(); }
+function removerTarefa(id) {
+  estado.tarefas = estado.tarefas.filter(t => t.id !== id);
+  salvar();
+  renderizarPainelPais();
+  renderizarTarefas();
+}
+
 function salvarNovoPin() {
     const p = document.getElementById('novo-pin-pais').value;
-    if(p.length === 4) { estado.pinPais = p; salvar(); alert('🔑 PIN alterado!'); } else alert('Precisa de 4 dígitos.');
+    if(p.length === 4) {
+      estado.pinPais = p;
+      salvar();
+      alert('🔑 PIN alterado!');
+    } else alert('Precisa de 4 dígitos.');
 }
-function atualizarTaxaCambio(v) { estado.taxaCambio = parseFloat(v) || 0.01; salvar(); atualizarTela(); }
+
+function atualizarTaxaCambio(v) {
+  estado.taxaCambio = parseFloat(v) || 0.01;
+  salvar();
+  atualizarTela();
+}
+
 function atualizarIdadeCrianca(v) {
     estado.idadeCrianca = Math.max(3, Math.min(15, parseInt(v) || 7));
     salvar();
@@ -699,7 +776,9 @@ function atualizarIdadeCrianca(v) {
 
 function alternarListaPets(e) { if(e) e.stopPropagation(); document.getElementById('lista-pets').classList.toggle('abrir'); }
 function escolherPet(tipo) {
-    estado.petAtual = tipo; salvar(); atualizarTela();
+    estado.petAtual = tipo;
+    salvar();
+    atualizarTela();
     document.getElementById('lista-pets').classList.remove('abrir');
 }
 document.addEventListener('click', (e) => {
@@ -753,20 +832,29 @@ function abrirDesafioMatematica() {
         }
     } else {
         const tipo = Math.random();
-        if (tipo < 0.5) {
+        if (tipo < 0.35) {
             a = Math.floor(Math.random() * 9) + 2;
             b = Math.floor(Math.random() * 9) + 2;
             op = '×';
             contaCorreta = a * b;
-        } else {
+        } else if (tipo < 0.7) {
             b = Math.floor(Math.random() * 7) + 2;
             contaCorreta = Math.floor(Math.random() * 8) + 2;
             a = b * contaCorreta;
             op = '÷';
+        } else {
+            b = Math.floor(Math.random() * 5) + 2;
+            const quociente = Math.floor(Math.random() * 5) + 1;
+            const resto = Math.floor(Math.random() * (b - 1)) + 1;
+            a = (b * quociente) + resto;
+            op = 'divisão: resto de';
+            contaCorreta = resto;
         }
     }
 
-    document.getElementById('conta-math').innerText = `${a} ${op} ${b} = ?`;
+    const textoConta = op.includes('resto') ? `${op} ${a} ÷ ${b} = ?` : `${a} ${op} ${b} = ?`;
+    document.getElementById('conta-math').innerText = textoConta;
+
     const opcoes = [contaCorreta];
     while (opcoes.length < 4) {
         const delta = (Math.floor(Math.random() * 5) + 1) * (Math.random() > 0.5 ? 1 : -1);
@@ -783,6 +871,10 @@ function abrirDesafioMatematica() {
 }
 
 function testarMath(op) {
+    if (debounceAcao) return;
+    debounceAcao = true;
+    setTimeout(() => { debounceAcao = false; }, 250);
+
     if(op === contaCorreta) {
       estado.moedas += 1;
       estado.dinheiroAcumulado = (estado.dinheiroAcumulado || 0) + (1 * (estado.taxaCambio || 0.01));
@@ -792,7 +884,9 @@ function testarMath(op) {
       fecharModal('modal-matematica');
       salvar();
       atualizarTela();
-    } else alert('❌ Tente de novo!');
+    } else {
+      alert('❌ Tente de novo!');
+    }
 }
 
 function abrirLojaFundos() {
@@ -825,42 +919,77 @@ function selecionarOuComprarFundo(f) {
     abrirLojaFundos();
     mostrarToast(`🎨 Fundo "${f.nome}" aplicado!`);
   } else if (estado.moedas >= f.preco) {
-    estado.moedas -= f.preco;
-    estado.fundosComprados.push(f.id);
-    estado.fundoAtual = f.id;
-    aplicarFundoTela(f.id);
-    dispararConfetes();
-    salvar();
-    atualizarTela();
-    abrirLojaFundos();
-    alert(`🎉 Você desbloqueou o fundo "${f.nome}"!`);
+    if (confirm(`Comprar o fundo "${f.nome}" por ${f.preco} moedas?`)) {
+      estado.moedas -= f.preco;
+      estado.fundosComprados.push(f.id);
+      estado.fundoAtual = f.id;
+      aplicarFundoTela(f.id);
+      dispararConfetes();
+      salvar();
+      atualizarTela();
+      abrirLojaFundos();
+      alert(`🎉 Você desbloqueou o fundo "${f.nome}"!`);
+    }
   } else {
     alert(`🪙 Moedas insuficientes! Você precisa de ${f.preco} moedas.`);
   }
 }
 
 let intervaloTimer = null;
+
 function iniciarTimerTela(minutos) {
   fecharModal('modal-recompensas');
   abrirModal('modal-timer');
-  let tempoSegundos = minutos * 60;
+  const agora = Date.now();
+  estado.timerFim = agora + (minutos * 60 * 1000);
+  salvar();
+  executarTickTimer();
+}
+
+function executarTickTimer() {
   clearInterval(intervaloTimer);
   const relogio = document.getElementById('relogio-timer');
-  
-  intervaloTimer = setInterval(() => {
-    tempoSegundos--;
-    const m = Math.floor(tempoSegundos / 60);
-    const s = tempoSegundos % 60;
-    relogio.innerText = `${m.toString().padStart(2,'0')}:${s.toString().padStart(2,'0')}`;
-    if (tempoSegundos <= 0) {
+
+  const atualizarContador = () => {
+    if (!estado.timerFim) {
       clearInterval(intervaloTimer);
-      alert('🔔 O TEMPO DE TELA ACABOU! Mostre aos seus pais.');
+      return;
     }
-  }, 1000);
+    const restanteMs = estado.timerFim - Date.now();
+    if (restanteMs <= 0) {
+      clearInterval(intervaloTimer);
+      estado.timerFim = null;
+      salvar();
+      relogio.innerText = "00:00";
+      alert('🔔 O TEMPO DE TELA ACABOU! Mostre aos seus pais.');
+      return;
+    }
+    const totalSegundos = Math.floor(restanteMs / 1000);
+    const m = Math.floor(totalSegundos / 60);
+    const s = totalSegundos % 60;
+    relogio.innerText = `${m.toString().padStart(2,'0')}:${s.toString().padStart(2,'0')}`;
+  };
+
+  atualizarContador();
+  intervaloTimer = setInterval(atualizarContador, 1000);
+}
+
+function recuperarTimerAtivo() {
+  if (estado.timerFim) {
+    if (Date.now() >= estado.timerFim) {
+      estado.timerFim = null;
+      salvar();
+    } else {
+      abrirModal('modal-timer');
+      executarTickTimer();
+    }
+  }
 }
 
 function pausarFecharTimer() {
   clearInterval(intervaloTimer);
+  estado.timerFim = null;
+  salvar();
   fecharModal('modal-timer');
 }
 
@@ -881,14 +1010,17 @@ function comprarPremio(id) {
     const r = estado.recompensas.find(x => x.id === id);
     if (!r) return;
     if(estado.moedas < r.custo) return alert('🪙 Moedas insuficientes!');
-    estado.moedas -= r.custo;
-    salvar();
-    atualizarTela();
-    if (r.tipo === 'timer') {
-      iniciarTimerTela(r.minutos);
-    } else {
-      fecharModal('modal-recompensas');
-      alert('🎉 Resgatado com sucesso!');
+    
+    if (confirm(`Deseja resgatar "${r.texto}" por ${r.custo} moedas?`)) {
+      estado.moedas -= r.custo;
+      salvar();
+      atualizarTela();
+      if (r.tipo === 'timer') {
+        iniciarTimerTela(r.minutos);
+      } else {
+        fecharModal('modal-recompensas');
+        alert('🎉 Resgatado com sucesso!');
+      }
     }
 }
 
@@ -925,6 +1057,7 @@ function mostrarToast(texto) {
 }
 
 atualizarTela();
+recuperarTimerAtivo();
 </script>
 </body>
 </html>
