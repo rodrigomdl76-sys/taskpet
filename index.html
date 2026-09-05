@@ -5,6 +5,10 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 <title>RotinaPet — Seu Pet Virtual</title>
 <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.9.3/dist/confetti.browser.min.js" defer></script>
+<!-- Firebase App e Realtime Database Compat -->
+<script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-database-compat.js"></script>
+
 <style>
 @import url('https://fonts.googleapis.com/css2?family=Nunito:wght@600;700;800;900&display=swap');
 *{margin:0;padding:0;box-sizing:border-box;font-family:'Nunito',sans-serif;-webkit-tap-highlight-color:transparent;}
@@ -146,7 +150,7 @@ body.cenario-festa{background:linear-gradient(180deg,#f472b6 0%,#a78bfa 50%,#60a
             <div style="width: 8px; height: 8px; background: #10B981; border-radius: 50%; flex-shrink: 0;"></div>
             <div>
                 <div class="top-pill-text">R$ <span id="txt-dinheiro">0,00</span></div>
-                <div class="top-pill-sub">🔒 pais</div>
+                <div class="top-pill-sub"><span id="txt-status-nuvem">🔒 pais</span></div>
             </div>
         </div>
         <div class="top-pill" onclick="abrirModal('modal-evolucoes')">
@@ -449,6 +453,31 @@ const BANCO_FUNDOS = [
   {id:'festa',nome:'Balada Neon',emoji:'🎉',preco:35,bg:'linear-gradient(180deg,#f472b6,#a78bfa 50%,#60a5fa)'}
 ];
 
+// CONFIGURAÇÃO DO FIREBASE (Substitua pelos dados do seu Console Firebase se desejar nuvem ativa)
+const firebaseConfig = {
+  apiKey: "SUA_API_KEY",
+  authDomain: "SEU_PROJETO.firebaseapp.com",
+  databaseURL: "https://SEU_PROJETO-default-rtdb.firebaseio.com",
+  projectId: "SEU_PROJETO",
+  storageBucket: "SEU_PROJETO.appspot.com",
+  messagingSenderId: "SENDER_ID",
+  appId: "APP_ID"
+};
+
+let dbFirebase = null;
+let sincronizacaoNuvemAtiva = false;
+let ignorarProximoSyncNuvem = false;
+
+try {
+  if (firebaseConfig.apiKey !== "SUA_API_KEY" && window.firebase) {
+    firebase.initializeApp(firebaseConfig);
+    dbFirebase = firebase.database();
+    sincronizacaoNuvemAtiva = true;
+  }
+} catch(e) {
+  console.warn("Firebase não inicializado, usando modo offline (localStorage).");
+}
+
 let estado = {
   petAtual: 'gato', moedas: 15, taxaCambio: 0.01, pinPais: '1234',
   dinheiroAcumulado: 0.15,
@@ -485,7 +514,33 @@ if (estado.ultimoDiaAcesso !== hoje) {
   estado.ultimoDiaAcesso = hoje;
 }
 
-function salvar() { localStorage.setItem('ROTINAPET_SAVE_FINAL', JSON.stringify(estado)); }
+function salvar() {
+  localStorage.setItem('ROTINAPET_SAVE_FINAL', JSON.stringify(estado));
+  if (sincronizacaoNuvemAtiva && dbFirebase) {
+    ignorarProximoSyncNuvem = true;
+    dbFirebase.ref('rotinapet/estado').set(estado).catch(() => {});
+  }
+}
+
+function iniciarSincronizacaoNuvem() {
+  if (!sincronizacaoNuvemAtiva || !dbFirebase) return;
+  const statusNuvem = document.getElementById('txt-status-nuvem');
+  if (statusNuvem) statusNuvem.innerText = '☁️ nuvem';
+
+  dbFirebase.ref('rotinapet/estado').on('value', snapshot => {
+    if (ignorarProximoSyncNuvem) {
+      ignorarProximoSyncNuvem = false;
+      return;
+    }
+    const dadosNuvem = snapshot.val();
+    if (dadosNuvem && typeof dadosNuvem === 'object') {
+      estado = {...estado, ...dadosNuvem};
+      localStorage.setItem('ROTINAPET_SAVE_FINAL', JSON.stringify(estado));
+      atualizarTela();
+      mostrarToast('☁️ Dados sincronizados da nuvem!');
+    }
+  });
+}
 
 function aplicarFundoTela(id) {
   document.body.className = `cenario-${id || 'ceu'}`;
@@ -1058,6 +1113,7 @@ function mostrarToast(texto) {
 
 atualizarTela();
 recuperarTimerAtivo();
+iniciarSincronizacaoNuvem();
 </script>
 </body>
 </html>
