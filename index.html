@@ -203,6 +203,14 @@ button{touch-action:manipulation}
   <div class="section-card"><label class="field-label">👶 Idade da criança</label><input class="field" id="input-idade-crianca" type="number" min="3" max="15" onchange="atualizarIdadeCrianca(this.value)"></div>
   <div class="section-card"><label class="field-label">💵 Valor por moeda (R$)</label><input class="field" id="input-taxa-cambio" type="number" min="0" step="0.01" onchange="atualizarTaxaCambio(this.value)"></div>
   <div class="section-card"><label class="field-label">🔑 Alterar PIN</label><div style="display:flex;gap:5px"><input class="field" id="novo-pin-pais" inputmode="numeric" maxlength="4" placeholder="4 dígitos"><button class="primary-btn" onclick="salvarNovoPin()">Salvar</button></div></div>
+  <div class="section-card">
+    <label class="field-label">🏠 Código da Família</label>
+    <div style="display:flex;gap:5px">
+      <input class="field" id="input-codigo-familia" placeholder="ex: cunhado">
+      <button class="primary-btn blue-btn" onclick="trocarFamiliaManualmente()">Conectar</button>
+    </div>
+    <small style="font-size:8px;color:#64748b;margin-top:3px;display:block">Dispositivos com o mesmo código compartilham as tarefas e pet.</small>
+  </div>
   <div class="section-card"><b style="font-size:10px">📋 Aprovações pendentes</b><div class="stack" id="lista-aprovacao-pais" style="margin-top:6px"></div></div>
   <div class="section-card"><b style="font-size:10px">✏️ Gerenciar tarefas</b><div style="font-size:8px;color:#64748b;margin-top:4px">Obrigatórias 🔥 contam para a ofensiva. Extras ⭐ dão recompensas, mas não liberam a ofensiva.</div><div class="stack" id="lista-edicao-tarefas" style="margin:6px 0"></div><div style="display:grid;grid-template-columns:1fr 48px 88px auto;gap:4px"><input class="field" id="nova-tarefa-texto" placeholder="Nova tarefa"><input class="field" id="nova-tarefa-moedas" type="number" value="5" min="1"><select class="field" id="nova-tarefa-tipo"><option value="obrigatoria">🔥 Obrigatória</option><option value="extra">⭐ Extra</option></select><button class="primary-btn blue-btn" onclick="adicionarTarefa()">+</button></div></div>
   <div class="section-card"><b style="font-size:10px">📊 Resumo</b><div class="stat-grid" style="margin-top:6px"><div class="stat">📋 <b id="stat-feitas">0</b><span>tarefas feitas</span></div><div class="stat">🔥 <b id="stat-ofensiva-pais">0</b><span>dias de ofensiva</span></div><div class="stat">🏆 <b id="stat-conquistas">0</b><span>conquistas</span></div></div></div>
@@ -305,6 +313,14 @@ const firebaseConfig={apiKey:"AIzaSyCiDk3ERIe8_uVqBhRnFRD5Od8nyLNlLVQ",authDomai
 let dbFirebase=null,sincronizacaoNuvemAtiva=false,ignorarProximoSyncNuvem=false;
 try{if(window.firebase){firebase.initializeApp(firebaseConfig);dbFirebase=firebase.database();sincronizacaoNuvemAtiva=true}}catch(e){}
 
+const urlParams=new URLSearchParams(window.location.search);
+let codigoFamilia=(urlParams.get('familia')||localStorage.getItem('ROTINAPET_FAMILIA_ID')||'casa_principal').trim().toLowerCase().replace(/[^a-z0-9_-]/g,'');
+localStorage.setItem('ROTINAPET_FAMILIA_ID',codigoFamilia);
+
+function getCaminhoFirebase(){
+  return `rotinapet/familias/${codigoFamilia}/estado`;
+}
+
 const hojeLocal=()=>{const d=new Date();return `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`};
 const ontemLocal=()=>{const d=new Date();d.setDate(d.getDate()-1);return `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`};
 
@@ -321,7 +337,7 @@ let estado={
 };
 
 try{
-  const salvo=localStorage.getItem('ROTINAPET_SAVE_FINAL');
+  const salvo=localStorage.getItem(`ROTINAPET_SAVE_${codigoFamilia}`);
   if(salvo){
     const d=JSON.parse(salvo);
     estado={...estado,...d};
@@ -349,24 +365,25 @@ if(estado.ultimoDiaAcesso!==hojeStr){
 }
 
 function salvar(){
-  try{localStorage.setItem('ROTINAPET_SAVE_FINAL',JSON.stringify(estado))}catch(e){mostrarToast('⚠️ Memória cheia; foto não armazenada.')}
+  try{localStorage.setItem(`ROTINAPET_SAVE_${codigoFamilia}`,JSON.stringify(estado))}catch(e){mostrarToast('⚠️ Memória cheia; foto não armazenada.')}
   if(sincronizacaoNuvemAtiva&&dbFirebase){
     ignorarProximoSyncNuvem=true;
-    dbFirebase.ref('rotinapet/estado').set(estado).catch(()=>{});
+    dbFirebase.ref(getCaminhoFirebase()).set(estado).catch(()=>{});
   }
 }
 
 function iniciarSincronizacaoNuvem(){
   if(!sincronizacaoNuvemAtiva||!dbFirebase)return;
-  document.getElementById('txt-status-nuvem').textContent='☁️ nuvem';
-  dbFirebase.ref('rotinapet/estado').on('value',s=>{
+  document.getElementById('txt-status-nuvem').textContent=`☁️ ${codigoFamilia}`;
+  dbFirebase.ref(getCaminhoFirebase()).off();
+  dbFirebase.ref(getCaminhoFirebase()).on('value',s=>{
     if(ignorarProximoSyncNuvem){ignorarProximoSyncNuvem=false;return}
     const d=s.val();
     if(d&&typeof d==='object'){
       estado={...estado,...d};
-      localStorage.setItem('ROTINAPET_SAVE_FINAL',JSON.stringify(estado));
+      localStorage.setItem(`ROTINAPET_SAVE_${codigoFamilia}`,JSON.stringify(estado));
       atualizarTela();
-      mostrarToast('☁️ Sincronizado!');
+      mostrarToast(`☁️ Sincronizado (${codigoFamilia})`);
     }
   });
 }
@@ -628,6 +645,9 @@ function limparPin(){
 function renderizarPainelPais(){
   document.getElementById('input-taxa-cambio').value=estado.taxaCambio;
   document.getElementById('input-idade-crianca').value=estado.idadeCrianca||7;
+  const inputFam=document.getElementById('input-codigo-familia');
+  if(inputFam)inputFam.value=codigoFamilia;
+
   const ap=document.getElementById('lista-aprovacao-pais');
   ap.innerHTML='';
   const ps=estado.tarefas.filter(t=>t.status==='aguardando_aprovacao');
@@ -647,6 +667,19 @@ function renderizarPainelPais(){
     </div>
   `);
   atualizarEstatisticas();
+}
+
+function trocarFamiliaManualmente(){
+  const novoCodigo=document.getElementById('input-codigo-familia').value.trim().toLowerCase().replace(/[^a-z0-9_-]/g,'');
+  if(!novoCodigo){
+    mostrarToast('Digite um código válido.');
+    return;
+  }
+  codigoFamilia=novoCodigo;
+  localStorage.setItem('ROTINAPET_FAMILIA_ID',codigoFamilia);
+  iniciarSincronizacaoNuvem();
+  fecharModal('modal-pais');
+  mostrarToast(`🏠 Conectado à família: ${codigoFamilia}`);
 }
 
 function alterarTipoTarefa(id,tipo){
