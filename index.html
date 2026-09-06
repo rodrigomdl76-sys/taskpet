@@ -66,11 +66,11 @@ body.cenario-festa{background:linear-gradient(180deg,#f472b6 0%,#a78bfa 50%,#60a
 
 .cat-section{display:flex;flex-direction:column;align-items:center;justify-content:center;flex-shrink:0;margin:1px 0;position:relative;}
 .cat-wrapper{
-  width:115px;height:115px;display:flex;align-items:center;justify-content:center;
+  width:120px;height:120px;display:flex;align-items:center;justify-content:center;
   cursor:pointer;position:relative;animation:catFloat 4s ease-in-out infinite;
 }
 @keyframes catFloat{0%,100%{transform:translateY(0);}50%{transform:translateY(-4px);}}
-#pet-svg-container{width:110px;height:110px;display:flex;align-items:center;justify-content:center;}
+#pet-svg-container{width:115px;height:115px;display:flex;align-items:center;justify-content:center;}
 #pet-svg-container svg{width:100%;height:100%;filter:drop-shadow(0 4px 8px rgba(0,0,0,0.15));}
 
 .level-number{font-size:22px;font-weight:900;color:#7c3aed;line-height:1;margin-top:0px;}
@@ -92,7 +92,7 @@ body.cenario-festa{background:linear-gradient(180deg,#f472b6 0%,#a78bfa 50%,#60a
   100%{transform:translateY(-40px) scale(1.2);opacity:0;}
 }
 
-.tasks-section{background:rgba(255,255,255,0.92);border-radius:14px;padding:6px 10px;flex-shrink:0;max-height:100px;overflow-y:auto;box-shadow:0 2px 6px rgba(0,0,0,0.05);}
+.tasks-section{background:rgba(255,255,255,0.92);border-radius:14px;padding:6px 10px;flex-shrink:0;max-height:115px;overflow-y:auto;box-shadow:0 2px 6px rgba(0,0,0,0.05);}
 .task-row{display:flex;align-items:center;justify-content:space-between;padding:3px 0;border-bottom:1px solid #f1f5f9;font-size:10px;}
 .task-row:last-child{border-bottom:none;}
 .task-name{font-weight:700;}
@@ -101,19 +101,18 @@ body.cenario-festa{background:linear-gradient(180deg,#f472b6 0%,#a78bfa 50%,#60a
 .task-btn{padding:2px 6px;border-radius:6px;border:none;font-weight:800;font-size:9px;cursor:pointer;}
 .btn-ok{background:#22c55e;color:#fff;}
 
-.bottom-buttons{display:grid;grid-template-columns:repeat(5,1fr);gap:4px;flex-shrink:0;margin-bottom:2px;}
+.bottom-buttons{display:grid;grid-template-columns:repeat(4,1fr);gap:6px;flex-shrink:0;margin-bottom:2px;}
 .bottom-btn{
-  aspect-ratio:1;border-radius:14px;border:none;display:flex;flex-direction:column;
-  align-items:center;justify-content:center;gap:1px;font-size:8px;font-weight:800;
+  aspect-ratio:1.1;border-radius:14px;border:none;display:flex;flex-direction:column;
+  align-items:center;justify-content:center;gap:1px;font-size:9px;font-weight:800;
   color:white;cursor:pointer;box-shadow:0 3px 8px rgba(0,0,0,0.1);transition:transform .2s;
 }
 .bottom-btn:active{transform:scale(0.92);}
-.btn-food{background:linear-gradient(135deg,#FFC107,#FF9800);}
 .btn-voice{background:linear-gradient(135deg,#4CAF50,#00BFA5);}
 .btn-game{background:linear-gradient(135deg,#9C27B0,#7B1FA2);}
 .btn-fundos{background:linear-gradient(135deg,#0284c7,#2563eb);}
 .btn-premios{background:linear-gradient(135deg,#FF5252,#FF3D00);}
-.btn-icon{font-size:15px;line-height:1;}
+.btn-icon{font-size:17px;line-height:1;}
 
 .modal-overlay{position:fixed;inset:0;background:rgba(0,0,0,0.6);display:flex;align-items:center;justify-content:center;padding:14px;z-index:100;backdrop-filter:blur(4px);opacity:0;visibility:hidden;transition:.3s;}
 .modal-overlay.mostrar{opacity:1;visibility:visible;}
@@ -185,7 +184,7 @@ body.cenario-festa{background:linear-gradient(180deg,#f472b6 0%,#a78bfa 50%,#60a
     </div>
 
     <div class="cat-section" id="pet-section-area">
-        <div class="cat-wrapper" onclick="somDoPet(event)" id="pet-principal">
+        <div class="cat-wrapper" onclick="interagirComPet(event)" id="pet-principal">
             <div id="pet-svg-container"></div>
         </div>
         
@@ -205,9 +204,6 @@ body.cenario-festa{background:linear-gradient(180deg,#f472b6 0%,#a78bfa 50%,#60a
     </div>
 
     <div class="bottom-buttons">
-        <button class="bottom-btn btn-food" onclick="darLanche(event)">
-            <span class="btn-icon">🍎</span>Comida
-        </button>
         <button class="bottom-btn btn-voice" onclick="alternarGravador()">
             <span class="btn-icon">🎙️</span>Gravar
         </button>
@@ -297,7 +293,7 @@ body.cenario-festa{background:linear-gradient(180deg,#f472b6 0%,#a78bfa 50%,#60a
 <div class="modal-overlay" id="modal-evolucoes">
     <div class="modal">
         <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px;">
-            <h3 style="font-size: 15px; font-weight: 900;">🔥 Evoluções — <span id="pet-evol-nome">Gato</span></h3>
+            <h3 style="font-size: 15px; font-weight: 900;">🔥 Evoluções — <span id="pet-evol-nome">Pipoca</span></h3>
             <button onclick="fecharModal('modal-evolucoes')" style="background: #e2e8f0; border: none; padding: 4px 8px; border-radius: 6px; font-weight: bold; cursor: pointer;">X</button>
         </div>
         <div id="lista-evolucoes" style="display: flex; flex-direction: column; gap: 6px;"></div>
@@ -322,7 +318,7 @@ body.cenario-festa{background:linear-gradient(180deg,#f472b6 0%,#a78bfa 50%,#60a
 <div class="modal-overlay" id="modal-matematica">
     <div class="modal" style="text-align: center;">
         <h3 style="font-size: 16px; font-weight: 900; color: #059669; margin-bottom: 4px;">🎮 Desafio Matemático</h3>
-        <p style="font-size:10px; color:#64748b; margin-bottom:8px;">Acerte e ganhe: +1 🪙 e +1 XP</p>
+        <p style="font-size:10px; color:#64748b; margin-bottom:8px;">Acerte e ganhe: +1 🪙 e +1 XP para o pet ativo</p>
         <div id="conta-math" style="font-size: 24px; font-weight: 900; background: #f1f5f9; padding: 8px; border-radius: 12px; margin-bottom: 10px;">?</div>
         <div id="opcoes-math" style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 6px; margin-bottom: 10px;"></div>
         <button onclick="fecharModal('modal-matematica')" style="background: none; border: none; color: #64748b; font-weight: bold; cursor: pointer;">Fechar</button>
@@ -351,94 +347,244 @@ body.cenario-festa{background:linear-gradient(180deg,#f472b6 0%,#a78bfa 50%,#60a
 <div class="toast" id="toast"></div>
 
 <script>
-function obterSvgPetComEvolucao(tipo, level) {
-  let acessorio = '';
-  if (level >= 5 && level < 10) {
-    acessorio = `<polygon points="130,150 115,165 130,180 145,165" fill="#38BDF8"/><circle cx="130" cy="165" r="5" fill="#0284C7"/>`;
-  } else if (level >= 10 && level < 20) {
-    acessorio = `<rect x="75" y="92" width="40" height="24" rx="4" fill="#1e293b"/><rect x="145" y="92" width="40" height="24" rx="4" fill="#1e293b"/><line x1="115" y1="102" x2="145" y2="102" stroke="#1e293b" stroke-width="4"/><circle cx="85" cy="98" r="4" fill="white" opacity="0.6"/>`;
-  } else if (level >= 20 && level < 50) {
-    acessorio = `<path d="M85 170 L55 240 L130 220 L205 240 L175 170 Z" fill="#9333EA"/><circle cx="130" cy="110" r="95" fill="none" stroke="#C084FC" stroke-width="3" stroke-dasharray="8 6" opacity="0.7"/>`;
-  } else if (level >= 50) {
-    acessorio = `<path d="M85 170 L55 240 L130 220 L205 240 L175 170 Z" fill="#D97706"/><path d="M100 35 L110 55 L130 30 L150 55 L160 35 L165 65 L95 65 Z" fill="#FBBF24"/><circle cx="130" cy="48" r="4" fill="#EF4444"/><circle cx="110" cy="52" r="3" fill="#3B82F6"/><circle cx="150" cy="52" r="3" fill="#10B981"/>`;
-  }
+// ===================== SVG DOS PETS + EVOLUÇÕES =====================
+const PETS = {
+  gato: {
+    id: 'gato', nome: 'Pipoca', emoji: '🐱',
+    desbloqueioNivel: 1,
+    evolucoes: [
+      { nivel: 1, nome: 'Gatinho Sombra', desc: 'Olhos grandes e fofos' },
+      { nivel: 21, nome: 'Gato da Lua', desc: 'Brilho prateado + mecha branca' },
+      { nivel: 41, nome: 'Gato Estelar', desc: 'Colar de estrelinhas + brilho' },
+      { nivel: 61, nome: 'Gato Nobre', desc: 'Coroa preta + capa de veludo' },
+      { nivel: 81, nome: 'Lenda Sombria', desc: 'Asas de sombra + olhos dourados' }
+    ],
+    som: 'https://assets.mixkit.co/sfx/preview/mixkit-cat-meow-14.mp3',
+    gerarSVG: function(fase) {
+      const e2 = fase >= 2, e3 = fase >= 3, e4 = fase >= 4, e5 = fase >= 5;
+      let extra = '';
+      
+      // Fase 2 — Brilho prateado + mecha branca
+      if (e2) extra += `
+        <circle cx="135" cy="80" r="8" fill="#F0F0FF" opacity="0.9"/>
+        <path d="M135 75 L135 95" stroke="#C8C8FF" stroke-width="5" stroke-linecap="round" opacity="0.8"/>
+      `;
+      // Fase 3 — Estrelas brilhantes
+      if (e3) extra += `
+        <circle cx="100" cy="100" r="6" fill="#FFD700" class="evo-sparkle"/>
+        <circle cx="170" cy="100" r="6" fill="#FFD700" class="evo-sparkle"/>
+        <circle cx="135" cy="85" r="5" fill="#FFD700" class="evo-sparkle"/>
+      `;
+      // Fase 4 — Coroa
+      if (e4) extra += `
+        <path d="M105 45 L120 25 L135 35 L150 25 L165 45 Z" fill="#FFD700" stroke="#B8860B" stroke-width="2"/>
+        <path d="M95 50 L175 50 L170 58 L100 58 Z" fill="#B8860B"/>
+      `;
+      // Fase 5 — Asas + olhos dourados
+      if (e5) extra += `
+        <path d="M60 110 Q30 90 20 120 Q40 140 60 130 Z" fill="#1A1A1A" opacity="0.6" class="evo-float"/>
+        <path d="M210 110 Q240 90 250 120 Q230 140 210 130 Z" fill="#1A1A1A" opacity="0.6" class="evo-float"/>
+      `;
 
-  if (tipo === 'frango') {
-    return `<svg width="120" height="120" viewBox="0 0 270 285" xmlns="http://www.w3.org/2000/svg">
-      <ellipse cx="135" cy="270" rx="52" ry="10" fill="rgba(0,0,0,0.08)"/>
-      <path d="M135 48 Q120 28 108 42 Q95 18 110 35 Q90 15 110 32 Q125 12 135 28 Q145 12 135 32 Q160 15 140 35 Q165 25 155 45 Q142 38 135 48 Z" fill="#FF3344"/>
-      <circle cx="135" cy="120" r="68" fill="#FFF9E6"/>
-      <path d="M135 138 L112 152 L158 152 Z" fill="#FFCC00"/>
-      <path d="M120 152 Q135 162 150 152" fill="#FF9933"/>
-      <ellipse cx="135" cy="150" rx="12" ry="8" fill="#552200"/>
-      <circle cx="100" cy="105" r="22" fill="#FFFFFF" stroke="#2D1B10" stroke-width="3.5"/>
-      <circle cx="170" cy="105" r="22" fill="#FFFFFF" stroke="#2D1B10" stroke-width="3.5"/>
-      <circle cx="95" cy="100" r="11" fill="#2D1B10"/>
-      <circle cx="175" cy="100" r="11" fill="#2D1B10"/>
-      <circle cx="90" cy="92" r="5" fill="white"/>
-      <circle cx="170" cy="92" r="5" fill="white"/>
-      <line x1="82" y1="90" x2="75" y2="78" stroke="#2D1B10" stroke-width="2.5" stroke-linecap="round"/>
-      <line x1="88" y1="85" x2="80" y2="72" stroke="#2D1B10" stroke-width="2.5" stroke-linecap="round"/>
-      <line x1="188" y1="90" x2="195" y2="78" stroke="#2D1B10" stroke-width="2.5" stroke-linecap="round"/>
-      <line x1="182" y1="85" x2="190" y2="72" stroke="#2D1B10" stroke-width="2.5" stroke-linecap="round"/>
-      <ellipse cx="72" cy="130" rx="10" ry="6" fill="#FFB6C1" opacity=".5"/>
-      <ellipse cx="198" cy="130" rx="10" ry="6" fill="#FFB6C1" opacity=".5"/>
-      <ellipse cx="135" cy="205" rx="62" ry="52" fill="#FFF9E6"/>
-      ${acessorio}
-    </svg>`;
-  } else if (tipo === 'cachorra') {
-    return `<svg width="120" height="120" viewBox="0 0 270 285" xmlns="http://www.w3.org/2000/svg">
-      <ellipse cx="135" cy="270" rx="52" ry="10" fill="rgba(0,0,0,0.08)"/>
-      <path d="M195 190 Q235 165 220 135" stroke="#D97706" stroke-width="22" stroke-linecap="round" fill="none"/>
-      <ellipse cx="135" cy="205" rx="60" ry="50" fill="#D97706"/>
-      <circle cx="135" cy="120" r="70" fill="#D97706"/>
-      <ellipse cx="105" cy="110" rx="15" ry="19" fill="#2D1B10"/>
-      <ellipse cx="165" cy="110" rx="15" ry="19" fill="#2D1B10"/>
-      <circle cx="100" cy="104" r="5" fill="white"/>
-      <circle cx="160" cy="104" r="5" fill="white"/>
-      <circle cx="135" cy="175" r="18" fill="#F59E0B" opacity="0.9"/>
-      ${acessorio}
-    </svg>`;
-  } else if (tipo === 'cabra') {
-    return `<svg width="120" height="120" viewBox="0 0 270 285" xmlns="http://www.w3.org/2000/svg">
-      <ellipse cx="135" cy="270" rx="55" ry="12" fill="rgba(0,0,0,0.08)"/>
-      <path d="M90 60 Q70 25 85 15 Q100 25 95 55" fill="#2D1B10"/>
-      <path d="M180 60 Q200 25 185 15 Q170 25 175 55" fill="#2D1B10"/>
-      <ellipse cx="135" cy="125" rx="60" ry="65" fill="#F5E6D3"/>
-      <circle cx="105" cy="110" r="16" fill="#FFFFFF" stroke="#2D1B10" stroke-width="3"/>
-      <circle cx="165" cy="110" r="16" fill="#FFFFFF" stroke="#2D1B10" stroke-width="3"/>
-      <circle cx="108" cy="108" r="8" fill="#2D1B10"/>
-      <circle cx="162" cy="108" r="8" fill="#2D1B10"/>
-      <circle cx="104" cy="104" r="3" fill="white"/>
-      <circle cx="158" cy="104" r="3" fill="white"/>
-      ${acessorio}
-    </svg>`;
-  } else {
-    return `<svg width="120" height="120" viewBox="0 0 260 260" xmlns="http://www.w3.org/2000/svg">
-      <ellipse cx="130" cy="235" rx="75" ry="12" fill="rgba(0,0,0,0.06)"/>
-      <path d="M195 180 Q240 140 225 95" stroke="#FF9F29" stroke-width="28" stroke-linecap="round" fill="none"/>
-      <ellipse cx="130" cy="190" rx="65" ry="55" fill="#FF9F29"/>
-      <ellipse cx="95" cy="230" rx="18" ry="15" fill="#FFE8CC"/>
-      <ellipse cx="165" cy="230" rx="18" ry="15" fill="#FFE8CC"/>
-      <circle cx="130" cy="110" r="75" fill="#FF9F29"/>
-      <path d="M55 45 L85 85 L50 80 Z" fill="#FF9F29"/>
-      <path d="M205 45 L175 85 L210 80 Z" fill="#FF9F29"/>
-      <ellipse cx="130" cy="125" rx="48" ry="45" fill="#FFE8CC"/>
-      <ellipse cx="95" cy="100" rx="18" ry="22" fill="#2D1B10"/>
-      <ellipse cx="165" cy="100" rx="18" ry="22" fill="#2D1B10"/>
-      <circle cx="100" cy="92" rx="7" ry="9" fill="white"/>
-      <circle cx="170" cy="92" rx="7" ry="9" fill="white"/>
-      <path d="M130 125 L122 138 L138 138 Z" fill="#FF9AAA"/>
-      ${acessorio}
-    </svg>`;
-  }
-}
+      return `
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 270 285" class="pet-svg">
+  <style>
+    .eye-blink { animation: blink 4s ease-in-out infinite; transform-origin: center; }
+    .evo-sparkle { animation: sparkle 1.5s ease-in-out infinite; }
+    .evo-float { animation: float 2.5s ease-in-out infinite; }
+    @keyframes blink { 0%,92%,100% { transform:scaleY(1); } 95% { transform:scaleY(0.05); } }
+    @keyframes sparkle { 0%,100% { opacity:0.4; transform:scale(0.8); } 50% { opacity:1; transform:scale(1.2); } }
+    @keyframes float { 0%,100% { transform:translateY(0); } 50% { transform:translateY(-8px); } }
+  </style>
+  <ellipse cx="135" cy="270" rx="52" ry="10" fill="rgba(0,0,0,0.08)"/>
+  <ellipse cx="135" cy="205" rx="55" ry="48" fill="#1A1A1A"/>
+  <circle cx="135" cy="130" r="70" fill="#1A1A1A"/>
+  <path d="M80 85 L65 40 L105 75 Z" fill="#1A1A1A"/>
+  <path d="M190 85 L205 40 L165 75 Z" fill="#1A1A1A"/>
+  <path d="M85 80 L75 50 L100 72 Z" fill="#FF9EBB"/>
+  <path d="M185 80 L195 50 L170 72 Z" fill="#FF9EBB"/>
+  <ellipse class="eye-blink" cx="110" cy="125" rx="28" ry="32" fill="white"/>
+  <ellipse class="eye-blink" cx="160" cy="125" rx="28" ry="32" fill="white"/>
+  <circle cx="118" cy="130" r="14" fill="${e5 ? '#FFB800' : '#1A1A1A'}"/>
+  <circle cx="152" cy="130" r="14" fill="${e5 ? '#FFB800' : '#1A1A1A'}"/>
+  <circle cx="112" cy="122" r="6" fill="white"/>
+  <circle cx="146" cy="122" r="6" fill="white"/>
+  <ellipse cx="135" cy="155" rx="7" ry="5" fill="#FF9EBB"/>
+  <path d="M95 175 Q70 190 85 210" stroke="#1A1A1A" stroke-width="14" fill="none" stroke-linecap="round"/>
+  <path d="M175 175 Q200 190 185 210" stroke="#1A1A1A" stroke-width="14" fill="none" stroke-linecap="round"/>
+  <path d="M105 235 Q100 255 115 255" stroke="#1A1A1A" stroke-width="12" fill="none" stroke-linecap="round"/>
+  <path d="M165 235 Q170 255 155 255" stroke="#1A1A1A" stroke-width="12" fill="none" stroke-linecap="round"/>
+  <path d="M110 245 L110 252" stroke="white" stroke-width="2" stroke-linecap="round"/>
+  <path d="M120 245 L120 252" stroke="white" stroke-width="2" stroke-linecap="round"/>
+  <path d="M150 245 L150 252" stroke="white" stroke-width="2" stroke-linecap="round"/>
+  <path d="M160 245 L160 252" stroke="white" stroke-width="2" stroke-linecap="round"/>
+  <path d="M200 220 Q240 240 230 270" stroke="#1A1A1A" stroke-width="16" fill="none" stroke-linecap="round"/>
+  ${extra}
+</svg>`;
+    }
+  },
 
-const BANCO_PETS = {
-  gato: { nome: "Gato", emoji: "🐱", som: "Miau!", freq: 440, evolucoes: [{nivel:1,nome:"Filhote"},{nivel:5,nome:"Jovem"},{nivel:10,nome:"Adulto"},{nivel:20,nome:"Sábio"},{nivel:50,nome:"Lendário"}] },
-  cachorra: { nome: "Cachorrinha", emoji: "🐶", som: "Au Au!", freq: 220, evolucoes: [{nivel:1,nome:"Filhote"},{nivel:5,nome:"Jovem"},{nivel:10,nome:"Adulta"},{nivel:20,nome:"Protetora"},{nivel:50,nome:"Lendária"}] },
-  cabra: { nome: "Cabra", emoji: "🐐", som: "Bééé!", freq: 330, evolucoes: [{nivel:1,nome:"Cabrinha"},{nivel:5,nome:"Jovem"},{nivel:10,nome:"Adulta"},{nivel:20,nome:"Montanhesa"},{nivel:50,nome:"Lendária"}] },
-  frango: { nome: "Frango", emoji: "🐔", som: "Cocoricó!", freq: 580, evolucoes: [{nivel:1,nome:"Pintinho"},{nivel:5,nome:"Jovem"},{nivel:10,nome:"Adulto"},{nivel:20,nome:"Galinha"},{nivel:50,nome:"Galo Lendário"}] }
+  cachorra: {
+    id: 'cachorra', nome: 'Mel', emoji: '🐶',
+    desbloqueioNivel: 5,
+    evolucoes: [
+      { nivel: 1, nome: 'Filhote Caramelo', desc: 'Orelhas caídas, super fofinha' },
+      { nivel: 21, nome: 'Cãozinho Brincalhão', desc: 'Bandana colorida no pescoço' },
+      { nivel: 41, nome: 'Cão Guia', desc: 'Colete brilhante + distintivo de herói' },
+      { nivel: 61, nome: 'Cão Campeã', desc: 'Faixa de campeã + medalha dourada' },
+      { nivel: 81, nome: 'Guardiã Lendária', desc: 'Asas de anjo + aurora dourada' }
+    ],
+    som: 'https://assets.mixkit.co/sfx/preview/mixkit-dog-barking-twice-1.mp3',
+    gerarSVG: function(fase) {
+      const e2 = fase >= 2, e3 = fase >= 3, e4 = fase >= 4, e5 = fase >= 5;
+      let extra = '';
+      
+      if (e2) extra += `<path d="M85 165 L135 180 L185 165 L175 190 L95 190 Z" fill="#EF4444"/><path d="M135 165 L135 180" stroke="white" stroke-width="3"/>`;
+      if (e3) extra += `<rect x="90" y="185" width="90" height="25" rx="6" fill="#3B82F6"/><circle cx="160" cy="197" r="10" fill="#FFD700"/>`;
+      if (e4) extra += `<circle cx="135" cy="60" r="15" fill="#FFD700" stroke="#B8860B" stroke-width="3"/><path d="M135 45 L135 75" stroke="#B8860B" stroke-width="2"/>`;
+      if (e5) extra += `
+        <path d="M50 120 Q20 80 10 110 Q30 150 60 135 Z" fill="#FFD700" opacity="0.5" class="evo-float"/>
+        <path d="M220 120 Q250 80 260 110 Q240 150 210 135 Z" fill="#FFD700" opacity="0.5" class="evo-float"/>
+        <circle cx="135" cy="140" r="100" fill="#FFD700" opacity="0.15" class="evo-sparkle"/>
+      `;
+
+      return `
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 270 285" class="pet-svg">
+  <style>
+    .eye-blink { animation: blink 4s ease-in-out infinite; transform-origin: center; }
+    .evo-sparkle { animation: sparkle 1.5s ease-in-out infinite; }
+    .evo-float { animation: float 2.5s ease-in-out infinite; }
+    @keyframes blink { 0%,92%,100% { transform:scaleY(1); } 95% { transform:scaleY(0.05); } }
+    @keyframes sparkle { 0%,100% { opacity:0.4; transform:scale(0.8); } 50% { opacity:1; transform:scale(1.2); } }
+    @keyframes float { 0%,100% { transform:translateY(0); } 50% { transform:translateY(-8px); } }
+  </style>
+  <ellipse cx="135" cy="270" rx="52" ry="10" fill="rgba(0,0,0,0.08)"/>
+  <ellipse cx="135" cy="205" rx="55" ry="48" fill="#F4A261"/>
+  <circle cx="135" cy="125" r="68" fill="#F4A261"/>
+  <ellipse cx="85" cy="80" rx="22" ry="35" fill="#E76F51"/>
+  <ellipse cx="185" cy="80" rx="22" ry="35" fill="#E76F51"/>
+  <ellipse class="eye-blink" cx="105" cy="115" rx="26" ry="30" fill="white"/>
+  <ellipse class="eye-blink" cx="165" cy="115" rx="26" ry="30" fill="white"/>
+  <circle cx="112" cy="120" r="13" fill="#2D1B10"/>
+  <circle cx="158" cy="120" r="13" fill="#2D1B10"/>
+  <circle cx="108" cy="112" r="5" fill="white"/>
+  <circle cx="154" cy="112" r="5" fill="white"/>
+  <ellipse cx="135" cy="150" rx="12" ry="9" fill="#2D1B10"/>
+  <path d="M135 162 L128 172 L142 172 Z" fill="#FF9EBB"/>
+  <ellipse cx="85" cy="145" rx="10" ry="7" fill="#FF9EBB" opacity="0.5"/>
+  <ellipse cx="185" cy="145" rx="10" ry="7" fill="#FF9EBB" opacity="0.5"/>
+  <path d="M95 235 Q90 255 105 255" stroke="#F4A261" stroke-width="14" fill="none" stroke-linecap="round"/>
+  <path d="M175 235 Q180 255 165 255" stroke="#F4A261" stroke-width="14" fill="none" stroke-linecap="round"/>
+  <path d="M200 190 Q240 170 230 135" stroke="#F4A261" stroke-width="18" fill="none" stroke-linecap="round"/>
+  ${extra}
+</svg>`;
+    }
+  },
+
+  cabra: {
+    id: 'cabra', nome: 'Nuvem', emoji: '🐐',
+    desbloqueioNivel: 10,
+    evolucoes: [
+      { nivel: 1, nome: 'Cabritinha Felpuda', desc: 'Chifres pequenos e fofos' },
+      { nivel: 21, nome: 'Cabra da Montanha', desc: 'Chifres maiores + pelo espesso' },
+      { nivel: 41, nome: 'Cabra de Cristal', desc: 'Chifres brilhantes + colar de pedras' },
+      { nivel: 61, nome: 'Rainha da Serra', desc: 'Coroa de folhas + manto natural' },
+      { nivel: 81, nome: 'Lenda da Montanha', desc: 'Aura mágica + chifres reluzentes' }
+    ],
+    som: 'https://assets.mixkit.co/sfx/preview/mixkit-goat-bleat-1.mp3',
+    gerarSVG: function(fase) {
+      const e2 = fase >= 2, e3 = fase >= 3, e4 = fase >= 4, e5 = fase >= 5;
+      let extra = '';
+      
+      if (e2) extra += `<path d="M90 55 Q70 15 85 5 Q100 15 95 50 Z" fill="#A0522D"/><path d="M180 55 Q200 15 185 5 Q170 15 175 50 Z" fill="#A0522D"/>`;
+      if (e3) extra += `<circle cx="100" cy="180" r="8" fill="#9932CC" class="evo-sparkle"/><circle cx="135" cy="190" r="8" fill="#FF00FF" class="evo-sparkle"/><circle cx="170" cy="180" r="8" fill="#9932CC" class="evo-sparkle"/>`;
+      if (e4) extra += `<path d="M100 45 L110 30 L125 40 L135 20 L145 40 L160 30 L170 45 Z" fill="#228B22"/><circle cx="135" cy="35" r="8" fill="#FFD700"/>`;
+      if (e5) extra += `<circle cx="135" cy="140" r="110" fill="#90EE90" opacity="0.2" class="evo-float"/><circle cx="135" cy="140" r="90" fill="#98FB98" opacity="0.15" class="evo-float"/>`;
+
+      return `
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 270 285" class="pet-svg">
+  <style>
+    .eye-blink { animation: blink 4s ease-in-out infinite; transform-origin: center; }
+    .evo-sparkle { animation: sparkle 1.5s ease-in-out infinite; }
+    .evo-float { animation: float 2.5s ease-in-out infinite; }
+    @keyframes blink { 0%,92%,100% { transform:scaleY(1); } 95% { transform:scaleY(0.05); } }
+    @keyframes sparkle { 0%,100% { opacity:0.4; transform:scale(0.8); } 50% { opacity:1; transform:scale(1.2); } }
+    @keyframes float { 0%,100% { transform:translateY(0); } 50% { transform:translateY(-8px); } }
+  </style>
+  <ellipse cx="135" cy="270" rx="55" ry="12" fill="rgba(0,0,0,0.08)"/>
+  <ellipse cx="135" cy="205" rx="58" ry="50" fill="#F5E6D3"/>
+  <circle cx="135" cy="125" r="65" fill="#F5E6D3"/>
+  <path d="M90 60 Q70 35 85 25 Q100 35 95 55 Z" fill="#8B5A2B"/>
+  <path d="M180 60 Q200 35 185 25 Q170 35 175 55 Z" fill="#8B5A2B"/>
+  <ellipse class="eye-blink" cx="105" cy="115" rx="25" ry="29" fill="white"/>
+  <ellipse class="eye-blink" cx="165" cy="115" rx="25" ry="29" fill="white"/>
+  <circle cx="112" cy="120" r="13" fill="#2D1B10"/>
+  <circle cx="158" cy="120" r="13" fill="#2D1B10"/>
+  <circle cx="108" cy="112" r="5" fill="white"/>
+  <circle cx="154" cy="112" r="5" fill="white"/>
+  <ellipse cx="135" cy="150" rx="10" ry="7" fill="#FF9EBB"/>
+  <path d="M125 158 Q135 168 145 158" stroke="#2D1B10" stroke-width="2.5" fill="none" stroke-linecap="round"/>
+  <ellipse cx="80" cy="140" rx="10" ry="7" fill="#FF9EBB" opacity="0.5"/>
+  <ellipse cx="190" cy="140" rx="10" ry="7" fill="#FF9EBB" opacity="0.5"/>
+  <ellipse cx="85" cy="90" rx="15" ry="25" fill="#F5E6D3"/>
+  <ellipse cx="185" cy="90" rx="15" ry="25" fill="#F5E6D3"/>
+  <path d="M95 235 Q90 255 105 255" stroke="#F5E6D3" stroke-width="14" fill="none" stroke-linecap="round"/>
+  <path d="M175 235 Q180 255 165 255" stroke="#F5E6D3" stroke-width="14" fill="none" stroke-linecap="round"/>
+  ${extra}
+</svg>`;
+    }
+  },
+
+  frango: {
+    id: 'frango', nome: 'Piu-Piu', emoji: '🐔',
+    desbloqueioNivel: 15,
+    evolucoes: [
+      { nivel: 1, nome: 'Pintinho Amarelinho', desc: 'Penas fofinhas, crista pequena' },
+      { nivel: 21, nome: 'Franguinho Colorido', desc: 'Penas ganham cores vibrantes' },
+      { nivel: 41, nome: 'Galo Arco-Íris', desc: 'Cauda colorida + crista maior' },
+      { nivel: 61, nome: 'Imperador das Cores', desc: 'Penas brilhantes + coroa dourada' },
+      { nivel: 81, nome: 'Fênix Dourada', desc: 'Asas de fogo + brilho intenso' }
+    ],
+    som: 'https://assets.mixkit.co/sfx/preview/mixkit-chicken-cluck-1.mp3',
+    gerarSVG: function(fase) {
+      const e2 = fase >= 2, e3 = fase >= 3, e4 = fase >= 4, e5 = fase >= 5;
+      let extra = '';
+      
+      if (e2) extra += `<path d="M200 180 Q230 160 240 190 Q225 210 200 200 Z" fill="#FF6B6B"/><path d="M210 160 Q245 140 250 170 Q235 190 210 180 Z" fill="#4ECDC4"/><path d="M195 200 Q215 220 195 230 Q175 215 195 200 Z" fill="#FFE66D"/>`;
+      if (e3) extra += `<path d="M60 130 Q20 100 30 150 Q50 170 70 150 Z" fill="#FF6B6B" opacity="0.8"/><path d="M50 150 Q10 140 25 170 Q45 180 60 160 Z" fill="#4ECDC4" opacity="0.8"/>`;
+      if (e4) extra += `<path d="M115 40 L125 20 L135 35 L145 20 L155 40 Z" fill="#FFD700" stroke="#B8860B" stroke-width="2"/>`;
+      if (e5) extra += `<path d="M50 100 Q10 60 20 100 Q35 130 60 115 Z" fill="#FF4500" opacity="0.6" class="evo-float"/><path d="M220 100 Q260 60 250 100 Q235 130 210 115 Z" fill="#FF4500" opacity="0.6" class="evo-float"/><circle cx="135" cy="140" r="90" fill="#FFD700" opacity="0.2" class="evo-sparkle"/>`;
+
+      return `
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 270 285" class="pet-svg">
+  <style>
+    .eye-blink { animation: blink 4s ease-in-out infinite; transform-origin: center; }
+    .evo-sparkle { animation: sparkle 1.5s ease-in-out infinite; }
+    .evo-float { animation: float 2.5s ease-in-out infinite; }
+    @keyframes blink { 0%,92%,100% { transform:scaleY(1); } 95% { transform:scaleY(0.05); } }
+    @keyframes sparkle { 0%,100% { opacity:0.4; transform:scale(0.8); } 50% { opacity:1; transform:scale(1.2); } }
+    @keyframes float { 0%,100% { transform:translateY(0); } 50% { transform:translateY(-8px); } }
+  </style>
+  <ellipse cx="135" cy="270" rx="52" ry="10" fill="rgba(0,0,0,0.08)"/>
+  <ellipse cx="135" cy="205" rx="55" ry="48" fill="#FFF9C4"/>
+  <circle cx="135" cy="120" r="68" fill="#FFF9C4"/>
+  <path d="M135 48 Q120 28 108 42 Q95 18 110 35 Q90 15 110 32 Q125 12 135 28 Q145 12 135 32 Q160 15 140 35 Q165 25 155 45 Q142 38 135 48 Z" fill="#FF3344"/>
+  <ellipse class="eye-blink" cx="100" cy="105" rx="26" ry="30" fill="white"/>
+  <ellipse class="eye-blink" cx="170" cy="105" rx="26" ry="30" fill="white"/>
+  <circle cx="107" cy="110" r="13" fill="#2D1B10"/>
+  <circle cx="163" cy="110" r="13" fill="#2D1B10"/>
+  <circle cx="103" cy="102" r="5" fill="white"/>
+  <circle cx="159" cy="102" r="5" fill="white"/>
+  <path d="M135 138 L112 152 L158 152 Z" fill="#FFCC00"/>
+  <ellipse cx="135" cy="150" rx="12" ry="8" fill="#552200"/>
+  <ellipse cx="72" cy="130" rx="10" ry="6" fill="#FFB6C1" opacity=".5"/>
+  <ellipse cx="198" cy="130" rx="10" ry="6" fill="#FFB6C1" opacity=".5"/>
+  <path d="M115 235 Q110 255 125 255" stroke="#FFF9C4" stroke-width="14" fill="none" stroke-linecap="round"/>
+  <path d="M155 235 Q160 255 145 255" stroke="#FFF9C4" stroke-width="14" fill="none" stroke-linecap="round"/>
+  ${extra}
+</svg>`;
+    }
+  }
 };
 
 const BANCO_FUNDOS = [
@@ -476,12 +622,24 @@ try {
 }
 
 let estado = {
-  petAtual: 'gato', moedas: 15, taxaCambio: 0.01, pinPais: '1234',
+  petAtual: 'gato',
+  moedas: 15,
+  taxaCambio: 0.01,
+  pinPais: '1234',
   dinheiroAcumulado: 0.15,
-  idadeCrianca: 7, fundoAtual: 'ceu', fundosComprados: ['ceu'],
-  nivel: 1, xp: 0, xpMax: 100, felicidade: 100, saude: 100,
-  metaMoedas: 50, totalSacado: 0, ultimoDiaAcesso: new Date().toISOString().slice(0,10),
+  idadeCrianca: 7,
+  fundoAtual: 'ceu',
+  fundosComprados: ['ceu'],
+  metaMoedas: 50,
+  totalSacado: 0,
+  ultimoDiaAcesso: new Date().toISOString().slice(0,10),
   timerFim: null,
+  pets: {
+    gato: { nivel: 1, xp: 0, felicidade: 100, saude: 100 },
+    cachorra: { nivel: 1, xp: 0, felicidade: 100, saude: 100 },
+    cabra: { nivel: 1, xp: 0, felicidade: 100, saude: 100 },
+    frango: { nivel: 1, xp: 0, felicidade: 100, saude: 100 }
+  },
   tarefas: [
     {id: 1, texto: 'Escovar os dentes', recompensa: 5, xp: 20, status: 'pendente', foto: null},
     {id: 2, texto: 'Arrumar a cama', recompensa: 5, xp: 20, status: 'pendente', foto: null}
@@ -492,11 +650,26 @@ let estado = {
   ]
 };
 
+// Carregamento e compatibilidade
 const salvo = localStorage.getItem('ROTINAPET_SAVE_FINAL');
 if (salvo) {
   try {
     const dadosCarregados = JSON.parse(salvo);
     estado = {...estado, ...dadosCarregados};
+    if (!estado.pets) {
+      estado.pets = {
+        gato: { nivel: dadosCarregados.nivel || 1, xp: dadosCarregados.xp || 0, felicidade: dadosCarregados.felicidade || 100, saude: dadosCarregados.saude || 100 },
+        cachorra: { nivel: 1, xp: 0, felicidade: 100, saude: 100 },
+        cabra: { nivel: 1, xp: 0, felicidade: 100, saude: 100 },
+        frango: { nivel: 1, xp: 0, felicidade: 100, saude: 100 }
+      };
+    } else {
+      ['gato', 'cachorra', 'cabra', 'frango'].forEach(p => {
+        if (!estado.pets[p]) {
+          estado.pets[p] = { nivel: 1, xp: 0, felicidade: 100, saude: 100 };
+        }
+      });
+    }
     if (typeof estado.dinheiroAcumulado !== 'number') {
       estado.dinheiroAcumulado = (estado.moedas || 0) * (estado.taxaCambio || 0.01);
     }
@@ -543,112 +716,92 @@ function aplicarFundoTela(id) {
   document.body.className = `cenario-${id || 'ceu'}`;
 }
 
+function obterDadosPetAtual() {
+  if (!estado.pets[estado.petAtual]) {
+    estado.pets[estado.petAtual] = { nivel: 1, xp: 0, felicidade: 100, saude: 100 };
+  }
+  return estado.pets[estado.petAtual];
+}
+
+// Converte o nível atual na fase visual de 1 a 5
+function calcularFase(nivel) {
+  if (nivel >= 81) return 5;
+  if (nivel >= 61) return 4;
+  if (nivel >= 41) return 3;
+  if (nivel >= 21) return 2;
+  return 1;
+}
+
 function atualizarTela() {
+    const petDef = PETS[estado.petAtual];
+    const dadosPet = obterDadosPetAtual();
+    const faseAtual = calcularFase(dadosPet.nivel);
+
     document.getElementById('txt-moedas').innerText = estado.moedas;
     const valorDisponivel = (estado.dinheiroAcumulado || 0).toFixed(2).replace('.', ',');
     document.getElementById('txt-dinheiro').innerText = valorDisponivel;
     document.getElementById('txt-painel-disponivel').innerText = valorDisponivel;
     document.getElementById('txt-total-pago').innerText = (estado.totalSacado || 0).toFixed(2).replace('.', ',');
-    document.getElementById('val-felicidade').innerText = estado.felicidade;
-    document.getElementById('barra-felicidade').style.width = estado.felicidade + '%';
-    document.getElementById('txt-saude').innerText = estado.saude + '%';
     
-    const level = estado.nivel || 1;
-    const xp = estado.xp || 0;
-    document.getElementById('numero-nivel').innerText = level;
-    document.getElementById('texto-xp').innerText = `${xp}/100`;
-    document.getElementById('barra-xp').style.width = `${xp}%`;
+    document.getElementById('val-felicidade').innerText = dadosPet.felicidade;
+    document.getElementById('barra-felicidade').style.width = dadosPet.felicidade + '%';
+    document.getElementById('txt-saude').innerText = dadosPet.saude + '%';
+    
+    document.getElementById('numero-nivel').innerText = dadosPet.nivel;
+    document.getElementById('texto-xp').innerText = `${dadosPet.xp}/100`;
+    document.getElementById('barra-xp').style.width = `${dadosPet.xp}%`;
 
-    const pet = BANCO_PETS[estado.petAtual];
-    document.getElementById('btn-pet-atual').textContent = pet.emoji;
-    document.getElementById('pet-svg-container').innerHTML = obterSvgPetComEvolucao(estado.petAtual, level);
-    document.getElementById('pet-evol-nome').textContent = pet.nome;
+    document.getElementById('btn-pet-atual').textContent = petDef.emoji;
+    document.getElementById('pet-svg-container').innerHTML = petDef.gerarSVG(faseAtual);
+    document.getElementById('pet-evol-nome').textContent = `${petDef.nome} (${petDef.evolucoes[faseAtual-1].nome})`;
 
     const inputIdade = document.getElementById('input-idade-crianca');
     if (inputIdade) inputIdade.value = estado.idadeCrianca || 7;
     const inputTaxa = document.getElementById('input-taxa-cambio');
     if (inputTaxa) inputTaxa.value = estado.taxaCambio;
 
+    document.querySelectorAll('.opcao-pet').forEach(el => {
+      el.classList.toggle('ativo', el.getAttribute('data-pet') === estado.petAtual);
+    });
+
     aplicarFundoTela(estado.fundoAtual || 'ceu');
     renderizarTarefas();
     renderizarEvolucoes();
 }
 
-let ctxAudio = null;
 let debounceAcao = false;
 
-function obterContextoAudio() {
+function tocarAudioPet(urlSom) {
   try {
-    const AudioContext = window.AudioContext || window.webkitAudioContext;
-    if (!AudioContext) return null;
-    if (!ctxAudio) ctxAudio = new AudioContext();
-    if (ctxAudio.state === 'suspended') ctxAudio.resume();
-    return ctxAudio;
-  } catch(e) {
-    return null;
-  }
+    const audio = new Audio(urlSom);
+    audio.volume = 0.6;
+    audio.play().catch(() => {});
+  } catch(e) {}
 }
 
-function somDoPet(event) {
+function interagirComPet(event) {
     if (debounceAcao) return;
     debounceAcao = true;
     setTimeout(() => { debounceAcao = false; }, 250);
 
-    const ctx = obterContextoAudio();
-    const pet = BANCO_PETS[estado.petAtual];
+    const petDef = PETS[estado.petAtual];
+    const dadosPet = obterDadosPetAtual();
 
-    if (ctx) {
-      try {
-        const osc = ctx.createOscillator();
-        const gain = ctx.createGain();
-        osc.connect(gain);
-        gain.connect(ctx.destination);
-        
-        osc.frequency.value = pet.freq;
-        osc.type = estado.petAtual === 'frango' ? 'triangle' : 'sine';
-        
-        const tempo = ctx.currentTime;
-        gain.gain.setValueAtTime(0.2, tempo);
-        gain.gain.exponentialRampToValueAtTime(0.001, tempo + 0.25);
-        osc.start(tempo);
-        osc.stop(tempo + 0.25);
-      } catch(e) {}
-    }
+    tocarAudioPet(petDef.som);
 
     try {
       if (navigator.vibrate) navigator.vibrate(30);
     } catch(e) {}
 
-    estado.felicidade = Math.min(100, estado.felicidade + 5);
-    mostrarToast(`🔊 ${pet.som} ❤️`);
-    ganharXP(5, event);
+    dadosPet.felicidade = Math.min(100, dadosPet.felicidade + 5);
+    mostrarToast(`❤️ ${petDef.nome} adorou o carinho!`);
     salvar();
     atualizarTela();
 }
 
-function darLanche(event) {
-    if (debounceAcao) return;
-    debounceAcao = true;
-    setTimeout(() => { debounceAcao = false; }, 250);
-
-    if (estado.moedas >= 5) {
-      estado.moedas -= 5;
-      estado.felicidade = Math.min(100, estado.felicidade + 20);
-      ganharXP(5, event);
-      salvar();
-      atualizarTela();
-      mostrarToast('🍎 Lanche delicioso! +5 XP');
-    } else {
-      estado.felicidade = Math.min(100, estado.felicidade + 5);
-      ganharXP(1, event);
-      salvar();
-      atualizarTela();
-      mostrarToast('🍎 Petisco simples! (Junte 5 moedas para o lanche)');
-    }
-}
-
 function darRemedio() {
-    estado.saude = 100;
+    const dadosPet = obterDadosPetAtual();
+    dadosPet.saude = 100;
     salvar();
     atualizarTela();
     mostrarToast('💚 Pet com saúde 100%!');
@@ -673,16 +826,18 @@ function criarTextoFlutuante(texto, evento) {
 }
 
 function ganharXP(qtd, evento) {
-    estado.xp += qtd;
+    const dadosPet = obterDadosPetAtual();
+    dadosPet.xp += qtd;
     criarTextoFlutuante(`+${qtd} XP`, evento);
-    if (estado.xp >= 100) {
-        estado.xp -= 100;
-        estado.nivel++;
+
+    while (dadosPet.xp >= 100) {
+        dadosPet.xp -= 100;
+        dadosPet.nivel++;
         dispararConfetes();
         try {
           if (navigator.vibrate) navigator.vibrate([100, 50, 100]);
         } catch(e) {}
-        mostrarToast(`🎉 Subiu para o Nível ${estado.nivel}!`);
+        mostrarToast(`🎉 Seu ${PETS[estado.petAtual].nome} subiu para o Nível ${dadosPet.nivel}!`);
     }
     atualizarTela();
     salvar();
@@ -776,7 +931,7 @@ function aprovarTarefaPais(id) {
 function sacarDinheiro() {
   const valor = estado.dinheiroAcumulado || 0;
   if (valor <= 0) return alert('Sem saldo para saque!');
-  if (confirm(`Confirmar o pagamento de R$ ${valor.toFixed(2).replace('.', ',')} ao Bernardo?`)) {
+  if (confirm(`Confirmar o pagamento de R$ ${valor.toFixed(2).replace('.', ',')}?`)) {
     estado.totalSacado = (estado.totalSacado || 0) + valor;
     estado.dinheiroAcumulado = 0;
     salvar();
@@ -835,15 +990,24 @@ function escolherPet(tipo) {
 }
 document.addEventListener('click', (e) => {
     const lista = document.getElementById('lista-pets'); const btn = document.getElementById('btn-pet-atual');
-    if (!lista.contains(e.target) && e.target !== btn) lista.classList.remove('abrir');
+    if (lista && !lista.contains(e.target) && e.target !== btn) lista.classList.remove('abrir');
 });
 
 function renderizarEvolucoes() {
-    const pet = BANCO_PETS[estado.petAtual];
+    const petDef = PETS[estado.petAtual];
+    const dadosPet = obterDadosPetAtual();
     const c = document.getElementById('lista-evolucoes'); c.innerHTML = '';
-    pet.evolucoes.forEach(ev => {
-        const desbloq = estado.nivel >= ev.nivel;
-        c.innerHTML += `<div style="display:flex;align-items:center;gap:8px;padding:6px;background:${desbloq?'#faf5ff':'#f8fafc'};border-radius:8px;border:1px solid #e2e8f0;font-size:11px;"><span>${desbloq?'⭐':'🔒'}</span><div><b>${ev.nome}</b><p style="color:#666;font-size:9px;">Nível ${ev.nivel}</p></div></div>`;
+    
+    petDef.evolucoes.forEach(ev => {
+        const desbloq = dadosPet.nivel >= ev.nivel;
+        c.innerHTML += `
+          <div style="display:flex;align-items:center;gap:8px;padding:6px;background:${desbloq?'#faf5ff':'#f8fafc'};border-radius:8px;border:1px solid ${desbloq?'#d8b4fe':'#e2e8f0'};font-size:11px;">
+            <span>${desbloq?'⭐':'🔒'}</span>
+            <div>
+              <b style="color:${desbloq?'#6b21a8':'#475569'};">${ev.nome}</b>
+              <p style="color:#64748b;font-size:9px;">${ev.desc} (Nível ${ev.nivel})</p>
+            </div>
+          </div>`;
     });
 }
 
