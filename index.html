@@ -18,13 +18,26 @@ body{
   transition:background 0.6s ease;
 }
 
+/* === ORIGINAIS === */
 body.cenario-ceu{background:linear-gradient(180deg,#4facfe 0%,#00f2fe 100%);}
-body.cenario-noite{background:linear-gradient(180deg,#0f172a 0%,#1e3a8a 100%);color:#f8fafc;}
 body.cenario-chuva{background:linear-gradient(180deg,#475569 0%,#94a3b8 100%);}
-body.cenario-arcoiris{background:linear-gradient(180deg,#f87171 0%,#fbbf24 20%,#4ade80 50%,#60a5fa 75%,#a78bfa 100%);}
-body.cenario-praia{background:linear-gradient(180deg,#fef08a 0%,#fcd34d 30%,#38bdf8 65%,#0ea5e9 100%);}
-body.cenario-floresta{background:linear-gradient(180deg,#166534 0%,#15803d 45%,#84cc16 100%);}
+body.cenario-noite{background:linear-gradient(180deg,#0f172a 0%,#1e3a8a 100%);color:#f8fafc;}
+body.cenario-arcoiris{background:linear-gradient(180deg,#f87171 0%,#fbbf24 30%,#4ade80 60%,#60a5fa 100%);}
+body.cenario-praia{background:linear-gradient(180deg,#fef08a 0%,#38bdf8 100%);}
+body.cenario-floresta{background:linear-gradient(180deg,#166534 0%,#84cc16 100%);}
 body.cenario-festa{background:linear-gradient(180deg,#f472b6 0%,#a78bfa 50%,#60a5fa 100%);}
+
+/* === TEMÁTICOS === */
+body.cenario-halloween{background:linear-gradient(180deg,#1a1033 0%,#2e1065 50%,#7c2d12 100%);color:#f8fafc;}
+body.cenario-estadio{background:linear-gradient(180deg,#064e3b 0%,#10b981 100%);color:#f8fafc;}
+body.cenario-quarto{background:linear-gradient(180deg,#fdf4ff 0%,#f5d0fe 100%);}
+body.cenario-mario{background:linear-gradient(180deg,#22d3ee 0%,#84cc16 100%);}
+body.cenario-dino{background:linear-gradient(180deg,#fef3c7 0%,#f59e0b 50%,#166534 100%);}
+body.cenario-princesa{background:linear-gradient(180deg,#fbcfe8 0%,#f9a8d4 100%);}
+body.cenario-astronauta{background:linear-gradient(180deg,#020617 0%,#1e1b4b 100%);color:#f8fafc;}
+body.cenario-pirata{background:linear-gradient(180deg,#78350f 0%,#0f172a 100%);color:#f8fafc;}
+body.cenario-fazenda{background:linear-gradient(180deg,#fef08a 0%,#84cc16 100%);}
+body.cenario-neve{background:linear-gradient(180deg,#e0f2fe 0%,#bae6fd 100%);}
 
 .app{width:100%;max-width:400px;height:100vh;margin:0 auto;position:relative;display:flex;flex-direction:column;justify-content:space-between;padding:8px 12px;}
 
@@ -119,14 +132,16 @@ body.cenario-festa{background:linear-gradient(180deg,#f472b6 0%,#a78bfa 50%,#60a
 .modal{background:#fff;border-radius:24px;padding:18px;width:100%;max-width:340px;max-height:85vh;overflow-y:auto;box-shadow:0 15px 35px rgba(0,0,0,0.25);}
 .hidden{display:none!important;}
 
-.grid-fundos{display:grid;grid-template-columns:repeat(2,1fr);gap:8px;}
+.grid-fundos{display:grid;grid-template-columns:repeat(2,1fr);gap:8px;max-height:60vh;overflow-y:auto;padding-right:4px;}
+.grid-fundos::-webkit-scrollbar{width:4px;}
+.grid-fundos::-webkit-scrollbar-thumb{background:#cbd5e1;border-radius:4px;}
 .fundo-card{
   border-radius:12px;padding:8px;display:flex;flex-direction:column;align-items:center;
-  justify-content:center;color:#fff;text-shadow:0 1px 2px rgba(0,0,0,0.5);cursor:pointer;
-  border:2px solid transparent;transition:transform 0.15s;min-height:74px;
+  justify-content:center;color:#fff;text-shadow:0 1px 2px rgba(0,0,0,0.6);cursor:pointer;
+  border:2px solid transparent;transition:transform 0.15s;min-height:78px;
 }
 .fundo-card:active{transform:scale(0.96);}
-.fundo-card.ativo{border-color:#22c55e;box-shadow:0 0 0 2px rgba(34,197,94,0.3);}
+.fundo-card.ativo{border-color:#22c55e;box-shadow:0 0 0 2px rgba(34,197,94,0.4);}
 
 .toast{position:fixed;bottom:65px;left:50%;transform:translateX(-50%) translateY(20px);background:rgba(15,23,42,0.9);color:#fff;padding:6px 14px;border-radius:20px;font-weight:800;font-size:11px;z-index:200;opacity:0;transition:all .3s ease;pointer-events:none;}
 .toast.mostrar{opacity:1;transform:translateX(-50%) translateY(0);}
@@ -347,7 +362,7 @@ body.cenario-festa{background:linear-gradient(180deg,#f472b6 0%,#a78bfa 50%,#60a
 <div class="toast" id="toast"></div>
 
 <script>
-// ===================== SVG DOS PETS + EVOLUÇÕES =====================
+// ===================== BANCO DE PETS =====================
 const PETS = {
   gato: {
     id: 'gato', nome: 'Pipoca', emoji: '🐱',
@@ -363,28 +378,10 @@ const PETS = {
     gerarSVG: function(fase) {
       const e2 = fase >= 2, e3 = fase >= 3, e4 = fase >= 4, e5 = fase >= 5;
       let extra = '';
-      
-      // Fase 2 — Brilho prateado + mecha branca
-      if (e2) extra += `
-        <circle cx="135" cy="80" r="8" fill="#F0F0FF" opacity="0.9"/>
-        <path d="M135 75 L135 95" stroke="#C8C8FF" stroke-width="5" stroke-linecap="round" opacity="0.8"/>
-      `;
-      // Fase 3 — Estrelas brilhantes
-      if (e3) extra += `
-        <circle cx="100" cy="100" r="6" fill="#FFD700" class="evo-sparkle"/>
-        <circle cx="170" cy="100" r="6" fill="#FFD700" class="evo-sparkle"/>
-        <circle cx="135" cy="85" r="5" fill="#FFD700" class="evo-sparkle"/>
-      `;
-      // Fase 4 — Coroa
-      if (e4) extra += `
-        <path d="M105 45 L120 25 L135 35 L150 25 L165 45 Z" fill="#FFD700" stroke="#B8860B" stroke-width="2"/>
-        <path d="M95 50 L175 50 L170 58 L100 58 Z" fill="#B8860B"/>
-      `;
-      // Fase 5 — Asas + olhos dourados
-      if (e5) extra += `
-        <path d="M60 110 Q30 90 20 120 Q40 140 60 130 Z" fill="#1A1A1A" opacity="0.6" class="evo-float"/>
-        <path d="M210 110 Q240 90 250 120 Q230 140 210 130 Z" fill="#1A1A1A" opacity="0.6" class="evo-float"/>
-      `;
+      if (e2) extra += `<circle cx="135" cy="80" r="8" fill="#F0F0FF" opacity="0.9"/><path d="M135 75 L135 95" stroke="#C8C8FF" stroke-width="5" stroke-linecap="round" opacity="0.8"/>`;
+      if (e3) extra += `<circle cx="100" cy="100" r="6" fill="#FFD700" class="evo-sparkle"/><circle cx="170" cy="100" r="6" fill="#FFD700" class="evo-sparkle"/><circle cx="135" cy="85" r="5" fill="#FFD700" class="evo-sparkle"/>`;
+      if (e4) extra += `<path d="M105 45 L120 25 L135 35 L150 25 L165 45 Z" fill="#FFD700" stroke="#B8860B" stroke-width="2"/><path d="M95 50 L175 50 L170 58 L100 58 Z" fill="#B8860B"/>`;
+      if (e5) extra += `<path d="M60 110 Q30 90 20 120 Q40 140 60 130 Z" fill="#1A1A1A" opacity="0.6" class="evo-float"/><path d="M210 110 Q240 90 250 120 Q230 140 210 130 Z" fill="#1A1A1A" opacity="0.6" class="evo-float"/>`;
 
       return `
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 270 285" class="pet-svg">
@@ -438,7 +435,6 @@ const PETS = {
     gerarSVG: function(fase) {
       const e2 = fase >= 2, e3 = fase >= 3, e4 = fase >= 4, e5 = fase >= 5;
       let extra = '';
-      
       if (e2) extra += `<path d="M85 165 L135 180 L185 165 L175 190 L95 190 Z" fill="#EF4444"/><path d="M135 165 L135 180" stroke="white" stroke-width="3"/>`;
       if (e3) extra += `<rect x="90" y="185" width="90" height="25" rx="6" fill="#3B82F6"/><circle cx="160" cy="197" r="10" fill="#FFD700"/>`;
       if (e4) extra += `<circle cx="135" cy="60" r="15" fill="#FFD700" stroke="#B8860B" stroke-width="3"/><path d="M135 45 L135 75" stroke="#B8860B" stroke-width="2"/>`;
@@ -495,7 +491,6 @@ const PETS = {
     gerarSVG: function(fase) {
       const e2 = fase >= 2, e3 = fase >= 3, e4 = fase >= 4, e5 = fase >= 5;
       let extra = '';
-      
       if (e2) extra += `<path d="M90 55 Q70 15 85 5 Q100 15 95 50 Z" fill="#A0522D"/><path d="M180 55 Q200 15 185 5 Q170 15 175 50 Z" fill="#A0522D"/>`;
       if (e3) extra += `<circle cx="100" cy="180" r="8" fill="#9932CC" class="evo-sparkle"/><circle cx="135" cy="190" r="8" fill="#FF00FF" class="evo-sparkle"/><circle cx="170" cy="180" r="8" fill="#9932CC" class="evo-sparkle"/>`;
       if (e4) extra += `<path d="M100 45 L110 30 L125 40 L135 20 L145 40 L160 30 L170 45 Z" fill="#228B22"/><circle cx="135" cy="35" r="8" fill="#FFD700"/>`;
@@ -549,7 +544,6 @@ const PETS = {
     gerarSVG: function(fase) {
       const e2 = fase >= 2, e3 = fase >= 3, e4 = fase >= 4, e5 = fase >= 5;
       let extra = '';
-      
       if (e2) extra += `<path d="M200 180 Q230 160 240 190 Q225 210 200 200 Z" fill="#FF6B6B"/><path d="M210 160 Q245 140 250 170 Q235 190 210 180 Z" fill="#4ECDC4"/><path d="M195 200 Q215 220 195 230 Q175 215 195 200 Z" fill="#FFE66D"/>`;
       if (e3) extra += `<path d="M60 130 Q20 100 30 150 Q50 170 70 150 Z" fill="#FF6B6B" opacity="0.8"/><path d="M50 150 Q10 140 25 170 Q45 180 60 160 Z" fill="#4ECDC4" opacity="0.8"/>`;
       if (e4) extra += `<path d="M115 40 L125 20 L135 35 L145 20 L155 40 Z" fill="#FFD700" stroke="#B8860B" stroke-width="2"/>`;
@@ -587,14 +581,28 @@ const PETS = {
   }
 };
 
+// ===================== BANCO DE FUNDOS (17 FUNDOS) =====================
 const BANCO_FUNDOS = [
+  // === ORIGINAIS ===
   {id:'ceu',nome:'Céu Azul',emoji:'☀️',preco:0,bg:'linear-gradient(180deg,#4facfe,#00f2fe)'},
   {id:'chuva',nome:'Chuva',emoji:'🌧️',preco:12,bg:'linear-gradient(180deg,#475569,#94a3b8)'},
   {id:'noite',nome:'Noite Estrelada',emoji:'🌙',preco:20,bg:'linear-gradient(180deg,#0f172a,#1e3a8a)'},
   {id:'arcoiris',nome:'Arco-Íris',emoji:'🌈',preco:30,bg:'linear-gradient(180deg,#f87171,#fbbf24 30%,#4ade80 60%,#60a5fa 100%)'},
   {id:'praia',nome:'Praia Tropical',emoji:'🏖️',preco:25,bg:'linear-gradient(180deg,#fef08a,#38bdf8)'},
   {id:'floresta',nome:'Floresta Mágica',emoji:'🌲',preco:22,bg:'linear-gradient(180deg,#166534,#84cc16)'},
-  {id:'festa',nome:'Balada Neon',emoji:'🎉',preco:35,bg:'linear-gradient(180deg,#f472b6,#a78bfa 50%,#60a5fa)'}
+  {id:'festa',nome:'Balada Neon',emoji:'🎉',preco:35,bg:'linear-gradient(180deg,#f472b6,#a78bfa 50%,#60a5fa)'},
+
+  // === TEMÁTICOS ===
+  {id:'halloween',nome:'Halloween',emoji:'🎃',preco:40,bg:'linear-gradient(180deg,#1a1033,#2e1065,#7c2d12)'},
+  {id:'estadio',nome:'Estádio Futebol',emoji:'⚽',preco:45,bg:'linear-gradient(180deg,#064e3b,#10b981)'},
+  {id:'quarto',nome:'Quarto Infantil',emoji:'🛏️',preco:35,bg:'linear-gradient(180deg,#fdf4ff,#f5d0fe)'},
+  {id:'mario',nome:'Mundo Mario',emoji:'🍄',preco:50,bg:'linear-gradient(180deg,#22d3ee,#84cc16)'},
+  {id:'dino',nome:'Mundo Dinossauros',emoji:'🦖',preco:45,bg:'linear-gradient(180deg,#fef3c7,#f59e0b,#166534)'},
+  {id:'princesa',nome:'Castelo Princesa',emoji:'👑',preco:40,bg:'linear-gradient(180deg,#fbcfe8,#f9a8d4)'},
+  {id:'astronauta',nome:'Astronauta',emoji:'🚀',preco:50,bg:'linear-gradient(180deg,#020617,#1e1b4b)'},
+  {id:'pirata',nome:'Barco Pirata',emoji:'🏴‍☠️',preco:45,bg:'linear-gradient(180deg,#78350f,#0f172a)'},
+  {id:'fazenda',nome:'Fazenda Feliz',emoji:'🐄',preco:35,bg:'linear-gradient(180deg,#fef08a,#84cc16)'},
+  {id:'neve',nome:'Neve Natal',emoji:'🎄',preco:40,bg:'linear-gradient(180deg,#e0f2fe,#bae6fd)'}
 ];
 
 const firebaseConfig = {
@@ -650,7 +658,6 @@ let estado = {
   ]
 };
 
-// Carregamento e compatibilidade
 const salvo = localStorage.getItem('ROTINAPET_SAVE_FINAL');
 if (salvo) {
   try {
@@ -723,7 +730,6 @@ function obterDadosPetAtual() {
   return estado.pets[estado.petAtual];
 }
 
-// Converte o nível atual na fase visual de 1 a 5
 function calcularFase(nivel) {
   if (nivel >= 81) return 5;
   if (nivel >= 61) return 4;
@@ -1117,7 +1123,7 @@ function abrirLojaFundos() {
     card.innerHTML = `
       <span style="font-size:20px;">${f.emoji}</span>
       <b style="font-size:11px;margin-top:2px;">${f.nome}</b>
-      <span style="font-size:9px;font-weight:800;margin-top:2px;background:rgba(0,0,0,0.3);padding:2px 6px;border-radius:6px;">
+      <span style="font-size:9px;font-weight:800;margin-top:2px;background:rgba(0,0,0,0.35);padding:2px 6px;border-radius:6px;">
         ${ativo ? '✓ Em uso' : comprado ? 'Usar' : `${f.preco} 🪙`}
       </span>
     `;
