@@ -174,6 +174,22 @@ button{touch-action:manipulation}
 
 <button id="btn-instalar-pwa" class="primary-btn green-btn hidden" style="position:fixed;bottom:14px;left:50%;transform:translateX(-50%);z-index:90;box-shadow:0 8px 24px rgba(0,0,0,.3);padding:10px 18px;font-size:11px;border-radius:99px;display:flex;align-items:center;gap:6px"><span>📲</span> Instalar RotinaPet</button>
 
+<div id="modal-selecao-perfil" class="modal-overlay">
+  <div class="modal" style="text-align:center;max-width:320px">
+    <div style="font-size:38px;margin-bottom:6px">👋</div>
+    <h3 style="font-size:17px;margin-bottom:4px">Quem está usando?</h3>
+    <p style="font-size:10px;color:#64748b;margin-bottom:14px">Escolha como deseja começar:</p>
+    <div style="display:flex;flex-direction:column;gap:8px">
+      <button class="primary-btn green-btn" style="padding:12px;font-size:12px;display:flex;align-items:center;justify-content:center;gap:8px" onclick="escolherPerfilInicial('crianca')">
+        <span style="font-size:18px">👶</span> Sou a Criança
+      </button>
+      <button class="primary-btn blue-btn" style="padding:12px;font-size:12px;display:flex;align-items:center;justify-content:center;gap:8px" onclick="escolherPerfilInicial('pais')">
+        <span style="font-size:18px">👨‍👩‍👧</span> Sou o Responsável
+      </button>
+    </div>
+  </div>
+</div>
+
 <div id="modal-fundos" class="modal-overlay"><div class="modal"><div class="modal-title"><h3>🖼️ Loja de Fundos</h3><button class="close-btn" onclick="fecharModal('modal-fundos')">×</button></div><p style="font-size:9px;color:#64748b;margin-bottom:10px">Use suas moedas para personalizar o mundo do seu pet.</p><div class="grid-fundos" id="grid-fundos"></div></div></div>
 
 <div id="modal-timer" class="modal-overlay"><div class="modal" style="text-align:center"><div class="modal-title"><h3>⏳ Tempo de Tela</h3><button class="close-btn" onclick="fecharModal('modal-timer')">×</button></div><p style="font-size:10px;color:#64748b;margin-bottom:10px">Tempo liberado pela recompensa.</p><div id="relogio-timer" class="timer-display">00:00</div><button class="primary-btn red-btn" style="margin-top:10px" onclick="pausarFecharTimer()">Encerrar tempo</button></div></div>
@@ -190,6 +206,7 @@ button{touch-action:manipulation}
   <div class="section-card"><b style="font-size:10px">📋 Aprovações pendentes</b><div class="stack" id="lista-aprovacao-pais" style="margin-top:6px"></div></div>
   <div class="section-card"><b style="font-size:10px">✏️ Gerenciar tarefas</b><div style="font-size:8px;color:#64748b;margin-top:4px">Obrigatórias 🔥 contam para a ofensiva. Extras ⭐ dão recompensas, mas não liberam a ofensiva.</div><div class="stack" id="lista-edicao-tarefas" style="margin:6px 0"></div><div style="display:grid;grid-template-columns:1fr 48px 88px auto;gap:4px"><input class="field" id="nova-tarefa-texto" placeholder="Nova tarefa"><input class="field" id="nova-tarefa-moedas" type="number" value="5" min="1"><select class="field" id="nova-tarefa-tipo"><option value="obrigatoria">🔥 Obrigatória</option><option value="extra">⭐ Extra</option></select><button class="primary-btn blue-btn" onclick="adicionarTarefa()">+</button></div></div>
   <div class="section-card"><b style="font-size:10px">📊 Resumo</b><div class="stat-grid" style="margin-top:6px"><div class="stat">📋 <b id="stat-feitas">0</b><span>tarefas feitas</span></div><div class="stat">🔥 <b id="stat-ofensiva-pais">0</b><span>dias de ofensiva</span></div><div class="stat">🏆 <b id="stat-conquistas">0</b><span>conquistas</span></div></div></div>
+  <button class="primary-btn" style="width:100%;margin-top:5px;background:#e2e8f0;color:#475569" onclick="fecharModal('modal-pais');alternarPerfil()">🔄 Trocar Perfil de Usuário</button>
 </div></div>
 
 <div id="modal-evolucoes" class="modal-overlay"><div class="modal"><div class="modal-title"><h3>⭐ Evoluções — <span id="modal-pet-evol-nome">Pipoca</span></h3><button class="close-btn" onclick="fecharModal('modal-evolucoes')">×</button></div><div class="stack" id="lista-evolucoes"></div></div></div>
@@ -292,6 +309,7 @@ const hojeLocal=()=>{const d=new Date();return `${d.getFullYear()}-${String(d.ge
 const ontemLocal=()=>{const d=new Date();d.setDate(d.getDate()-1);return `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`};
 
 let estado={
+  perfilAtivo:null,
   petAtual:'gato',moedas:15,taxaCambio:.01,pinPais:'1234',dinheiroAcumulado:.15,idadeCrianca:7,
   fundoAtual:'ceu',fundosComprados:['ceu'],metaMoedas:50,totalSacado:0,
   ultimoDiaAcesso:hojeLocal(),ultimoDiaConcluido:null,streak:0,ultimoStreakPremiado:0,
@@ -522,6 +540,31 @@ function renderizarTarefas(){
   bloco('Obrigatórias — liberam a ofensiva',o,'🔥');
   bloco('Extras — não afetam a ofensiva',x,'⭐');
   atualizarOfensiva();
+}
+
+function verificarPrimeiroAcesso(){
+  if(!estado.perfilAtivo){
+    abrirModal('modal-selecao-perfil');
+  }else if(estado.perfilAtivo==='pais'){
+    abrirPainelPais();
+  }
+}
+
+function escolherPerfilInicial(tipo){
+  estado.perfilAtivo=tipo;
+  salvar();
+  fecharModal('modal-selecao-perfil');
+  if(tipo==='pais'){
+    abrirPainelPais();
+  }else{
+    mostrarToast('🐾 Bem-vindo ao seu Pet!');
+  }
+}
+
+function alternarPerfil(){
+  estado.perfilAtivo=null;
+  salvar();
+  abrirModal('modal-selecao-perfil');
 }
 
 let pinDigitado='';
@@ -992,6 +1035,7 @@ atualizarTela();
 marcarConquistas();
 recuperarTimerAtivo();
 iniciarSincronizacaoNuvem();
+verificarPrimeiroAcesso();
 </script>
 </body>
 </html>
