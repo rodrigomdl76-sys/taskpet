@@ -103,6 +103,7 @@ button{touch-action:manipulation}
 .field-label{font-size:10px;font-weight:900;color:#475569;display:block;margin-bottom:4px}
 .field{width:100%;padding:8px;border:1px solid #cbd5e1;border-radius:9px;outline:none;font-size:11px;font-weight:800}
 .primary-btn{border:0;background:#7c3aed;color:#fff;border-radius:10px;padding:8px 12px;font-size:10px;font-weight:900;cursor:pointer}
+.primary-btn:disabled{opacity:.5;cursor:not-allowed}
 .green-btn{background:#10b981}.red-btn{background:#ef4444}.blue-btn{background:#0284c7}
 .grid-fundos{display:grid;grid-template-columns:repeat(2,1fr);gap:8px}
 .fundo-card{min-height:95px;border-radius:15px;padding:8px;display:flex;flex-direction:column;align-items:center;justify-content:center;color:#fff;text-shadow:0 1px 3px #0008;border:2px solid transparent;cursor:pointer}
@@ -110,16 +111,23 @@ button{touch-action:manipulation}
 .shop-tag{margin-top:5px;background:#0006;padding:3px 7px;border-radius:8px;font-size:8px;font-weight:900}
 .progress{height:8px;background:#e2e8f0;border-radius:99px;overflow:hidden}.progress>div{height:100%;background:#ef4444;border-radius:99px}
 .reward-row,.approval-row,.edit-row,.achievement-row{display:flex;justify-content:space-between;align-items:center;gap:7px;background:#f8fafc;border:1px solid #edf0f4;padding:8px;border-radius:11px;font-size:9px}
+.approval-row{flex-direction:column;align-items:stretch}
+.approval-top{display:flex;justify-content:space-between;align-items:center;gap:7px}
+.approval-foto{width:100%;max-height:160px;object-fit:cover;border-radius:9px;margin-top:6px;cursor:pointer}
 .stack{display:flex;flex-direction:column;gap:5px}
 .timer-display{font-size:46px;font-weight:900;background:#f1f5f9;border-radius:18px;padding:12px;color:#172033}
 .math-question{font-size:27px;font-weight:900;background:#f1f5f9;border-radius:15px;padding:12px;margin-bottom:10px}
 .math-options{display:grid;grid-template-columns:repeat(2,1fr);gap:7px}.math-options button{padding:10px;border:0;border-radius:12px;background:#e0e7ff;color:#312e81;font-size:17px;font-weight:900}
 .pin-dots{display:flex;justify-content:center;gap:8px;margin:12px 0}.pin-dot{width:13px;height:13px;border-radius:50%;background:#e2e8f0}.pin-dot.on{background:#7c3aed}
-.pin-pad{display:grid;grid-template-columns:repeat(3,1fr);gap:7px}.pin-key{height:48px;border:0;border-radius:12px;background:#f1f5f9;font-size:16px;font-weight:900;cursor:pointer}.pin-key:active{transform:scale(.95)}
+.pin-pad{display:grid;grid-template-columns:repeat(3,1fr);gap:7px}.pin-key{height:48px;border:0;border-radius:12px;background:#f1f5f9;font-size:16px;font-weight:900;cursor:pointer}.pin-key:active{transform:scale(.95)}.pin-key:disabled{opacity:.4}
+.pin-erro{font-size:9px;font-weight:900;color:#ef4444;margin-top:6px;min-height:12px}
 .stat-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:7px}.stat{background:#f8fafc;border-radius:12px;padding:9px}.stat b{font-size:17px}.stat span{display:block;font-size:8px;color:#64748b;font-weight:900}
 .toast{position:fixed;left:50%;bottom:74px;transform:translate(-50%,20px);background:#0f172aee;color:#fff;padding:8px 15px;border-radius:99px;font-size:10px;font-weight:900;z-index:200;opacity:0;pointer-events:none;transition:.25s}
 .toast.mostrar{opacity:1;transform:translate(-50%,0)}
 .hidden{display:none!important}
+.foto-viewer{position:fixed;inset:0;background:#000d;display:flex;align-items:center;justify-content:center;z-index:300;opacity:0;visibility:hidden;transition:.2s;padding:20px}
+.foto-viewer.mostrar{opacity:1;visibility:visible}
+.foto-viewer img{max-width:100%;max-height:100%;border-radius:14px}
 @media(max-height:650px){.pet-stage{height:185px;min-height:160px}.tasks-section{max-height:105px}.bottom-btn{min-height:50px}.btn-icon{font-size:17px}#pet-svg-container{width:160px;height:160px}}
 </style>
 </head>
@@ -194,7 +202,7 @@ button{touch-action:manipulation}
 
 <div id="modal-timer" class="modal-overlay"><div class="modal" style="text-align:center"><div class="modal-title"><h3>⏳ Tempo de Tela</h3><button class="close-btn" onclick="fecharModal('modal-timer')">×</button></div><p style="font-size:10px;color:#64748b;margin-bottom:10px">Tempo liberado pela recompensa.</p><div id="relogio-timer" class="timer-display">00:00</div><button class="primary-btn red-btn" style="margin-top:10px" onclick="pausarFecharTimer()">Encerrar tempo</button></div></div>
 
-<div id="modal-pin" class="modal-overlay"><div class="modal" style="text-align:center;max-width:310px"><h3 style="font-size:17px">🔐 Área dos responsáveis</h3><p style="font-size:10px;color:#64748b;margin-top:4px">Digite o PIN de 4 dígitos</p><div class="pin-dots" id="pin-dots"><i class="pin-dot"></i><i class="pin-dot"></i><i class="pin-dot"></i><i class="pin-dot"></i></div><div class="pin-pad" id="pin-pad"></div><button class="primary-btn" style="margin-top:9px;background:#e2e8f0;color:#475569" onclick="fecharModal('modal-pin');limparPin()">Cancelar</button></div></div>
+<div id="modal-pin" class="modal-overlay"><div class="modal" style="text-align:center;max-width:310px"><h3 style="font-size:17px">🔐 Área dos responsáveis</h3><p style="font-size:10px;color:#64748b;margin-top:4px">Digite o PIN de 4 dígitos</p><div class="pin-dots" id="pin-dots"><i class="pin-dot"></i><i class="pin-dot"></i><i class="pin-dot"></i><i class="pin-dot"></i></div><div class="pin-erro" id="pin-erro"></div><div class="pin-pad" id="pin-pad"></div><button class="primary-btn" style="margin-top:9px;background:#e2e8f0;color:#475569" onclick="fecharModal('modal-pin');limparPin()">Cancelar</button></div></div>
 
 <div id="modal-pais" class="modal-overlay"><div class="modal">
   <div class="modal-title"><h3>👨‍👩‍👧 Painel dos Pais</h3><button class="close-btn" onclick="fecharModal('modal-pais')">×</button></div>
@@ -209,7 +217,7 @@ button{touch-action:manipulation}
       <input class="field" id="input-codigo-familia" placeholder="ex: cunhado">
       <button class="primary-btn blue-btn" onclick="trocarFamiliaManualmente()">Conectar</button>
     </div>
-    <small style="font-size:8px;color:#64748b;margin-top:3px;display:block">Dispositivos com o mesmo código compartilham as tarefas e pet.</small>
+    <small style="font-size:8px;color:#64748b;margin-top:3px;display:block">Dispositivos com o mesmo código compartilham as tarefas e pet. Use um código longo e difícil de adivinhar — ele funciona como uma senha.</small>
   </div>
   <div class="section-card"><b style="font-size:10px">📋 Aprovações pendentes</b><div class="stack" id="lista-aprovacao-pais" style="margin-top:6px"></div></div>
   <div class="section-card"><b style="font-size:10px">✏️ Gerenciar tarefas</b><div style="font-size:8px;color:#64748b;margin-top:4px">Obrigatórias 🔥 contam para a ofensiva. Extras ⭐ dão recompensas, mas não liberam a ofensiva.</div><div class="stack" id="lista-edicao-tarefas" style="margin:6px 0"></div><div style="display:grid;grid-template-columns:1fr 48px 88px auto;gap:4px"><input class="field" id="nova-tarefa-texto" placeholder="Nova tarefa"><input class="field" id="nova-tarefa-moedas" type="number" value="5" min="1"><select class="field" id="nova-tarefa-tipo"><option value="obrigatoria">🔥 Obrigatória</option><option value="extra">⭐ Extra</option></select><button class="primary-btn blue-btn" onclick="adicionarTarefa()">+</button></div></div>
@@ -237,13 +245,26 @@ button{touch-action:manipulation}
   <div class="stack" id="lista-conquistas"></div>
 </div></div>
 
-<div id="modal-gravador" class="modal-overlay"><div class="modal" style="text-align:center"><div class="modal-title"><h3>🎙️ Gravar Voz</h3><button class="close-btn" onclick="fecharModal('modal-gravador')">×</button></div><p style="font-size:10px;color:#64748b;margin-bottom:10px">Grave uma mensagem para o seu pet.</p><button id="btn-iniciar-grav" class="primary-btn red-btn" onclick="iniciarGravacao()">🔴 Começar</button><button id="btn-parar-grav" class="primary-btn" style="display:none;background:#475569" onclick="pararGravacao()">⏹️ Parar</button><div id="grav-result" class="hidden" style="margin-top:10px"><audio id="audio-original" controls style="width:100%"></audio><button class="primary-btn" style="margin-top:7px" onclick="salvarVoz()">💾 Usar no Pet</button></div></div></div>
+<div id="modal-gravador" class="modal-overlay"><div class="modal" style="text-align:center"><div class="modal-title"><h3>🎙️ Gravar Voz</h3><button class="close-btn" onclick="fecharModal('modal-gravador')">×</button></div><p style="font-size:10px;color:#64748b;margin-bottom:10px">Grave uma mensagem para o seu pet.</p><button id="btn-iniciar-grav" class="primary-btn red-btn" onclick="iniciarGravacao()">🔴 Começar</button><button id="btn-parar-grav" class="primary-btn" style="display:none;background:#475569" onclick="pararGravacao()">⏹️ Parar</button><div id="grav-result" class="hidden" style="margin-top:10px">
+  <audio id="audio-original" controls style="width:100%"></audio>
+  <div style="margin-top:9px"><span class="field-label" style="text-align:left">🎚️ Efeito de voz</span>
+    <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:5px;margin-top:4px">
+      <button type="button" class="task-btn" id="efeito-normal" style="padding:9px 4px;font-size:9px" onclick="aplicarEfeitoVoz('normal',this)">🎤<br>Normal</button>
+      <button type="button" class="task-btn" id="efeito-fininha" style="padding:9px 4px;font-size:9px" onclick="aplicarEfeitoVoz('fininha',this)">🐿️<br>Fininha</button>
+      <button type="button" class="task-btn" id="efeito-grossa" style="padding:9px 4px;font-size:9px" onclick="aplicarEfeitoVoz('grossa',this)">🐻<br>Grossa</button>
+    </div>
+  </div>
+  <div id="efeito-processando" class="hidden" style="font-size:9px;font-weight:900;color:#7c3aed;margin-top:7px">⏳ Aplicando efeito...</div>
+  <button class="primary-btn" style="margin-top:9px" onclick="salvarVoz()">💾 Usar no Pet</button>
+</div></div></div>
 
 <div id="modal-matematica" class="modal-overlay"><div class="modal" style="text-align:center"><div class="modal-title"><h3>🎮 Desafio Matemático</h3><button class="close-btn" onclick="fecharModal('modal-matematica')">×</button></div><p style="font-size:9px;color:#64748b;margin-bottom:8px">Acertou? +1 🪙 e +1 XP</p><div id="conta-math" class="math-question">?</div><div id="opcoes-math" class="math-options"></div></div></div>
 
 <div id="modal-recompensas" class="modal-overlay"><div class="modal"><div class="modal-title"><h3>🎁 Resgatar Prêmios</h3><button class="close-btn" onclick="fecharModal('modal-recompensas')">×</button></div><div class="section-card"><div style="display:flex;justify-content:space-between;font-size:9px;font-weight:900"><span>🎯 Meta: Passeio Especial</span><span id="texto-meta-progresso">0 / 50 🪙</span></div><div class="progress" style="margin-top:5px"><div id="barra-meta-progresso" style="width:0"></div></div></div><div class="stack" id="lista-itens-loja"></div></div></div>
 
 <div id="modal-aviso" class="modal-overlay"><div class="modal" style="text-align:center;max-width:320px"><div id="aviso-emoji" style="font-size:35px">🎉</div><h3 id="aviso-titulo" style="font-size:16px;margin:5px 0">Tudo certo!</h3><p id="aviso-texto" style="font-size:10px;color:#64748b"></p><button class="primary-btn" style="margin-top:10px" onclick="fecharModal('modal-aviso')">OK</button></div></div>
+
+<div class="foto-viewer" id="foto-viewer" onclick="fecharVisualizadorFoto()"><img id="foto-viewer-img" src=""></div>
 
 <div class="toast" id="toast"></div>
 
@@ -333,7 +354,8 @@ let estado={
   pets:{gato:{nivel:1,xp:0,felicidade:100,saude:100},cachorra:{nivel:1,xp:0,felicidade:100,saude:100},cabra:{nivel:1,xp:0,felicidade:100,saude:100},frango:{nivel:1,xp:0,felicidade:100,saude:100}},
   tarefas:[{id:1,texto:'Escovar os dentes',recompensa:5,xp:20,tipo:'obrigatoria',status:'pendente',foto:null},{id:2,texto:'Arrumar a cama',recompensa:5,xp:20,tipo:'obrigatoria',status:'pendente',foto:null}],
   recompensas:[{id:1,texto:'15 min de tela',custo:10,tipo:'timer',minutos:15},{id:2,texto:'30 min de tela',custo:18,tipo:'timer',minutos:30}],
-  conquistas:{}
+  conquistas:{},
+  pinBloqueadoAte:null,pinTentativasFalhas:0
 };
 
 try{
@@ -588,6 +610,7 @@ let pinDigitado='';
 function abrirPainelPais(){
   limparPin();
   montarTecladoPin();
+  atualizarEstadoBloqueioPin();
   abrirModal('modal-pin');
 }
 
@@ -603,6 +626,7 @@ function montarTecladoPin(){
     b.textContent=k;
     b.onclick=(e)=>{
       e.stopPropagation();
+      if(estaPinBloqueado())return;
       if(k==='⌫'){
         pinDigitado=pinDigitado.slice(0,-1);
       }else if(k==='✓'){
@@ -624,16 +648,55 @@ function atualizarDots(){
   document.querySelectorAll('.pin-dot').forEach((d,i)=>d.classList.toggle('on',i<pinDigitado.length));
 }
 
+const PIN_MAX_TENTATIVAS=5;
+const PIN_BLOQUEIO_MS=60000;
+
+function estaPinBloqueado(){
+  return !!(estado.pinBloqueadoAte&&Date.now()<estado.pinBloqueadoAte);
+}
+
+function atualizarEstadoBloqueioPin(){
+  const erroEl=document.getElementById('pin-erro');
+  const bloqueado=estaPinBloqueado();
+  document.querySelectorAll('.pin-key').forEach(k=>k.disabled=bloqueado);
+  if(!erroEl)return;
+  if(bloqueado){
+    const segundosRestantes=Math.ceil((estado.pinBloqueadoAte-Date.now())/1000);
+    erroEl.textContent=`🔒 Muitas tentativas. Aguarde ${segundosRestantes}s.`;
+    setTimeout(()=>{
+      if(document.getElementById('modal-pin')?.classList.contains('mostrar'))atualizarEstadoBloqueioPin();
+    },1000);
+  }else{
+    erroEl.textContent='';
+  }
+}
+
 function validarPin(){
+  if(estaPinBloqueado())return;
   const pinCorreto=String(estado.pinPais||'1234');
   if(pinDigitado===pinCorreto){
+    estado.pinTentativasFalhas=0;
+    estado.pinBloqueadoAte=null;
+    salvar();
     fecharModal('modal-pin');
     limparPin();
     renderizarPainelPais();
     abrirModal('modal-pais');
   }else{
-    mostrarAviso('❌','PIN incorreto','Tente novamente.');
+    estado.pinTentativasFalhas=(estado.pinTentativasFalhas||0)+1;
     limparPin();
+    if(estado.pinTentativasFalhas>=PIN_MAX_TENTATIVAS){
+      estado.pinBloqueadoAte=Date.now()+PIN_BLOQUEIO_MS;
+      estado.pinTentativasFalhas=0;
+      salvar();
+      atualizarEstadoBloqueioPin();
+    }else{
+      salvar();
+      const erroEl=document.getElementById('pin-erro');
+      const restam=PIN_MAX_TENTATIVAS-estado.pinTentativasFalhas;
+      if(erroEl)erroEl.textContent=`❌ PIN incorreto. ${restam} tentativa(s) restante(s).`;
+      navigator.vibrate?.(120);
+    }
   }
 }
 
@@ -652,7 +715,10 @@ function renderizarPainelPais(){
   ap.innerHTML='';
   const ps=estado.tarefas.filter(t=>t.status==='aguardando_aprovacao');
   if(!ps.length)ap.innerHTML='<span style="font-size:9px;color:#94a3b8">Nenhuma pendente.</span>';
-  ps.forEach(t=>ap.innerHTML+=`<div class="approval-row"><span>${t.tipo==='obrigatoria'?'🔥':'⭐'} <b>${esc(t.texto)}</b> ${t.foto?'📸':''}</span><button class="primary-btn green-btn" onclick="aprovarTarefaPais(${t.id})">Aprovar</button></div>`);
+  ps.forEach(t=>{
+    const fotoHtml=t.foto?`<img class="approval-foto" src="${t.foto}" onclick="abrirVisualizadorFoto('${t.foto}')">`:'';
+    ap.innerHTML+=`<div class="approval-row"><div class="approval-top"><span>${t.tipo==='obrigatoria'?'🔥':'⭐'} <b>${esc(t.texto)}</b> ${t.foto?'📸':''}</span><div style="display:flex;gap:4px"><button class="primary-btn red-btn" onclick="reprovarTarefaPais(${t.id})">Recusar</button><button class="primary-btn green-btn" onclick="aprovarTarefaPais(${t.id})">Aprovar</button></div></div>${fotoHtml}</div>`;
+  });
   
   const ed=document.getElementById('lista-edicao-tarefas');
   ed.innerHTML='';
@@ -669,10 +735,35 @@ function renderizarPainelPais(){
   atualizarEstatisticas();
 }
 
+function abrirVisualizadorFoto(src){
+  document.getElementById('foto-viewer-img').src=src;
+  document.getElementById('foto-viewer').classList.add('mostrar');
+}
+function fecharVisualizadorFoto(){
+  document.getElementById('foto-viewer').classList.remove('mostrar');
+}
+
+function reprovarTarefaPais(id){
+  const t=estado.tarefas.find(x=>x.id===id);
+  if(!t)return;
+  mostrarConfirmacao(`Recusar a tarefa "${t.texto}"? Ela voltará como pendente para a criança refazer.`,()=>{
+    t.status='pendente';
+    t.foto=null;
+    salvar();
+    renderizarPainelPais();
+    atualizarTela();
+    mostrarToast('↩️ Tarefa devolvida para a criança.');
+  });
+}
+
 function trocarFamiliaManualmente(){
   const novoCodigo=document.getElementById('input-codigo-familia').value.trim().toLowerCase().replace(/[^a-z0-9_-]/g,'');
   if(!novoCodigo){
     mostrarToast('Digite um código válido.');
+    return;
+  }
+  if(novoCodigo.length<8){
+    mostrarToast('⚠️ Use um código com pelo menos 8 caracteres, difícil de adivinhar.');
     return;
   }
   codigoFamilia=novoCodigo;
@@ -769,6 +860,7 @@ function salvarNovoPin(){
   const input=document.getElementById('novo-pin-pais');
   const p=input.value.trim();
   if(!/^\d{4}$/.test(p))return mostrarToast('PIN precisa ter exatamente 4 números.');
+  if(p==='1234'||p==='0000'||/^(\d)\1{3}$/.test(p))return mostrarToast('⚠️ Escolha um PIN menos óbvio (não use 1234 ou dígitos repetidos).');
   estado.pinPais=p;
   input.value='';
   salvar();
@@ -988,21 +1080,31 @@ function comprarPremio(id){
 }
 
 let mediaRecorder=null,chunks=[];
-function alternarGravador(){abrirModal('modal-gravador')}
+let blobGravacaoOriginal=null,blobEfeitoAtual=null,cacheEfeitosVoz={};
+function alternarGravador(){resetarEstadoGravador();abrirModal('modal-gravador')}
+
+function resetarEstadoGravador(){
+  blobGravacaoOriginal=null;
+  blobEfeitoAtual=null;
+  cacheEfeitosVoz={};
+  window.ultimaVozBase64=null;
+  document.getElementById('grav-result').classList.add('hidden');
+  document.getElementById('efeito-processando').classList.add('hidden');
+  document.querySelectorAll('#grav-result .task-btn').forEach(b=>b.classList.remove('btn-ok'));
+}
+
 async function iniciarGravacao(){
   try{
     const stream=await navigator.mediaDevices.getUserMedia({audio:true});
     chunks=[];
     mediaRecorder=new MediaRecorder(stream);
     mediaRecorder.ondataavailable=e=>chunks.push(e.data);
-    mediaRecorder.onstop=()=>{
-      const blob=new Blob(chunks,{type:'audio/webm'});
-      const r=new FileReader();
-      r.onload=ev=>window.ultimaVozBase64=ev.target.result;
-      r.readAsDataURL(blob);
-      document.getElementById('audio-original').src=URL.createObjectURL(blob);
-      document.getElementById('grav-result').classList.remove('hidden');
+    mediaRecorder.onstop=async()=>{
+      blobGravacaoOriginal=new Blob(chunks,{type:'audio/webm'});
+      cacheEfeitosVoz={};
       stream.getTracks().forEach(t=>t.stop());
+      document.getElementById('grav-result').classList.remove('hidden');
+      await aplicarEfeitoVoz('normal',document.getElementById('efeito-normal'));
     };
     mediaRecorder.start();
     document.getElementById('btn-iniciar-grav').style.display='none';
@@ -1017,6 +1119,84 @@ function pararGravacao(){
     document.getElementById('btn-iniciar-grav').style.display='inline-block';
     document.getElementById('btn-parar-grav').style.display='none';
   }
+}
+
+const TAXAS_EFEITO_VOZ={normal:1,fininha:1.55,grossa:.72};
+
+async function aplicarEfeitoVoz(tipo,btnEl){
+  if(!blobGravacaoOriginal)return;
+  document.querySelectorAll('#grav-result .task-btn').forEach(b=>b.classList.remove('btn-ok'));
+  btnEl?.classList.add('btn-ok');
+  try{
+    let blobResultado=cacheEfeitosVoz[tipo];
+    if(!blobResultado){
+      document.getElementById('efeito-processando').classList.remove('hidden');
+      blobResultado=tipo==='normal'?blobGravacaoOriginal:await transformarPitchAudio(blobGravacaoOriginal,TAXAS_EFEITO_VOZ[tipo]);
+      cacheEfeitosVoz[tipo]=blobResultado;
+    }
+    blobEfeitoAtual=blobResultado;
+    document.getElementById('audio-original').src=URL.createObjectURL(blobResultado);
+    const r=new FileReader();
+    r.onload=ev=>window.ultimaVozBase64=ev.target.result;
+    r.readAsDataURL(blobResultado);
+  }catch(e){
+    mostrarToast('⚠️ Não foi possível aplicar o efeito, usando voz normal.');
+    blobEfeitoAtual=blobGravacaoOriginal;
+    document.getElementById('audio-original').src=URL.createObjectURL(blobGravacaoOriginal);
+  }finally{
+    document.getElementById('efeito-processando').classList.add('hidden');
+  }
+}
+
+async function transformarPitchAudio(blobOriginal,taxa){
+  const arrayBuffer=await blobOriginal.arrayBuffer();
+  const ctxTemp=new(window.AudioContext||window.webkitAudioContext)();
+  const bufferOriginal=await ctxTemp.decodeAudioData(arrayBuffer);
+  const novoTamanho=Math.max(1,Math.ceil(bufferOriginal.length/taxa));
+  const ctxOffline=new OfflineAudioContext(bufferOriginal.numberOfChannels,novoTamanho,bufferOriginal.sampleRate);
+  const fonte=ctxOffline.createBufferSource();
+  fonte.buffer=bufferOriginal;
+  fonte.playbackRate.value=taxa;
+  fonte.connect(ctxOffline.destination);
+  fonte.start();
+  const bufferRenderizado=await ctxOffline.startRendering();
+  ctxTemp.close();
+  return bufferParaWavBlob(bufferRenderizado);
+}
+
+function bufferParaWavBlob(buffer){
+  const numCanais=buffer.numberOfChannels,taxaAmostragem=buffer.sampleRate,bitsPorAmostra=16;
+  const numAmostras=buffer.length;
+  const bytesPorAmostra=bitsPorAmostra/8;
+  const blocoAlinhamento=numCanais*bytesPorAmostra;
+  const tamanhoDados=numAmostras*blocoAlinhamento;
+  const bufferArray=new ArrayBuffer(44+tamanhoDados);
+  const view=new DataView(bufferArray);
+  const escreverString=(offset,str)=>{for(let i=0;i<str.length;i++)view.setUint8(offset+i,str.charCodeAt(i))};
+  escreverString(0,'RIFF');
+  view.setUint32(4,36+tamanhoDados,true);
+  escreverString(8,'WAVE');
+  escreverString(12,'fmt ');
+  view.setUint32(16,16,true);
+  view.setUint16(20,1,true);
+  view.setUint16(22,numCanais,true);
+  view.setUint32(24,taxaAmostragem,true);
+  view.setUint32(28,taxaAmostragem*blocoAlinhamento,true);
+  view.setUint16(32,blocoAlinhamento,true);
+  view.setUint16(34,bitsPorAmostra,true);
+  escreverString(36,'data');
+  view.setUint32(40,tamanhoDados,true);
+  const canais=[];
+  for(let c=0;c<numCanais;c++)canais.push(buffer.getChannelData(c));
+  let offset=44;
+  for(let i=0;i<numAmostras;i++){
+    for(let c=0;c<numCanais;c++){
+      const amostra=Math.max(-1,Math.min(1,canais[c][i]));
+      view.setInt16(offset,amostra<0?amostra*0x8000:amostra*0x7FFF,true);
+      offset+=2;
+    }
+  }
+  return new Blob([bufferArray],{type:'audio/wav'});
 }
 
 function salvarVoz(){
