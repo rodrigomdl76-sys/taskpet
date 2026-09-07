@@ -1725,4 +1725,277 @@ function renderizarAcessorioNoContainer(){
   if(!c)return;
   const ativo=estado.acessorios?.ativo;
   const item=ACESSORIOS.find(a=>a.id===ativo);
-  c.innerHTML=item?item.svg:''
+  c.innerHTML=item?item.svg:'';
+}
+
+function abrirLojaRecompensas(){
+  renderizarLojaRecompensas();
+  abrirModal('modal-recompensas');
+}
+
+function renderizarLojaRecompensas(){
+  const c=document.getElementById('lista-itens-loja');
+  c.innerHTML='';
+  const metaTotal=estado.metaMoedas||50;
+  const percMeta=Math.min(100,Math.round((estado.moedas/metaTotal)*100));
+  document.getElementById('texto-meta-progresso').textContent=`${estado.moedas} / ${metaTotal} 🪙`;
+  document.getElementById('barra-meta-progresso').style.width=`${percMeta}%`;
+
+  estado.recompensas.forEach(r=>{
+    const pode=estado.moedas>=r.custo;
+    c.innerHTML+=`
+      <div class="reward-row">
+        <div>
+          <b>${esc(r.texto)}</b>
+          <span style="display:block;color:#6366f1;font-weight:800">${r.custo} 🪙</span>
+        </div>
+        <button class="primary-btn ${pode?'green-btn':''}" ${pode?'':'disabled'} onclick="resgatarRecompensa(${r.id})">
+          Resgatar
+        </button>
+      </div>
+    `;
+  });
+}
+
+function resgatarRecompensa(id){
+  const r=estado.recompensas.find(x=>x.id===id);
+  if(!r||estado.moedas<r.custo)return;
+  mostrarConfirmacao(`Resgatar "${r.texto}" por ${r.custo} moedas?`,()=>{
+    estado.moedas-=r.custo;
+    salvar();
+    atualizarTela();
+    renderizarLojaRecompensas();
+    fecharModal('modal-recompensas');
+    if(r.tipo==='timer'&&r.minutos){
+      iniciarTimerTela(r.minutos);
+    }else{
+      dispararConfetes();
+      somConquista();
+      mostrarAviso('🎁','Prêmio Liberado!',`Você resgatou: ${r.texto}`);
+    }
+  });
+}
+
+let intervaloTimer=null;
+function iniciarTimerTela(minutos){
+  estado.timerFim=Date.now()+(minutos*60*1000);
+  salvar();
+  atualizarDisplayTimer();
+  abrirModal('modal-timer');
+  clearInterval(intervaloTimer);
+  intervaloTimer=setInterval(atualizarDisplayTimer,1000);
+}
+
+function atualizarDisplayTimer(){
+  if(!estado.timerFim)return;
+  const restante=Math.max(0,Math.floor((estado.timerFim-Date.now())/1000));
+  const m=String(Math.floor(restante/60)).padStart(2,'0');
+  const s=String(restante%60).padStart(2,'0');
+  const el=document.getElementById('relogio-timer');
+  if(el)el.textContent=`${m}:${s}`;
+  if(restante<=0){
+    clearInterval(intervaloTimer);
+    estado.timerFim=null;
+    salvar();
+    tocarTom(300,'sawtooth',.4,0,.3);
+    setTimeout(()=>tocarTom(250,'sawtooth',.6,0,.3),450);
+    mostrarAviso('⏰','Tempo Esgotado!','O tempo de tela liberado acabou.');
+    fecharModal('modal-timer');
+  }
+}
+
+function pausarFecharTimer(){
+  clearInterval(intervaloTimer);
+  estado.timerFim=null;
+  salvar();
+  fecharModal('modal-timer');
+}
+
+let mediaRecorder=null,pedacosAudio=[],bufferGravado=null,audioBlobFinal=null;
+
+function alternarGravador(){
+  abrirModal('modal-gravador');
+}
+
+async function iniciarGravacao(){
+  try{
+    const stream=await navigator.mediaDevices.getUserMedia({audio:true});
+    pedacosAudio=[];
+    mediaRecorder=new MediaRecorder(stream);
+    mediaRecorder.ondataavailable=e=>{if(e.data.size>0)pedacosAudio.push(e.data)};
+    mediaRecorder.onstop=async ()=>{
+      const blob=new Blob(pedacosAudio,{type:'audio/webm'});
+      const arrayBuf=await blob.arrayBuffer();
+      const ctx=obterAudioContext();
+      bufferGravado=await ctx.decodeAudioData(arrayBuf);
+      audioBlobFinal=blob;
+      document.getElementById('audio-original').src=URL.createObjectURL(blob);
+      document.getElementById('grav-result').classList.remove('hidden');
+    };
+    mediaRecorder.start();
+    document.getElementById('btn-iniciar-grav').style.display='none';
+    document.getElementById('btn-parar-grav').style.display='inline-block';
+  }catch(err){
+    mostrarToast('❌ Permissão de microfone negada ou indisponível.');
+  }
+}
+
+function pararGravacao(){
+  if(mediaRecorder&&mediaRecorder.state!=='inactive'){
+    mediaRecorder.stop();
+    mediaRecorder.stream.getTracks().forEach(t=>t.stop());
+  }
+  document.getElementById('btn-iniciar-grav').style.display='inline-block';
+  document.getElementById('btn-parar-grav').style.display='none';
+}
+
+async function aplicarEfeitoVoz(tipo,btnEl){
+  if(!bufferGravado)return;
+  document.querySelectorAll('#modal-gravador .task-btn').forEach(b=>b.style.background='');
+  btnEl.style.background='#c7d2fe';
+  
+  if(tipo==='normal'){
+    document.getElementById('audio-original').src=URL.createObjectURL(audioBlobFinal);
+    return;
+  }
+  
+  const aviso=document.getElementById('efeito-processando');
+  aviso.classList.remove('hidden');
+  
+  const taxa=tipo==='fininha'?1.5:0.75;
+  const ctxOff=new OfflineAudioContext(
+    bufferGravado.numberOfChannels,
+    Math.ceil(bufferGravado.length/taxa),
+    bufferGravado.sampleRate
+  );
+  
+  const src=ctxOff.createBufferSource();
+  src.buffer=bufferGravado;
+  src.playbackRate.value=taxa;
+  src.connect(ctxOff.destination);
+  src.start(0);
+  
+  const renderizado=await ctxOff.startRendering();
+  const wavBlob=audioBufferParaWavBlob(renderizado);
+  audioBlobFinal=wavBlob;
+  document.getElementById('audio-original').src=URL.createObjectURL(wavBlob);
+  aviso.classList.add('hidden');
+}
+
+function audioBufferParaWavBlob(buffer){
+  const numCanais=buffer.numberOfChannels,taxaAmostragem=buffer.sampleRate,formato=1,profundidadeBits=16;
+  const bytesAmostra=profundidadeBits/8,tamanhoBloco=numCanais*bytesAmostra;
+  const numAmostras=buffer.length;
+  const tamanhoDados=numAmostras*tamanhoBloco;
+  const arrayBuf=new ArrayBuffer(44+tamanhoDados);
+  const v=new DataView(arrayBuf);
+  
+  const escreverString=(offset,str)=>{for(let i=0;i<str.length;i++)v.setUint8(offset+i,str.charCodeAt(i))};
+  escreverString(0,'RIFF');
+  v.setUint32(4,36+tamanhoDados,true);
+  escreverString(8,'WAVE');
+  escreverString(12,'fmt ');
+  v.setUint32(16,16,true);
+  v.setUint16(20,formato,true);
+  v.setUint16(22,numCanais,true);
+  v.setUint32(24,taxaAmostragem,true);
+  v.setUint32(28,taxaAmostragem*tamanhoBloco,true);
+  v.setUint16(32,tamanhoBloco,true);
+  v.setUint16(34,profundidadeBits,true);
+  escreverString(36,'data');
+  v.setUint32(40,tamanhoDados,true);
+  
+  let offset=44;
+  for(let i=0;i<numAmostras;i++){
+    for(let canal=0;canal<numCanais;canal++){
+      let s=buffer.getChannelData(canal)[i];
+      s=Math.max(-1,Math.min(1,s));
+      v.setInt16(offset,s<0?s*0x8000:s*0x7FFF,true);
+      offset+=2;
+    }
+  }
+  return new Blob([arrayBuf],{type:'audio/wav'});
+}
+
+function salvarVoz(){
+  if(!audioBlobFinal)return;
+  const leitor=new FileReader();
+  leitor.onloadend=()=>{
+    estado.vozSalva=leitor.result;
+    salvar();
+    fecharModal('modal-gravador');
+    mostrarToast('💾 Som do pet atualizado!');
+  };
+  leitor.readAsDataURL(audioBlobFinal);
+}
+
+function abrirModal(id){
+  document.getElementById(id)?.classList.add('mostrar');
+}
+function fecharModal(id){
+  document.getElementById(id)?.classList.remove('mostrar');
+}
+
+let toastTimer=null;
+function mostrarToast(txt){
+  const el=document.getElementById('toast');
+  if(!el)return;
+  el.textContent=txt;
+  el.classList.add('mostrar');
+  clearTimeout(toastTimer);
+  toastTimer=setTimeout(()=>el.classList.remove('mostrar'),2500);
+}
+
+function mostrarAviso(emoji,titulo,texto){
+  document.getElementById('aviso-emoji').textContent=emoji;
+  document.getElementById('aviso-titulo').textContent=titulo;
+  document.getElementById('aviso-texto').textContent=texto;
+  abrirModal('modal-aviso');
+}
+
+function mostrarConfirmacao(msg,cb){
+  if(window.confirm(msg))cb();
+}
+
+function esc(str){
+  return String(str||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+}
+
+let disparoInstalacao=null;
+window.addEventListener('beforeinstallprompt',e=>{
+  e.preventDefault();
+  disparoInstalacao=e;
+  const btn=document.getElementById('btn-instalar-pwa');
+  if(btn)btn.classList.remove('hidden');
+});
+
+document.getElementById('btn-instalar-pwa')?.addEventListener('click',async ()=>{
+  if(!disparoInstalacao)return;
+  disparoInstalacao.prompt();
+  const res=await disparoInstalacao.userChoice;
+  if(res.outcome==='accepted'){
+    document.getElementById('btn-instalar-pwa')?.classList.add('hidden');
+  }
+  disparoInstalacao=null;
+});
+
+setInterval(()=>{
+  const agora=new Date();
+  if(agora.getSeconds()===0){
+    verificarLembreteNoturno();
+    if(estado.timerFim)atualizarDisplayTimer();
+  }
+},1000);
+
+window.addEventListener('DOMContentLoaded',()=>{
+  atualizarTela();
+  iniciarSincronizacaoNuvem();
+  verificarPrimeiroAcesso();
+  agendarFalaAleatoria();
+  if(estado.timerFim&&estado.timerFim>Date.now()){
+    iniciarTimerTela(Math.ceil((estado.timerFim-Date.now())/60000));
+  }
+});
+</script>
+</body>
+</html>
