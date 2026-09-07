@@ -546,7 +546,9 @@ const urlParams=new URLSearchParams(window.location.search);
 // Família agora exige ID com entropia adequada (mínimo 8 caracteres)
 function sanitizarIdFamilia(id){
   const limp=(id||'').trim().toLowerCase().replace(/[^a-z0-9_-]/g,'');
-  return limp.length>=8?limp:'rotinapet_padrao';
+    if (limp.length >= 8) return limp;
+  return 'fam_' + Math.random().toString(36).substring(2, 10);
+
 }
 
 let codigoFamilia=sanitizarIdFamilia(urlParams.get('familia')||localStorage.getItem('ROTINAPET_FAMILIA_ID'));
