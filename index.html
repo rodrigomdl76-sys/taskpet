@@ -10,7 +10,9 @@
 <link rel="manifest" href="manifest.webmanifest">
 <link rel="apple-touch-icon" href="icon-192.png">
 <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.9.3/dist/confetti.browser.min.js" defer></script>
+<!-- Firebase Compat Core, Auth e Database -->
 <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-auth-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-database-compat.js"></script>
 <style>
 @import url('https://fonts.googleapis.com/css2?family=Nunito:wght@600;700;800;900&display=swap');
@@ -93,7 +95,7 @@ button{touch-action:manipulation}
 .bottom-buttons{display:grid;grid-template-columns:repeat(4,1fr);gap:6px;flex-shrink:0}
 .bottom-btn{min-height:60px;border:0;border-radius:17px;color:#fff;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px;font-size:10px;font-weight:900;box-shadow:0 6px 14px #0002;cursor:pointer;transition:transform .15s}
 .bottom-btn:active{transform:scale(.94)}
-.btn-voice{background:linear-gradient(135deg,#10b981,#059669)}.btn-game{background:linear-gradient(135deg,#a855f7,#7c3aed)}.btn-fundos{background:linear-gradient(135deg,#0ea5e9,#2563eb)}.btn-premios{background:linear-gradient(135deg,#fb7185,#e11d48)}
+.btn-voice{background:linear-gradient(135deg,#10b981,#059669)}.btn-game{background:linear-gradient(135deg,#a855f7,#7c3aed)}.btn-fundos{background:linear-gradient(135deg,#0ea5e9,#2563eb)}.btn-premios{background:linear-gradient(135deg,#fb7185,#e11d48)}.pink-btn{background:linear-gradient(135deg,#fb7185,#e11d48);color:#fff}
 .btn-icon{font-size:20px}
 .modal-overlay{position:fixed;inset:0;background:#0f172a99;backdrop-filter:blur(7px);display:flex;align-items:center;justify-content:center;padding:14px;z-index:100;opacity:0;visibility:hidden;transition:.2s}
 .modal-overlay.mostrar{opacity:1;visibility:visible}
@@ -298,10 +300,10 @@ button{touch-action:manipulation}
   <div class="section-card">
     <label class="field-label">🏠 Código da Família</label>
     <div style="display:flex;gap:5px">
-      <input class="field" id="input-codigo-familia" placeholder="ex: cunhado">
+      <input class="field" id="input-codigo-familia" placeholder="mínimo 8 caracteres">
       <button class="primary-btn blue-btn" onclick="trocarFamiliaManualmente()">Conectar</button>
     </div>
-    <small style="font-size:8px;color:#64748b;margin-top:3px;display:block">Dispositivos com o mesmo código compartilham as tarefas e pet. Use um código longo e difícil de adivinhar — ele funciona como uma senha.</small>
+    <small style="font-size:8px;color:#64748b;margin-top:3px;display:block">Use um código único de no mínimo 8 caracteres para sincronizar seus aparelhos com segurança.</small>
   </div>
   <div class="section-card" id="card-lembrete">
     <b style="font-size:10px">🔔 Lembrete antes de dormir</b>
@@ -318,10 +320,23 @@ button{touch-action:manipulation}
       <button class="primary-btn blue-btn" onclick="ativarPausa()">Pausar streak</button>
       <button class="primary-btn red-btn" onclick="cancelarPausa()">Cancelar</button>
     </div>
-    <small style="font-size:8px;color:#64748b;margin-top:4px;display:block">Durante a pausa, o streak não é perdido mesmo sem completar tarefas.</small>
+    <small style="font-size:8px;color:#64748b;margin-top:4px;display:block">Durante a pausa, o streak não é perdido mesmo sem tarefas.</small>
   </div>
   <div class="section-card"><b style="font-size:10px">📋 Aprovações pendentes</b><div class="stack" id="lista-aprovacao-pais" style="margin-top:6px"></div></div>
-  <div class="section-card"><b style="font-size:10px">✏️ Gerenciar tarefas</b><div style="font-size:8px;color:#64748b;margin-top:4px">Obrigatórias 🔥 contam para a ofensiva. Extras ⭐ dão recompensas, mas não liberam a ofensiva.</div><div class="stack" id="lista-edicao-tarefas" style="margin:6px 0"></div><div style="display:grid;grid-template-columns:1fr 48px 88px auto;gap:4px"><input class="field" id="nova-tarefa-texto" placeholder="Nova tarefa"><input class="field" id="nova-tarefa-moedas" type="number" value="5" min="1"><select class="field" id="nova-tarefa-tipo"><option value="obrigatoria">🔥 Obrigatória</option><option value="extra">⭐ Extra</option></select><button class="primary-btn blue-btn" onclick="adicionarTarefa()">+</button></div>
+  <div class="section-card">
+    <div style="display:flex;justify-content:space-between;align-items:center">
+      <b style="font-size:10px">🎁 Gerenciar Prêmios</b>
+      <button class="primary-btn pink-btn" onclick="adicionarPremioPais()">＋ Novo prêmio</button>
+    </div>
+    <div style="font-size:8px;color:#64748b;margin-top:4px">Cadastre recompensas combinadas com a criança.</div>
+    <div class="stack" id="lista-gerenciar-premios" style="margin-top:7px"></div>
+  </div>
+  <div class="section-card">
+    <b style="font-size:10px">🎟️ Solicitações de prêmios</b>
+    <div style="font-size:8px;color:#64748b;margin-top:4px">O resgate só desconta moedas após a aprovação dos pais.</div>
+    <div class="stack" id="lista-solicitacoes-premios" style="margin-top:7px"></div>
+  </div>
+  <div class="section-card"><b style="font-size:10px">✏️ Gerenciar tarefas</b><div style="font-size:8px;color:#64748b;margin-top:4px">Obrigatórias 🔥 contam para a ofensiva. Extras ⭐ dão moedas sem travar o streak.</div><div class="stack" id="lista-edicao-tarefas" style="margin:6px 0"></div><div style="display:grid;grid-template-columns:1fr 48px 88px auto;gap:4px"><input class="field" id="nova-tarefa-texto" placeholder="Nova tarefa"><input class="field" id="nova-tarefa-moedas" type="number" value="5" min="1"><select class="field" id="nova-tarefa-tipo"><option value="obrigatoria">🔥 Obrigatória</option><option value="extra">⭐ Extra</option></select><button class="primary-btn blue-btn" onclick="adicionarTarefa()">+</button></div>
     <div style="margin-top:6px"><span class="field-label" style="margin-bottom:2px">📅 Repetir em (vazio = todo dia)</span><div class="dias-semana-picker" id="dias-nova-tarefa"></div></div>
   </div>
   <div class="section-card"><div style="display:flex;justify-content:space-between;align-items:center"><b style="font-size:10px">📊 Resumo</b><button class="primary-btn blue-btn" onclick="abrirRelatorioSemanal()">Ver relatório semanal</button></div><div class="stat-grid" style="margin-top:6px"><div class="stat">📋 <b id="stat-feitas">0</b><span>tarefas feitas</span></div><div class="stat">🔥 <b id="stat-ofensiva-pais">0</b><span>dias de ofensiva</span></div><div class="stat">🏆 <b id="stat-conquistas">0</b><span>conquistas</span></div></div></div>
@@ -354,6 +369,25 @@ button{touch-action:manipulation}
     <b style="font-size:10px">📅 Últimos 35 dias</b>
     <div class="heatmap-grid" id="grid-heatmap"></div>
     <div class="heatmap-legenda"><span><i style="background:#22c55e"></i>Concluído</span><span><i style="background:#e2e8f0"></i>Sem registro</span></div>
+  </div>
+  <div class="rp-progress-dashboard" id="painel-progresso-geral">
+    <div class="rpd-head">
+      <div>
+        <b>🚀 Seu progresso</b>
+        <small>Ofensiva, nível e próximas conquistas</small>
+      </div>
+      <span class="rpd-level">⭐ Nível <b id="rpd-nivel">1</b></span>
+    </div>
+    <div class="rpd-stats">
+      <div><span>🔥</span><b id="rpd-streak">0</b><small>dias seguidos</small></div>
+      <div><span>⭐</span><b id="rpd-xp">0/100</b><small>XP atual</small></div>
+      <div><span>🏆</span><b id="rpd-conquistas">0/7</b><small>conquistas</small></div>
+    </div>
+    <div class="rpd-next">
+      <div class="rpd-next-top"><b id="rpd-proxima-titulo">Próximo marco</b><span id="rpd-proxima-meta">7 dias</span></div>
+      <div class="rpd-track"><div id="rpd-proxima-barra"></div></div>
+      <small id="rpd-proxima-texto">Complete as obrigatórias para manter sua ofensiva.</small>
+    </div>
   </div>
   <div class="stack" id="lista-conquistas"></div>
 </div></div>
@@ -433,7 +467,57 @@ tipo==='cachorra'?'<ellipse cx="85" cy="80" rx="22" ry="35" fill="#E76F51"/><ell
 tipo==='cabra'?'<path d="M90 60Q70 35 85 25q15 10 10 30zM180 60q20-25 5-35-15 10-10 30z" fill="#8B5A2B"/>':
 '<path d="M135 48Q120 28 108 42 95 18 110 35 90 15 110 32 125 12 135 28 145 12 135 32 160 15 140 35 165 25 155 45z" fill="#ff3344"/>';
 return `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 270 285">
-<style>.blink{animation:blink 4s infinite;transform-origin:center}@keyframes blink{0%,92%,100%{transform:scaleY(1)}95%{transform:scaleY(.05)}}</style>
+<style>.blink{animation:blink 4s infinite;transform-origin:center}@keyframes blink{0%,92%,100%{transform:scaleY(1)}95%{transform:scaleY(.05)}}
+.rp-progress-dashboard{margin:0 0 10px;padding:11px;border-radius:18px;background:linear-gradient(135deg,#eef2ff,#faf5ff);border:1px solid #ddd6fe;box-shadow:0 6px 18px rgba(76,29,149,.08)}
+.rpd-head{display:flex;justify-content:space-between;align-items:center;gap:8px}
+.rpd-head b{font-size:11px;color:#312e81}
+.rpd-head small{display:block;font-size:7px;color:#64748b;margin-top:2px}
+.rpd-level{padding:5px 8px;border-radius:99px;background:#fff;border:1px solid #ddd6fe;font-size:8px;color:#7c3aed;white-space:nowrap}
+.rpd-stats{display:grid;grid-template-columns:repeat(3,1fr);gap:6px;margin-top:9px}
+.rpd-stats>div{background:#fff;border:1px solid #e5e7eb;border-radius:13px;padding:7px 4px;text-align:center}
+.rpd-stats span{display:block;font-size:15px}
+.rpd-stats b{display:block;font-size:11px;color:#1e293b;margin-top:2px}
+.rpd-stats small{display:block;font-size:6px;color:#94a3b8;margin-top:2px}
+.rpd-next{margin-top:8px;background:#fff;border-radius:12px;padding:7px 8px;border:1px solid #e5e7eb}
+.rpd-next-top{display:flex;justify-content:space-between;gap:5px;font-size:8px;color:#475569;margin-bottom:5px}
+.rpd-next-top span{font-weight:900;color:#7c3aed}
+.rpd-track{height:7px;background:#e5e7eb;border-radius:99px;overflow:hidden}
+.rpd-track>div{height:100%;width:0;background:linear-gradient(90deg,#f97316,#facc15,#22c55e);border-radius:99px;transition:width .5s}
+.rpd-next small{display:block;font-size:7px;color:#64748b;margin-top:5px}
+.rp-shop-head{display:flex;justify-content:space-between;align-items:center;gap:10px;padding:4px 2px 10px}
+.rp-shop-title{font-size:18px;font-weight:1000;letter-spacing:-.4px}
+.rp-shop-sub{font-size:9px;color:#64748b;line-height:1.4;margin-top:2px}
+.rp-wallet{background:#fff7ed;border:1px solid #fed7aa;border-radius:14px;padding:8px 10px;font-size:13px;white-space:nowrap;box-shadow:0 4px 12px rgba(0,0,0,.05)}
+.rp-shop-progress{background:linear-gradient(135deg,#f8fafc,#eef2ff);border:1px solid #e2e8f0;border-radius:16px;padding:10px 12px;margin-bottom:12px}
+.rp-progress-top{display:flex;justify-content:space-between;font-size:9px;margin-bottom:6px;color:#475569}
+.rp-progress-track,.rp-mini-track{height:7px;background:#e2e8f0;border-radius:99px;overflow:hidden}
+.rp-progress-track>div,.rp-mini-track>div{height:100%;border-radius:99px;background:linear-gradient(90deg,#818cf8,#a855f7)}
+.rp-shop-progress small{display:block;font-size:8px;color:#64748b;margin-top:5px}
+.rp-shop-section-title{font-size:10px;font-weight:1000;margin:9px 2px 7px}
+.rp-prize-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:9px}
+.rp-prize-card{position:relative;border:1px solid #e2e8f0;border-radius:18px;padding:11px 9px 10px;background:#fff;box-shadow:0 5px 16px rgba(15,23,42,.06);text-align:center;overflow:hidden}
+.rp-prize-card.ready{border-color:#c4b5fd;box-shadow:0 6px 20px rgba(124,58,237,.12)}
+.rp-prize-icon{font-size:34px;line-height:1.1;margin:2px 0 6px}
+.rp-prize-name{font-size:11px;font-weight:1000;color:#1e293b;min-height:27px}
+.rp-prize-desc{font-size:8px;color:#64748b;line-height:1.3;min-height:23px;margin:2px 0 6px}
+.rp-prize-cost{font-size:12px;font-weight:1000;color:#7c3aed;margin-bottom:5px}
+.rp-can-get{font-size:7px;color:#16a34a;font-weight:900;margin-bottom:5px}
+.rp-missing{font-size:7px;color:#94a3b8;min-height:13px}
+.rp-mini-track{height:4px;margin:4px 0 7px}
+.rp-mini-track>div{background:#94a3b8}
+.rp-prize-btn{border:0;border-radius:11px;padding:8px 7px;width:100%;font-size:8px;font-weight:1000;background:linear-gradient(135deg,#7c3aed,#a855f7);color:#fff;cursor:pointer}
+.rp-prize-btn.disabled{background:#e2e8f0;color:#94a3b8}
+.rp-prize-btn:disabled{opacity:.75;cursor:default}
+.rp-empty{text-align:center;padding:25px 12px;color:#94a3b8;font-size:26px}
+.rp-empty b{display:block;font-size:11px;color:#475569;margin-top:5px}
+.rp-empty small{display:block;font-size:8px;margin-top:4px}
+.rp-my-orders{margin-top:13px}
+.rp-order{display:flex;justify-content:space-between;gap:8px;padding:8px 9px;border-radius:11px;margin-bottom:5px;font-size:8px;background:#f8fafc;border-left:3px solid #cbd5e1}
+.rp-order.ok{border-left-color:#22c55e;background:#f0fdf4}
+.rp-order.no{border-left-color:#ef4444;background:#fef2f2}
+.rp-order.wait{border-left-color:#f59e0b;background:#fffbeb}
+@media(max-width:360px){.rp-prize-grid{grid-template-columns:1fr}.rp-shop-title{font-size:16px}}
+</style>
 <ellipse cx="135" cy="270" rx="55" ry="10" fill="#0002"/><ellipse cx="135" cy="205" rx="57" ry="49" fill="${c}"/><circle cx="135" cy="125" r="68" fill="${c}"/>${ears}
 <ellipse class="blink" cx="${tipo==='frango'?'100':'108'}" cy="${tipo==='gato'?'125':'115'}" rx="27" ry="31" fill="white"/><ellipse class="blink" cx="${tipo==='frango'?'170':'162'}" cy="${tipo==='gato'?'125':'115'}" rx="27" ry="31" fill="white"/>
 <circle cx="${tipo==='frango'?'107':'115'}" cy="${tipo==='gato'?'130':'120'}" r="13" fill="${fase>=5?'#FFD000':dark}"/><circle cx="${tipo==='frango'?'163':'155'}" cy="${tipo==='gato'?'130':'120'}" r="13" fill="${fase>=5?'#FFD000':dark}"/>
@@ -455,15 +539,43 @@ const BANCO_FUNDOS=[
 {id:'ceu',nome:'Céu Azul',emoji:'☀️',preco:0,bg:'linear-gradient(180deg,#4facfe,#00f2fe)'},{id:'chuva',nome:'Chuva',emoji:'🌧️',preco:12,bg:'linear-gradient(180deg,#475569,#94a3b8)'},{id:'noite',nome:'Noite Estrelada',emoji:'🌙',preco:20,bg:'linear-gradient(180deg,#0f172a,#1e3a8a)'},{id:'arcoiris',nome:'Arco-Íris',emoji:'🌈',preco:30,bg:'linear-gradient(180deg,#f87171,#fbbf24 30%,#4ade80 60%,#60a5fa)'},{id:'praia',nome:'Praia Tropical',emoji:'🏖️',preco:25,bg:'linear-gradient(180deg,#fef08a,#38bdf8)'},{id:'floresta',nome:'Floresta Mágica',emoji:'🌲',preco:22,bg:'linear-gradient(180deg,#166534,#84cc16)'},{id:'festa',nome:'Balada Neon',emoji:'🎉',preco:35,bg:'linear-gradient(180deg,#f472b6,#a78bfa 50%,#60a5fa)'},{id:'halloween',nome:'Halloween',emoji:'🎃',preco:40,bg:'linear-gradient(180deg,#1a1033,#2e1065,#7c2d12)'},{id:'estadio',nome:'Estádio Futebol',emoji:'⚽',preco:45,bg:'linear-gradient(180deg,#064e3b,#10b981)'},{id:'quarto',nome:'Quarto Infantil',emoji:'🛏️',preco:35,bg:'linear-gradient(180deg,#fdf4ff,#f5d0fe)'},{id:'mario',nome:'Mundo Mario',emoji:'🍄',preco:50,bg:'linear-gradient(180deg,#22d3ee,#84cc16)'},{id:'dino',nome:'Mundo Dinossauros',emoji:'🦖',preco:45,bg:'linear-gradient(180deg,#fef3c7,#f59e0b,#166534)'},{id:'princesa',nome:'Castelo Princesa',emoji:'👑',preco:40,bg:'linear-gradient(180deg,#fbcfe8,#f9a8d4)'},{id:'astronauta',nome:'Astronauta',emoji:'🚀',preco:50,bg:'linear-gradient(180deg,#020617,#1e1b4b)'},{id:'pirata',nome:'Barco Pirata',emoji:'🏴‍☠️',preco:45,bg:'linear-gradient(180deg,#78350f,#0f172a)'},{id:'fazenda',nome:'Fazenda Feliz',emoji:'🐄',preco:35,bg:'linear-gradient(180deg,#fef08a,#84cc16)'},{id:'neve',nome:'Neve Natal',emoji:'🎄',preco:40,bg:'linear-gradient(180deg,#e0f2fe,#bae6fd)'}];
 
 const firebaseConfig={apiKey:"AIzaSyCiDk3ERIe8_uVqBhRnFRD5Od8nyLNlLVQ",authDomain:"rotinapet-624a9.firebaseapp.com",databaseURL:"https://rotinapet-624a9-default-rtdb.firebaseio.com",projectId:"rotinapet-624a9",storageBucket:"rotinapet-624a9.appspot.com",messagingSenderId:"367302484084",appId:"1:367302484084:web:8a5f8b9e6c1d7a8b"};
-let dbFirebase=null,sincronizacaoNuvemAtiva=false,ignorarProximoSyncNuvem=false;
-try{if(window.firebase){firebase.initializeApp(firebaseConfig);dbFirebase=firebase.database();sincronizacaoNuvemAtiva=true}}catch(e){}
 
+let dbFirebase=null,sincronizacaoNuvemAtiva=false,ignorarProximoSyncNuvem=false;
 const urlParams=new URLSearchParams(window.location.search);
-let codigoFamilia=(urlParams.get('familia')||localStorage.getItem('ROTINAPET_FAMILIA_ID')||'casa_principal').trim().toLowerCase().replace(/[^a-z0-9_-]/g,'');
+
+// Família agora exige ID com entropia adequada (mínimo 8 caracteres)
+function sanitizarIdFamilia(id){
+  const limp=(id||'').trim().toLowerCase().replace(/[^a-z0-9_-]/g,'');
+  return limp.length>=8?limp:'rotinapet_padrao';
+}
+
+let codigoFamilia=sanitizarIdFamilia(urlParams.get('familia')||localStorage.getItem('ROTINAPET_FAMILIA_ID'));
 localStorage.setItem('ROTINAPET_FAMILIA_ID',codigoFamilia);
+
+// Autenticação anônima obrigatória antes de qualquer sync
+try{
+  if(window.firebase){
+    firebase.initializeApp(firebaseConfig);
+    firebase.auth().signInAnonymously().then(()=>{
+      dbFirebase=firebase.database();
+      sincronizacaoNuvemAtiva=true;
+      iniciarSincronizacaoNuvem();
+    }).catch(()=>{
+      sincronizacaoNuvemAtiva=false;
+    });
+  }
+}catch(e){}
 
 function getCaminhoFirebase(){
   return `rotinapet/familias/${codigoFamilia}/estado`;
+}
+
+// Criptografia e hashing seguro do PIN
+async function hashPin(pin){
+  const encoder=new TextEncoder();
+  const data=encoder.encode(pin+":rotinapet:"+codigoFamilia);
+  const hashBuffer=await crypto.subtle.digest('SHA-256',data);
+  return Array.from(new Uint8Array(hashBuffer)).map(b=>b.toString(16).padStart(2,'0')).join('');
 }
 
 const hojeLocal=()=>{const d=new Date();return `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`};
@@ -471,13 +583,17 @@ const ontemLocal=()=>{const d=new Date();d.setDate(d.getDate()-1);return `${d.ge
 
 let estado={
   perfilAtivo:null,
-  petAtual:'gato',moedas:15,taxaCambio:.01,pinPais:'1234',dinheiroAcumulado:.15,idadeCrianca:7,
+  petAtual:'gato',moedas:15,taxaCambio:.01,pinHash:null,dinheiroAcumulado:.15,idadeCrianca:7,
   fundoAtual:'ceu',fundosComprados:['ceu'],metaMoedas:50,totalSacado:0,
   ultimoDiaAcesso:hojeLocal(),ultimoDiaConcluido:null,streak:0,ultimoStreakPremiado:0,
   tarefasHojeCount:0,desafiosMathAcertos:0,timerFim:null,vozSalva:null,
   pets:{gato:{nivel:1,xp:0,felicidade:100,saude:100},cachorra:{nivel:1,xp:0,felicidade:100,saude:100},cabra:{nivel:1,xp:0,felicidade:100,saude:100},frango:{nivel:1,xp:0,felicidade:100,saude:100}},
   tarefas:[{id:1,texto:'Escovar os dentes',recompensa:5,xp:20,tipo:'obrigatoria',status:'pendente',foto:null,dias:[]},{id:2,texto:'Arrumar a cama',recompensa:5,xp:20,tipo:'obrigatoria',status:'pendente',foto:null,dias:[]}],
-  recompensas:[{id:1,texto:'15 min de tela',custo:10,tipo:'timer',minutos:15},{id:2,texto:'30 min de tela',custo:18,tipo:'timer',minutos:30}],
+  recompensas:[
+    {id:1,texto:'15 min de tela',descricao:'Tempo de tela liberado pelos pais.',custo:10,tipo:'timer',minutos:15,icone:'📱',ativo:true},
+    {id:2,texto:'30 min de tela',descricao:'Tempo de tela liberado pelos pais.',custo:18,tipo:'timer',minutos:30,icone:'🎮',ativo:true}
+  ],
+  solicitacoesPremios:[],
   conquistas:{},
   pinBloqueadoAte:null,pinTentativasFalhas:0,
   acessorios:{comprados:[],ativo:null},
@@ -500,10 +616,24 @@ try{
     if(!Array.isArray(estado.fundosComprados))estado.fundosComprados=['ceu'];
     if(!Array.isArray(estado.tarefas))estado.tarefas=[];
     if(!Array.isArray(estado.recompensas))estado.recompensas=[];
+    estado.recompensas=estado.recompensas.map(r=>({
+      id:r.id??Date.now()+Math.random(),
+      texto:r.texto||'Prêmio',
+      descricao:r.descricao||'',
+      custo:Math.max(1,Number(r.custo)||1),
+      tipo:r.tipo||'premio',
+      minutos:Number(r.minutos)||0,
+      icone:r.icone||'🎁',
+      ativo:r.ativo!==false
+    }));
+    if(!Array.isArray(estado.solicitacoesPremios))estado.solicitacoesPremios=[];
     estado.conquistas=estado.conquistas||{};
     estado.acessorios=estado.acessorios&&Array.isArray(estado.acessorios.comprados)?estado.acessorios:{comprados:[],ativo:null};
     estado.historicoConclusoes=estado.historicoConclusoes||{};
     estado.registroDiario=estado.registroDiario||{};
+    if(d.pinPais&&!d.pinHash){
+      hashPin(d.pinPais).then(h=>{estado.pinHash=h;delete estado.pinPais;salvar();});
+    }
   }
 }catch(e){}
 
@@ -532,7 +662,8 @@ function salvar(){
 
 function iniciarSincronizacaoNuvem(){
   if(!sincronizacaoNuvemAtiva||!dbFirebase)return;
-  document.getElementById('txt-status-nuvem').textContent=`☁️ ${codigoFamilia}`;
+  const statusEl=document.getElementById('txt-status-nuvem');
+  if(statusEl)statusEl.textContent=`☁️ online`;
   dbFirebase.ref(getCaminhoFirebase()).off();
   dbFirebase.ref(getCaminhoFirebase()).on('value',s=>{
     if(ignorarProximoSyncNuvem){ignorarProximoSyncNuvem=false;return}
@@ -541,7 +672,7 @@ function iniciarSincronizacaoNuvem(){
       estado={...estado,...d};
       localStorage.setItem(`ROTINAPET_SAVE_${codigoFamilia}`,JSON.stringify(estado));
       atualizarTela();
-      mostrarToast(`☁️ Sincronizado (${codigoFamilia})`);
+      mostrarToast(`☁️ Sincronizado`);
     }
   });
 }
@@ -751,7 +882,7 @@ function abrirSurpresaDia(){
   atualizarTela();
   dispararConfetes();
   somConquista();
-  mostrarAviso('🎁','Surpresa do dia!',`Você ganhou +${moedas} moeda(s) só por aparecer hoje! Volte amanhã para outra surpresa.`);
+  mostrarAviso('🎁','Surpresa do dia!',`Você ganhou +${moedas} moeda(s) hoje! Volte amanhã para mais.`);
 }
 
 function atualizarBotaoSurpresaDia(){
@@ -776,21 +907,21 @@ function processarFotoCapturada(e){
   const img=new Image();
   img.onload=()=>{
     const canvas=document.createElement('canvas');
-    const maxDim=360;
+    const maxDim=320;
     let w=img.width,h=img.height;
     if(w>h){if(w>maxDim){h*=maxDim/w;w=maxDim}}
     else{if(h>maxDim){w*=maxDim/h;h=maxDim}}
     canvas.width=w;canvas.height=h;
     const ctx=canvas.getContext('2d');
     ctx.drawImage(img,0,0,w,h);
-    const miniDataUrl=canvas.toDataURL('image/jpeg',0.6);
+    const miniDataUrl=canvas.toDataURL('image/jpeg',0.55);
     const t=estado.tarefas.find(item=>item.id===tarefaIdFoto);
     if(t){
       t.foto=miniDataUrl;
       t.status='pendente';
       salvar();
       renderizarTarefas();
-      mostrarToast('📸 Foto otimizada e anexada!');
+      mostrarToast('📸 Foto otimizada com sucesso!');
     }
   };
   img.src=URL.createObjectURL(f);
@@ -812,7 +943,7 @@ function atualizarOfensiva(){
   if(!el)return;
   if(emPausaHoje()){
     const dias=Math.max(0,Math.ceil((new Date(estado.pausaAte+'T00:00:00')-new Date(hojeLocal()+'T00:00:00'))/86400000)+1);
-    el.textContent=`🌴 Ofensiva em pausa (${dias} dia(s) restante(s)). O streak fica protegido.`;
+    el.textContent=`🌴 Ofensiva em pausa (${dias} dia(s) restante(s)).`;
     el.style.background='#ecfeff';el.style.borderColor='#a5f3fc';el.style.color='#0e7490';
     return;
   }
@@ -821,10 +952,10 @@ function atualizarOfensiva(){
     el.textContent='🔥 Ofensiva: defina tarefas obrigatórias no painel dos pais.';
     el.style.background='#fef2f2';el.style.borderColor='#fecaca';el.style.color='#b91c1c';
   }else if(todasObrigatoriasConcluidas()){
-    el.textContent=`🔥 Ofensiva liberada! ${f}/${o.length} obrigatórias concluídas. Sequência atual: ${estado.streak||0} dia(s).`;
+    el.textContent=`🔥 Ofensiva liberada! ${f}/${o.length} concluídas. Sequência: ${estado.streak||0} dia(s).`;
     el.style.background='#ecfdf5';el.style.borderColor='#bbf7d0';el.style.color='#047857';
   }else{
-    el.textContent=`🔥 Ofensiva: ${f}/${o.length} obrigatórias concluídas. Complete todas para liberar o dia.`;
+    el.textContent=`🔥 Ofensiva: ${f}/${o.length} concluídas. Termine todas para liberar o dia.`;
     el.style.background='#fff7ed';el.style.borderColor='#fed7aa';el.style.color='#9a3412';
   }
 }
@@ -854,22 +985,28 @@ function renderizarTarefas(){
   
   const bloco=(titulo,lista,icone)=>{
     if(!lista.length)return;
-    c.innerHTML+=`<div style="font-size:9px;font-weight:900;color:#475569;margin:7px 2px 4px">${icone} ${titulo}</div>`;
+    const h=document.createElement('div');
+    h.style.cssText="font-size:9px;font-weight:900;color:#475569;margin:7px 2px 4px";
+    h.textContent=`${icone} ${titulo}`;
+    c.appendChild(h);
+
     lista.forEach(t=>{
       const apr=t.status==='aprovada',pend=t.status==='aguardando_aprovacao';
-      const badgeDias=t.dias&&t.dias.length?`<span style="font-size:7px;color:#7c3aed;font-weight:900"> • ${t.dias.map(x=>DIAS_LABEL[x]).join(',')}</span>`:'';
+      const badgeDias=t.dias&&t.dias.length?` • ${t.dias.map(x=>DIAS_LABEL[x]).join(',')}`:'';
       const animar=idTarefaRecemAprovada===t.id?' pop-anim':'';
-      c.innerHTML+=`
-        <div class="task-row${animar}">
-          <div>
-            <div class="task-name" style="${apr?'text-decoration:line-through;color:#94a3b8':''}">${esc(t.texto)}${badgeDias}</div>
-            <span class="task-reward">+${t.xp} XP • +${t.recompensa} 🪙 ${t.foto?'• 📸':''}</span>
-          </div>
-          <div class="task-actions">
-            ${apr?'<span style="font-size:9px;color:#10b981;font-weight:900">✓ Feito</span>':pend?'<span style="font-size:8px;color:#f59e0b;font-weight:900">Avaliando</span>':`<button class="task-btn btn-photo" onclick="dispararCamera(${t.id})">📷</button><button class="task-btn btn-ok" onclick="enviarParaAprovacao(${t.id})">Enviar</button>`}
-          </div>
+      
+      const row=document.createElement('div');
+      row.className=`task-row${animar}`;
+      row.innerHTML=`
+        <div>
+          <div class="task-name" style="${apr?'text-decoration:line-through;color:#94a3b8':''}">${esc(t.texto)}<span style="font-size:7px;color:#7c3aed;font-weight:900">${esc(badgeDias)}</span></div>
+          <span class="task-reward">+${Number(t.xp)||20} XP • +${Number(t.recompensa)||5} 🪙 ${t.foto?'• 📸':''}</span>
+        </div>
+        <div class="task-actions">
+          ${apr?'<span style="font-size:9px;color:#10b981;font-weight:900">✓ Feito</span>':pend?'<span style="font-size:8px;color:#f59e0b;font-weight:900">Avaliando</span>':`<button class="task-btn btn-photo" onclick="dispararCamera(${t.id})">📷</button><button class="task-btn btn-ok" onclick="enviarParaAprovacao(${t.id})">Enviar</button>`}
         </div>
       `;
+      c.appendChild(row);
     });
   };
   bloco('Obrigatórias — liberam a ofensiva',o,'🔥');
@@ -968,7 +1105,7 @@ function atualizarEstadoBloqueioPin(){
   if(!erroEl)return;
   if(bloqueado){
     const segundosRestantes=Math.ceil((estado.pinBloqueadoAte-Date.now())/1000);
-    erroEl.textContent=`🔒 Muitas tentativas. Aguarde ${segundosRestantes}s.`;
+    erroEl.textContent=`🔒 Aguarde ${segundosRestantes}s para tentar novamente.`;
     setTimeout(()=>{
       if(document.getElementById('modal-pin')?.classList.contains('mostrar'))atualizarEstadoBloqueioPin();
     },1000);
@@ -977,10 +1114,16 @@ function atualizarEstadoBloqueioPin(){
   }
 }
 
-function validarPin(){
+async function validarPin(){
   if(estaPinBloqueado())return;
-  const pinCorreto=String(estado.pinPais||'1234');
-  if(pinDigitado===pinCorreto){
+  
+  if(!estado.pinHash){
+    estado.pinHash=await hashPin('1234');
+    salvar();
+  }
+
+  const hashDigitado=await hashPin(pinDigitado);
+  if(hashDigitado===estado.pinHash){
     estado.pinTentativasFalhas=0;
     estado.pinBloqueadoAte=null;
     salvar();
@@ -1019,6 +1162,8 @@ function renderizarPainelPais(){
   montarPickerDiasNovaTarefa();
   atualizarBannerPausaPainel();
   atualizarBotaoLembrete();
+  renderizarGerenciamentoPremiosPais();
+  renderizarSolicitacoesPremiosPais();
 
   const ap=document.getElementById('lista-aprovacao-pais');
   ap.innerHTML='';
@@ -1035,7 +1180,7 @@ function renderizarPainelPais(){
     const diasTxt=t.dias&&t.dias.length?t.dias.map(i=>DIAS_LABEL[i]).join(','):'todo dia';
     ed.innerHTML+=`
     <div class="edit-row" style="gap:5px;flex-wrap:wrap">
-      <span style="flex:1">${t.tipo==='obrigatoria'?'🔥':'⭐'} ${esc(t.texto)} • ${t.recompensa}🪙 <br><small style="color:#94a3b8">📅 ${diasTxt}</small></span>
+      <span style="flex:1">${t.tipo==='obrigatoria'?'🔥':'⭐'} ${esc(t.texto)} • ${Number(t.recompensa)||5}🪙 <br><small style="color:#94a3b8">📅 ${diasTxt}</small></span>
       <select class="field" style="width:100px;padding:5px" onchange="alterarTipoTarefa(${t.id},this.value)">
         <option value="obrigatoria" ${t.tipo==='obrigatoria'?'selected':''}>Obrigatória</option>
         <option value="extra" ${t.tipo==='extra'?'selected':''}>Extra</option>
@@ -1058,31 +1203,27 @@ function fecharVisualizadorFoto(){
 function reprovarTarefaPais(id){
   const t=estado.tarefas.find(x=>x.id===id);
   if(!t)return;
-  mostrarConfirmacao(`Recusar a tarefa "${t.texto}"? Ela voltará como pendente para a criança refazer.`,()=>{
+  mostrarConfirmacao(`Recusar a tarefa "${t.texto}"?`,()=>{
     t.status='pendente';
     t.foto=null;
     salvar();
     renderizarPainelPais();
     atualizarTela();
-    mostrarToast('↩️ Tarefa devolvida para a criança.');
+    mostrarToast('↩️ Devolvida para a criança.');
   });
 }
 
 function trocarFamiliaManualmente(){
   const novoCodigo=document.getElementById('input-codigo-familia').value.trim().toLowerCase().replace(/[^a-z0-9_-]/g,'');
-  if(!novoCodigo){
-    mostrarToast('Digite um código válido.');
-    return;
-  }
-  if(novoCodigo.length<8){
-    mostrarToast('⚠️ Use um código com pelo menos 8 caracteres, difícil de adivinhar.');
+  if(!novoCodigo||novoCodigo.length<8){
+    mostrarToast('⚠️ O código deve ter pelo menos 8 caracteres alfanuméricos.');
     return;
   }
   codigoFamilia=novoCodigo;
   localStorage.setItem('ROTINAPET_FAMILIA_ID',codigoFamilia);
   iniciarSincronizacaoNuvem();
   fecharModal('modal-pais');
-  mostrarToast(`🏠 Conectado à família: ${codigoFamilia}`);
+  mostrarToast(`🏠 Sincronizando com a família informada.`);
 }
 
 function alterarTipoTarefa(id,tipo){
@@ -1093,7 +1234,7 @@ function alterarTipoTarefa(id,tipo){
   renderizarPainelPais();
   renderizarTarefas();
   atualizarTela();
-  mostrarToast(t.tipo==='obrigatoria'?'🔥 Tarefa definida como obrigatória.':'⭐ Tarefa definida como extra.');
+  mostrarToast(t.tipo==='obrigatoria'?'🔥 Tarefa obrigatória.':'⭐ Tarefa extra.');
 }
 
 function abrirBauSemanal(streakAtual){
@@ -1107,7 +1248,7 @@ function abrirBauSemanal(streakAtual){
   atualizarTela();
   somBauLendario();
   try{window.confetti?.({particleCount:130,spread:85,origin:{y:.5}})}catch(e){}
-  mostrarAviso('🎁',`Baú dos ${streakAtual} Dias!`,`Incrível dedicação! Você abriu o Baú Lendário e faturou +${moedasGanhas} 🪙 e +${xpGanho} XP!`);
+  mostrarAviso('🎁',`Baú dos ${streakAtual} Dias!`,`+${moedasGanhas} 🪙 e +${xpGanho} XP adicionados!`);
 }
 
 function registrarNoRelatorioDiario(tarefasSomar,moedasSomar){
@@ -1208,7 +1349,7 @@ function alternarLembretes(){
         estado.notificacoesAtivas=true;
         salvar();
         atualizarBotaoLembrete();
-        mostrarToast(perm==='granted'?'🔔 Lembretes ativados!':'🔔 Lembretes ativados (sem notificação do sistema).');
+        mostrarToast(perm==='granted'?'🔔 Lembretes ativados!':'🔔 Lembretes ativados no app.');
       });
     }else{
       estado.notificacoesAtivas=true;
@@ -1240,7 +1381,7 @@ function verificarLembreteNoturno(){
   if(emPausaHoje()||todasObrigatoriasConcluidas())return;
   estado.lembreteEnviadoData=hoje;
   salvar();
-  const texto='Ainda faltam tarefas obrigatórias hoje! Bora terminar antes de dormir? 🌙';
+  const texto='Ainda faltam tarefas obrigatórias hoje! Bora terminar? 🌙';
   if('Notification' in window&&Notification.permission==='granted'){
     try{new Notification('🐾 RotinaPet',{body:texto})}catch(e){}
   }
@@ -1291,14 +1432,14 @@ function adicionarTarefa(){
   salvar();
   renderizarPainelPais();
   atualizarTela();
-  mostrarToast(tipo==='obrigatoria'?'🔥 Tarefa obrigatória criada!':'⭐ Tarefa extra criada!');
+  mostrarToast(tipo==='obrigatoria'?'🔥 Tarefa criada!':'⭐ Tarefa extra criada!');
 }
 
 function editarDiasTarefa(id){
   const t=estado.tarefas.find(x=>x.id===id);
   if(!t)return;
   const atual=(t.dias||[]).map(i=>DIAS_LABEL[i]).join(',');
-  const resp=window.prompt('Digite os dias separados por vírgula (Dom,Seg,Ter,Qua,Qui,Sex,Sáb). Deixe vazio para todo dia:',atual);
+  const resp=window.prompt('Dias da semana (Dom,Seg,Ter,Qua,Qui,Sex,Sáb) ou vazio para todos:',atual);
   if(resp===null)return;
   const partes=resp.split(',').map(s=>s.trim().toLowerCase()).filter(Boolean);
   const novosDias=[];
@@ -1320,15 +1461,16 @@ function removerTarefa(id){
   atualizarTela();
 }
 
-function salvarNovoPin(){
+async function salvarNovoPin(){
   const input=document.getElementById('novo-pin-pais');
   const p=input.value.trim();
-  if(!/^\d{4}$/.test(p))return mostrarToast('PIN precisa ter exatamente 4 números.');
-  if(p==='1234'||p==='0000'||/^(\d)\1{3}$/.test(p))return mostrarToast('⚠️ Escolha um PIN menos óbvio (não use 1234 ou dígitos repetidos).');
-  estado.pinPais=p;
+  if(!/^\d{4}$/.test(p))return mostrarToast('PIN precisa ter 4 dígitos.');
+  if(p==='1234'||p==='0000'||/^(\d)\1{3}$/.test(p))return mostrarToast('⚠️ Evite senhas fáceis ou números repetidos.');
+  
+  estado.pinHash=await hashPin(p);
   input.value='';
   salvar();
-  mostrarToast('🔑 PIN alterado com sucesso!');
+  mostrarToast('🔑 PIN seguro atualizado!');
 }
 
 function atualizarTaxaCambio(v){
@@ -1350,7 +1492,7 @@ function alternarListaPets(e){
 }
 
 function escolherPet(tipo){
-  if(nivelJogador()<PETS[tipo].desbloqueioNivel)return mostrarToast(`🔒 Chegue ao nível ${PETS[tipo].desbloqueioNivel} para liberar ${PETS[tipo].nome}.`);
+  if(nivelJogador()<PETS[tipo].desbloqueioNivel)return mostrarToast(`🔒 Nível ${PETS[tipo].desbloqueioNivel} necessário.`);
   estado.petAtual=tipo;
   salvar();
   atualizarTela();
@@ -1367,7 +1509,7 @@ function renderizarEvolucoes(){
   c.innerHTML='';
   d.evolucoes.forEach(ev=>{
     const ok=p.nivel>=ev.nivel;
-    c.innerHTML+=`<div class="achievement-row"><span style="font-size:18px">${ok?'⭐':'🔒'}</span><div style="flex:1"><b style="font-size:10px;color:${ok?'#6b21a8':'#475569'}">${ev.nome}</b><div style="font-size:8px;color:#64748b">${ev.desc} • Nível ${ev.nivel}</div></div><span style="font-size:8px;font-weight:900">${ok?'LIBERADO':'BLOQUEADO'}</span></div>`;
+    c.innerHTML+=`<div class="achievement-row"><span style="font-size:18px">${ok?'⭐':'🔒'}</span><div style="flex:1"><b style="font-size:10px;color:${ok?'#6b21a8':'#475569'}">${esc(ev.nome)}</b><div style="font-size:8px;color:#64748b">${esc(ev.desc)} • Nível ${ev.nivel}</div></div><span style="font-size:8px;font-weight:900">${ok?'LIBERADO':'BLOQUEADO'}</span></div>`;
   });
 }
 
@@ -1429,7 +1571,45 @@ function renderizarHeatmap(){
   });
 }
 
+function renderizarPainelProgresso(){
+  const p=obterDadosPetAtual();
+  const nivel=Number(p.nivel)||1;
+  const xp=Math.max(0,Number(p.xp)||0);
+  const streak=Number(estado.streak)||0;
+  const total=CONQUISTAS.length;
+  const feitas=CONQUISTAS.filter(x=>estado.conquistas?.[x[0]]).length;
+
+  const n=document.getElementById('rpd-nivel');
+  const s=document.getElementById('rpd-streak');
+  const x=document.getElementById('rpd-xp');
+  const k=document.getElementById('rpd-conquistas');
+  if(n)n.textContent=nivel;
+  if(s)s.textContent=streak;
+  if(x)x.textContent=`${xp}/100`;
+  if(k)k.textContent=`${feitas}/${total}`;
+
+  const marcos=[7,14,21,30,50,75,100];
+  const proximo=marcos.find(m=>m>streak)||Math.ceil((streak+1)/25)*25;
+  const anterior=marcos.filter(m=>m<=streak).pop()||0;
+  const perc=proximo===anterior?100:Math.min(100,Math.round(((streak-anterior)/(proximo-anterior))*100));
+
+  const titulo=document.getElementById('rpd-proxima-titulo');
+  const meta=document.getElementById('rpd-proxima-meta');
+  const barra=document.getElementById('rpd-proxima-barra');
+  const texto=document.getElementById('rpd-proxima-texto');
+
+  if(titulo)titulo.textContent=`🔥 Próximo marco: ${proximo} dias`;
+  if(meta)meta.textContent=streak>=proximo?'🎉 Alcançado!':`${Math.max(0,proximo-streak)} dia(s)`;
+  if(barra)barra.style.width=`${perc}%`;
+  if(texto){
+    if(streak===0)texto.textContent='Complete as tarefas obrigatórias para começar sua ofensiva.';
+    else if(streak<proximo)texto.textContent=`Mais ${proximo-streak} dia(s) para chegar a ${proximo}!`;
+    else texto.textContent='Marco alcançado!';
+  }
+}
+
 function renderizarConquistas(){
+  renderizarPainelProgresso();
   const c=document.getElementById('lista-conquistas');
   if(!c)return;
   renderizarHeatmap();
@@ -1447,10 +1627,10 @@ function renderizarConquistas(){
   if(elBarra)elBarra.style.width=`${perc}%`;
   if(elSub){
     if(diasRestantes===1){
-      elSub.textContent='🔥 Falta apenas 1 dia para abrir o baú!';
+      elSub.textContent='🔥 Falta 1 dia para o baú!';
       if(elIcone)elIcone.textContent='✨🎁';
     }else{
-      elSub.textContent=`Faltam ${diasRestantes} dias para o próximo baú (${proximoMarco} dias)!`;
+      elSub.textContent=`Faltam ${diasRestantes} dias para o baú (${proximoMarco} dias)!`;
       if(elIcone)elIcone.textContent='🎁';
     }
   }
@@ -1458,7 +1638,7 @@ function renderizarConquistas(){
   c.innerHTML='';
   CONQUISTAS.forEach(x=>{
     const ok=!!estado.conquistas?.[x[0]];
-    c.innerHTML+=`<div class="achievement-row" style="opacity:${ok?1:.55}"><span style="font-size:22px">${x[1]}</span><div style="flex:1"><b style="font-size:10px">${x[2]}</b><div style="font-size:8px;color:#64748b">${x[3]}</div></div><span>${ok?'✅':'🔒'}</span></div>`;
+    c.innerHTML+=`<div class="achievement-row" style="opacity:${ok?1:.55}"><span style="font-size:22px">${x[1]}</span><div style="flex:1"><b style="font-size:10px">${esc(x[2])}</b><div style="font-size:8px;color:#64748b">${esc(x[3])}</div></div><span>${ok?'✅':'🔒'}</span></div>`;
   });
 }
 
@@ -1558,7 +1738,7 @@ function reproduzirSequenciaMemoria(){
     if(i>=sequenciaMemoria.length){
       memoriaTravada=false;
       const statusEl=document.getElementById('memoria-status');
-      if(statusEl)statusEl.textContent='Sua vez! Repita a sequência.';
+      if(statusEl)statusEl.textContent='Sua vez!';
       return;
     }
     const idx=sequenciaMemoria[i];
@@ -1619,7 +1799,7 @@ function iniciarJogoReacao(){
   clearTimeout(reacaoTimer);
   reacaoTimer=setTimeout(()=>{
     if(document.getElementById('modal-desafio')?.classList.contains('mostrar')){
-      mostrarToast('⏰ Tempo esgotado! Tente de novo.');
+      mostrarToast('⏰ Tempo esgotado!');
       fecharModal('modal-desafio');
     }
   },5000);
@@ -1646,7 +1826,7 @@ function alternarAbaLojaVisual(aba){
   document.getElementById('tab-fundos').classList.toggle('ativa',ehFundos);
   document.getElementById('tab-acessorios').classList.toggle('ativa',!ehFundos);
   document.getElementById('titulo-loja-visual').textContent=ehFundos?'🖼️ Loja de Fundos':'🎀 Loja de Acessórios';
-  document.getElementById('desc-loja-visual').textContent=ehFundos?'Use suas moedas para personalizar o mundo do seu pet.':'Vista seu pet com acessórios divertidos! Toque de novo para tirar.';
+  document.getElementById('desc-loja-visual').textContent=ehFundos?'Use suas moedas para personalizar o visual.':'Vista seu pet com acessórios!';
 }
 
 function renderizarGridFundos(){
@@ -1656,7 +1836,7 @@ function renderizarGridFundos(){
     const comprado=estado.fundosComprados.includes(f.id),ativo=estado.fundoAtual===f.id,d=document.createElement('div');
     d.className='fundo-card '+(ativo?'ativo':'');
     d.style.background=f.bg;
-    d.innerHTML=`<span style="font-size:25px">${f.emoji}</span><b style="font-size:10px;margin-top:3px">${f.nome}</b><span class="shop-tag">${ativo?'✓ Em uso':comprado?'Usar':f.preco+' 🪙'}</span>`;
+    d.innerHTML=`<span style="font-size:25px">${f.emoji}</span><b style="font-size:10px;margin-top:3px">${esc(f.nome)}</b><span class="shop-tag">${ativo?'✓ Em uso':comprado?'Usar':f.preco+' 🪙'}</span>`;
     d.onclick=()=>selecionarOuComprarFundo(f);
     c.appendChild(d);
   });
@@ -1693,7 +1873,7 @@ function renderizarGridAcessorios(){
     d.style.background='linear-gradient(160deg,#ede9fe,#ddd6fe)';
     d.style.color='#312e81';
     d.style.textShadow='none';
-    d.innerHTML=`<span style="font-size:25px">${a.emoji}</span><b style="font-size:10px;margin-top:3px">${a.nome}</b><span class="shop-tag" style="background:#312e81cc;color:#fff">${ativo?'✓ Usando':comprado?'Usar/Tirar':a.preco+' 🪙'}</span>`;
+    d.innerHTML=`<span style="font-size:25px">${a.emoji}</span><b style="font-size:10px;margin-top:3px">${esc(a.nome)}</b><span class="shop-tag" style="background:#312e81cc;color:#fff">${ativo?'✓ Usando':comprado?'Usar/Tirar':a.preco+' 🪙'}</span>`;
     d.onclick=()=>selecionarOuComprarAcessorio(a);
     c.appendChild(d);
   });
@@ -1733,46 +1913,259 @@ function abrirLojaRecompensas(){
   abrirModal('modal-recompensas');
 }
 
+function premioTemSolicitacaoPendente(id){
+  return (estado.solicitacoesPremios||[]).some(s=>s.recompensaId===id&&s.status==='pendente');
+}
+
 function renderizarLojaRecompensas(){
   const c=document.getElementById('lista-itens-loja');
-  c.innerHTML='';
+  if(!c)return;
+
   const metaTotal=estado.metaMoedas||50;
   const percMeta=Math.min(100,Math.round((estado.moedas/metaTotal)*100));
-  document.getElementById('texto-meta-progresso').textContent=`${estado.moedas} / ${metaTotal} 🪙`;
-  document.getElementById('barra-meta-progresso').style.width=`${percMeta}%`;
+  const metaTxt=document.getElementById('texto-meta-progresso');
+  const metaBar=document.getElementById('barra-meta-progresso');
+  if(metaTxt)metaTxt.textContent=`${estado.moedas} / ${metaTotal} 🪙`;
+  if(metaBar)metaBar.style.width=`${percMeta}%`;
 
-  estado.recompensas.forEach(r=>{
-    const pode=estado.moedas>=r.custo;
-    c.innerHTML+=`
-      <div class="reward-row">
-        <div>
-          <b>${esc(r.texto)}</b>
-          <span style="display:block;color:#6366f1;font-weight:800">${r.custo} 🪙</span>
-        </div>
-        <button class="primary-btn ${pode?'green-btn':''}" ${pode?'':'disabled'} onclick="resgatarRecompensa(${r.id})">
-          Resgatar
-        </button>
+  const premiosAtivos=(estado.recompensas||[]).filter(r=>r.ativo!==false);
+
+  c.innerHTML=`
+    <div class="rp-shop-head">
+      <div>
+        <div class="rp-shop-title">🎁 Loja de Prêmios</div>
+        <div class="rp-shop-sub">Troque moedas por recompensas combinadas com os pais.</div>
       </div>
+      <div class="rp-wallet">🪙 <b>${estado.moedas}</b></div>
+    </div>
+    <div class="rp-shop-progress">
+      <div class="rp-progress-top"><span>Seu saldo</span><b>${estado.moedas} 🪙</b></div>
+      <div class="rp-progress-track"><div style="width:${percMeta}%"></div></div>
+      <small>${percMeta>=100?'🎉 Meta alcançada!':`Faça mais tarefas para juntar moedas.`}</small>
+    </div>
+    <div class="rp-shop-section-title">✨ Prêmios disponíveis</div>
+  `;
+
+  if(!premiosAtivos.length){
+    c.innerHTML+=`<div class="rp-empty">🎁<br><b>Nenhum prêmio disponível.</b><small>Os pais podem cadastrar no painel.</small></div>`;
+    return;
+  }
+
+  const grid=document.createElement('div');
+  grid.className='rp-prize-grid';
+
+  premiosAtivos.forEach(r=>{
+    const pode=estado.moedas>=r.custo;
+    const pendente=premioTemSolicitacaoPendente(r.id);
+    const faltam=Math.max(0,r.custo-estado.moedas);
+    const pct=Math.min(100,Math.round((estado.moedas/r.custo)*100));
+    const card=document.createElement('div');
+    card.className='rp-prize-card'+(pode?' ready':'');
+    card.innerHTML=`
+      <div class="rp-prize-icon">${esc(r.icone||'🎁')}</div>
+      <div class="rp-prize-name">${esc(r.texto)}</div>
+      <div class="rp-prize-desc">${esc(r.descricao||'Recompensa especial.')}</div>
+      <div class="rp-prize-cost">🪙 ${Number(r.custo)||0}</div>
+      ${pode ? `
+        <div class="rp-can-get">✨ Pode pedir!</div>
+        <button class="rp-prize-btn" ${pendente?'disabled':''} onclick="resgatarRecompensa(${r.id})">${pendente?'⏳ Pedido enviado':'🎟️ Solicitar prêmio'}</button>
+      ` : `
+        <div class="rp-missing">Faltam <b>${faltam} 🪙</b></div>
+        <div class="rp-mini-track"><div style="width:${pct}%"></div></div>
+        <button class="rp-prize-btn disabled" disabled>🔒 Bloqueado</button>
+      `}
     `;
+    grid.appendChild(card);
   });
+  c.appendChild(grid);
+
+  const meusPedidos=(estado.solicitacoesPremios||[]).slice().reverse().slice(0,5);
+  if(meusPedidos.length){
+    const history=document.createElement('div');
+    history.className='rp-my-orders';
+    history.innerHTML=`<div class="rp-shop-section-title">🎟️ Meus pedidos</div>`;
+    meusPedidos.forEach(s=>{
+      const cls=s.status==='aprovado'?'ok':s.status==='recusado'?'no':'wait';
+      const label=s.status==='aprovado'?'Aprovado':s.status==='recusado'?'Recusado':'Aguardando';
+      history.innerHTML+=`
+        <div class="rp-order ${cls}">
+          <span>${esc(s.texto)}</span>
+          <span><b>${Number(s.custo)||0} 🪙</b> · ${label}</span>
+        </div>`;
+    });
+    c.appendChild(history);
+  }
 }
 
 function resgatarRecompensa(id){
   const r=estado.recompensas.find(x=>x.id===id);
-  if(!r||estado.moedas<r.custo)return;
-  mostrarConfirmacao(`Resgatar "${r.texto}" por ${r.custo} moedas?`,()=>{
-    estado.moedas-=r.custo;
+  if(!r||r.ativo===false||estado.moedas<r.custo||premioTemSolicitacaoPendente(id))return;
+  const solicitacao={
+    id:Date.now()+Math.floor(Math.random()*1000),
+    recompensaId:r.id,
+    texto:r.texto,
+    custo:Number(r.custo)||0,
+    tipo:r.tipo||'premio',
+    minutos:Number(r.minutos)||0,
+    status:'pendente',
+    data:hojeLocal()
+  };
+  estado.solicitacoesPremios=estado.solicitacoesPremios||[];
+  estado.solicitacoesPremios.push(solicitacao);
+  salvar();
+  atualizarTela();
+  renderizarLojaRecompensas();
+  mostrarToast('🎟️ Pedido enviado aos pais!');
+}
+
+function aprovarSolicitacaoPremio(id){
+  const s=(estado.solicitacoesPremios||[]).find(x=>x.id===id);
+  if(!s||s.status!=='pendente')return;
+  if(estado.moedas<s.custo){
+    mostrarToast('⚠️ Saldo insuficiente.');
+    return;
+  }
+  estado.moedas-=s.custo;
+  s.status='aprovado';
+  s.aprovadoEm=Date.now();
+  salvar();
+  atualizarTela();
+  renderizarPainelPais();
+  renderizarLojaRecompensas();
+
+  const r=estado.recompensas.find(x=>x.id===s.recompensaId);
+  if((s.tipo==='timer'||r?.tipo==='timer')&&s.minutos){
+    iniciarTimerTela(s.minutos);
+  }else{
+    dispararConfetes();
+    somConquista();
+    mostrarAviso('🎁','Prêmio aprovado!',`Liberado: ${s.texto}`);
+  }
+}
+
+function recusarSolicitacaoPremio(id){
+  const s=(estado.solicitacoesPremios||[]).find(x=>x.id===id);
+  if(!s||s.status!=='pendente')return;
+  s.status='recusado';
+  s.recusadoEm=Date.now();
+  salvar();
+  renderizarPainelPais();
+  renderizarLojaRecompensas();
+  mostrarToast('❌ Solicitação recusada.');
+}
+
+function adicionarPremioPais(){
+  const texto=window.prompt('Nome do prêmio:');
+  if(!texto||!texto.trim())return;
+  const custo=Number(window.prompt('Moedas necessárias:', '50'));
+  if(!Number.isFinite(custo)||custo<1)return mostrarToast('⚠️ Quantidade inválida.');
+  const descricao=window.prompt('Descrição (opcional):','')??'';
+  const icone=window.prompt('Emoji (opcional):','🎁')||'🎁';
+  const tipo=window.confirm('Libera tempo de tela?')?'timer':'premio';
+  let minutos=0;
+  if(tipo==='timer'){
+    minutos=Number(window.prompt('Quantos minutos?', '20'));
+    if(!Number.isFinite(minutos)||minutos<1)return mostrarToast('⚠️ Minutos inválidos.');
+  }
+  const id=Date.now()+Math.floor(Math.random()*1000);
+  estado.recompensas.push({id,texto:texto.trim(),descricao:descricao.trim(),custo,tipo,minutos,icone:icone.trim()||'🎁',ativo:true});
+  salvar();
+  renderizarPainelPais();
+  renderizarLojaRecompensas();
+  mostrarToast('🎁 Prêmio criado!');
+}
+
+function editarPremioPais(id){
+  const r=estado.recompensas.find(x=>x.id===id);
+  if(!r)return;
+  const texto=window.prompt('Nome:',r.texto);
+  if(!texto||!texto.trim())return;
+  const custo=Number(window.prompt('Moedas:',String(r.custo)));
+  if(!Number.isFinite(custo)||custo<1)return mostrarToast('⚠️ Custo inválido.');
+  const descricao=window.prompt('Descrição:',r.descricao||'')??'';
+  const icone=window.prompt('Emoji:',r.icone||'🎁')||'🎁';
+  r.texto=texto.trim();
+  r.custo=custo;
+  r.descricao=descricao.trim();
+  r.icone=icone.trim()||'🎁';
+  if(r.tipo==='timer'){
+    const minutos=Number(window.prompt('Minutos:',String(r.minutos||20)));
+    if(!Number.isFinite(minutos)||minutos<1)return mostrarToast('⚠️ Minutos inválidos.');
+    r.minutos=minutos;
+  }
+  salvar();
+  renderizarPainelPais();
+  renderizarLojaRecompensas();
+  mostrarToast('✏️ Atualizado!');
+}
+
+function alternarPremioPais(id){
+  const r=estado.recompensas.find(x=>x.id===id);
+  if(!r)return;
+  r.ativo=r.ativo===false;
+  salvar();
+  renderizarPainelPais();
+  renderizarLojaRecompensas();
+  mostrarToast(r.ativo?'👁️ Ativado.':'🙈 Ocultado.');
+}
+
+function excluirPremioPais(id){
+  const r=estado.recompensas.find(x=>x.id===id);
+  if(!r)return;
+  mostrarConfirmacao(`Excluir "${r.texto}"?`,()=>{
+    estado.recompensas=estado.recompensas.filter(x=>x.id!==id);
+    estado.solicitacoesPremios=(estado.solicitacoesPremios||[]).filter(s=>s.recompensaId!==id||s.status!=='pendente');
     salvar();
-    atualizarTela();
+    renderizarPainelPais();
     renderizarLojaRecompensas();
-    fecharModal('modal-recompensas');
-    if(r.tipo==='timer'&&r.minutos){
-      iniciarTimerTela(r.minutos);
-    }else{
-      dispararConfetes();
-      somConquista();
-      mostrarAviso('🎁','Prêmio Liberado!',`Você resgatou: ${r.texto}`);
-    }
+    mostrarToast('🗑️ Excluído.');
+  });
+}
+
+function renderizarGerenciamentoPremiosPais(){
+  const c=document.getElementById('lista-gerenciar-premios');
+  if(!c)return;
+  c.innerHTML='';
+  if(!estado.recompensas.length){
+    c.innerHTML='<span style="font-size:9px;color:#94a3b8">Nenhum prêmio cadastrado.</span>';
+    return;
+  }
+  estado.recompensas.forEach(r=>{
+    const status=r.ativo===false?'🙈 oculto':'✅ ativo';
+    c.innerHTML+=`
+      <div class="edit-row" style="gap:5px;align-items:center;flex-wrap:wrap">
+        <span style="font-size:20px">${esc(r.icone||'🎁')}</span>
+        <span style="flex:1;min-width:120px">
+          <b>${esc(r.texto)}</b> • ${Number(r.custo)||0}🪙
+          <small style="display:block;color:#94a3b8">${esc(r.descricao||'Sem descrição')} • ${status}</small>
+        </span>
+        <button class="primary-btn blue-btn" onclick="editarPremioPais(${r.id})">✏️</button>
+        <button class="primary-btn" onclick="alternarPremioPais(${r.id})">${r.ativo===false?'👁️':'🙈'}</button>
+        <button class="primary-btn red-btn" onclick="excluirPremioPais(${r.id})">🗑️</button>
+      </div>`;
+  });
+}
+
+function renderizarSolicitacoesPremiosPais(){
+  const c=document.getElementById('lista-solicitacoes-premios');
+  if(!c)return;
+  c.innerHTML='';
+  const pendentes=(estado.solicitacoesPremios||[]).filter(s=>s.status==='pendente');
+  if(!pendentes.length){
+    c.innerHTML='<span style="font-size:9px;color:#94a3b8">Nenhuma solicitação pendente.</span>';
+    return;
+  }
+  pendentes.forEach(s=>{
+    c.innerHTML+=`
+      <div class="approval-row">
+        <div class="approval-top">
+          <span>🎁 <b>${esc(s.texto)}</b> • ${Number(s.custo)||0}🪙</span>
+          <div style="display:flex;gap:4px">
+            <button class="primary-btn red-btn" onclick="recusarSolicitacaoPremio(${s.id})">Recusar</button>
+            <button class="primary-btn green-btn" onclick="aprovarSolicitacaoPremio(${s.id})">Aprovar</button>
+          </div>
+        </div>
+      </div>`;
   });
 }
 
@@ -1799,7 +2192,7 @@ function atualizarDisplayTimer(){
     salvar();
     tocarTom(300,'sawtooth',.4,0,.3);
     setTimeout(()=>tocarTom(250,'sawtooth',.6,0,.3),450);
-    mostrarAviso('⏰','Tempo Esgotado!','O tempo de tela liberado acabou.');
+    mostrarAviso('⏰','Tempo Esgotado!','O tempo de tela acabou.');
     fecharModal('modal-timer');
   }
 }
@@ -1989,7 +2382,6 @@ setInterval(()=>{
 
 window.addEventListener('DOMContentLoaded',()=>{
   atualizarTela();
-  iniciarSincronizacaoNuvem();
   verificarPrimeiroAcesso();
   agendarFalaAleatoria();
   if(estado.timerFim&&estado.timerFim>Date.now()){
