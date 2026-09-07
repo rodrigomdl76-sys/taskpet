@@ -17,23 +17,23 @@
 *{margin:0;padding:0;box-sizing:border-box;font-family:'Nunito',sans-serif;-webkit-tap-highlight-color:transparent}
 html,body{width:100%;height:100%;overflow:hidden}
 body{min-height:100dvh;color:#172033;transition:background .5s ease}
-body.cenario-ceu{background:linear-gradient(180deg,#4facfe,#00f2fe)}
-body.cenario-chuva{background:linear-gradient(180deg,#475569,#94a3b8)}
-body.cenario-noite{background:linear-gradient(180deg,#0f172a,#1e3a8a);color:#f8fafc}
-body.cenario-arcoiris{background:linear-gradient(180deg,#f87171,#fbbf24 30%,#4ade80 60%,#60a5fa)}
-body.cenario-praia{background:linear-gradient(180deg,#fef08a,#38bdf8)}
-body.cenario-floresta{background:linear-gradient(180deg,#166534,#84cc16)}
-body.cenario-festa{background:linear-gradient(180deg,#f472b6,#a78bfa 50%,#60a5fa)}
-body.cenario-halloween{background:linear-gradient(180deg,#1a1033,#2e1065 50%,#7c2d12);color:#fff}
-body.cenario-estadio{background:linear-gradient(180deg,#064e3b,#10b981);color:#fff}
-body.cenario-quarto{background:linear-gradient(180deg,#fdf4ff,#f5d0fe)}
-body.cenario-mario{background:linear-gradient(180deg,#22d3ee,#84cc16)}
-body.cenario-dino{background:linear-gradient(180deg,#fef3c7,#f59e0b 50%,#166534)}
-body.cenario-princesa{background:linear-gradient(180deg,#fbcfe8,#f9a8d4)}
-body.cenario-astronauta{background:linear-gradient(180deg,#020617,#1e1b4b);color:#fff}
-body.cenario-pirata{background:linear-gradient(180deg,#78350f,#0f172a);color:#fff}
-body.cenario-fazenda{background:linear-gradient(180deg,#fef08a,#84cc16)}
-body.cenario-neve{background:linear-gradient(180deg,#e0f2fe,#bae6fd)}
+body.cenario-ceu,.bg-layer.cenario-ceu{background:linear-gradient(180deg,#4facfe,#00f2fe)}
+body.cenario-chuva,.bg-layer.cenario-chuva{background:linear-gradient(180deg,#475569,#94a3b8)}
+body.cenario-noite,.bg-layer.cenario-noite{background:linear-gradient(180deg,#0f172a,#1e3a8a);color:#f8fafc}
+body.cenario-arcoiris,.bg-layer.cenario-arcoiris{background:linear-gradient(180deg,#f87171,#fbbf24 30%,#4ade80 60%,#60a5fa)}
+body.cenario-praia,.bg-layer.cenario-praia{background:linear-gradient(180deg,#fef08a,#38bdf8)}
+body.cenario-floresta,.bg-layer.cenario-floresta{background:linear-gradient(180deg,#166534,#84cc16)}
+body.cenario-festa,.bg-layer.cenario-festa{background:linear-gradient(180deg,#f472b6,#a78bfa 50%,#60a5fa)}
+body.cenario-halloween,.bg-layer.cenario-halloween{background:linear-gradient(180deg,#1a1033,#2e1065 50%,#7c2d12);color:#fff}
+body.cenario-estadio,.bg-layer.cenario-estadio{background:linear-gradient(180deg,#064e3b,#10b981);color:#fff}
+body.cenario-quarto,.bg-layer.cenario-quarto{background:linear-gradient(180deg,#fdf4ff,#f5d0fe)}
+body.cenario-mario,.bg-layer.cenario-mario{background:linear-gradient(180deg,#22d3ee,#84cc16)}
+body.cenario-dino,.bg-layer.cenario-dino{background:linear-gradient(180deg,#fef3c7,#f59e0b 50%,#166534)}
+body.cenario-princesa,.bg-layer.cenario-princesa{background:linear-gradient(180deg,#fbcfe8,#f9a8d4)}
+body.cenario-astronauta,.bg-layer.cenario-astronauta{background:linear-gradient(180deg,#020617,#1e1b4b);color:#fff}
+body.cenario-pirata,.bg-layer.cenario-pirata{background:linear-gradient(180deg,#78350f,#0f172a);color:#fff}
+body.cenario-fazenda,.bg-layer.cenario-fazenda{background:linear-gradient(180deg,#fef08a,#84cc16)}
+body.cenario-neve,.bg-layer.cenario-neve{background:linear-gradient(180deg,#e0f2fe,#bae6fd)}
 
 button,input,select{font:inherit}
 button{touch-action:manipulation}
@@ -69,6 +69,8 @@ button{touch-action:manipulation}
 .pet-stage:after{content:"";position:absolute;width:120px;height:18px;border-radius:50%;bottom:17px;background:#0002;filter:blur(7px)}
 #pet-svg-container{width:210px;height:210px;position:relative;z-index:2}
 #pet-svg-container svg{width:100%;height:100%;filter:drop-shadow(0 9px 12px rgba(0,0,0,.18))}
+.camada-pet,.camada-acessorio{position:absolute;inset:0}
+.camada-acessorio svg{width:100%;height:100%}
 .cat-wrapper{cursor:pointer;animation:catFloat 4s ease-in-out infinite;z-index:3}
 @keyframes catFloat{0%,100%{transform:translateY(0)}50%{transform:translateY(-7px)}}
 .level-badge{margin-top:5px;background:#fff;border-radius:99px;padding:5px 12px;display:flex;align-items:center;gap:6px;box-shadow:0 4px 12px #0002}
@@ -83,13 +85,13 @@ button{touch-action:manipulation}
 .task-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:5px}
 .task-row{display:grid;grid-template-columns:1fr auto;gap:5px;align-items:center;padding:6px 0;border-bottom:1px solid #eef2f7}
 .task-row:last-child{border:0}
-.task-name{font-size:10px;font-weight:900}
-.task-reward{display:block;font-size:8px;color:#6366f1;font-weight:800;margin-top:1px}
+.task-name{font-size:11px;font-weight:900}
+.task-reward{display:block;font-size:9px;color:#6366f1;font-weight:800;margin-top:1px}
 .task-actions{display:flex;gap:3px;align-items:center}
 .task-btn{border:0;border-radius:8px;padding:5px 7px;font-size:8px;font-weight:900;cursor:pointer}
 .btn-photo{background:#eef2ff;color:#4338ca}.btn-ok{background:#22c55e;color:#fff}
 .bottom-buttons{display:grid;grid-template-columns:repeat(4,1fr);gap:6px;flex-shrink:0}
-.bottom-btn{min-height:60px;border:0;border-radius:17px;color:#fff;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px;font-size:9px;font-weight:900;box-shadow:0 6px 14px #0002;cursor:pointer;transition:transform .15s}
+.bottom-btn{min-height:60px;border:0;border-radius:17px;color:#fff;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px;font-size:10px;font-weight:900;box-shadow:0 6px 14px #0002;cursor:pointer;transition:transform .15s}
 .bottom-btn:active{transform:scale(.94)}
 .btn-voice{background:linear-gradient(135deg,#10b981,#059669)}.btn-game{background:linear-gradient(135deg,#a855f7,#7c3aed)}.btn-fundos{background:linear-gradient(135deg,#0ea5e9,#2563eb)}.btn-premios{background:linear-gradient(135deg,#fb7185,#e11d48)}
 .btn-icon{font-size:20px}
@@ -128,10 +130,52 @@ button{touch-action:manipulation}
 .foto-viewer{position:fixed;inset:0;background:#000d;display:flex;align-items:center;justify-content:center;z-index:300;opacity:0;visibility:hidden;transition:.2s;padding:20px}
 .foto-viewer.mostrar{opacity:1;visibility:visible}
 .foto-viewer img{max-width:100%;max-height:100%;border-radius:14px}
+
+.bg-layer{position:fixed;inset:0;z-index:-2;transition:opacity 1s ease;opacity:0}
+.bg-layer.ativa{opacity:1;z-index:-1}
+
+.cat-wrapper.mood-feliz{animation-duration:2.6s}
+.cat-wrapper.mood-triste{animation-duration:5.5s;filter:saturate(.75) brightness(.96)}
+.cat-wrapper.mood-doente{filter:saturate(.5) brightness(.9)}
+.cat-wrapper.pet-dormindo{animation-duration:7s;filter:brightness(.8) saturate(.8)}
+
+.balao-fala{position:absolute;top:6%;background:#fff;color:#172033;border-radius:16px;padding:7px 12px;font-size:10.5px;font-weight:900;max-width:200px;text-align:center;box-shadow:0 6px 16px #0003;opacity:0;transform:translateY(6px) scale(.9);transition:.25s;pointer-events:none;z-index:10}
+.balao-fala:after{content:"";position:absolute;bottom:-7px;left:50%;transform:translateX(-50%);border:8px solid transparent;border-top-color:#fff}
+.balao-fala.mostrar{opacity:1;transform:translateY(0) scale(1)}
+
+.zzz-flutuante{position:absolute;font-weight:900;font-size:20px;color:#fff;text-shadow:0 2px 5px #0007;pointer-events:none;animation:zzzSobe 2.6s ease-in forwards;z-index:11}
+@keyframes zzzSobe{0%{opacity:0;transform:translate(0,0) scale(.5)}20%{opacity:1}100%{opacity:0;transform:translate(22px,-60px) scale(1.3)}}
+
+@keyframes taskPop{0%{transform:scale(1)}35%{transform:scale(1.04);background:#ecfdf5}100%{transform:scale(1)}}
+.task-row.pop-anim{animation:taskPop .5s ease}
+
+.dias-semana-picker{display:grid;grid-template-columns:repeat(7,1fr);gap:3px;margin-top:5px}
+.dia-chip{border:1px solid #cbd5e1;background:#fff;border-radius:8px;padding:5px 0;font-size:8px;font-weight:900;color:#64748b;cursor:pointer;text-align:center}
+.dia-chip.on{background:#7c3aed;border-color:#7c3aed;color:#fff}
+
+.heatmap-grid{display:grid;grid-template-columns:repeat(7,1fr);gap:4px;margin-top:6px}
+.heatmap-dia{aspect-ratio:1;border-radius:5px;background:#e2e8f0}
+.heatmap-dia.feito{background:#22c55e}
+.heatmap-dia.parcial{background:#fde68a}
+.heatmap-dia.futuro{background:transparent}
+.heatmap-legenda{display:flex;gap:10px;margin-top:7px;font-size:8px;font-weight:800;color:#64748b;align-items:center}
+.heatmap-legenda i{width:10px;height:10px;border-radius:3px;display:inline-block;margin-right:3px;vertical-align:-1px}
+
+.pausa-banner{margin-top:7px;padding:7px 9px;border-radius:12px;background:#ecfeff;border:1px solid #a5f3fc;font-size:9px;font-weight:900;color:#0e7490}
+
+.relatorio-dia-row{display:grid;grid-template-columns:70px 1fr auto;gap:6px;align-items:center;font-size:9px;font-weight:800;padding:5px 0;border-bottom:1px solid #f1f5f9}
+.relatorio-dia-row:last-child{border:0}
+
+.grid-tabs{display:grid;grid-template-columns:1fr 1fr;gap:6px;margin-bottom:10px}
+.tab-btn{border:0;background:#f1f5f9;color:#64748b;border-radius:10px;padding:8px;font-size:10px;font-weight:900;cursor:pointer}
+.tab-btn.ativa{background:#7c3aed;color:#fff}
+
 @media(max-height:650px){.pet-stage{height:185px;min-height:160px}.tasks-section{max-height:105px}.bottom-btn{min-height:50px}.btn-icon{font-size:17px}#pet-svg-container{width:160px;height:160px}}
 </style>
 </head>
 <body class="cenario-ceu">
+<div class="bg-layer cenario-ceu ativa" id="bg-layer-a"></div>
+<div class="bg-layer" id="bg-layer-b"></div>
 <input type="file" id="camera-input" accept="image/*" capture="environment" class="hidden">
 
 <div class="app">
@@ -159,6 +203,7 @@ button{touch-action:manipulation}
 
   <div class="cat-section" id="pet-section-area">
     <div class="pet-stage">
+      <div class="balao-fala" id="balao-fala"></div>
       <div class="cat-wrapper" id="pet-principal" onclick="interagirComPet(event)"><div id="pet-svg-container"></div></div>
     </div>
     <div class="level-badge">⭐ <span class="level-number">Nível <span id="numero-nivel">1</span></span></div>
@@ -198,7 +243,26 @@ button{touch-action:manipulation}
   </div>
 </div>
 
-<div id="modal-fundos" class="modal-overlay"><div class="modal"><div class="modal-title"><h3>🖼️ Loja de Fundos</h3><button class="close-btn" onclick="fecharModal('modal-fundos')">×</button></div><p style="font-size:9px;color:#64748b;margin-bottom:10px">Use suas moedas para personalizar o mundo do seu pet.</p><div class="grid-fundos" id="grid-fundos"></div></div></div>
+<div id="modal-onboarding" class="modal-overlay"><div class="modal" style="text-align:center;max-width:320px">
+  <div style="font-size:40px">🐾</div>
+  <h3 style="font-size:16px;margin:5px 0">Como funciona?</h3>
+  <div class="stack" style="text-align:left;margin-top:8px">
+    <div class="achievement-row"><span style="font-size:20px">👆</span><div><b style="font-size:10px">Toque no seu pet</b><div style="font-size:8px;color:#64748b">Dê carinho e deixe ele feliz!</div></div></div>
+    <div class="achievement-row"><span style="font-size:20px">🛡️</span><div><b style="font-size:10px">Complete as tarefas</b><div style="font-size:8px;color:#64748b">Ganhe moedas e XP para seu pet crescer.</div></div></div>
+    <div class="achievement-row"><span style="font-size:20px">🎁</span><div><b style="font-size:10px">Troque moedas por prêmios</b><div style="font-size:8px;color:#64748b">Fundos, acessórios e tempo de tela!</div></div></div>
+  </div>
+  <button class="primary-btn green-btn" style="width:100%;margin-top:12px" onclick="fecharOnboarding()">Entendi, vamos lá! 🚀</button>
+</div></div>
+
+<div id="modal-fundos" class="modal-overlay"><div class="modal"><div class="modal-title"><h3 id="titulo-loja-visual">🖼️ Loja de Fundos</h3><button class="close-btn" onclick="fecharModal('modal-fundos')">×</button></div>
+  <div class="grid-tabs">
+    <button class="tab-btn ativa" id="tab-fundos" onclick="alternarAbaLojaVisual('fundos')">🖼️ Fundos</button>
+    <button class="tab-btn" id="tab-acessorios" onclick="alternarAbaLojaVisual('acessorios')">🎀 Acessórios</button>
+  </div>
+  <p style="font-size:9px;color:#64748b;margin-bottom:10px" id="desc-loja-visual">Use suas moedas para personalizar o mundo do seu pet.</p>
+  <div class="grid-fundos" id="grid-fundos"></div>
+  <div class="grid-fundos hidden" id="grid-acessorios"></div>
+</div></div>
 
 <div id="modal-timer" class="modal-overlay"><div class="modal" style="text-align:center"><div class="modal-title"><h3>⏳ Tempo de Tela</h3><button class="close-btn" onclick="fecharModal('modal-timer')">×</button></div><p style="font-size:10px;color:#64748b;margin-bottom:10px">Tempo liberado pela recompensa.</p><div id="relogio-timer" class="timer-display">00:00</div><button class="primary-btn red-btn" style="margin-top:10px" onclick="pausarFecharTimer()">Encerrar tempo</button></div></div>
 
@@ -219,10 +283,34 @@ button{touch-action:manipulation}
     </div>
     <small style="font-size:8px;color:#64748b;margin-top:3px;display:block">Dispositivos com o mesmo código compartilham as tarefas e pet. Use um código longo e difícil de adivinhar — ele funciona como uma senha.</small>
   </div>
+  <div class="section-card" id="card-lembrete">
+    <b style="font-size:10px">🔔 Lembrete antes de dormir</b>
+    <div style="display:flex;justify-content:space-between;align-items:center;margin-top:6px">
+      <span style="font-size:9px;color:#64748b">Avisar às 20h se ainda faltar tarefa obrigatória</span>
+      <button class="primary-btn" id="btn-toggle-lembrete" onclick="alternarLembretes()">Ativar</button>
+    </div>
+  </div>
+  <div class="section-card" id="card-pausa">
+    <b style="font-size:10px">🌴 Pausa da Ofensiva (férias/doença)</b>
+    <div id="pausa-banner-painel"></div>
+    <div style="display:flex;gap:5px;margin-top:6px">
+      <input class="field" id="input-dias-pausa" type="number" min="1" max="30" value="3" placeholder="dias">
+      <button class="primary-btn blue-btn" onclick="ativarPausa()">Pausar streak</button>
+      <button class="primary-btn red-btn" onclick="cancelarPausa()">Cancelar</button>
+    </div>
+    <small style="font-size:8px;color:#64748b;margin-top:4px;display:block">Durante a pausa, o streak não é perdido mesmo sem completar tarefas.</small>
+  </div>
   <div class="section-card"><b style="font-size:10px">📋 Aprovações pendentes</b><div class="stack" id="lista-aprovacao-pais" style="margin-top:6px"></div></div>
-  <div class="section-card"><b style="font-size:10px">✏️ Gerenciar tarefas</b><div style="font-size:8px;color:#64748b;margin-top:4px">Obrigatórias 🔥 contam para a ofensiva. Extras ⭐ dão recompensas, mas não liberam a ofensiva.</div><div class="stack" id="lista-edicao-tarefas" style="margin:6px 0"></div><div style="display:grid;grid-template-columns:1fr 48px 88px auto;gap:4px"><input class="field" id="nova-tarefa-texto" placeholder="Nova tarefa"><input class="field" id="nova-tarefa-moedas" type="number" value="5" min="1"><select class="field" id="nova-tarefa-tipo"><option value="obrigatoria">🔥 Obrigatória</option><option value="extra">⭐ Extra</option></select><button class="primary-btn blue-btn" onclick="adicionarTarefa()">+</button></div></div>
-  <div class="section-card"><b style="font-size:10px">📊 Resumo</b><div class="stat-grid" style="margin-top:6px"><div class="stat">📋 <b id="stat-feitas">0</b><span>tarefas feitas</span></div><div class="stat">🔥 <b id="stat-ofensiva-pais">0</b><span>dias de ofensiva</span></div><div class="stat">🏆 <b id="stat-conquistas">0</b><span>conquistas</span></div></div></div>
+  <div class="section-card"><b style="font-size:10px">✏️ Gerenciar tarefas</b><div style="font-size:8px;color:#64748b;margin-top:4px">Obrigatórias 🔥 contam para a ofensiva. Extras ⭐ dão recompensas, mas não liberam a ofensiva.</div><div class="stack" id="lista-edicao-tarefas" style="margin:6px 0"></div><div style="display:grid;grid-template-columns:1fr 48px 88px auto;gap:4px"><input class="field" id="nova-tarefa-texto" placeholder="Nova tarefa"><input class="field" id="nova-tarefa-moedas" type="number" value="5" min="1"><select class="field" id="nova-tarefa-tipo"><option value="obrigatoria">🔥 Obrigatória</option><option value="extra">⭐ Extra</option></select><button class="primary-btn blue-btn" onclick="adicionarTarefa()">+</button></div>
+    <div style="margin-top:6px"><span class="field-label" style="margin-bottom:2px">📅 Repetir em (vazio = todo dia)</span><div class="dias-semana-picker" id="dias-nova-tarefa"></div></div>
+  </div>
+  <div class="section-card"><div style="display:flex;justify-content:space-between;align-items:center"><b style="font-size:10px">📊 Resumo</b><button class="primary-btn blue-btn" onclick="abrirRelatorioSemanal()">Ver relatório semanal</button></div><div class="stat-grid" style="margin-top:6px"><div class="stat">📋 <b id="stat-feitas">0</b><span>tarefas feitas</span></div><div class="stat">🔥 <b id="stat-ofensiva-pais">0</b><span>dias de ofensiva</span></div><div class="stat">🏆 <b id="stat-conquistas">0</b><span>conquistas</span></div></div></div>
   <button class="primary-btn" style="width:100%;margin-top:5px;background:#e2e8f0;color:#475569" onclick="fecharModal('modal-pais');alternarPerfil()">🔄 Trocar Perfil de Usuário</button>
+</div></div>
+
+<div id="modal-relatorio" class="modal-overlay"><div class="modal"><div class="modal-title"><h3>📊 Relatório Semanal</h3><button class="close-btn" onclick="fecharModal('modal-relatorio')">×</button></div>
+  <div class="stat-grid" style="margin-bottom:9px"><div class="stat">📋 <b id="rel-total-tarefas">0</b><span>tarefas na semana</span></div><div class="stat">🪙 <b id="rel-total-moedas">0</b><span>moedas ganhas</span></div></div>
+  <div class="section-card"><div class="stack" id="rel-lista-dias"></div></div>
 </div></div>
 
 <div id="modal-evolucoes" class="modal-overlay"><div class="modal"><div class="modal-title"><h3>⭐ Evoluções — <span id="modal-pet-evol-nome">Pipoca</span></h3><button class="close-btn" onclick="fecharModal('modal-evolucoes')">×</button></div><div class="stack" id="lista-evolucoes"></div></div></div>
@@ -241,6 +329,11 @@ button{touch-action:manipulation}
         <span style="font-size:8px;font-weight:800;color:#9a3412;display:block;margin-top:4px" id="bau-status-sub">Faltam 7 dias para o próximo baú!</span>
       </div>
     </div>
+  </div>
+  <div class="section-card">
+    <b style="font-size:10px">📅 Últimos 35 dias</b>
+    <div class="heatmap-grid" id="grid-heatmap"></div>
+    <div class="heatmap-legenda"><span><i style="background:#22c55e"></i>Concluído</span><span><i style="background:#e2e8f0"></i>Sem registro</span></div>
   </div>
   <div class="stack" id="lista-conquistas"></div>
 </div></div>
@@ -327,6 +420,13 @@ ${tipo==='frango'?'<path d="M135 138l-23 14h46z" fill="#ffcc00"/><ellipse cx="13
 ${tipo==='gato'?'<path d="M200 220q40 20 30 50" stroke="#1A1A1A" stroke-width="16" fill="none" stroke-linecap="round"/>':''}${extra}</svg>`;
 }
 
+const ACESSORIOS=[
+{id:'chapeu',nome:'Chapéu de Festa',emoji:'🎉',preco:15,svg:'<svg viewBox="0 0 270 285" xmlns="http://www.w3.org/2000/svg"><path d="M108 58 L135 8 L162 58 Z" fill="#f43f5e" stroke="#fff" stroke-width="3"/><circle cx="135" cy="8" r="7" fill="#fbbf24"/><path d="M100 60h70" stroke="#fff" stroke-width="4" stroke-linecap="round"/></svg>'},
+{id:'oculos',nome:'Óculos Estiloso',emoji:'🕶️',preco:18,svg:'<svg viewBox="0 0 270 285" xmlns="http://www.w3.org/2000/svg"><circle cx="108" cy="120" r="27" fill="none" stroke="#172033" stroke-width="6"/><circle cx="162" cy="120" r="27" fill="none" stroke="#172033" stroke-width="6"/><line x1="135" y1="120" x2="135" y2="120" stroke="#172033" stroke-width="6"/><path d="M81 118 L60 108M189 118 L210 108" stroke="#172033" stroke-width="6" stroke-linecap="round"/></svg>'},
+{id:'laco',nome:'Laço Fofo',emoji:'🎀',preco:15,svg:'<svg viewBox="0 0 270 285" xmlns="http://www.w3.org/2000/svg"><g transform="translate(160,50)"><path d="M-25 0 Q-25 -18 0 -6 Q25 -18 25 0 Q25 18 0 6 Q-25 18 -25 0Z" fill="#ec4899" stroke="#fff" stroke-width="2"/><circle cx="0" cy="0" r="7" fill="#f9a8d4"/></g></svg>'},
+{id:'cachecol',nome:'Cachecol',emoji:'🧣',preco:20,svg:'<svg viewBox="0 0 270 285" xmlns="http://www.w3.org/2000/svg"><path d="M85 178Q135 200 185 178v20Q135 222 85 198Z" fill="#0ea5e9" stroke="#fff" stroke-width="2"/><rect x="150" y="196" width="14" height="34" rx="3" fill="#0ea5e9"/></svg>'}
+];
+
 const BANCO_FUNDOS=[
 {id:'ceu',nome:'Céu Azul',emoji:'☀️',preco:0,bg:'linear-gradient(180deg,#4facfe,#00f2fe)'},{id:'chuva',nome:'Chuva',emoji:'🌧️',preco:12,bg:'linear-gradient(180deg,#475569,#94a3b8)'},{id:'noite',nome:'Noite Estrelada',emoji:'🌙',preco:20,bg:'linear-gradient(180deg,#0f172a,#1e3a8a)'},{id:'arcoiris',nome:'Arco-Íris',emoji:'🌈',preco:30,bg:'linear-gradient(180deg,#f87171,#fbbf24 30%,#4ade80 60%,#60a5fa)'},{id:'praia',nome:'Praia Tropical',emoji:'🏖️',preco:25,bg:'linear-gradient(180deg,#fef08a,#38bdf8)'},{id:'floresta',nome:'Floresta Mágica',emoji:'🌲',preco:22,bg:'linear-gradient(180deg,#166534,#84cc16)'},{id:'festa',nome:'Balada Neon',emoji:'🎉',preco:35,bg:'linear-gradient(180deg,#f472b6,#a78bfa 50%,#60a5fa)'},{id:'halloween',nome:'Halloween',emoji:'🎃',preco:40,bg:'linear-gradient(180deg,#1a1033,#2e1065,#7c2d12)'},{id:'estadio',nome:'Estádio Futebol',emoji:'⚽',preco:45,bg:'linear-gradient(180deg,#064e3b,#10b981)'},{id:'quarto',nome:'Quarto Infantil',emoji:'🛏️',preco:35,bg:'linear-gradient(180deg,#fdf4ff,#f5d0fe)'},{id:'mario',nome:'Mundo Mario',emoji:'🍄',preco:50,bg:'linear-gradient(180deg,#22d3ee,#84cc16)'},{id:'dino',nome:'Mundo Dinossauros',emoji:'🦖',preco:45,bg:'linear-gradient(180deg,#fef3c7,#f59e0b,#166534)'},{id:'princesa',nome:'Castelo Princesa',emoji:'👑',preco:40,bg:'linear-gradient(180deg,#fbcfe8,#f9a8d4)'},{id:'astronauta',nome:'Astronauta',emoji:'🚀',preco:50,bg:'linear-gradient(180deg,#020617,#1e1b4b)'},{id:'pirata',nome:'Barco Pirata',emoji:'🏴‍☠️',preco:45,bg:'linear-gradient(180deg,#78350f,#0f172a)'},{id:'fazenda',nome:'Fazenda Feliz',emoji:'🐄',preco:35,bg:'linear-gradient(180deg,#fef08a,#84cc16)'},{id:'neve',nome:'Neve Natal',emoji:'🎄',preco:40,bg:'linear-gradient(180deg,#e0f2fe,#bae6fd)'}];
 
@@ -352,10 +452,17 @@ let estado={
   ultimoDiaAcesso:hojeLocal(),ultimoDiaConcluido:null,streak:0,ultimoStreakPremiado:0,
   tarefasHojeCount:0,desafiosMathAcertos:0,timerFim:null,vozSalva:null,
   pets:{gato:{nivel:1,xp:0,felicidade:100,saude:100},cachorra:{nivel:1,xp:0,felicidade:100,saude:100},cabra:{nivel:1,xp:0,felicidade:100,saude:100},frango:{nivel:1,xp:0,felicidade:100,saude:100}},
-  tarefas:[{id:1,texto:'Escovar os dentes',recompensa:5,xp:20,tipo:'obrigatoria',status:'pendente',foto:null},{id:2,texto:'Arrumar a cama',recompensa:5,xp:20,tipo:'obrigatoria',status:'pendente',foto:null}],
+  tarefas:[{id:1,texto:'Escovar os dentes',recompensa:5,xp:20,tipo:'obrigatoria',status:'pendente',foto:null,dias:[]},{id:2,texto:'Arrumar a cama',recompensa:5,xp:20,tipo:'obrigatoria',status:'pendente',foto:null,dias:[]}],
   recompensas:[{id:1,texto:'15 min de tela',custo:10,tipo:'timer',minutos:15},{id:2,texto:'30 min de tela',custo:18,tipo:'timer',minutos:30}],
   conquistas:{},
-  pinBloqueadoAte:null,pinTentativasFalhas:0
+  pinBloqueadoAte:null,pinTentativasFalhas:0,
+  acessorios:{comprados:[],ativo:null},
+  pausaAte:null,
+  historicoConclusoes:{},
+  registroDiario:{},
+  onboardingVistoCrianca:false,
+  lembreteEnviadoData:null,
+  notificacoesAtivas:false
 };
 
 try{
@@ -369,15 +476,19 @@ try{
     if(!Array.isArray(estado.tarefas))estado.tarefas=[];
     if(!Array.isArray(estado.recompensas))estado.recompensas=[];
     estado.conquistas=estado.conquistas||{};
+    estado.acessorios=estado.acessorios&&Array.isArray(estado.acessorios.comprados)?estado.acessorios:{comprados:[],ativo:null};
+    estado.historicoConclusoes=estado.historicoConclusoes||{};
+    estado.registroDiario=estado.registroDiario||{};
   }
 }catch(e){}
 
-estado.tarefas.forEach(t=>{if(!t.tipo)t.tipo='obrigatoria';if(!t.status)t.status='pendente';if(t.foto===undefined)t.foto=null});
+estado.tarefas.forEach(t=>{if(!t.tipo)t.tipo='obrigatoria';if(!t.status)t.status='pendente';if(t.foto===undefined)t.foto=null;if(!Array.isArray(t.dias))t.dias=[]});
 if(!Number.isFinite(Number(estado.streak)))estado.streak=0;
 
 const hojeStr=hojeLocal();
 if(estado.ultimoDiaAcesso!==hojeStr){
-  if(estado.ultimoDiaConcluido!==ontemLocal()&&estado.ultimoDiaConcluido!==hojeStr){
+  const emPausa=estado.pausaAte&&hojeStr<=estado.pausaAte;
+  if(!emPausa&&estado.ultimoDiaConcluido!==ontemLocal()&&estado.ultimoDiaConcluido!==hojeStr){
     estado.streak=0;
     estado.ultimoStreakPremiado=0;
   }
@@ -410,7 +521,21 @@ function iniciarSincronizacaoNuvem(){
   });
 }
 
-function aplicarFundoTela(id){document.body.className='cenario-'+(id||'ceu')}
+let camadaFundoAtiva='a';
+function aplicarFundoTela(id){
+  const cls='cenario-'+(id||'ceu');
+  document.body.classList.forEach(c=>{if(c.startsWith('cenario-'))document.body.classList.remove(c)});
+  document.body.classList.add(cls);
+  const la=document.getElementById('bg-layer-a'),lb=document.getElementById('bg-layer-b');
+  if(!la||!lb)return;
+  const proxima=camadaFundoAtiva==='a'?lb:la,atual=camadaFundoAtiva==='a'?la:lb;
+  proxima.className='bg-layer '+cls;
+  requestAnimationFrame(()=>{
+    proxima.classList.add('ativa');
+    atual.classList.remove('ativa');
+  });
+  camadaFundoAtiva=camadaFundoAtiva==='a'?'b':'a';
+}
 function obterDadosPetAtual(){if(!estado.pets[estado.petAtual])estado.pets[estado.petAtual]={nivel:1,xp:0,felicidade:100,saude:100};return estado.pets[estado.petAtual]}
 function nivelJogador(){return Math.max(...Object.values(estado.pets).map(p=>p.nivel||1))}
 function calcularFase(n){return n>=81?5:n>=61?4:n>=41?3:n>=21?2:1}
@@ -436,7 +561,7 @@ function atualizarTela(){
   document.getElementById('texto-xp').textContent=`${p.xp}/100`;
   document.getElementById('barra-xp').style.width=p.xp+'%';
   document.getElementById('btn-pet-atual').textContent=def.emoji;
-  document.getElementById('pet-svg-container').innerHTML=petSVG(estado.petAtual,fase);
+  document.getElementById('pet-svg-container').innerHTML=`<div class="camada-pet">${petSVG(estado.petAtual,fase)}</div><div class="camada-acessorio" id="camada-acessorio"></div>`;
   
   document.getElementById('pet-evol-nome').textContent=`${def.nome} • ${def.evolucoes[fase-1].nome}`;
   const modalNome=document.getElementById('modal-pet-evol-nome');
@@ -454,10 +579,64 @@ function atualizarTela(){
   });
 
   aplicarFundoTela(estado.fundoAtual);
+  atualizarHumorPet(p);
+  renderizarAcessorioNoContainer();
   renderizarTarefas();
   renderizarEvolucoes();
   renderizarConquistas();
   atualizarEstatisticas();
+}
+
+function estaDormindoAgora(){
+  const h=new Date().getHours();
+  return h>=21||h<6;
+}
+
+function atualizarHumorPet(p){
+  const wrap=document.getElementById('pet-principal');
+  if(!wrap)return;
+  wrap.classList.remove('mood-feliz','mood-triste','mood-doente','pet-dormindo');
+  if(estaDormindoAgora()){
+    wrap.classList.add('pet-dormindo');
+    if(Math.random()<.5)criarTextoFlutuanteZzz();
+  }else if(p.saude<40){
+    wrap.classList.add('mood-doente');
+  }else if(p.felicidade>=70){
+    wrap.classList.add('mood-feliz');
+  }else if(p.felicidade<35){
+    wrap.classList.add('mood-triste');
+  }
+}
+
+function criarTextoFlutuanteZzz(){
+  const area=document.getElementById('pet-section-area');
+  if(!area)return;
+  const s=document.createElement('div');
+  s.className='zzz-flutuante';
+  s.textContent='💤';
+  s.style.left='58%';
+  s.style.top='20%';
+  area.appendChild(s);
+  setTimeout(()=>s.remove(),2700);
+}
+
+const FALAS_PET=['Comi minha ração! 🍖','Vamos brincar? 🎾','Você é o melhor! 💜','Hoje tá um dia ótimo!','Adorei o carinho! 🥰','Cadê minha tarefa de hoje?','Estou ficando forte! 💪','Zzz... quase dormindo 😴','Que tal um desafio de matemática?','Amo essa cor de fundo! 🎨'];
+let timerBalaoFala=null;
+function mostrarBalaoFala(texto,duracaoMs=2600){
+  const el=document.getElementById('balao-fala');
+  if(!el)return;
+  el.textContent=texto;
+  el.classList.add('mostrar');
+  clearTimeout(timerBalaoFala);
+  timerBalaoFala=setTimeout(()=>el.classList.remove('mostrar'),duracaoMs);
+}
+function agendarFalaAleatoria(){
+  const espera=25000+Math.random()*35000;
+  setTimeout(()=>{
+    if(document.getElementById('modal-selecao-perfil')?.classList.contains('mostrar')){agendarFalaAleatoria();return}
+    mostrarBalaoFala(FALAS_PET[Math.floor(Math.random()*FALAS_PET.length)]);
+    agendarFalaAleatoria();
+  },espera);
 }
 
 let debounceAcao=false;
@@ -479,15 +658,17 @@ function interagirComPet(e){
   tocarAudioPet(PETS[estado.petAtual].som);
   navigator.vibrate?.(25);
   criarTextoFlutuante('❤️ +5',e);
-  mostrarToast(`❤️ ${PETS[estado.petAtual].nome} adorou!`);
+  if(Math.random()<.5)mostrarBalaoFala(FALAS_PET[Math.floor(Math.random()*FALAS_PET.length)]);
+  else mostrarToast(`❤️ ${PETS[estado.petAtual].nome} adorou!`);
   salvar();
   atualizarTela();
 }
 
 function darRemedio(){obterDadosPetAtual().saude=100;salvar();atualizarTela();mostrarToast('💚 Saúde restaurada!')}
 function criarTextoFlutuante(txt,e){const area=document.getElementById('pet-section-area'),s=document.createElement('div');s.className='floating-text';s.textContent=txt;const r=area.getBoundingClientRect();s.style.left=(e?.clientX?r.left<e.clientX?e.clientX-r.left:80:90)+'px';s.style.top='35%';area.appendChild(s);setTimeout(()=>s.remove(),900)}
-function ganharXP(qtd,e){const p=obterDadosPetAtual();p.xp+=qtd;criarTextoFlutuante(`+${qtd} XP`,e);let subiu=false;while(p.xp>=100){p.xp-=100;p.nivel++;subiu=true;dispararConfetes();navigator.vibrate?.([70,40,70]);}if(subiu)mostrarToast(`🎉 Nível ${p.nivel}!`);salvar();atualizarTela()}
-function dispararConfetes(){try{window.confetti?.({particleCount:75,spread:65,origin:{y:.6}})}catch(e){}}
+const CORES_CONFETE_PET={gato:['#a78bfa','#1e293b','#f8fafc'],cachorra:['#f4a261','#e76f51','#fff7ed'],cabra:['#f5e6d3','#a0522d','#fefce8'],frango:['#fff9c4','#ff6b6b','#ffcc00']};
+function ganharXP(qtd,e){const p=obterDadosPetAtual();p.xp+=qtd;criarTextoFlutuante(`+${qtd} XP`,e);let subiu=false;while(p.xp>=100){p.xp-=100;p.nivel++;subiu=true;dispararConfetes(140,CORES_CONFETE_PET[estado.petAtual]);navigator.vibrate?.([70,40,70]);}if(subiu)mostrarToast(`🎉 Nível ${p.nivel}!`);salvar();atualizarTela()}
+function dispararConfetes(qtd=75,cores=null){try{window.confetti?.({particleCount:qtd,spread:65,origin:{y:.6},...(cores?{colors:cores}:{})})}catch(e){}}
 
 let tarefaIdFoto=null;
 document.getElementById('camera-input').addEventListener('change',processarFotoCapturada);
@@ -521,12 +702,25 @@ function processarFotoCapturada(e){
 }
 
 function enviarParaAprovacao(id){const t=estado.tarefas.find(t=>t.id===id);if(t){t.status='aguardando_aprovacao';salvar();renderizarTarefas();mostrarToast('⏳ Enviado aos pais!')}}
-function todasObrigatoriasConcluidas(){const o=estado.tarefas.filter(t=>t.tipo==='obrigatoria');return o.length>0&&o.every(t=>t.status==='aprovada')}
+
+const DIAS_LABEL=['Dom','Seg','Ter','Qua','Qui','Sex','Sáb'];
+function diaSemanaHoje(){return new Date().getDay()}
+function tarefaEhHoje(t){return !t.dias||t.dias.length===0||t.dias.includes(diaSemanaHoje())}
+function tarefasDeHoje(){return estado.tarefas.filter(tarefaEhHoje)}
+function emPausaHoje(){return !!(estado.pausaAte&&hojeLocal()<=estado.pausaAte)}
+
+function todasObrigatoriasConcluidas(){const o=tarefasDeHoje().filter(t=>t.tipo==='obrigatoria');return o.length>0&&o.every(t=>t.status==='aprovada')}
 
 function atualizarOfensiva(){
   const el=document.getElementById('status-ofensiva');
   if(!el)return;
-  const o=estado.tarefas.filter(t=>t.tipo==='obrigatoria'),f=o.filter(t=>t.status==='aprovada').length;
+  if(emPausaHoje()){
+    const dias=Math.max(0,Math.ceil((new Date(estado.pausaAte+'T00:00:00')-new Date(hojeLocal()+'T00:00:00'))/86400000)+1);
+    el.textContent=`🌴 Ofensiva em pausa (${dias} dia(s) restante(s)). O streak fica protegido.`;
+    el.style.background='#ecfeff';el.style.borderColor='#a5f3fc';el.style.color='#0e7490';
+    return;
+  }
+  const o=tarefasDeHoje().filter(t=>t.tipo==='obrigatoria'),f=o.filter(t=>t.status==='aprovada').length;
   if(!o.length){
     el.textContent='🔥 Ofensiva: defina tarefas obrigatórias no painel dos pais.';
     el.style.background='#fef2f2';el.style.borderColor='#fecaca';el.style.color='#b91c1c';
@@ -545,17 +739,21 @@ function registrarConclusaoDoDia(){
   if(estado.ultimoDiaConcluido===hoje)return false;
   const d=new Date();d.setDate(d.getDate()-1);
   const ontem=`${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`;
-  estado.streak=estado.ultimoDiaConcluido===ontem?(Number(estado.streak)||0)+1:1;
+  estado.streak=(estado.ultimoDiaConcluido===ontem||emPausaHoje())?(Number(estado.streak)||0)+1:1;
   estado.ultimoDiaConcluido=hoje;
+  estado.historicoConclusoes=estado.historicoConclusoes||{};
+  estado.historicoConclusoes[hoje]=true;
   salvar();
   dispararConfetes();
   return true;
 }
 
+let idTarefaRecemAprovada=null;
 function renderizarTarefas(){
   const c=document.getElementById('lista-tarefas');
   c.innerHTML='';
-  const o=estado.tarefas.filter(t=>t.tipo==='obrigatoria'),x=estado.tarefas.filter(t=>t.tipo!=='obrigatoria');
+  const hojeLista=tarefasDeHoje();
+  const o=hojeLista.filter(t=>t.tipo==='obrigatoria'),x=hojeLista.filter(t=>t.tipo!=='obrigatoria');
   document.getElementById('qtd-tarefas').textContent=`${o.length} obrig. • ${x.length} extras`;
   
   const bloco=(titulo,lista,icone)=>{
@@ -563,10 +761,12 @@ function renderizarTarefas(){
     c.innerHTML+=`<div style="font-size:9px;font-weight:900;color:#475569;margin:7px 2px 4px">${icone} ${titulo}</div>`;
     lista.forEach(t=>{
       const apr=t.status==='aprovada',pend=t.status==='aguardando_aprovacao';
+      const badgeDias=t.dias&&t.dias.length?`<span style="font-size:7px;color:#7c3aed;font-weight:900"> • ${t.dias.map(x=>DIAS_LABEL[x]).join(',')}</span>`:'';
+      const animar=idTarefaRecemAprovada===t.id?' pop-anim':'';
       c.innerHTML+=`
-        <div class="task-row">
+        <div class="task-row${animar}">
           <div>
-            <div class="task-name" style="${apr?'text-decoration:line-through;color:#94a3b8':''}">${esc(t.texto)}</div>
+            <div class="task-name" style="${apr?'text-decoration:line-through;color:#94a3b8':''}">${esc(t.texto)}${badgeDias}</div>
             <span class="task-reward">+${t.xp} XP • +${t.recompensa} 🪙 ${t.foto?'• 📸':''}</span>
           </div>
           <div class="task-actions">
@@ -578,6 +778,7 @@ function renderizarTarefas(){
   };
   bloco('Obrigatórias — liberam a ofensiva',o,'🔥');
   bloco('Extras — não afetam a ofensiva',x,'⭐');
+  idTarefaRecemAprovada=null;
   atualizarOfensiva();
 }
 
@@ -597,7 +798,16 @@ function escolherPerfilInicial(tipo){
     abrirPainelPais();
   }else{
     mostrarToast('🐾 Bem-vindo ao seu Pet!');
+    if(!estado.onboardingVistoCrianca){
+      setTimeout(()=>abrirModal('modal-onboarding'),450);
+    }
   }
+}
+
+function fecharOnboarding(){
+  estado.onboardingVistoCrianca=true;
+  salvar();
+  fecharModal('modal-onboarding');
 }
 
 function alternarPerfil(){
@@ -710,6 +920,9 @@ function renderizarPainelPais(){
   document.getElementById('input-idade-crianca').value=estado.idadeCrianca||7;
   const inputFam=document.getElementById('input-codigo-familia');
   if(inputFam)inputFam.value=codigoFamilia;
+  montarPickerDiasNovaTarefa();
+  atualizarBannerPausaPainel();
+  atualizarBotaoLembrete();
 
   const ap=document.getElementById('lista-aprovacao-pais');
   ap.innerHTML='';
@@ -722,16 +935,19 @@ function renderizarPainelPais(){
   
   const ed=document.getElementById('lista-edicao-tarefas');
   ed.innerHTML='';
-  estado.tarefas.forEach(t=>ed.innerHTML+=`
-    <div class="edit-row" style="gap:5px">
-      <span style="flex:1">${t.tipo==='obrigatoria'?'🔥':'⭐'} ${esc(t.texto)} • ${t.recompensa}🪙</span>
-      <select class="field" style="width:105px;padding:5px" onchange="alterarTipoTarefa(${t.id},this.value)">
+  estado.tarefas.forEach(t=>{
+    const diasTxt=t.dias&&t.dias.length?t.dias.map(i=>DIAS_LABEL[i]).join(','):'todo dia';
+    ed.innerHTML+=`
+    <div class="edit-row" style="gap:5px;flex-wrap:wrap">
+      <span style="flex:1">${t.tipo==='obrigatoria'?'🔥':'⭐'} ${esc(t.texto)} • ${t.recompensa}🪙 <br><small style="color:#94a3b8">📅 ${diasTxt}</small></span>
+      <select class="field" style="width:100px;padding:5px" onchange="alterarTipoTarefa(${t.id},this.value)">
         <option value="obrigatoria" ${t.tipo==='obrigatoria'?'selected':''}>Obrigatória</option>
         <option value="extra" ${t.tipo==='extra'?'selected':''}>Extra</option>
       </select>
+      <button class="primary-btn blue-btn" onclick="editarDiasTarefa(${t.id})">📅</button>
       <button class="primary-btn red-btn" onclick="removerTarefa(${t.id})">Excluir</button>
     </div>
-  `);
+  `;});
   atualizarEstatisticas();
 }
 
@@ -798,6 +1014,17 @@ function abrirBauSemanal(streakAtual){
   mostrarAviso('🎁',`Baú dos ${streakAtual} Dias!`,`Incrível dedicação! Você abriu o Baú Lendário e faturou +${moedasGanhas} 🪙 e +${xpGanho} XP!`);
 }
 
+function registrarNoRelatorioDiario(tarefasSomar,moedasSomar){
+  const hoje=hojeLocal();
+  estado.registroDiario=estado.registroDiario||{};
+  const r=estado.registroDiario[hoje]||{tarefas:0,moedas:0};
+  r.tarefas+=tarefasSomar;
+  r.moedas+=moedasSomar;
+  estado.registroDiario[hoje]=r;
+  const chaves=Object.keys(estado.registroDiario).sort();
+  if(chaves.length>60)delete estado.registroDiario[chaves[0]];
+}
+
 function aprovarTarefaPais(id){
   const t=estado.tarefas.find(x=>x.id===id);
   if(!t)return;
@@ -805,6 +1032,8 @@ function aprovarTarefaPais(id){
   estado.moedas+=Number(t.recompensa)||0;
   estado.dinheiroAcumulado=(estado.dinheiroAcumulado||0)+(Number(t.recompensa)||0)*(Number(estado.taxaCambio)||.01);
   estado.tarefasHojeCount=(estado.tarefasHojeCount||0)+1;
+  registrarNoRelatorioDiario(1,Number(t.recompensa)||0);
+  idTarefaRecemAprovada=id;
 
   const liberouOfensiva=registrarConclusaoDoDia();
   if(liberouOfensiva){
@@ -822,6 +1051,106 @@ function aprovarTarefaPais(id){
   atualizarTela();
 }
 
+function ativarPausa(){
+  const dias=Math.max(1,Math.min(30,parseInt(document.getElementById('input-dias-pausa').value)||3));
+  const d=new Date();
+  d.setDate(d.getDate()+dias-1);
+  estado.pausaAte=`${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`;
+  salvar();
+  atualizarBannerPausaPainel();
+  atualizarTela();
+  mostrarToast(`🌴 Pausa ativada por ${dias} dia(s).`);
+}
+
+function cancelarPausa(){
+  if(!estado.pausaAte)return;
+  estado.pausaAte=null;
+  salvar();
+  atualizarBannerPausaPainel();
+  atualizarTela();
+  mostrarToast('▶️ Pausa cancelada.');
+}
+
+function atualizarBannerPausaPainel(){
+  const el=document.getElementById('pausa-banner-painel');
+  if(!el)return;
+  if(emPausaHoje()){
+    const [ano,mes,dia]=estado.pausaAte.split('-');
+    el.innerHTML=`<div class="pausa-banner">🌴 Pausa ativa até ${dia}/${mes}/${ano}.</div>`;
+  }else{
+    el.innerHTML='';
+  }
+}
+
+function abrirRelatorioSemanal(){
+  const hoje=new Date();
+  const dias=[];
+  for(let i=6;i>=0;i--){
+    const d=new Date(hoje);
+    d.setDate(d.getDate()-i);
+    dias.push(`${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`);
+  }
+  let totalTarefas=0,totalMoedas=0;
+  const c=document.getElementById('rel-lista-dias');
+  c.innerHTML='';
+  dias.forEach(dataStr=>{
+    const r=estado.registroDiario?.[dataStr]||{tarefas:0,moedas:0};
+    totalTarefas+=r.tarefas;
+    totalMoedas+=r.moedas;
+    const [ano,mes,dia]=dataStr.split('-');
+    c.innerHTML+=`<div class="relatorio-dia-row"><span>${dia}/${mes}</span><span>${r.tarefas} tarefa(s)</span><span>${r.moedas} 🪙</span></div>`;
+  });
+  document.getElementById('rel-total-tarefas').textContent=totalTarefas;
+  document.getElementById('rel-total-moedas').textContent=totalMoedas;
+  abrirModal('modal-relatorio');
+}
+
+function alternarLembretes(){
+  if(!estado.notificacoesAtivas){
+    if('Notification' in window){
+      Notification.requestPermission().then(perm=>{
+        estado.notificacoesAtivas=true;
+        salvar();
+        atualizarBotaoLembrete();
+        mostrarToast(perm==='granted'?'🔔 Lembretes ativados!':'🔔 Lembretes ativados (sem notificação do sistema).');
+      });
+    }else{
+      estado.notificacoesAtivas=true;
+      salvar();
+      atualizarBotaoLembrete();
+      mostrarToast('🔔 Lembretes ativados!');
+    }
+  }else{
+    estado.notificacoesAtivas=false;
+    salvar();
+    atualizarBotaoLembrete();
+    mostrarToast('🔕 Lembretes desativados.');
+  }
+}
+
+function atualizarBotaoLembrete(){
+  const b=document.getElementById('btn-toggle-lembrete');
+  if(!b)return;
+  b.textContent=estado.notificacoesAtivas?'Desativar':'Ativar';
+  b.classList.toggle('red-btn',estado.notificacoesAtivas);
+}
+
+function verificarLembreteNoturno(){
+  if(!estado.notificacoesAtivas)return;
+  const agora=new Date();
+  if(agora.getHours()<20)return;
+  const hoje=hojeLocal();
+  if(estado.lembreteEnviadoData===hoje)return;
+  if(emPausaHoje()||todasObrigatoriasConcluidas())return;
+  estado.lembreteEnviadoData=hoje;
+  salvar();
+  const texto='Ainda faltam tarefas obrigatórias hoje! Bora terminar antes de dormir? 🌙';
+  if('Notification' in window&&Notification.permission==='granted'){
+    try{new Notification('🐾 RotinaPet',{body:texto})}catch(e){}
+  }
+  mostrarToast('🔔 '+texto);
+}
+
 function sacarDinheiro(){
   const v=Number(estado.dinheiroAcumulado)||0;
   if(v<=0)return mostrarAviso('💰','Sem saldo','Ainda não há saldo disponível.');
@@ -835,18 +1164,57 @@ function sacarDinheiro(){
   });
 }
 
+let diasSelecionadosNovaTarefa=[];
+function montarPickerDiasNovaTarefa(){
+  const c=document.getElementById('dias-nova-tarefa');
+  if(!c||c.dataset.pronto)return;
+  c.dataset.pronto='1';
+  DIAS_LABEL.forEach((lbl,i)=>{
+    const chip=document.createElement('div');
+    chip.className='dia-chip';
+    chip.textContent=lbl;
+    chip.onclick=()=>{
+      const idx=diasSelecionadosNovaTarefa.indexOf(i);
+      if(idx>-1)diasSelecionadosNovaTarefa.splice(idx,1);else diasSelecionadosNovaTarefa.push(i);
+      chip.classList.toggle('on');
+    };
+    c.appendChild(chip);
+  });
+}
+
 function adicionarTarefa(){
   const txt=document.getElementById('nova-tarefa-texto').value.trim(),
         moedas=Math.max(1,parseInt(document.getElementById('nova-tarefa-moedas').value)||5),
         tipo=document.getElementById('nova-tarefa-tipo')?.value==='extra'?'extra':'obrigatoria';
   if(!txt)return mostrarToast('Digite uma tarefa.');
   const id=estado.tarefas.length?Math.max(...estado.tarefas.map(t=>Number(t.id)||0))+1:1;
-  estado.tarefas.push({id,texto:txt,recompensa:moedas,xp:20,tipo,status:'pendente',foto:null});
+  estado.tarefas.push({id,texto:txt,recompensa:moedas,xp:20,tipo,status:'pendente',foto:null,dias:[...diasSelecionadosNovaTarefa]});
   document.getElementById('nova-tarefa-texto').value='';
+  diasSelecionadosNovaTarefa=[];
+  document.querySelectorAll('#dias-nova-tarefa .dia-chip').forEach(c=>c.classList.remove('on'));
   salvar();
   renderizarPainelPais();
   atualizarTela();
   mostrarToast(tipo==='obrigatoria'?'🔥 Tarefa obrigatória criada!':'⭐ Tarefa extra criada!');
+}
+
+function editarDiasTarefa(id){
+  const t=estado.tarefas.find(x=>x.id===id);
+  if(!t)return;
+  const atual=(t.dias||[]).map(i=>DIAS_LABEL[i]).join(',');
+  const resp=window.prompt('Digite os dias separados por vírgula (Dom,Seg,Ter,Qua,Qui,Sex,Sáb). Deixe vazio para todo dia:',atual);
+  if(resp===null)return;
+  const partes=resp.split(',').map(s=>s.trim().toLowerCase()).filter(Boolean);
+  const novosDias=[];
+  partes.forEach(p=>{
+    const idx=DIAS_LABEL.findIndex(l=>l.toLowerCase().startsWith(p.slice(0,3)));
+    if(idx>-1&&!novosDias.includes(idx))novosDias.push(idx);
+  });
+  t.dias=novosDias;
+  salvar();
+  renderizarPainelPais();
+  atualizarTela();
+  mostrarToast('📅 Recorrência atualizada.');
 }
 
 function removerTarefa(id){
@@ -945,9 +1313,30 @@ function marcarConquistas(){
   }
 }
 
+function renderizarHeatmap(){
+  const g=document.getElementById('grid-heatmap');
+  if(!g)return;
+  g.innerHTML='';
+  const hoje=new Date();
+  const dias=[];
+  for(let i=34;i>=0;i--){
+    const d=new Date(hoje);
+    d.setDate(d.getDate()-i);
+    dias.push(`${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`);
+  }
+  dias.forEach(dataStr=>{
+    const feito=!!estado.historicoConclusoes?.[dataStr];
+    const div=document.createElement('div');
+    div.className='heatmap-dia'+(feito?' feito':'');
+    div.title=dataStr+(feito?' — concluído':'');
+    g.appendChild(div);
+  });
+}
+
 function renderizarConquistas(){
   const c=document.getElementById('lista-conquistas');
   if(!c)return;
+  renderizarHeatmap();
   const streak=Number(estado.streak)||0;
   const proximoMarco=streak===0?7:(Math.floor(streak/7)+1)*7;
   const diasRestantes=proximoMarco-streak;
@@ -1007,6 +1396,7 @@ function testarMath(v){
     estado.moedas++;
     estado.dinheiroAcumulado=(estado.dinheiroAcumulado||0)+(estado.taxaCambio||.01);
     estado.desafiosMathAcertos=(estado.desafiosMathAcertos||0)+1;
+    registrarNoRelatorioDiario(0,1);
     ganharXP(1);
     dispararConfetes();
     fecharModal('modal-matematica');
@@ -1016,6 +1406,23 @@ function testarMath(v){
 }
 
 function abrirLojaFundos(){
+  renderizarGridFundos();
+  renderizarGridAcessorios();
+  alternarAbaLojaVisual('fundos');
+  abrirModal('modal-fundos');
+}
+
+function alternarAbaLojaVisual(aba){
+  const ehFundos=aba==='fundos';
+  document.getElementById('grid-fundos').classList.toggle('hidden',!ehFundos);
+  document.getElementById('grid-acessorios').classList.toggle('hidden',ehFundos);
+  document.getElementById('tab-fundos').classList.toggle('ativa',ehFundos);
+  document.getElementById('tab-acessorios').classList.toggle('ativa',!ehFundos);
+  document.getElementById('titulo-loja-visual').textContent=ehFundos?'🖼️ Loja de Fundos':'🎀 Loja de Acessórios';
+  document.getElementById('desc-loja-visual').textContent=ehFundos?'Use suas moedas para personalizar o mundo do seu pet.':'Vista seu pet com acessórios divertidos! Toque de novo para tirar.';
+}
+
+function renderizarGridFundos(){
   const c=document.getElementById('grid-fundos');
   c.innerHTML='';
   BANCO_FUNDOS.forEach(f=>{
@@ -1026,7 +1433,6 @@ function abrirLojaFundos(){
     d.onclick=()=>selecionarOuComprarFundo(f);
     c.appendChild(d);
   });
-  abrirModal('modal-fundos');
 }
 
 function selecionarOuComprarFundo(f){
@@ -1034,7 +1440,7 @@ function selecionarOuComprarFundo(f){
     estado.fundoAtual=f.id;
     salvar();
     aplicarFundoTela(f.id);
-    abrirLojaFundos();
+    renderizarGridFundos();
     return mostrarToast(`🎨 ${f.nome} aplicado!`);
   }
   if(estado.moedas<f.preco)return mostrarToast(`🪙 Faltam ${f.preco-estado.moedas} moedas.`);
@@ -1044,10 +1450,55 @@ function selecionarOuComprarFundo(f){
     estado.fundoAtual=f.id;
     salvar();
     atualizarTela();
-    abrirLojaFundos();
+    renderizarGridFundos();
     dispararConfetes();
     mostrarToast('🎉 Fundo desbloqueado!');
   });
+}
+
+function renderizarGridAcessorios(){
+  const c=document.getElementById('grid-acessorios');
+  if(!c)return;
+  c.innerHTML='';
+  ACESSORIOS.forEach(a=>{
+    const comprado=estado.acessorios.comprados.includes(a.id),ativo=estado.acessorios.ativo===a.id,d=document.createElement('div');
+    d.className='fundo-card '+(ativo?'ativo':'');
+    d.style.background='linear-gradient(160deg,#ede9fe,#ddd6fe)';
+    d.style.color='#312e81';
+    d.style.textShadow='none';
+    d.innerHTML=`<span style="font-size:25px">${a.emoji}</span><b style="font-size:10px;margin-top:3px">${a.nome}</b><span class="shop-tag" style="background:#312e81cc;color:#fff">${ativo?'✓ Usando':comprado?'Usar/Tirar':a.preco+' 🪙'}</span>`;
+    d.onclick=()=>selecionarOuComprarAcessorio(a);
+    c.appendChild(d);
+  });
+}
+
+function selecionarOuComprarAcessorio(a){
+  if(estado.acessorios.comprados.includes(a.id)){
+    estado.acessorios.ativo=estado.acessorios.ativo===a.id?null:a.id;
+    salvar();
+    atualizarTela();
+    renderizarGridAcessorios();
+    return mostrarToast(estado.acessorios.ativo?`🎀 ${a.nome} equipado!`:`Acessório removido.`);
+  }
+  if(estado.moedas<a.preco)return mostrarToast(`🪙 Faltam ${a.preco-estado.moedas} moedas.`);
+  mostrarConfirmacao(`Comprar "${a.nome}" por ${a.preco} moedas?`,()=>{
+    estado.moedas-=a.preco;
+    estado.acessorios.comprados.push(a.id);
+    estado.acessorios.ativo=a.id;
+    salvar();
+    atualizarTela();
+    renderizarGridAcessorios();
+    dispararConfetes();
+    mostrarToast('🎉 Acessório desbloqueado!');
+  });
+}
+
+function renderizarAcessorioNoContainer(){
+  const c=document.getElementById('camada-acessorio');
+  if(!c)return;
+  const ativo=estado.acessorios?.ativo;
+  const item=ACESSORIOS.find(a=>a.id===ativo);
+  c.innerHTML=item?item.svg:'';
 }
 
 let intervaloTimer=null;
@@ -1249,6 +1700,10 @@ marcarConquistas();
 recuperarTimerAtivo();
 iniciarSincronizacaoNuvem();
 verificarPrimeiroAcesso();
+agendarFalaAleatoria();
+setInterval(verificarLembreteNoturno,60000);
+setInterval(()=>atualizarHumorPet(obterDadosPetAtual()),60000);
+verificarLembreteNoturno();
 </script>
 </body>
 </html>
