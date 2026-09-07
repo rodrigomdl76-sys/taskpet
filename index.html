@@ -303,6 +303,8 @@ button{touch-action:manipulation}
       <input class="field" id="input-codigo-familia" placeholder="mínimo 8 caracteres">
       <button class="primary-btn blue-btn" onclick="trocarFamiliaManualmente()">Conectar</button>
     </div>
+    <button type="button" class="primary-btn blue-btn" style="margin-top:6px;width:100%;" onclick="compartilharConviteFamilia()">📲 Convidar Criança via WhatsApp</button>
+
     <small style="font-size:8px;color:#64748b;margin-top:3px;display:block">Use um código único de no mínimo 8 caracteres para sincronizar seus aparelhos com segurança.</small>
   </div>
   <div class="section-card" id="card-lembrete">
@@ -553,6 +555,21 @@ function sanitizarIdFamilia(id){
 
 let codigoFamilia=sanitizarIdFamilia(urlParams.get('familia')||localStorage.getItem('ROTINAPET_FAMILIA_ID'));
 localStorage.setItem('ROTINAPET_FAMILIA_ID',codigoFamilia);
+  function compartilharConviteFamilia() {
+  const linkConvite = 'https://rodrigomdl76-sys.github.io/taskpet/?familia=' + encodeURIComponent(codigoFamilia);
+  const texto = 'Entre no TaskPet comigo para cuidarmos do nosso pet juntos! Acesse: ' + linkConvite;
+
+  if (navigator.share) {
+    navigator.share({
+      title: 'Convite TaskPet',
+      text: texto,
+      url: linkConvite
+    }).catch(function(){});
+  } else {
+    window.open('https://api.whatsapp.com/send?text=' + encodeURIComponent(texto), '_blank');
+  }
+}
+
 
 // Autenticação anônima obrigatória antes de qualquer sync
 try{
