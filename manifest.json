@@ -1,21 +1,25 @@
 {
-  "name": "TaskPet - Mascote de Rotina",
-  "short_name": "TaskPet",
-  "start_url": "./index.html",
+  "name": "RotinaPet",
+  "short_name": "RotinaPet",
+  "description": "Rotinas, tarefas e aprendizado com mascote virtual que evolui — seguro e divertido para crianças, com controle dos pais",
+  "start_url": "./",
   "display": "standalone",
-  "background_color": "#38bdf8",
-  "theme_color": "#38bdf8",
-  "orientation": "portrait",
+  "background_color": "#E0F2FE",
+  "theme_color": "#7C3AED",
+  "orientation": "portrait-primary",
+  "lang": "pt-BR",
   "icons": [
     {
-      "src": "https://cdn-icons-png.flaticon.com/512/616/616408.png",
+      "src": "icon-192.png",
       "sizes": "192x192",
-      "type": "image/png"
+      "type": "image/png",
+      "purpose": "any maskable"
     },
     {
-      "src": "https://cdn-icons-png.flaticon.com/512/616/616408.png",
+      "src": "icon-512.png",
       "sizes": "512x512",
-      "type": "image/png"
+      "type": "image/png",
+      "purpose": "any maskable"
     }
   ]
 }
