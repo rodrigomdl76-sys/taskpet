@@ -848,25 +848,24 @@ localStorage.setItem('ROTINAPET_FAMILIA_ID',codigoFamilia);
 }
 
 
-// Autenticação anônima obrigatória antes de qualquer sync
 try{
   if(window.firebase){
     firebase.initializeApp(firebaseConfig);
     firebase.auth().signInAnonymously().then(()=>{
-  dbFirebase = firebase.database();
-  definirIdUsuario(firebase.auth().currentUser.uid);
+      dbFirebase = firebase.database();
+      definirIdUsuario(firebase.auth().currentUser.uid);
 
-  sincronizacaoNuvemAtiva = true;
-  iniciarSincronizacaoNuven();
-
+      sincronizacaoNuvemAtiva = true;
+      iniciarSincronizacaoNuvem();
     }).catch(()=>{
-      sincronizacaoNuvemAtiva=false;
+      sincronizacaoNuvemAtiva = false;
     });
   }
-}catch(e){}
+}
 
 function getCaminhoFirebase(){
   return `rotinapet/familias/${codigoFamilia}/estado`;
+}
 }
 
 // Criptografia e hashing seguro do PIN
