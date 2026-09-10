@@ -1348,11 +1348,53 @@ function alternarPerfil(){
 }
 
 let pinDigitado='';
-function abrirPainelPais(){
+  
+ abrirPainelPais(){
   limparPin();
   montarTecladoPin();
   atualizarEstadoBloqueioPin();
   abrirModal('modal-pin');
+}
+function digitar(num) {
+  if (pinDigitado.length < 4) {
+    pinDigitado += String(num);
+    atualizarDisplayPin();
+    
+    if (pinDigitado.length === 4) {
+      setTimeout(() => {
+        if (typeof validarPin === 'function') {
+          validarPin();
+        }
+      }, 150);
+    }
+  }
+}
+
+function apagar() {
+  if (pinDigitado.length > 0) {
+    pinDigitado = pinDigitado.slice(0, -1);
+    atualizarDisplayPin();
+  }
+}
+
+function limparPin() {
+  pinDigitado = '';
+  atualizarDisplayPin();
+}
+
+function atualizarDisplayPin() {
+  for (let i = 1; i <= 4; i++) {
+    const el = document.getElementById('d' + i);
+    if (el) {
+      if (i <= pinDigitado.length) {
+        el.textContent = '•';
+        el.classList.add('preenchido');
+      } else {
+        el.textContent = '';
+        el.classList.remove('preenchido');
+      }
+    }
+  }
 }
 
 function montarTecladoPin(){
