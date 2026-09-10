@@ -191,287 +191,10 @@ button{touch-action:manipulation}
 .tab-btn.ativa{background:#7c3aed;color:#fff}
 
 @media(max-height:650px){.pet-stage{height:185px;min-height:160px}.tasks-section{max-height:105px}.bottom-btn{min-height:50px}.btn-icon{font-size:17px}#pet-svg-container{width:160px;height:160px}}
-  // ========== VARIÁVEIS DO PIN ==========
-
-// ✅ Usa o seu usuário já existente — não mude nada aqui
-
-// ========== FUNÇÕES DO PIN — AJUSTADAS ==========
-let pinDigitado = ''; // ✅ Valor inicial que estava faltando!
-let idUsuarioAtual = null;
-
-// ✅ Função para receber o ID do usuário logado
-function definirIdUsuario(id) {
-  idUsuarioAtual = id;
-}
-
-function digitar(num) {
-  if (pinDigitado.length >= 4) return;
-  pinDigitado += num;
-  atualizarVisualPin(); // ✅ Atualiza visual sempre que digita
-  if (pinDigitado.length === 4) setTimeout(verificarPin, 250);
-}
-
-function apagar() {
-  pinDigitado = pinDigitado.slice(0, -1);
-  atualizarVisualPin(); // ✅ Atualiza também ao apagar
-}
-
-function atualizarVisualPin() {
-  // ✅ AGORA MOSTRA OS NÚMEROS NOS QUADRADINHOS CERTINHO!
-  for(let i=1;i<=4;i++){
-    const el = document.getElementById('d'+i);
-    if(!el) continue;
-    el.textContent = pinDigitado[i-1] || '';
-    el.classList.toggle('preenchido', !!pinDigitado[i-1]);
-  }
-}
-
-// ==== Verifica bloqueio antes de conferir ====
-async function verificarPin(){
-  // ✅ PRIMEIRA VEZ SEM USUÁRIO → ACEITA 1234 DIRETO!
-  if(!idUsuarioAtual) {
-    if (pinDigitado === '1234') {
-      pinDigitado = '';
-      atualizarVisualPin();
-      document.getElementById('telaPinResponsavel').style.display = 'none';
-      mostrarToast('✅ Acesso liberado!');
-    } else {
-      pinDigitado = '';
-      atualizarVisualPin();
-      mostrarToast('⚠️ Use 1234 na primeira vez');
-    }
-    return;
-  }
-
-  // ✅ COM USUÁRIO → BUSCA NO BANCO COMO VOCÊ JÁ FAZ
-  const ref = db.ref(`usuarios/${idUsuarioAtual}/responsavel`);
-  const snap = await ref.once("value");
-  const dados = snap.val() || {};
-
-  // Verifica bloqueio
-  if(dados.pinBloqueadoAte && Date.now() < dados.pinBloqueadoAte){
-    const minutos = Math.ceil((dados.pinBloqueadoAte - Date.now()) / 60000);
-    document.getElementById("avisoBloqueio").style.display = "block";
-    document.getElementById("avisoBloqueio").textContent = `⏳ Aguarde ${minutos} minuto(s)`;
-    pinDigitado = ""; atualizarVisualPin();
-    return;
-  }
-
-  // Compara o hash — MD5 igual usado no app
-  const hashDigitado = gerarMD5(pinDigitado);
-  const hashSalvo = dados.pinHash || "";
-
-  if(hashDigitado === hashSalvo){
-    // ✅ Acesso liberado — zera tentativas
-    await ref.update({ pinTentativasFalhas:0, pinBloqueadoAte:0 });
-    document.getElementById("telaPinResponsavel").style.display = "none";
-    // ✅ Se não tem e-mail cadastrado → pede agora
-    if(!dados.emailRecuperacao){
-      setTimeout(()=>{
-        document.getElementById("telaEmailRecupera").style.display = "flex";
-      }, 300);
-    }
-  } else {
-    // ❌ Errou — conta tentativas
-    let tentativas = (dados.pinTentativasFalhas || 0) + 1;
-    let atualizacao = { pinTentativasFalhas: tentativas };
-    if(tentativas >=5){
-      atualizacao.pinBloqueadoAte = Date.now() + 15 * 60 * 1000; // 15 min
-      document.getElementById("avisoBloqueio").style.display = "block";
-      document.getElementById("avisoBloqueio").textContent = "⚠️ Muitas tentativas — bloqueado 15 min";
-    }
-    await ref.update(atualizacao);
-    pinDigitado = ""; atualizarVisualPin();
-    mostrarToast(`❌ Errou! ${5 - tentativas} tentativas restantes`);
-  }
-}
-
-
-// ========== RECUPERAÇÃO DE PIN ==========
-function abrirRecuperaPin(){
-  const email = prompt("Digite o e-mail cadastrado dos responsáveis:");
-  if(!email) return;
-  enviarLinkRedefinir(email);
-}
-
-async function enviarLinkRedefinir(email){
-  try {
-    await auth.sendPasswordResetEmail(email);
-    alert("✅ Se esse e-mail estiver cadastrado, você receberá o link em instantes! Verifique também a caixa de spam.");
-  } catch (e) {
-    alert("✅ Se esse e-mail estiver cadastrado, você receberá o link em instantes! Verifique também a caixa de spam.");
-  }
-}
-
-// ========== CADASTRO DE E-MAIL DE RECUPERAÇÃO ==========
-async function salvarEmailRecuperacao(){
-  const email = document.getElementById("inputEmailRecupera").value.trim();
-  if(!email || !email.includes("@")){
-    alert("❌ Digite um e-mail válido!");
-    return;
-  }
-  if(!idUsuarioAtual) return;
-
-  try {
-    await db.ref(`usuarios/${idUsuarioAtual}/responsavel`).update({
-      emailRecuperacao: email,
-      dataCadastroEmail: new Date().toISOString()
-    });
-    alert("✅ E-mail salvo com sucesso! Sempre poderá recuperar o acesso por ele.");
-    fecharTelaEmail();
-  } catch (erro) {
-    alert("❌ Erro ao salvar, tente novamente.");
-  }
-}
-
-function fecharTelaEmail(){
-  document.getElementById("telaEmailRecupera").style.display = "none";
-  document.getElementById("inputEmailRecupera").value = "";
-}
-
-// ========== FUNÇÃO MD5 — igual usada no hash do PIN ==========
-function gerarMD5(texto){
-  let hc = "0123456789abcdef";
-  let hv = [0x67452301,0xEFCDAB89,0x98BADCFE,0x10325476];
-  let tc = [0xD76AA478,0xE8C7B756,0x242070DB,0xC1BDCEEE,0xF57C0FAF,0x4787C62A,0xA8304613,0xFD469501,0x698098D8,0x8B44F7AF,0xFFFF5BB1,0x895CD7BE,0x6B901122,0xFD987193,0xA679438E,0x49B40821,0xF61E2562,0xC040B340,0x265E5A51,0xE9B6C7AA,0xD62F105D,0x02441453,0xD8A1E681,0xE7D3FBC8,0x21E1CDE6,0xC33707D6,0xF4D50D87,0x455A14ED,0xA9E3E905,0xFCEFA3F8,0x676F02D9,0x8D2A4C8A,0xFFFA3942,0x8771F681,0x6D9D6122,0xFDE5380C,0xA4BEEA44,0x4BDECFA9,0xF6BB4B60,0xBEBFBC70,0x289B7EC6,0xEAA127FA,0xD4EF3085,0x04881D05,0xD9D4D390,0xE6DB99E5,0x1FA27CF8,0xC4AC5665,0xF4292244,0x432AFF97,0xAB9423A7,0xFC93A039,0x655B59C3,0x8F0CCC92,0xFFEFF47D,0x85845DD1,0x6FA87E4F,0xFE2CE6E0,0xA3014314,0x4E0811A1,0xF7537E82,0xBD3AF235,0x2AD7D2BB,0xEB86D391];
-  let shift = [7,12,17,22,5,9,14,20,4,11,16,23,6,10,15,21];
-
-  function adicionaBloco(bloco){
-    let a = hv[0], b = hv[1], c = hv[2], d = hv[3];
-    for(let i=0;i<64;i++){
-      let f, g;
-      if(i<16){ f = (b & c) | (~b & d); g = i; }
-      else if(i<32){ f = (d & b) | (~d & c); g = (5*i +1) %16; }
-      else if(i<48){ f = b ^ c ^ d; g = (3*i +5) %16; }
-      else { f = c ^ (b | ~d); g = (7*i) %16; }
-      let temp = d; d = c; c = b;
-      let k = (a + f + tc[i] + bloco[g]) >>> 0;
-      k = ((k << shift[i%4]) | (k >>> (32-shift[i%4]))) >>> 0;
-      b = (b + k) >>> 0; a = temp;
-    }
-    hv[0] = (hv[0]+a)>>>0; hv[1] = (hv[1]+b)>>>0; hv[2] = (hv[2]+c)>>>0; hv[3] = (hv[3]+d)>>>0;
-  }
-
-  // Converte texto para blocos
-  let bytes = [];
-  for(let i=0;i<texto.length;i++) bytes.push(texto.charCodeAt(i) & 0xFF);
-  bytes.push(0x80);
-  while((bytes.length*8) % 512 !== 448) bytes.push(0x00);
-  let bits = texto.length * 8;
-  for(let i=0;i<8;i++) bytes.push((bits >> (i*8)) & 0xFF);
-  // Divide em blocos de 16 palavras
-  for(let i=0;i<bytes.length;i+=64){
-    let bloco = [];
-    for(let j=0;j<64;j+=4) bloco.push((bytes[i+j]) | (bytes[i+j+1]<<8) | (bytes[i+j+2]<<16) | (bytes[i+j+3]<<24));
-    adicionaBloco(bloco);
-  }
-  // Converte para hexadecimal minúsculo
-  let saida = "";
-  for(let i=0;i<4;i++){
-    let n = hv[i];
-    for(let j=0;j<4;j++) saida += hc[(n >> (j*8+4)) & 0xF] + hc[(n >> (j*8)) & 0xF];
-  }
-  return saida;
-}
-/* --- Tela PIN Responsáveis --- */
-.tela-pin{
-  position:fixed;inset:0;
-  background:rgba(15,23,42,0.85);
-  display:flex;align-items:center;justify-content:center;
-  z-index:9999;
-}
-.caixa-pin{
-  background:#fff;border-radius:24px;padding:32px 24px;width:90%;max-width:380px;
-  box-shadow:0 10px 40px rgba(0,0,0,0.25);
-}
-.caixa-pin h2{text-align:center;color:#1e293b;margin-bottom:20px;}
-.digitos{display:flex;gap:12px;justify-content:center;margin:24px 0;}
-.digito{
-  width:48px;height:56px;border:2px solid #cbd5e1;border-radius:12px;
-  display:flex;align-items:center;justify-content:center;font-size:24px;font-weight:800;color:#1e293b;
-  transition:all 0.2s;
-}
-.digito.preenchido{border-color:#7c3aed;background:#f5f3ff;}
-.teclado{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-top:20px;}
-.tecla{
-  padding:14px;background:#e2e8f0;border-radius:12px;border:none;font-size:20px;font-weight:700;
-  color:#1e293b;cursor:pointer;transition:background 0.2s;
-}
-.tecla:active{background:#cbd5e1;}
-.tecla.espaco{visibility:hidden;}
-.aviso-bloqueio{color:#dc2626;text-align:center;margin:12px 0;font-size:14px;display:none;}
-.link-recupera{
-  text-align:center;margin-top:16px;font-size:14px;color:#4f46e5;
-  cursor:pointer;text-decoration:underline;
-}
-
-/* --- Cadastro de E-mail --- */
-.campo-grupo{margin:16px 0;}
-.campo-grupo label{display:block;color:#334155;font-weight:700;margin-bottom:6px;}
-.campo-grupo input{
-  width:100%;padding:12px 14px;border:2px solid #cbd5e1;border-radius:12px;
-  font-size:16px;outline:none;transition:border-color 0.2s;
-}
-.campo-grupo input:focus{border-color:#7c3aed;}
-.botao-principal{
-  width:100%;padding:14px;background:#7c3aed;color:#fff;border:none;
-  border-radius:12px;font-size:16px;font-weight:800;cursor:pointer;transition:background 0.2s;
-}
-.botao-principal:active{background:#6d28d9;}
-.botao-secundario{
-  background:#e2e8f0;color:#1e293b;margin-top:10px;
-}
-.botao-secundario:active{background:#cbd5e1;}
-
 </style>
 </head>
 <body class="cenario-ceu">
-<!-- Tela de PIN dos Responsáveis -->
-<div class="tela-pin" id="telaPinResponsavel">
-  <div class="caixa-pin">
-    <h2>🔐 Área dos Responsáveis</h2>
-    <div class="digitos">
-      <div class="digito" id="d1"></div>
-      <div class="digito" id="d2"></div>
-      <div class="digito" id="d3"></div>
-      <div class="digito" id="d4"></div>
-    </div>
-    <div class="aviso-bloqueio" id="avisoBloqueio"></div>
-    <div class="teclado">
-      <button class="tecla" onclick="digitar(1)">1</button>
-      <button class="tecla" onclick="digitar(2)">2</button>
-      <button class="tecla" onclick="digitar(3)">3</button>
-      <button class="tecla" onclick="digitar(4)">4</button>
-      <button class="tecla" onclick="digitar(5)">5</button>
-      <button class="tecla" onclick="digitar(6)">6</button>
-      <button class="tecla" onclick="digitar(7)">7</button>
-      <button class="tecla" onclick="digitar(8)">8</button>
-      <button class="tecla" onclick="digitar(9)">9</button>
-      <button class="tecla espaco"></button>
-      <button class="tecla" onclick="apagar()">⌫</button>
-      <button class="tecla espaco"></button>
-    </div>
-    <p class="link-recupera" onclick="abrirRecuperaPin()">❓ Esqueceu seu PIN?</p>
-  </div>
-</div>
-
-<!-- Tela Cadastro E-mail Recuperação -->
-<div class="tela-pin" id="telaEmailRecupera" style="display:none;">
-  <div class="caixa-pin">
-    <h2>📧 E-mail de Recuperação</h2>
-    <p style="color:#64748b;font-size:14px;text-align:center;margin-bottom:16px;">
-      Cadastre um e-mail para recuperar seu acesso caso esqueça o PIN.
-    </p>
-    <div class="campo-grupo">
-      <label>Seu e-mail:</label>
-      <input type="email" id="inputEmailRecupera" placeholder="exemplo@email.com">
-    </div>
-    <button class="botao-principal" onclick="salvarEmailRecuperacao()">Salvar E-mail</button>
-    <button class="botao-principal botao-secundario" onclick="fecharTelaEmail()">Voltar</button>
-  </div>
-</div>
-
-  <div class="bg-layer cenario-ceu ativa" id="bg-layer-a"></div>
+<div class="bg-layer cenario-ceu ativa" id="bg-layer-a"></div>
 <div class="bg-layer" id="bg-layer-b"></div>
 <div class="particulas-cenario" id="particulas-cenario"></div>
 <input type="file" id="camera-input" accept="image/*" capture="environment" class="hidden">
@@ -848,24 +571,22 @@ localStorage.setItem('ROTINAPET_FAMILIA_ID',codigoFamilia);
 }
 
 
+// Autenticação anônima obrigatória antes de qualquer sync
 try{
   if(window.firebase){
     firebase.initializeApp(firebaseConfig);
     firebase.auth().signInAnonymously().then(()=>{
-      dbFirebase = firebase.database();
-      definirIdUsuario(firebase.auth().currentUser.uid);
-
-      sincronizacaoNuvemAtiva = true;
+      dbFirebase=firebase.database();
+      sincronizacaoNuvemAtiva=true;
       iniciarSincronizacaoNuvem();
     }).catch(()=>{
-      sincronizacaoNuvemAtiva = false;
+      sincronizacaoNuvemAtiva=false;
     });
   }
-}
+}catch(e){}
 
 function getCaminhoFirebase(){
   return `rotinapet/familias/${codigoFamilia}/estado`;
-}
 }
 
 // Criptografia e hashing seguro do PIN
@@ -1348,53 +1069,11 @@ function alternarPerfil(){
 }
 
 let pinDigitado='';
-  
- abrirPainelPais(){
+function abrirPainelPais(){
   limparPin();
   montarTecladoPin();
   atualizarEstadoBloqueioPin();
   abrirModal('modal-pin');
-}
-function digitar(num) {
-  if (pinDigitado.length < 4) {
-    pinDigitado += String(num);
-    atualizarDisplayPin();
-    
-    if (pinDigitado.length === 4) {
-      setTimeout(() => {
-        if (typeof validarPin === 'function') {
-          validarPin();
-        }
-      }, 150);
-    }
-  }
-}
-
-function apagar() {
-  if (pinDigitado.length > 0) {
-    pinDigitado = pinDigitado.slice(0, -1);
-    atualizarDisplayPin();
-  }
-}
-
-function limparPin() {
-  pinDigitado = '';
-  atualizarDisplayPin();
-}
-
-function atualizarDisplayPin() {
-  for (let i = 1; i <= 4; i++) {
-    const el = document.getElementById('d' + i);
-    if (el) {
-      if (i <= pinDigitado.length) {
-        el.textContent = '•';
-        el.classList.add('preenchido');
-      } else {
-        el.textContent = '';
-        el.classList.remove('preenchido');
-      }
-    }
-  }
 }
 
 function montarTecladoPin(){
@@ -1427,24 +1106,9 @@ function montarTecladoPin(){
   atualizarDots();
 }
 
-function atualizarDots() {
-  const dots = document.querySelectorAll('.pin-dot');
-  dots.forEach((dot, i) => {
-    if (i < pinDigitado.length) {
-      dot.classList.add('active', 'filled');
-      dot.textContent = '•';
-      dot.style.fontSize = '28px';
-      dot.style.display = 'flex';
-      dot.style.alignItems = 'center';
-      dot.style.justifyContent = 'center';
-      dot.style.color = '#7C3AED';
-    } else {
-      dot.classList.remove('active', 'filled');
-      dot.textContent = '';
-    }
-  });
+function atualizarDots(){
+  document.querySelectorAll('.pin-dot').forEach((d,i)=>d.classList.toggle('on',i<pinDigitado.length));
 }
-
 
 const PIN_MAX_TENTATIVAS=5;
 const PIN_BLOQUEIO_MS=60000;
