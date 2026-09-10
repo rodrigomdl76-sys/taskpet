@@ -1385,9 +1385,24 @@ function montarTecladoPin(){
   atualizarDots();
 }
 
-function atualizarDots(){
-  document.querySelectorAll('.pin-dot').forEach((d,i)=>d.classList.toggle('on',i<pinDigitado.length));
+function atualizarDots() {
+  const dots = document.querySelectorAll('.pin-dot');
+  dots.forEach((dot, i) => {
+    if (i < pinDigitado.length) {
+      dot.classList.add('active', 'filled');
+      dot.textContent = '•';
+      dot.style.fontSize = '28px';
+      dot.style.display = 'flex';
+      dot.style.alignItems = 'center';
+      dot.style.justifyContent = 'center';
+      dot.style.color = '#7C3AED';
+    } else {
+      dot.classList.remove('active', 'filled');
+      dot.textContent = '';
+    }
+  });
 }
+
 
 const PIN_MAX_TENTATIVAS=5;
 const PIN_BLOQUEIO_MS=60000;
