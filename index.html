@@ -664,9 +664,19 @@ function getCaminhoFirebase(){
   return `rotinapet/familias/${codigoFamilia}/estado`;
 }
 // Criptografia e hashing seguro do PIN
+// IMPORTANTE: o hash NÃO deve depender de codigoFamilia, pois esse valor pode
+// mudar quando o usuário troca de família — isso fazia o PIN "parar de bater"
+// (hash antigo calculado com o código antigo x hash novo calculado com o código novo).
 async function hashPin(pin){
   const encoder=new TextEncoder();
-  const data=encoder.encode(pin+":rotinapet:"+codigoFamilia);
+  const data=encoder.encode(pin+":rotinapet:salt-fixo-v2");
+  const hashBuffer=await crypto.subtle.digest('SHA-256',data);
+  return Array.from(new Uint8Array(hashBuffer)).map(b=>b.toString(16).padStart(2,'0')).join('');
+}
+// Formato antigo (mantido só para migração de quem já tinha PIN salvo).
+async function hashPinLegado(pin,codigo){
+  const encoder=new TextEncoder();
+  const data=encoder.encode(pin+":rotinapet:"+codigo);
   const hashBuffer=await crypto.subtle.digest('SHA-256',data);
   return Array.from(new Uint8Array(hashBuffer)).map(b=>b.toString(16).padStart(2,'0')).join('');
 }
@@ -1337,7 +1347,21 @@ async function validarPin(){
     salvar();
   }
   const hashDigitado=await hashPin(pinDigitado);
-  if(hashDigitado===estado.pinHash){
+  let pinCorreto=hashDigitado===estado.pinHash;
+  if(!pinCorreto){
+    // Migração: pode ser um hash salvo no formato antigo (amarrado ao codigoFamilia
+    // de quando o PIN foi criado). Testamos os códigos conhecidos e, se bater,
+    // regravamos no formato novo para não depender mais do código da família.
+    const codigosParaTestar=[codigoFamilia,localStorage.getItem('ROTINAPET_FAMILIA_ID')].filter(Boolean);
+    for(const codigo of codigosParaTestar){
+      if(await hashPinLegado(pinDigitado,codigo)===estado.pinHash){
+        pinCorreto=true;
+        break;
+      }
+    }
+  }
+  if(pinCorreto){
+    estado.pinHash=hashDigitado;
     estado.pinTentativasFalhas=0;
     estado.pinBloqueadoAte=null;
     salvar();
