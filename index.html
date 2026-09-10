@@ -125,6 +125,8 @@ button{touch-action:manipulation}
 .stat-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:7px}.stat{background:#f8fafc;border-radius:12px;padding:9px}.stat b{font-size:17px}.stat span{display:block;font-size:8px;color:#64748b;font-weight:900}
 .toast{position:fixed;left:50%;bottom:74px;transform:translate(-50%,20px);background:#0f172aee;color:#fff;padding:8px 15px;border-radius:99px;font-size:10px;font-weight:900;z-index:200;opacity:0;pointer-events:none;transition:.25s}
 .toast.mostrar{opacity:1;transform:translate(-50%,0)}
+.banner-offline{position:fixed;top:0;left:0;right:0;background:#b45309;color:#fff;text-align:center;font-size:10px;font-weight:800;padding:6px 10px;z-index:300;transform:translateY(-100%);transition:.25s}
+.banner-offline.mostrar{transform:translateY(0)}
 .hidden{display:none!important}
 .foto-viewer{position:fixed;inset:0;background:#000d;display:flex;align-items:center;justify-content:center;z-index:300;opacity:0;visibility:hidden;transition:.2s;padding:20px}
 .foto-viewer.mostrar{opacity:1;visibility:visible}
@@ -259,7 +261,7 @@ button{touch-action:manipulation}
   <div class="caixa-pin">
     <h2>🔑 Entrar com e-mail</h2>
     <p style="color:#64748b;font-size:14px;text-align:center;margin-bottom:16px;">
-      Use o email e a senha cadastrados para recuperar o acesso desta conta.
+      Use o e-mail e a senha vinculados a esta família para entrar — sem precisar do PIN. Útil também para um segundo responsável acessar com a própria conta.
     </p>
     <div class="campo-grupo">
       <label>E-mail:</label>
@@ -285,11 +287,15 @@ button{touch-action:manipulation}
       <input type="email" id="inputEmailRecupera" autocomplete="email" placeholder="exemplo@email.com">
     </div>
     <div class="campo-grupo">
+      <label>Confirme o e-mail:</label>
+      <input type="email" id="inputEmailRecuperaConfirma" autocomplete="email" placeholder="Digite o e-mail novamente">
+    </div>
+    <div class="campo-grupo">
       <label>Senha de acesso (mínimo 6 caracteres):</label>
       <input type="password" id="inputSenhaRecupera" autocomplete="new-password" minlength="6" placeholder="Crie uma senha">
     </div>
     <p style="color:#64748b;font-size:11px;line-height:1.35;margin:8px 0 12px;">
-      O email e a senha serão usados apenas para recuperar a conta. O PIN continua protegendo o painel dos responsáveis.
+      O email e a senha serão usados apenas para recuperar a conta. O PIN continua protegendo o painel dos responsáveis. Suporta até 2 responsáveis — para o segundo cadastrar o próprio e-mail, abra o app com o mesmo código de família no aparelho dessa pessoa e repita este passo por lá.
     </p>
     <button class="botao-principal" onclick="salvarEmailRecuperacao()">Vincular E-mail</button>
     <button class="botao-principal botao-secundario" onclick="fecharTelaEmail()">Voltar</button>
@@ -386,12 +392,27 @@ button{touch-action:manipulation}
   <div class="section-card"><label class="field-label">💵 Valor por moeda (R$)</label><input class="field" id="input-taxa-cambio" type="number" min="0" step="0.01" onchange="atualizarTaxaCambio(this.value)"></div>
   <div class="section-card"><label class="field-label">🔑 Alterar PIN</label><div style="display:flex;gap:5px"><input class="field" id="novo-pin-pais" inputmode="numeric" maxlength="4" placeholder="4 dígitos"><button class="primary-btn" onclick="salvarNovoPin()">Salvar</button></div></div>
   <div class="section-card">
+    <label class="field-label">📧 E-mail de recuperação</label>
+    <div style="font-size:9px;color:#64748b;margin-bottom:6px" id="txt-status-email-recupera">Nenhum e-mail vinculado ainda.</div>
+    <button type="button" class="primary-btn blue-btn" style="width:100%" onclick="abrirTelaEmailRecupera()">Cadastrar / atualizar e-mail</button>
+    <small style="font-size:8px;color:#64748b;margin-top:3px;display:block">Cadastre um e-mail para conseguir recuperar o acesso caso esqueça o PIN. Até 2 responsáveis podem ter seu próprio e-mail (cada um cadastra pelo próprio aparelho).</small>
+  </div>
+  <div class="section-card">
+    <label class="field-label">💾 Backup</label>
+    <button type="button" class="primary-btn blue-btn" style="width:100%" onclick="baixarBackupEstado()">⬇️ Baixar backup (.json)</button>
+    <small style="font-size:8px;color:#64748b;margin-top:3px;display:block">Salva uma cópia de segurança de tudo (moedas, tarefas, nível do pet...) no seu aparelho, sem depender da internet.</small>
+    <input type="file" id="input-restaurar-backup" accept="application/json" style="display:none" onchange="restaurarBackupEstado(this.files[0])">
+    <button type="button" class="primary-btn blue-btn botao-secundario" style="width:100%;margin-top:6px" onclick="document.getElementById('input-restaurar-backup').click()">⬆️ Restaurar backup</button>
+    <small style="font-size:8px;color:#64748b;margin-top:3px;display:block">⚠️ Substitui os dados atuais desta família pelo conteúdo do arquivo.</small>
+  </div>
+  <div class="section-card">
     <label class="field-label">🏠 Código da Família</label>
     <div style="display:flex;gap:5px">
       <input class="field" id="input-codigo-familia" placeholder="mínimo 8 caracteres">
       <button class="primary-btn blue-btn" onclick="trocarFamiliaManualmente()">Conectar</button>
     </div>
     <button type="button" class="primary-btn blue-btn" style="margin-top:6px;width:100%;" onclick="compartilharConviteFamilia()">📲 Convidar Criança via WhatsApp</button>
+    <button type="button" class="primary-btn blue-btn botao-secundario" style="margin-top:6px;width:100%;" onclick="abrirQrConvite()">📷 Mostrar QR Code de convite</button>
     <small style="font-size:8px;color:#64748b;margin-top:3px;display:block">Use um código único de no mínimo 8 caracteres para sincronizar seus aparelhos com segurança.</small>
   </div>
   <div class="section-card" id="card-lembrete">
@@ -496,8 +517,10 @@ button{touch-action:manipulation}
 </div></div>
 <div id="modal-recompensas" class="modal-overlay"><div class="modal"><div class="modal-title"><h3>🎁 Resgatar Prêmios</h3><button class="close-btn" onclick="fecharModal('modal-recompensas')">×</button></div><div class="section-card"><div style="display:flex;justify-content:space-between;font-size:9px;font-weight:900"><span>🎯 Meta: Passeio Especial</span><span id="texto-meta-progresso">0 / 50 🪙</span></div><div class="progress" style="margin-top:5px"><div id="barra-meta-progresso" style="width:0"></div></div></div><div class="stack" id="lista-itens-loja"></div></div></div>
 <div id="modal-aviso" class="modal-overlay"><div class="modal" style="text-align:center;max-width:320px"><div id="aviso-emoji" style="font-size:35px">🎉</div><h3 id="aviso-titulo" style="font-size:16px;margin:5px 0">Tudo certo!</h3><p id="aviso-texto" style="font-size:10px;color:#64748b"></p><button class="primary-btn" style="margin-top:10px" onclick="fecharModal('modal-aviso')">OK</button></div></div>
+<div id="modal-qrcode" class="modal-overlay"><div class="modal" style="text-align:center;max-width:280px"><div class="modal-title"><h3>📷 Convite por QR Code</h3><button class="close-btn" onclick="fecharModal('modal-qrcode')">×</button></div><p style="font-size:9px;color:#64748b;margin-bottom:8px">Peça para a outra pessoa escanear com a câmera do celular.</p><img id="img-qr-convite" src="" alt="QR code de convite" style="width:220px;height:220px;border-radius:12px;background:#fff;padding:6px"><p id="txt-link-qr-convite" style="font-size:8px;color:#94a3b8;margin-top:8px;word-break:break-all"></p></div></div>
 <div class="foto-viewer" id="foto-viewer" onclick="fecharVisualizadorFoto()"><img id="foto-viewer-img" src=""></div>
 <div class="toast" id="toast"></div>
+<div class="banner-offline" id="banner-offline">📡 Sem conexão — as alterações serão sincronizadas quando a internet voltar.</div>
 <script>
 let audioCtx=null;
 function obterAudioContext(){if(!audioCtx)audioCtx=new(window.AudioContext||window.webkitAudioContext)();if(audioCtx.state==='suspended')audioCtx.resume();return audioCtx}
@@ -627,8 +650,11 @@ function sanitizarIdFamilia(id){
 }
 let codigoFamilia=sanitizarIdFamilia(urlParams.get('familia')||localStorage.getItem('ROTINAPET_FAMILIA_ID'));
 localStorage.setItem('ROTINAPET_FAMILIA_ID',codigoFamilia);
+  function obterLinkConvite(){
+    return 'https://rodrigomdl76-sys.github.io/taskpet/?familia=' + encodeURIComponent(codigoFamilia);
+  }
   function compartilharConviteFamilia() {
-  const linkConvite = 'https://rodrigomdl76-sys.github.io/taskpet/?familia=' + encodeURIComponent(codigoFamilia);
+  const linkConvite = obterLinkConvite();
   const texto = 'Entre no TaskPet comigo para cuidarmos do nosso pet juntos! Acesse: ' + linkConvite;
   if (navigator.share) {
     navigator.share({
@@ -639,6 +665,14 @@ localStorage.setItem('ROTINAPET_FAMILIA_ID',codigoFamilia);
   } else {
     window.open('https://api.whatsapp.com/send?text=' + encodeURIComponent(texto), '_blank');
   }
+}
+function abrirQrConvite(){
+  const link=obterLinkConvite();
+  const img=document.getElementById('img-qr-convite');
+  const txt=document.getElementById('txt-link-qr-convite');
+  if(img)img.src='https://api.qrserver.com/v1/create-qr-code/?size=220x220&data='+encodeURIComponent(link);
+  if(txt)txt.textContent=link;
+  abrirModal('modal-qrcode');
 }
 try{
   if(window.firebase){
@@ -735,6 +769,7 @@ try{
     estado.acessorios=estado.acessorios&&Array.isArray(estado.acessorios.comprados)?estado.acessorios:{comprados:[],ativo:null};
     estado.historicoConclusoes=estado.historicoConclusoes||{};
     estado.registroDiario=estado.registroDiario||{};
+    normalizarEmailsRecuperacao();
     if(d.pinPais&&!d.pinHash){
       hashPin(d.pinPais).then(h=>{estado.pinHash=h;delete estado.pinPais;salvar();});
     }
@@ -760,13 +795,27 @@ function salvar(){
     dbFirebase.ref(getCaminhoFirebase()).set(estado).catch(()=>{});
   }
 }
+// Suporta até 2 responsáveis com e-mails próprios vinculados à mesma família.
+// Migra o campo antigo (um único e-mail em string) para a lista nova.
+function normalizarEmailsRecuperacao(){
+  if(estado.emailRecuperacao&&!Array.isArray(estado.emailsRecuperacao)){
+    estado.emailsRecuperacao=[estado.emailRecuperacao];
+  }
+  if(!Array.isArray(estado.emailsRecuperacao))estado.emailsRecuperacao=[];
+  delete estado.emailRecuperacao;
+}
 async function carregarEstadoNuvem(){
   if(!sincronizacaoNuvemAtiva||!dbFirebase)return false;
   try{
-    const snap=await dbFirebase.ref(getCaminhoFirebase()).once('value');
+    // Timeout de segurança: se a rede travar, não deixamos cargaNuvemPendente
+    // preso para sempre (o que bloquearia salvar() indefinidamente).
+    const timeoutMs=8000;
+    const timeout=new Promise((_,reject)=>setTimeout(()=>reject(new Error('timeout ao buscar dados da família')),timeoutMs));
+    const snap=await Promise.race([dbFirebase.ref(getCaminhoFirebase()).once('value'),timeout]);
     const remoto=snap.val();
     if(!remoto||typeof remoto!=='object')return false;
     estado={...estado,...remoto,pets:{...estado.pets,...(remoto.pets||{})}};
+    normalizarEmailsRecuperacao();
     localStorage.setItem(`ROTINAPET_SAVE_${codigoFamilia}`,JSON.stringify(estado));
     atualizarTela();
     return true;
@@ -1190,36 +1239,109 @@ async function entrarComEmail(){
     await auth.signInWithEmailAndPassword(email,senha);
     fecharLoginEmail();
     atualizarTela();
-    await redefinirPinComEmail();
+    // O login por e-mail já comprova que é um responsável de verdade —
+    // não precisa forçar troca de PIN. Isso também permite que um segundo
+    // responsável entre com a própria conta, sem depender do PIN compartilhado.
+    renderizarPainelPais();
+    abrirModal('modal-pais');
+    mostrarAviso('✅','Acesso liberado','Bem-vindo(a) de volta! Se quiser, você pode alterar o PIN aqui no painel.');
   }catch(error){
     console.warn('Falha no login por email:',error);
     mostrarErroRecuperacao('E-mail ou senha incorretos. Se esqueceu a senha, use “Esqueceu seu PIN?” para receber um link.');
   }
 }
-async function redefinirPinComEmail(){
-  const novo=window.prompt('Conta recuperada. Crie um novo PIN de 4 números:');
-  if(novo===null)return;
-  const confirmacao=window.prompt('Digite o novo PIN novamente:');
-  if(!/^\d{4}$/.test(novo)||confirmacao!==novo){
-    mostrarErroRecuperacao('O PIN precisa ter 4 números e as duas entradas devem ser iguais.');
-    abrirModal('modal-pin');
-    return;
+function restaurarBackupEstado(arquivo){
+  const inputFile=document.getElementById('input-restaurar-backup');
+  if(!arquivo)return;
+  const leitor=new FileReader();
+  leitor.onload=async ()=>{
+    let dados;
+    try{
+      dados=JSON.parse(leitor.result);
+    }catch(e){
+      mostrarToast('⚠️ Arquivo inválido — não parece um backup do RotinaPet.');
+      if(inputFile)inputFile.value='';
+      return;
+    }
+    // Checagem mínima de que é mesmo um backup deste app.
+    if(typeof dados!=='object'||dados===null||!Array.isArray(dados.tarefas)){
+      mostrarToast('⚠️ Arquivo inválido — não parece um backup do RotinaPet.');
+      if(inputFile)inputFile.value='';
+      return;
+    }
+    const confirmado=window.confirm('Isso vai substituir TODOS os dados atuais desta família (moedas, tarefas, nível do pet...) pelo conteúdo do backup. Essa ação não pode ser desfeita. Deseja continuar?');
+    if(inputFile)inputFile.value='';
+    if(!confirmado)return;
+    estado=dados;
+    estado.pets={...{gato:{nivel:1,xp:0,felicidade:100,saude:100},cachorra:{nivel:1,xp:0,felicidade:100,saude:100},cabra:{nivel:1,xp:0,felicidade:100,saude:100},frango:{nivel:1,xp:0,felicidade:100,saude:100}},...(estado.pets||{})};
+    if(!Array.isArray(estado.tarefas))estado.tarefas=[];
+    if(!Array.isArray(estado.recompensas))estado.recompensas=[];
+    if(!Array.isArray(estado.solicitacoesPremios))estado.solicitacoesPremios=[];
+    estado.conquistas=estado.conquistas||{};
+    estado.historicoConclusoes=estado.historicoConclusoes||{};
+    estado.registroDiario=estado.registroDiario||{};
+    normalizarEmailsRecuperacao();
+    salvar();
+    renderizarPainelPais();
+    atualizarTela();
+    mostrarAviso('✅','Backup restaurado','Os dados foram restaurados com sucesso.');
+  };
+  leitor.onerror=()=>mostrarToast('⚠️ Não foi possível ler o arquivo.');
+  leitor.readAsText(arquivo);
+}
+function baixarBackupEstado(){
+  try{
+    const conteudo=JSON.stringify(estado,null,2);
+    const blob=new Blob([conteudo],{type:'application/json'});
+    const url=URL.createObjectURL(blob);
+    const a=document.createElement('a');
+    const dataHoje=hojeLocal();
+    a.href=url;
+    a.download=`rotinapet-backup-${codigoFamilia}-${dataHoje}.json`;
+    document.body.appendChild(a);
+    a.click();
+    a.remove();
+    URL.revokeObjectURL(url);
+    mostrarToast('💾 Backup baixado!');
+  }catch(e){
+    console.error('Falha ao gerar backup:',e);
+    mostrarToast('⚠️ Não foi possível gerar o backup.');
   }
-  estado.pinHash=await hashPin(novo);
-  estado.pinTentativasFalhas=0;
-  estado.pinBloqueadoAte=null;
-  salvar();
+}
+function atualizarBannerOffline(){
+  const b=document.getElementById('banner-offline');
+  if(!b)return;
+  b.classList.toggle('mostrar',!navigator.onLine);
+}
+window.addEventListener('online',atualizarBannerOffline);
+window.addEventListener('offline',atualizarBannerOffline);
+function abrirTelaEmailRecupera(){
+  fecharModal('modal-pais');
+  const inputEmail=document.getElementById('inputEmailRecupera');
+  const inputEmailConfirma=document.getElementById('inputEmailRecuperaConfirma');
+  const inputSenha=document.getElementById('inputSenhaRecupera');
+  if(inputEmail)inputEmail.value='';
+  if(inputEmailConfirma)inputEmailConfirma.value='';
+  if(inputSenha)inputSenha.value='';
+  document.getElementById('telaEmailRecupera').style.display='flex';
+}
+function fecharTelaEmail(){
+  document.getElementById('telaEmailRecupera').style.display='none';
+  document.getElementById('inputEmailRecupera').value='';
+  document.getElementById('inputEmailRecuperaConfirma').value='';
+  document.getElementById('inputSenhaRecupera').value='';
   renderizarPainelPais();
   abrirModal('modal-pais');
-  mostrarAviso('✅','PIN redefinido','Seu novo PIN foi salvo. Guarde-o em local seguro.');
 }
 async function salvarEmailRecuperacao(){
   const email=document.getElementById('inputEmailRecupera').value.trim();
+  const emailConfirma=document.getElementById('inputEmailRecuperaConfirma').value.trim();
   const senha=document.getElementById('inputSenhaRecupera').value;
   const auth=obterAuth();
   const user=auth?.currentUser;
   if(!auth||!user)return mostrarErroRecuperacao('A autenticação ainda não terminou. Tente novamente.');
   if(!validarEmail(email))return mostrarErroRecuperacao('Digite um e-mail válido.');
+  if(email.toLowerCase()!==emailConfirma.toLowerCase())return mostrarErroRecuperacao('Os dois e-mails digitados são diferentes. Confira e tente de novo.');
   if(senha.length<6)return mostrarErroRecuperacao('A senha precisa ter pelo menos 6 caracteres.');
   try{
     if(user.isAnonymous){
@@ -1229,7 +1351,12 @@ async function salvarEmailRecuperacao(){
       await user.updateEmail(email);
       await user.updatePassword(senha);
     }
-    estado.emailRecuperacao=email;
+    normalizarEmailsRecuperacao();
+    const jaTinha=estado.emailsRecuperacao.some(e=>e.toLowerCase()===email.toLowerCase());
+    if(!jaTinha){
+      if(estado.emailsRecuperacao.length>=2)estado.emailsRecuperacao.shift();
+      estado.emailsRecuperacao.push(email);
+    }
     salvar();
     fecharTelaEmail();
     mostrarAviso('✅','E-mail vinculado','Agora você pode recuperar a senha por e-mail e entrar novamente nesta conta.');
@@ -1407,6 +1534,11 @@ function limparPin(){
 function renderizarPainelPais(){
   document.getElementById('input-taxa-cambio').value=estado.taxaCambio;
   document.getElementById('input-idade-crianca').value=estado.idadeCrianca||7;
+  const statusEmail=document.getElementById('txt-status-email-recupera');
+  if(statusEmail){
+    const lista=Array.isArray(estado.emailsRecuperacao)?estado.emailsRecuperacao:[];
+    statusEmail.textContent=lista.length?`✅ Vinculado${lista.length>1?'s':''}: ${lista.join(', ')}`:'Nenhum e-mail vinculado ainda.';
+  }
   const inputFam=document.getElementById('input-codigo-familia');
   if(inputFam)inputFam.value=codigoFamilia;
   montarPickerDiasNovaTarefa();
@@ -2555,6 +2687,7 @@ window.addEventListener('DOMContentLoaded',()=>{
   atualizarTela();
   verificarPrimeiroAcesso();
   agendarFalaAleatoria();
+  atualizarBannerOffline();
   if(estado.timerFim&&estado.timerFim>Date.now()){
     iniciarTimerTela(Math.ceil((estado.timerFim-Date.now())/60000));
   }
