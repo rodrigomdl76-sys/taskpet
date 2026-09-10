@@ -36,7 +36,6 @@ body.cenario-astronauta,.bg-layer.cenario-astronauta{background:linear-gradient(
 body.cenario-pirata,.bg-layer.cenario-pirata{background:linear-gradient(180deg,#78350f,#0f172a);color:#fff}
 body.cenario-fazenda,.bg-layer.cenario-fazenda{background:linear-gradient(180deg,#fef08a,#84cc16)}
 body.cenario-neve,.bg-layer.cenario-neve{background:linear-gradient(180deg,#e0f2fe,#bae6fd)}
-
 button,input,select{font:inherit}
 button{touch-action:manipulation}
 .app{width:100%;max-width:430px;height:100dvh;margin:auto;padding:max(8px,env(safe-area-inset-top)) 12px max(8px,env(safe-area-inset-bottom));display:flex;flex-direction:column;gap:6px;position:relative;overflow:hidden}
@@ -46,12 +45,10 @@ button{touch-action:manipulation}
 .top-pill-text{font-size:9.5px;font-weight:900;color:#172033;line-height:1.1;white-space:nowrap}
 .top-pill-sub{font-size:7px;font-weight:800;color:#64748b;margin-top:2px;display:block}
 .coin-dot{width:13px;height:13px;border-radius:50%;background:linear-gradient(135deg,#ffe16b,#f59e0b);border:2px solid #fff;box-shadow:0 2px 5px #f59e0b66;flex-shrink:0}
-
 .top-pill.streak-fogo{background:linear-gradient(135deg,#fff7ed,#ffedd5);border-color:#fb923c;box-shadow:0 0 12px rgba(249,115,22,.45);animation:pulseFogo 1.8s infinite ease-in-out}
 .top-pill.streak-fogo span:first-child{display:inline-block;animation:balancoChama .9s infinite alternate ease-in-out}
 @keyframes pulseFogo{0%,100%{transform:scale(1);box-shadow:0 0 8px rgba(249,115,22,.35)}50%{transform:scale(1.04);box-shadow:0 0 18px rgba(234,88,12,.7);border-color:#f97316}}
 @keyframes balancoChama{0%{transform:rotate(-5deg) scale(1)}100%{transform:rotate(7deg) scale(1.18)}}
-
 .status-row{display:grid;grid-template-columns:auto 1fr;gap:6px;flex-shrink:0}
 .mini-card,.happiness-box{background:rgba(255,255,255,.93);border-radius:14px;box-shadow:0 4px 12px rgba(15,23,42,.08)}
 .mini-card{padding:6px 9px;display:flex;align-items:center;gap:4px;border:0;cursor:pointer}
@@ -132,29 +129,22 @@ button{touch-action:manipulation}
 .foto-viewer{position:fixed;inset:0;background:#000d;display:flex;align-items:center;justify-content:center;z-index:300;opacity:0;visibility:hidden;transition:.2s;padding:20px}
 .foto-viewer.mostrar{opacity:1;visibility:visible}
 .foto-viewer img{max-width:100%;max-height:100%;border-radius:14px}
-
 .bg-layer{position:fixed;inset:0;z-index:-2;transition:opacity 1s ease;opacity:0}
 .bg-layer.ativa{opacity:1;z-index:-1}
-
 .cat-wrapper.mood-feliz{animation-duration:2.6s}
 .cat-wrapper.mood-triste{animation-duration:5.5s;filter:saturate(.75) brightness(.96)}
 .cat-wrapper.mood-doente{filter:saturate(.5) brightness(.9)}
 .cat-wrapper.pet-dormindo{animation-duration:7s;filter:brightness(.8) saturate(.8)}
-
 .balao-fala{position:absolute;top:6%;background:#fff;color:#172033;border-radius:16px;padding:7px 12px;font-size:10.5px;font-weight:900;max-width:200px;text-align:center;box-shadow:0 6px 16px #0003;opacity:0;transform:translateY(6px) scale(.9);transition:.25s;pointer-events:none;z-index:10}
 .balao-fala:after{content:"";position:absolute;bottom:-7px;left:50%;transform:translateX(-50%);border:8px solid transparent;border-top-color:#fff}
 .balao-fala.mostrar{opacity:1;transform:translateY(0) scale(1)}
-
 .zzz-flutuante{position:absolute;font-weight:900;font-size:20px;color:#fff;text-shadow:0 2px 5px #0007;pointer-events:none;animation:zzzSobe 2.6s ease-in forwards;z-index:11}
 @keyframes zzzSobe{0%{opacity:0;transform:translate(0,0) scale(.5)}20%{opacity:1}100%{opacity:0;transform:translate(22px,-60px) scale(1.3)}}
-
 @keyframes taskPop{0%{transform:scale(1)}35%{transform:scale(1.04);background:#ecfdf5}100%{transform:scale(1)}}
 .task-row.pop-anim{animation:taskPop .5s ease}
-
 .dias-semana-picker{display:grid;grid-template-columns:repeat(7,1fr);gap:3px;margin-top:5px}
 .dia-chip{border:1px solid #cbd5e1;background:#fff;border-radius:8px;padding:5px 0;font-size:8px;font-weight:900;color:#64748b;cursor:pointer;text-align:center}
 .dia-chip.on{background:#7c3aed;border-color:#7c3aed;color:#fff}
-
 .heatmap-grid{display:grid;grid-template-columns:repeat(7,1fr);gap:4px;margin-top:6px}
 .heatmap-dia{aspect-ratio:1;border-radius:5px;background:#e2e8f0}
 .heatmap-dia.feito{background:#22c55e}
@@ -162,14 +152,10 @@ button{touch-action:manipulation}
 .heatmap-dia.futuro{background:transparent}
 .heatmap-legenda{display:flex;gap:10px;margin-top:7px;font-size:8px;font-weight:800;color:#64748b;align-items:center}
 .heatmap-legenda i{width:10px;height:10px;border-radius:3px;display:inline-block;margin-right:3px;vertical-align:-1px}
-
 .pausa-banner{margin-top:7px;padding:7px 9px;border-radius:12px;background:#ecfeff;border:1px solid #a5f3fc;font-size:9px;font-weight:900;color:#0e7490}
-
 .relatorio-dia-row{display:grid;grid-template-columns:70px 1fr auto;gap:6px;align-items:center;font-size:9px;font-weight:800;padding:5px 0;border-bottom:1px solid #f1f5f9}
 .relatorio-dia-row:last-child{border:0}
-
 .grid-tabs{display:grid;grid-template-columns:1fr 1fr;gap:6px;margin-bottom:10px}
-
 .particulas-cenario{position:fixed;inset:0;z-index:-1;overflow:hidden;pointer-events:none}
 .particula{position:absolute;pointer-events:none;will-change:transform,opacity}
 @keyframes cairParticula{0%{transform:translateY(-10vh) rotate(0deg);opacity:.9}100%{transform:translateY(110vh) rotate(200deg);opacity:.6}}
@@ -180,25 +166,274 @@ button{touch-action:manipulation}
 .particula.modo-subir{animation-name:subirParticula;animation-timing-function:linear;animation-iteration-count:infinite}
 .particula.modo-piscar{animation-name:piscarParticula;animation-timing-function:ease-in-out;animation-iteration-count:infinite}
 .particula.modo-lateral{animation-name:flutuarLateralParticula;animation-timing-function:linear;animation-iteration-count:infinite}
-
 .jogo-tile{padding:18px;border:0;border-radius:16px;font-size:28px;cursor:pointer;background:#e0e7ff;transition:.15s}
 .jogo-tile.ativo{background:#facc15;transform:scale(1.08)}
 .jogo-tile.errado{background:#fecaca}
-
 .surpresa-dia-btn{position:absolute;top:6px;right:6px;width:38px;height:38px;border-radius:50%;background:linear-gradient(135deg,#fbbf24,#f59e0b);border:2px solid #fff;font-size:19px;display:flex;align-items:center;justify-content:center;cursor:pointer;z-index:15;box-shadow:0 4px 10px #0004;animation:pulseSurpresa 1.4s infinite}
 @keyframes pulseSurpresa{0%,100%{transform:scale(1)}50%{transform:scale(1.14)}}
 .tab-btn{border:0;background:#f1f5f9;color:#64748b;border-radius:10px;padding:8px;font-size:10px;font-weight:900;cursor:pointer}
 .tab-btn.ativa{background:#7c3aed;color:#fff}
-
 @media(max-height:650px){.pet-stage{height:185px;min-height:160px}.tasks-section{max-height:105px}.bottom-btn{min-height:50px}.btn-icon{font-size:17px}#pet-svg-container{width:160px;height:160px}}
+  // ========== VARIÁVEIS DO PIN ==========
+// ✅ Usa o seu usuário já existente — não mude nada aqui
+// ========== FUNÇÕES DO PIN — AJUSTADAS ==========
+let pinDigitado = ''; // ✅ Valor inicial que estava faltando!
+let idUsuarioAtual = null;
+// ✅ Função para receber o ID do usuário logado
+function definirIdUsuario(id) {
+  idUsuarioAtual = id;
+}
+function digitar(num) {
+  if (pinDigitado.length >= 4) return;
+  pinDigitado += num;
+  atualizarVisualPin(); // ✅ Atualiza visual sempre que digita
+  if (pinDigitado.length === 4) setTimeout(verificarPin, 250);
+}
+function apagar() {
+  pinDigitado = pinDigitado.slice(0, -1);
+  atualizarVisualPin(); // ✅ Atualiza também ao apagar
+}
+function atualizarVisualPin() {
+  // ✅ AGORA MOSTRA OS NÚMEROS NOS QUADRADINHOS CERTINHO!
+  for(let i=1;i<=4;i++){
+    const el = document.getElementById('d'+i);
+    if(!el) continue;
+    el.textContent = pinDigitado[i-1] || '';
+    el.classList.toggle('preenchido', !!pinDigitado[i-1]);
+  }
+}
+// ==== Verifica bloqueio antes de conferir ====
+async function verificarPin(){
+  // ✅ PRIMEIRA VEZ SEM USUÁRIO → ACEITA 1234 DIRETO!
+  if(!idUsuarioAtual) {
+    if (pinDigitado === '1234') {
+      pinDigitado = '';
+      atualizarVisualPin();
+      document.getElementById('telaPinResponsavel').style.display = 'none';
+      mostrarToast('✅ Acesso liberado!');
+    } else {
+      pinDigitado = '';
+      atualizarVisualPin();
+      mostrarToast('⚠️ Use 1234 na primeira vez');
+    }
+    return;
+  }
+  // ✅ COM USUÁRIO → BUSCA NO BANCO COMO VOCÊ JÁ FAZ
+  const ref = db.ref(`usuarios/${idUsuarioAtual}/responsavel`);
+  const snap = await ref.once("value");
+  const dados = snap.val() || {};
+  // Verifica bloqueio
+  if(dados.pinBloqueadoAte && Date.now() < dados.pinBloqueadoAte){
+    const minutos = Math.ceil((dados.pinBloqueadoAte - Date.now()) / 60000);
+    document.getElementById("avisoBloqueio").style.display = "block";
+    document.getElementById("avisoBloqueio").textContent = `⏳ Aguarde ${minutos} minuto(s)`;
+    pinDigitado = ""; atualizarVisualPin();
+    return;
+  }
+  // Compara o hash — MD5 igual usado no app
+  const hashDigitado = gerarMD5(pinDigitado);
+  const hashSalvo = dados.pinHash || "";
+  if(hashDigitado === hashSalvo){
+    // ✅ Acesso liberado — zera tentativas
+    await ref.update({ pinTentativasFalhas:0, pinBloqueadoAte:0 });
+    document.getElementById("telaPinResponsavel").style.display = "none";
+    // ✅ Se não tem e-mail cadastrado → pede agora
+    if(!dados.emailRecuperacao){
+      setTimeout(()=>{
+        document.getElementById("telaEmailRecupera").style.display = "flex";
+      }, 300);
+    }
+  } else {
+    // ❌ Errou — conta tentativas
+    let tentativas = (dados.pinTentativasFalhas || 0) + 1;
+    let atualizacao = { pinTentativasFalhas: tentativas };
+    if(tentativas >=5){
+      atualizacao.pinBloqueadoAte = Date.now() + 15 * 60 * 1000; // 15 min
+      document.getElementById("avisoBloqueio").style.display = "block";
+      document.getElementById("avisoBloqueio").textContent = "⚠️ Muitas tentativas — bloqueado 15 min";
+    }
+    await ref.update(atualizacao);
+    pinDigitado = ""; atualizarVisualPin();
+    mostrarToast(`❌ Errou! ${5 - tentativas} tentativas restantes`);
+  }
+}
+// ========== RECUPERAÇÃO DE PIN ==========
+function abrirRecuperaPin(){
+  const email = prompt("Digite o e-mail cadastrado dos responsáveis:");
+  if(!email) return;
+  enviarLinkRedefinir(email);
+}
+async function enviarLinkRedefinir(email){
+  try {
+    await auth.sendPasswordResetEmail(email);
+    alert("✅ Se esse e-mail estiver cadastrado, você receberá o link em instantes! Verifique também a caixa de spam.");
+  } catch (e) {
+    alert("✅ Se esse e-mail estiver cadastrado, você receberá o link em instantes! Verifique também a caixa de spam.");
+  }
+}
+// ========== CADASTRO DE E-MAIL DE RECUPERAÇÃO ==========
+async function salvarEmailRecuperacao(){
+  const email = document.getElementById("inputEmailRecupera").value.trim();
+  if(!email || !email.includes("@")){
+    alert("❌ Digite um e-mail válido!");
+    return;
+  }
+  if(!idUsuarioAtual) return;
+  try {
+    await db.ref(`usuarios/${idUsuarioAtual}/responsavel`).update({
+      emailRecuperacao: email,
+      dataCadastroEmail: new Date().toISOString()
+    });
+    alert("✅ E-mail salvo com sucesso! Sempre poderá recuperar o acesso por ele.");
+    fecharTelaEmail();
+  } catch (erro) {
+    alert("❌ Erro ao salvar, tente novamente.");
+  }
+}
+function fecharTelaEmail(){
+  document.getElementById("telaEmailRecupera").style.display = "none";
+  document.getElementById("inputEmailRecupera").value = "";
+}
+// ========== FUNÇÃO MD5 — igual usada no hash do PIN ==========
+function gerarMD5(texto){
+  let hc = "0123456789abcdef";
+  let hv = [0x67452301,0xEFCDAB89,0x98BADCFE,0x10325476];
+  let tc = [0xD76AA478,0xE8C7B756,0x242070DB,0xC1BDCEEE,0xF57C0FAF,0x4787C62A,0xA8304613,0xFD469501,0x698098D8,0x8B44F7AF,0xFFFF5BB1,0x895CD7BE,0x6B901122,0xFD987193,0xA679438E,0x49B40821,0xF61E2562,0xC040B340,0x265E5A51,0xE9B6C7AA,0xD62F105D,0x02441453,0xD8A1E681,0xE7D3FBC8,0x21E1CDE6,0xC33707D6,0xF4D50D87,0x455A14ED,0xA9E3E905,0xFCEFA3F8,0x676F02D9,0x8D2A4C8A,0xFFFA3942,0x8771F681,0x6D9D6122,0xFDE5380C,0xA4BEEA44,0x4BDECFA9,0xF6BB4B60,0xBEBFBC70,0x289B7EC6,0xEAA127FA,0xD4EF3085,0x04881D05,0xD9D4D390,0xE6DB99E5,0x1FA27CF8,0xC4AC5665,0xF4292244,0x432AFF97,0xAB9423A7,0xFC93A039,0x655B59C3,0x8F0CCC92,0xFFEFF47D,0x85845DD1,0x6FA87E4F,0xFE2CE6E0,0xA3014314,0x4E0811A1,0xF7537E82,0xBD3AF235,0x2AD7D2BB,0xEB86D391];
+  let shift = [7,12,17,22,5,9,14,20,4,11,16,23,6,10,15,21];
+  function adicionaBloco(bloco){
+    let a = hv[0], b = hv[1], c = hv[2], d = hv[3];
+    for(let i=0;i<64;i++){
+      let f, g;
+      if(i<16){ f = (b & c) | (~b & d); g = i; }
+      else if(i<32){ f = (d & b) | (~d & c); g = (5*i +1) %16; }
+      else if(i<48){ f = b ^ c ^ d; g = (3*i +5) %16; }
+      else { f = c ^ (b | ~d); g = (7*i) %16; }
+      let temp = d; d = c; c = b;
+      let k = (a + f + tc[i] + bloco[g]) >>> 0;
+      k = ((k << shift[i%4]) | (k >>> (32-shift[i%4]))) >>> 0;
+      b = (b + k) >>> 0; a = temp;
+    }
+    hv[0] = (hv[0]+a)>>>0; hv[1] = (hv[1]+b)>>>0; hv[2] = (hv[2]+c)>>>0; hv[3] = (hv[3]+d)>>>0;
+  }
+  // Converte texto para blocos
+  let bytes = [];
+  for(let i=0;i<texto.length;i++) bytes.push(texto.charCodeAt(i) & 0xFF);
+  bytes.push(0x80);
+  while((bytes.length*8) % 512 !== 448) bytes.push(0x00);
+  let bits = texto.length * 8;
+  for(let i=0;i<8;i++) bytes.push((bits >> (i*8)) & 0xFF);
+  // Divide em blocos de 16 palavras
+  for(let i=0;i<bytes.length;i+=64){
+    let bloco = [];
+    for(let j=0;j<64;j+=4) bloco.push((bytes[i+j]) | (bytes[i+j+1]<<8) | (bytes[i+j+2]<<16) | (bytes[i+j+3]<<24));
+    adicionaBloco(bloco);
+  }
+  // Converte para hexadecimal minúsculo
+  let saida = "";
+  for(let i=0;i<4;i++){
+    let n = hv[i];
+    for(let j=0;j<4;j++) saida += hc[(n >> (j*8+4)) & 0xF] + hc[(n >> (j*8)) & 0xF];
+  }
+  return saida;
+}
+/* --- Tela PIN Responsáveis --- */
+.tela-pin{
+  position:fixed;inset:0;
+  background:rgba(15,23,42,0.85);
+  display:flex;align-items:center;justify-content:center;
+  z-index:9999;
+}
+.caixa-pin{
+  background:#fff;border-radius:24px;padding:32px 24px;width:90%;max-width:380px;
+  box-shadow:0 10px 40px rgba(0,0,0,0.25);
+}
+.caixa-pin h2{text-align:center;color:#1e293b;margin-bottom:20px;}
+.digitos{display:flex;gap:12px;justify-content:center;margin:24px 0;}
+.digito{
+  width:48px;height:56px;border:2px solid #cbd5e1;border-radius:12px;
+  display:flex;align-items:center;justify-content:center;font-size:24px;font-weight:800;color:#1e293b;
+  transition:all 0.2s;
+}
+.digito.preenchido{border-color:#7c3aed;background:#f5f3ff;}
+.teclado{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-top:20px;}
+.tecla{
+  padding:14px;background:#e2e8f0;border-radius:12px;border:none;font-size:20px;font-weight:700;
+  color:#1e293b;cursor:pointer;transition:background 0.2s;
+}
+.tecla:active{background:#cbd5e1;}
+.tecla.espaco{visibility:hidden;}
+.aviso-bloqueio{color:#dc2626;text-align:center;margin:12px 0;font-size:14px;display:none;}
+.link-recupera{
+  text-align:center;margin-top:16px;font-size:14px;color:#4f46e5;
+  cursor:pointer;text-decoration:underline;
+}
+/* --- Cadastro de E-mail --- */
+.campo-grupo{margin:16px 0;}
+.campo-grupo label{display:block;color:#334155;font-weight:700;margin-bottom:6px;}
+.campo-grupo input{
+  width:100%;padding:12px 14px;border:2px solid #cbd5e1;border-radius:12px;
+  font-size:16px;outline:none;transition:border-color 0.2s;
+}
+.campo-grupo input:focus{border-color:#7c3aed;}
+.botao-principal{
+  width:100%;padding:14px;background:#7c3aed;color:#fff;border:none;
+  border-radius:12px;font-size:16px;font-weight:800;cursor:pointer;transition:background 0.2s;
+}
+.botao-principal:active{background:#6d28d9;}
+.botao-secundario{
+  background:#e2e8f0;color:#1e293b;margin-top:10px;
+}
+.botao-secundario:active{background:#cbd5e1;}
 </style>
 </head>
 <body class="cenario-ceu">
-<div class="bg-layer cenario-ceu ativa" id="bg-layer-a"></div>
+<!-- Tela de PIN dos Responsáveis -->
+<div class="tela-pin" id="telaPinResponsavel">
+  <div class="caixa-pin">
+    <h2>🔐 Área dos Responsáveis</h2>
+    <div class="digitos">
+      <div class="digito" id="d1"></div>
+      <div class="digito" id="d2"></div>
+      <div class="digito" id="d3"></div>
+      <div class="digito" id="d4"></div>
+    </div>
+    <div class="aviso-bloqueio" id="avisoBloqueio"></div>
+    <div class="teclado">
+      <button class="tecla" onclick="digitar(1)">1</button>
+      <button class="tecla" onclick="digitar(2)">2</button>
+      <button class="tecla" onclick="digitar(3)">3</button>
+      <button class="tecla" onclick="digitar(4)">4</button>
+      <button class="tecla" onclick="digitar(5)">5</button>
+      <button class="tecla" onclick="digitar(6)">6</button>
+      <button class="tecla" onclick="digitar(7)">7</button>
+      <button class="tecla" onclick="digitar(8)">8</button>
+      <button class="tecla" onclick="digitar(9)">9</button>
+      <button class="tecla espaco"></button>
+      <button class="tecla" onclick="apagar()">⌫</button>
+      <button class="tecla espaco"></button>
+    </div>
+    <p class="link-recupera" onclick="abrirRecuperaPin()">❓ Esqueceu seu PIN?</p>
+  </div>
+</div>
+<!-- Tela Cadastro E-mail Recuperação -->
+<div class="tela-pin" id="telaEmailRecupera" style="display:none;">
+  <div class="caixa-pin">
+    <h2>📧 E-mail de Recuperação</h2>
+    <p style="color:#64748b;font-size:14px;text-align:center;margin-bottom:16px;">
+      Cadastre um e-mail para recuperar seu acesso caso esqueça o PIN.
+    </p>
+    <div class="campo-grupo">
+      <label>Seu e-mail:</label>
+      <input type="email" id="inputEmailRecupera" placeholder="exemplo@email.com">
+    </div>
+    <button class="botao-principal" onclick="salvarEmailRecuperacao()">Salvar E-mail</button>
+    <button class="botao-principal botao-secundario" onclick="fecharTelaEmail()">Voltar</button>
+  </div>
+</div>
+  <div class="bg-layer cenario-ceu ativa" id="bg-layer-a"></div>
 <div class="bg-layer" id="bg-layer-b"></div>
 <div class="particulas-cenario" id="particulas-cenario"></div>
 <input type="file" id="camera-input" accept="image/*" capture="environment" class="hidden">
-
 <div class="app">
   <div class="top-row">
     <button class="top-pill" onclick="abrirPainelPais()"><span class="coin-dot"></span><span class="top-pill-text"><span id="txt-moedas">0</span> 🪙</span></button>
@@ -206,7 +441,6 @@ button{touch-action:manipulation}
     <button class="top-pill" onclick="abrirModal('modal-evolucoes')"><span style="font-size:13px">⭐</span><span><span class="top-pill-text">Evoluções</span><span class="top-pill-sub">ver fases</span></span></button>
     <button class="top-pill" id="btn-pill-streak" onclick="abrirModal('modal-conquistas')" title="Ofensiva diária"><span style="font-size:13px">🔥</span><span><span class="top-pill-text"><span id="txt-streak">0</span> dias</span><span class="top-pill-sub">ofensiva</span></span></button>
   </div>
-
   <div class="pet-selector">
     <button class="pet-unico-btn" id="btn-pet-atual" onclick="alternarListaPets(event)">🐱</button>
     <div class="lista-pet-dropdown" id="lista-pets">
@@ -216,12 +450,10 @@ button{touch-action:manipulation}
       <div class="opcao-pet" data-pet="frango" onclick="escolherPet('frango')">🐔</div>
     </div>
   </div>
-
   <div class="status-row">
     <button class="mini-card" onclick="darRemedio()"><span>💚</span><b style="font-size:9px;color:#059669" id="txt-saude">100%</b></button>
     <div class="happiness-box"><div style="display:flex;justify-content:space-between"><span style="font-size:8px;font-weight:900;color:#64748b">❤️ FELICIDADE</span><b style="font-size:8px"><span id="val-felicidade">100</span>%</b></div><div class="bar-bg"><div class="bar-fill" id="barra-felicidade"></div></div></div>
   </div>
-
   <div class="cat-section" id="pet-section-area">
     <div class="pet-stage">
       <button class="surpresa-dia-btn hidden" id="btn-surpresa-dia" onclick="abrirSurpresaDia()">🎁</button>
@@ -232,13 +464,11 @@ button{touch-action:manipulation}
     <div class="xp-bar-bg"><div class="xp-bar-fill" id="barra-xp"></div><span class="xp-text">XP <span id="texto-xp">0/100</span></span></div>
     <div class="evo-name" id="pet-evol-nome">Pipoca • Gatinho Sombra</div>
   </div>
-
   <div class="tasks-section">
     <div class="task-header"><b style="font-size:10px">🛡️ TAREFAS DE HOJE</b><span style="font-size:8px;font-weight:900;color:#0284c7" id="qtd-tarefas">2 tarefas</span></div>
     <div id="lista-tarefas"></div>
     <div id="status-ofensiva" style="margin-top:7px;padding:7px 9px;border-radius:12px;background:#fff7ed;border:1px solid #fed7aa;font-size:9px;font-weight:900;color:#9a3412">🔥 Ofensiva: complete todas as obrigatórias para liberar o dia.</div>
   </div>
-
   <div class="bottom-buttons">
     <button class="bottom-btn btn-voice" onclick="alternarGravador()"><span class="btn-icon">🎙️</span>Gravar</button>
     <button class="bottom-btn btn-game" onclick="abrirDesafio()"><span class="btn-icon">🎮</span>Desafio</button>
@@ -246,9 +476,7 @@ button{touch-action:manipulation}
     <button class="bottom-btn btn-premios" onclick="abrirLojaRecompensas()"><span class="btn-icon">🎁</span>Prêmios</button>
   </div>
 </div>
-
 <button id="btn-instalar-pwa" class="primary-btn green-btn hidden" style="position:fixed;bottom:14px;left:50%;transform:translateX(-50%);z-index:90;box-shadow:0 8px 24px rgba(0,0,0,.3);padding:10px 18px;font-size:11px;border-radius:99px;display:flex;align-items:center;gap:6px"><span>📲</span> Instalar RotinaPet</button>
-
 <div id="modal-selecao-perfil" class="modal-overlay">
   <div class="modal" style="text-align:center;max-width:320px">
     <div style="font-size:38px;margin-bottom:6px">👋</div>
@@ -264,7 +492,6 @@ button{touch-action:manipulation}
     </div>
   </div>
 </div>
-
 <div id="modal-onboarding" class="modal-overlay"><div class="modal" style="text-align:center;max-width:320px">
   <div style="font-size:40px">🐾</div>
   <h3 style="font-size:16px;margin:5px 0">Como funciona?</h3>
@@ -275,7 +502,6 @@ button{touch-action:manipulation}
   </div>
   <button class="primary-btn green-btn" style="width:100%;margin-top:12px" onclick="fecharOnboarding()">Entendi, vamos lá! 🚀</button>
 </div></div>
-
 <div id="modal-fundos" class="modal-overlay"><div class="modal"><div class="modal-title"><h3 id="titulo-loja-visual">🖼️ Loja de Fundos</h3><button class="close-btn" onclick="fecharModal('modal-fundos')">×</button></div>
   <div class="grid-tabs">
     <button class="tab-btn ativa" id="tab-fundos" onclick="alternarAbaLojaVisual('fundos')">🖼️ Fundos</button>
@@ -285,11 +511,8 @@ button{touch-action:manipulation}
   <div class="grid-fundos" id="grid-fundos"></div>
   <div class="grid-fundos hidden" id="grid-acessorios"></div>
 </div></div>
-
 <div id="modal-timer" class="modal-overlay"><div class="modal" style="text-align:center"><div class="modal-title"><h3>⏳ Tempo de Tela</h3><button class="close-btn" onclick="fecharModal('modal-timer')">×</button></div><p style="font-size:10px;color:#64748b;margin-bottom:10px">Tempo liberado pela recompensa.</p><div id="relogio-timer" class="timer-display">00:00</div><button class="primary-btn red-btn" style="margin-top:10px" onclick="pausarFecharTimer()">Encerrar tempo</button></div></div>
-
 <div id="modal-pin" class="modal-overlay"><div class="modal" style="text-align:center;max-width:310px"><h3 style="font-size:17px">🔐 Área dos responsáveis</h3><p style="font-size:10px;color:#64748b;margin-top:4px">Digite o PIN de 4 dígitos</p><div class="pin-dots" id="pin-dots"><i class="pin-dot"></i><i class="pin-dot"></i><i class="pin-dot"></i><i class="pin-dot"></i></div><div class="pin-erro" id="pin-erro"></div><div class="pin-pad" id="pin-pad"></div><button class="primary-btn" style="margin-top:9px;background:#e2e8f0;color:#475569" onclick="fecharModal('modal-pin');limparPin()">Cancelar</button></div></div>
-
 <div id="modal-pais" class="modal-overlay"><div class="modal">
   <div class="modal-title"><h3>👨‍👩‍👧 Painel dos Pais</h3><button class="close-btn" onclick="fecharModal('modal-pais')">×</button></div>
   <div class="stat-grid" style="margin-bottom:9px"><div class="stat">💰 <b>R$ <span id="txt-painel-disponivel">0,00</span></b><span>saldo disponível</span></div><div class="stat">🧾 <b>R$ <span id="txt-total-pago">0,00</span></b><span>total pago</span></div></div>
@@ -304,7 +527,6 @@ button{touch-action:manipulation}
       <button class="primary-btn blue-btn" onclick="trocarFamiliaManualmente()">Conectar</button>
     </div>
     <button type="button" class="primary-btn blue-btn" style="margin-top:6px;width:100%;" onclick="compartilharConviteFamilia()">📲 Convidar Criança via WhatsApp</button>
-
     <small style="font-size:8px;color:#64748b;margin-top:3px;display:block">Use um código único de no mínimo 8 caracteres para sincronizar seus aparelhos com segurança.</small>
   </div>
   <div class="section-card" id="card-lembrete">
@@ -344,14 +566,11 @@ button{touch-action:manipulation}
   <div class="section-card"><div style="display:flex;justify-content:space-between;align-items:center"><b style="font-size:10px">📊 Resumo</b><button class="primary-btn blue-btn" onclick="abrirRelatorioSemanal()">Ver relatório semanal</button></div><div class="stat-grid" style="margin-top:6px"><div class="stat">📋 <b id="stat-feitas">0</b><span>tarefas feitas</span></div><div class="stat">🔥 <b id="stat-ofensiva-pais">0</b><span>dias de ofensiva</span></div><div class="stat">🏆 <b id="stat-conquistas">0</b><span>conquistas</span></div></div></div>
   <button class="primary-btn" style="width:100%;margin-top:5px;background:#e2e8f0;color:#475569" onclick="fecharModal('modal-pais');alternarPerfil()">🔄 Trocar Perfil de Usuário</button>
 </div></div>
-
 <div id="modal-relatorio" class="modal-overlay"><div class="modal"><div class="modal-title"><h3>📊 Relatório Semanal</h3><button class="close-btn" onclick="fecharModal('modal-relatorio')">×</button></div>
   <div class="stat-grid" style="margin-bottom:9px"><div class="stat">📋 <b id="rel-total-tarefas">0</b><span>tarefas na semana</span></div><div class="stat">🪙 <b id="rel-total-moedas">0</b><span>moedas ganhas</span></div></div>
   <div class="section-card"><div class="stack" id="rel-lista-dias"></div></div>
 </div></div>
-
 <div id="modal-evolucoes" class="modal-overlay"><div class="modal"><div class="modal-title"><h3>⭐ Evoluções — <span id="modal-pet-evol-nome">Pipoca</span></h3><button class="close-btn" onclick="fecharModal('modal-evolucoes')">×</button></div><div class="stack" id="lista-evolucoes"></div></div></div>
-
 <div id="modal-conquistas" class="modal-overlay"><div class="modal">
   <div class="modal-title"><h3>🏆 Conquistas</h3><button class="close-btn" onclick="fecharModal('modal-conquistas')">×</button></div>
   <div class="section-card" id="card-bau-semanal" style="background:linear-gradient(135deg,#fef3c7,#fed7aa);border-color:#fb923c;margin-bottom:12px">
@@ -393,7 +612,6 @@ button{touch-action:manipulation}
   </div>
   <div class="stack" id="lista-conquistas"></div>
 </div></div>
-
 <div id="modal-gravador" class="modal-overlay"><div class="modal" style="text-align:center"><div class="modal-title"><h3>🎙️ Gravar Voz</h3><button class="close-btn" onclick="fecharModal('modal-gravador')">×</button></div><p style="font-size:10px;color:#64748b;margin-bottom:10px">Grave uma mensagem para o seu pet.</p><button id="btn-iniciar-grav" class="primary-btn red-btn" onclick="iniciarGravacao()">🔴 Começar</button><button id="btn-parar-grav" class="primary-btn" style="display:none;background:#475569" onclick="pararGravacao()">⏹️ Parar</button><div id="grav-result" class="hidden" style="margin-top:10px">
   <audio id="audio-original" controls style="width:100%"></audio>
   <div style="margin-top:9px"><span class="field-label" style="text-align:left">🎚️ Efeito de voz</span>
@@ -406,39 +624,31 @@ button{touch-action:manipulation}
   <div id="efeito-processando" class="hidden" style="font-size:9px;font-weight:900;color:#7c3aed;margin-top:7px">⏳ Aplicando efeito...</div>
   <button class="primary-btn" style="margin-top:9px" onclick="salvarVoz()">💾 Usar no Pet</button>
 </div></div></div>
-
 <div id="modal-desafio" class="modal-overlay"><div class="modal" style="text-align:center"><div class="modal-title"><h3 id="titulo-desafio">🎮 Desafio</h3><button class="close-btn" onclick="fecharModal('modal-desafio')">×</button></div><p style="font-size:9px;color:#64748b;margin-bottom:8px" id="desc-desafio">Acertou? +1 🪙 e +1 XP</p>
   <div id="area-jogo-matematica"><div id="conta-math" class="math-question">?</div><div id="opcoes-math" class="math-options"></div></div>
   <div id="area-jogo-memoria" class="hidden"><div id="memoria-status" style="font-size:11px;font-weight:900;margin-bottom:10px;color:#475569">Observe a sequência...</div><div id="memoria-grid" style="display:grid;grid-template-columns:repeat(2,1fr);gap:10px"></div></div>
   <div id="area-jogo-reacao" class="hidden"><div style="font-size:11px;font-weight:900;margin-bottom:10px;color:#475569">Toque no <span id="reacao-alvo-nome" style="font-size:20px"></span> antes do tempo acabar!</div><div id="reacao-grid" style="display:grid;grid-template-columns:repeat(3,1fr);gap:8px"></div></div>
 </div></div>
-
 <div id="modal-recompensas" class="modal-overlay"><div class="modal"><div class="modal-title"><h3>🎁 Resgatar Prêmios</h3><button class="close-btn" onclick="fecharModal('modal-recompensas')">×</button></div><div class="section-card"><div style="display:flex;justify-content:space-between;font-size:9px;font-weight:900"><span>🎯 Meta: Passeio Especial</span><span id="texto-meta-progresso">0 / 50 🪙</span></div><div class="progress" style="margin-top:5px"><div id="barra-meta-progresso" style="width:0"></div></div></div><div class="stack" id="lista-itens-loja"></div></div></div>
-
 <div id="modal-aviso" class="modal-overlay"><div class="modal" style="text-align:center;max-width:320px"><div id="aviso-emoji" style="font-size:35px">🎉</div><h3 id="aviso-titulo" style="font-size:16px;margin:5px 0">Tudo certo!</h3><p id="aviso-texto" style="font-size:10px;color:#64748b"></p><button class="primary-btn" style="margin-top:10px" onclick="fecharModal('modal-aviso')">OK</button></div></div>
-
 <div class="foto-viewer" id="foto-viewer" onclick="fecharVisualizadorFoto()"><img id="foto-viewer-img" src=""></div>
-
 <div class="toast" id="toast"></div>
-
 <script>
 let audioCtx=null;
 function obterAudioContext(){if(!audioCtx)audioCtx=new(window.AudioContext||window.webkitAudioContext)();if(audioCtx.state==='suspended')audioCtx.resume();return audioCtx}
 function tocarTom(f,t,d,delay=0,v=.15){try{const ctx=obterAudioContext(),o=ctx.createOscillator(),g=ctx.createGain();o.type=t;o.frequency.setValueAtTime(f,ctx.currentTime+delay);g.gain.setValueAtTime(v,ctx.currentTime+delay);g.gain.exponentialRampToValueAtTime(.001,ctx.currentTime+delay+d);o.connect(g);g.connect(ctx.destination);o.start(ctx.currentTime+delay);o.stop(ctx.currentTime+delay+d)}catch(e){}}
 function somConquista(){[523.25,659.25,783.99,1046.50].forEach((f,i)=>tocarTom(f,'triangle',.18,i*.08,.2))}
 function somBauLendario(){tocarTom(440,'sine',.08,0);tocarTom(554.37,'sine',.08,.07);tocarTom(659.25,'sine',.12,.14);setTimeout(()=>{tocarTom(587.33,'triangle',.15,0,.25);tocarTom(739.99,'triangle',.15,.12,.25);tocarTom(880,'triangle',.35,.24,.3);tocarTom(1174.66,'sine',.45,.24,.2)},220)}
-
 const PETS={
 gato:{id:'gato',nome:'Pipoca',emoji:'🐱',desbloqueioNivel:1,som:'https://assets.mixkit.co/sfx/preview/mixkit-cat-meow-14.mp3',evolucoes:[
 {nivel:1,nome:'Gatinho Sombra',desc:'Olhos grandes e fofos'},{nivel:21,nome:'Gato da Lua',desc:'Brilho prateado + mecha branca'},{nivel:41,nome:'Gato Estelar',desc:'Colar de estrelinhas + brilho'},{nivel:61,nome:'Gato Nobre',desc:'Coroa preta + capa de veludo'},{nivel:81,nome:'Lenda Sombria',desc:'Asas de sombra + olhos dourados'}]},
 cachorra:{id:'cachorra',nome:'Mel',emoji:'🐶',desbloqueioNivel:5,som:'https://assets.mixkit.co/sfx/preview/mixkit-dog-barking-twice-1.mp3',evolucoes:[
-{nivel:1,nome:'Filhote Caramelo',desc:'Orelhas caídas, super fofinha'},{nivel:21,nome:'Cãozinho Brincalhão',desc:'Bandana colorida'},{nivel:41,nome:'Cão Guia',desc:'Colete brilhante + distintivo'},{nivel:61,nome:'Cão Campeã',desc:'Faixa + medalha dourada'},{nivel:81,nome:'Guardiã Lendária',desc:'Asas de anjo + aurora dourada'}]},
+{nivel:1,nome:'Filhote Caramelo',desc:'Orelhas caídas, super fofinha'},{nivel:21,nome:'Cãozinho Brincalhão',desc:'Bandana colorida'},{nivel:41,nome:'Cão Guia',desc:'Colete brilhante + distintivo'},{nivel:61,nome:'Cão Campeão',desc:'Faixa + medalha dourada'},{nivel:81,nome:'Guardiã Lendária',desc:'Asas de anjo + aurora dourada'}]},
 cabra:{id:'cabra',nome:'Nuvem',emoji:'🐐',desbloqueioNivel:10,som:'https://assets.mixkit.co/sfx/preview/mixkit-goat-bleat-1.mp3',evolucoes:[
 {nivel:1,nome:'Cabritinha Felpuda',desc:'Chifres pequenos e fofos'},{nivel:21,nome:'Cabra da Montanha',desc:'Chifres maiores + pelo espesso'},{nivel:41,nome:'Cabra de Cristal',desc:'Chifres brilhantes + pedras'},{nivel:61,nome:'Rainha da Serra',desc:'Coroa de folhas + manto'},{nivel:81,nome:'Lenda da Montanha',desc:'Aura mágica + chifres reluzentes'}]},
 frango:{id:'frango',nome:'Piu-Piu',emoji:'🐔',desbloqueioNivel:15,som:'https://assets.mixkit.co/sfx/preview/mixkit-chicken-cluck-1.mp3',evolucoes:[
 {nivel:1,nome:'Pintinho Amarelinho',desc:'Penas fofinhas'},{nivel:21,nome:'Franguinho Colorido',desc:'Penas vibrantes'},{nivel:41,nome:'Galo Arco-Íris',desc:'Cauda colorida + crista'},{nivel:61,nome:'Imperador das Cores',desc:'Penas brilhantes + coroa'},{nivel:81,nome:'Fênix Dourada',desc:'Asas de fogo + brilho intenso'}]}
 };
-
 function petSVG(tipo,fase){
 const colors={gato:'#1A1A1A',cachorra:'#F4A261',cabra:'#F5E6D3',frango:'#FFF9C4'};
 const c=colors[tipo],dark=tipo==='gato'?'#111827':tipo==='cachorra'?'#2D1B10':tipo==='cabra'?'#8B5A2B':'#552200';
@@ -529,36 +739,28 @@ ${tipo==='frango'?'<path d="M135 138l-23 14h46z" fill="#ffcc00"/><ellipse cx="13
 <path d="M95 235Q90 255 105 255M175 235Q180 255 165 255" stroke="${c}" stroke-width="14" fill="none" stroke-linecap="round"/>
 ${tipo==='gato'?'<path d="M200 220q40 20 30 50" stroke="#1A1A1A" stroke-width="16" fill="none" stroke-linecap="round"/>':''}${extra}</svg>`;
 }
-
 const ACESSORIOS=[
 {id:'chapeu',nome:'Chapéu de Festa',emoji:'🎉',preco:15,svg:'<svg viewBox="0 0 270 285" xmlns="http://www.w3.org/2000/svg"><path d="M108 58 L135 8 L162 58 Z" fill="#f43f5e" stroke="#fff" stroke-width="3"/><circle cx="135" cy="8" r="7" fill="#fbbf24"/><path d="M100 60h70" stroke="#fff" stroke-width="4" stroke-linecap="round"/></svg>'},
 {id:'oculos',nome:'Óculos Estiloso',emoji:'🕶️',preco:18,svg:'<svg viewBox="0 0 270 285" xmlns="http://www.w3.org/2000/svg"><circle cx="108" cy="120" r="27" fill="none" stroke="#172033" stroke-width="6"/><circle cx="162" cy="120" r="27" fill="none" stroke="#172033" stroke-width="6"/><line x1="135" y1="120" x2="135" y2="120" stroke="#172033" stroke-width="6"/><path d="M81 118 L60 108M189 118 L210 108" stroke="#172033" stroke-width="6" stroke-linecap="round"/></svg>'},
 {id:'laco',nome:'Laço Fofo',emoji:'🎀',preco:15,svg:'<svg viewBox="0 0 270 285" xmlns="http://www.w3.org/2000/svg"><g transform="translate(160,50)"><path d="M-25 0 Q-25 -18 0 -6 Q25 -18 25 0 Q25 18 0 6 Q-25 18 -25 0Z" fill="#ec4899" stroke="#fff" stroke-width="2"/><circle cx="0" cy="0" r="7" fill="#f9a8d4"/></g></svg>'},
 {id:'cachecol',nome:'Cachecol',emoji:'🧣',preco:20,svg:'<svg viewBox="0 0 270 285" xmlns="http://www.w3.org/2000/svg"><path d="M85 178Q135 200 185 178v20Q135 222 85 198Z" fill="#0ea5e9" stroke="#fff" stroke-width="2"/><rect x="150" y="196" width="14" height="34" rx="3" fill="#0ea5e9"/></svg>'}
 ];
-
 const BANCO_FUNDOS=[
 {id:'ceu',nome:'Céu Azul',emoji:'☀️',preco:0,bg:'linear-gradient(180deg,#4facfe,#00f2fe)'},{id:'chuva',nome:'Chuva',emoji:'🌧️',preco:12,bg:'linear-gradient(180deg,#475569,#94a3b8)'},{id:'noite',nome:'Noite Estrelada',emoji:'🌙',preco:20,bg:'linear-gradient(180deg,#0f172a,#1e3a8a)'},{id:'arcoiris',nome:'Arco-Íris',emoji:'🌈',preco:30,bg:'linear-gradient(180deg,#f87171,#fbbf24 30%,#4ade80 60%,#60a5fa)'},{id:'praia',nome:'Praia Tropical',emoji:'🏖️',preco:25,bg:'linear-gradient(180deg,#fef08a,#38bdf8)'},{id:'floresta',nome:'Floresta Mágica',emoji:'🌲',preco:22,bg:'linear-gradient(180deg,#166534,#84cc16)'},{id:'festa',nome:'Balada Neon',emoji:'🎉',preco:35,bg:'linear-gradient(180deg,#f472b6,#a78bfa 50%,#60a5fa)'},{id:'halloween',nome:'Halloween',emoji:'🎃',preco:40,bg:'linear-gradient(180deg,#1a1033,#2e1065,#7c2d12)'},{id:'estadio',nome:'Estádio Futebol',emoji:'⚽',preco:45,bg:'linear-gradient(180deg,#064e3b,#10b981)'},{id:'quarto',nome:'Quarto Infantil',emoji:'🛏️',preco:35,bg:'linear-gradient(180deg,#fdf4ff,#f5d0fe)'},{id:'mario',nome:'Mundo Mario',emoji:'🍄',preco:50,bg:'linear-gradient(180deg,#22d3ee,#84cc16)'},{id:'dino',nome:'Mundo Dinossauros',emoji:'🦖',preco:45,bg:'linear-gradient(180deg,#fef3c7,#f59e0b,#166534)'},{id:'princesa',nome:'Castelo Princesa',emoji:'👑',preco:40,bg:'linear-gradient(180deg,#fbcfe8,#f9a8d4)'},{id:'astronauta',nome:'Astronauta',emoji:'🚀',preco:50,bg:'linear-gradient(180deg,#020617,#1e1b4b)'},{id:'pirata',nome:'Barco Pirata',emoji:'🏴‍☠️',preco:45,bg:'linear-gradient(180deg,#78350f,#0f172a)'},{id:'fazenda',nome:'Fazenda Feliz',emoji:'🐄',preco:35,bg:'linear-gradient(180deg,#fef08a,#84cc16)'},{id:'neve',nome:'Neve Natal',emoji:'🎄',preco:40,bg:'linear-gradient(180deg,#e0f2fe,#bae6fd)'}];
-
 const firebaseConfig={apiKey:"AIzaSyCiDk3ERIe8_uVqBhRnFRD5Od8nyLNlLVQ",authDomain:"rotinapet-624a9.firebaseapp.com",databaseURL:"https://rotinapet-624a9-default-rtdb.firebaseio.com",projectId:"rotinapet-624a9",storageBucket:"rotinapet-624a9.appspot.com",messagingSenderId:"367302484084",appId:"1:367302484084:web:8a5f8b9e6c1d7a8b"};
-
 let dbFirebase=null,sincronizacaoNuvemAtiva=false,ignorarProximoSyncNuvem=false;
 const urlParams=new URLSearchParams(window.location.search);
-
 // Família agora exige ID com entropia adequada (mínimo 8 caracteres)
 function sanitizarIdFamilia(id){
   const limp=(id||'').trim().toLowerCase().replace(/[^a-z0-9_-]/g,'');
     if (limp.length >= 8) return limp;
   return 'fam_' + Math.random().toString(36).substring(2, 10);
-
 }
-
 let codigoFamilia=sanitizarIdFamilia(urlParams.get('familia')||localStorage.getItem('ROTINAPET_FAMILIA_ID'));
 localStorage.setItem('ROTINAPET_FAMILIA_ID',codigoFamilia);
   function compartilharConviteFamilia() {
   const linkConvite = 'https://rodrigomdl76-sys.github.io/taskpet/?familia=' + encodeURIComponent(codigoFamilia);
   const texto = 'Entre no TaskPet comigo para cuidarmos do nosso pet juntos! Acesse: ' + linkConvite;
-
   if (navigator.share) {
     navigator.share({
       title: 'Convite TaskPet',
@@ -569,26 +771,33 @@ localStorage.setItem('ROTINAPET_FAMILIA_ID',codigoFamilia);
     window.open('https://api.whatsapp.com/send?text=' + encodeURIComponent(texto), '_blank');
   }
 }
-
-
-// Autenticação anônima obrigatória antes de qualquer sync
 try{
   if(window.firebase){
     firebase.initializeApp(firebaseConfig);
-    firebase.auth().signInAnonymously().then(()=>{
-      dbFirebase=firebase.database();
-      sincronizacaoNuvemAtiva=true;
-      iniciarSincronizacaoNuvem();
-    }).catch(()=>{
-      sincronizacaoNuvemAtiva=false;
+    firebase.auth().signInAnonymously().then(async ()=>{
+      dbFirebase = firebase.database();
+      definirIdUsuario(firebase.auth().currentUser.uid);
+      sincronizacaoNuvemAtiva = true;
+      await iniciarSincronizacaoNuvem();
+    }).catch((error)=>{
+      console.error('Firebase indisponível:',error);
+      sincronizacaoNuvemAtiva = false;
+      const statusEl=document.getElementById('txt-status-nuvem');
+      if(statusEl)statusEl.textContent='📱 somente neste aparelho';
     });
   }
-}catch(e){}
-
+}catch(error){
+  console.error('Falha ao inicializar Firebase:',error);
+  sincronizacaoNuvemAtiva=false;
+}
+function definirIdUsuario(uid){
+  if(uid) localStorage.setItem('ROTINAPET_UID', uid);
+  const statusEl=document.getElementById('txt-status-nuvem');
+  if(statusEl)statusEl.textContent='☁️ online';
+}
 function getCaminhoFirebase(){
   return `rotinapet/familias/${codigoFamilia}/estado`;
 }
-
 // Criptografia e hashing seguro do PIN
 async function hashPin(pin){
   const encoder=new TextEncoder();
@@ -596,10 +805,8 @@ async function hashPin(pin){
   const hashBuffer=await crypto.subtle.digest('SHA-256',data);
   return Array.from(new Uint8Array(hashBuffer)).map(b=>b.toString(16).padStart(2,'0')).join('');
 }
-
 const hojeLocal=()=>{const d=new Date();return `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`};
 const ontemLocal=()=>{const d=new Date();d.setDate(d.getDate()-1);return `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`};
-
 let estado={
   perfilAtivo:null,
   petAtual:'gato',moedas:15,taxaCambio:.01,pinHash:null,dinheiroAcumulado:.15,idadeCrianca:7,
@@ -624,7 +831,6 @@ let estado={
   notificacoesAtivas:false,
   surpresaResgatadaData:null
 };
-
 try{
   const salvo=localStorage.getItem(`ROTINAPET_SAVE_${codigoFamilia}`);
   if(salvo){
@@ -655,10 +861,8 @@ try{
     }
   }
 }catch(e){}
-
 estado.tarefas.forEach(t=>{if(!t.tipo)t.tipo='obrigatoria';if(!t.status)t.status='pendente';if(t.foto===undefined)t.foto=null;if(!Array.isArray(t.dias))t.dias=[]});
 if(!Number.isFinite(Number(estado.streak)))estado.streak=0;
-
 const hojeStr=hojeLocal();
 if(estado.ultimoDiaAcesso!==hojeStr){
   const emPausa=estado.pausaAte&&hojeStr<=estado.pausaAte;
@@ -670,7 +874,6 @@ if(estado.ultimoDiaAcesso!==hojeStr){
   estado.tarefasHojeCount=0;
   estado.ultimoDiaAcesso=hojeStr;
 }
-
 function salvar(){
   try{localStorage.setItem(`ROTINAPET_SAVE_${codigoFamilia}`,JSON.stringify(estado))}catch(e){mostrarToast('⚠️ Memória cheia; foto não armazenada.')}
   if(sincronizacaoNuvemAtiva&&dbFirebase){
@@ -678,24 +881,39 @@ function salvar(){
     dbFirebase.ref(getCaminhoFirebase()).set(estado).catch(()=>{});
   }
 }
-
-function iniciarSincronizacaoNuvem(){
+async function carregarEstadoNuvem(){
+  if(!sincronizacaoNuvemAtiva||!dbFirebase)return false;
+  try{
+    const snap=await dbFirebase.ref(getCaminhoFirebase()).once('value');
+    const remoto=snap.val();
+    if(!remoto||typeof remoto!=='object')return false;
+    estado={...estado,...remoto,pets:{...estado.pets,...(remoto.pets||{})}};
+    localStorage.setItem(`ROTINAPET_SAVE_${codigoFamilia}`,JSON.stringify(estado));
+    atualizarTela();
+    return true;
+  }catch(e){
+    console.error('Falha ao carregar família:',e);
+    return false;
+  }
+}
+async function iniciarSincronizacaoNuvem(){
   if(!sincronizacaoNuvemAtiva||!dbFirebase)return;
+  const ref=dbFirebase.ref(getCaminhoFirebase());
   const statusEl=document.getElementById('txt-status-nuvem');
-  if(statusEl)statusEl.textContent=`☁️ online`;
-  dbFirebase.ref(getCaminhoFirebase()).off();
-  dbFirebase.ref(getCaminhoFirebase()).on('value',s=>{
+  if(statusEl)statusEl.textContent='☁️ online';
+  ref.off();
+  await carregarEstadoNuvem();
+  ref.on('value',s=>{
     if(ignorarProximoSyncNuvem){ignorarProximoSyncNuvem=false;return}
     const d=s.val();
     if(d&&typeof d==='object'){
-      estado={...estado,...d};
-      localStorage.setItem(`ROTINAPET_SAVE_${codigoFamilia}`,JSON.stringify(estado));
+      estado={...estado,...d,pets:{...estado.pets,...(d.pets||{})}};
+      try{localStorage.setItem(`ROTINAPET_SAVE_${codigoFamilia}`,JSON.stringify(estado))}catch(e){}
       atualizarTela();
-      mostrarToast(`☁️ Sincronizado`);
+      mostrarToast('☁️ Sincronizado');
     }
   });
 }
-
 const CONFIG_PARTICULAS={
   floresta:{emojis:['🍃','🍂'],modo:'cair',qtd:12},
   neve:{emojis:['❄️'],modo:'cair',qtd:16},
@@ -712,7 +930,6 @@ const CONFIG_PARTICULAS={
   princesa:{emojis:['✨'],modo:'piscar',qtd:14},
   arcoiris:{emojis:['✨'],modo:'piscar',qtd:10}
 };
-
 let ultimoFundoParticulas=null;
 function renderizarParticulasCenario(fundoId){
   if(fundoId===ultimoFundoParticulas)return;
@@ -743,7 +960,6 @@ function renderizarParticulasCenario(fundoId){
     c.appendChild(el);
   }
 }
-
 let camadaFundoAtiva='a';
 function aplicarFundoTela(id){
   const cls='cenario-'+(id||'ceu');
@@ -763,7 +979,6 @@ function aplicarFundoTela(id){
 function obterDadosPetAtual(){if(!estado.pets[estado.petAtual])estado.pets[estado.petAtual]={nivel:1,xp:0,felicidade:100,saude:100};return estado.pets[estado.petAtual]}
 function nivelJogador(){return Math.max(...Object.values(estado.pets).map(p=>p.nivel||1))}
 function calcularFase(n){return n>=81?5:n>=61?4:n>=41?3:n>=21?2:1}
-
 function atualizarTela(){
   const def=PETS[estado.petAtual],p=obterDadosPetAtual(),fase=calcularFase(p.nivel);
   document.getElementById('txt-moedas').textContent=estado.moedas;
@@ -777,7 +992,6 @@ function atualizarTela(){
   document.getElementById('txt-streak').textContent=streakVal;
   const btnStreak=document.getElementById('btn-pill-streak');
   if(btnStreak)btnStreak.classList.toggle('streak-fogo',streakVal>=3);
-
   document.getElementById('val-felicidade').textContent=p.felicidade;
   document.getElementById('barra-felicidade').style.width=p.felicidade+'%';
   document.getElementById('txt-saude').textContent=p.saude+'%';
@@ -790,7 +1004,6 @@ function atualizarTela(){
   document.getElementById('pet-evol-nome').textContent=`${def.nome} • ${def.evolucoes[fase-1].nome}`;
   const modalNome=document.getElementById('modal-pet-evol-nome');
   if(modalNome)modalNome.textContent=def.nome;
-
   document.getElementById('input-idade-crianca').value=estado.idadeCrianca||7;
   document.getElementById('input-taxa-cambio').value=estado.taxaCambio;
   
@@ -801,7 +1014,6 @@ function atualizarTela(){
     el.querySelector('.lock-mini')?.remove();
     if(!ok){const s=document.createElement('span');s.className='lock-mini';s.textContent='🔒';el.appendChild(s)}
   });
-
   aplicarFundoTela(estado.fundoAtual);
   atualizarHumorPet(p);
   renderizarAcessorioNoContainer();
@@ -811,12 +1023,10 @@ function atualizarTela(){
   renderizarConquistas();
   atualizarEstatisticas();
 }
-
 function estaDormindoAgora(){
   const h=new Date().getHours();
   return h>=21||h<6;
 }
-
 function atualizarHumorPet(p){
   const wrap=document.getElementById('pet-principal');
   if(!wrap)return;
@@ -832,7 +1042,6 @@ function atualizarHumorPet(p){
     wrap.classList.add('mood-triste');
   }
 }
-
 function criarTextoFlutuanteZzz(){
   const area=document.getElementById('pet-section-area');
   if(!area)return;
@@ -844,7 +1053,6 @@ function criarTextoFlutuanteZzz(){
   area.appendChild(s);
   setTimeout(()=>s.remove(),2700);
 }
-
 const FALAS_PET=['Comi minha ração! 🍖','Vamos brincar? 🎾','Você é o melhor! 💜','Hoje tá um dia ótimo!','Adorei o carinho! 🥰','Cadê minha tarefa de hoje?','Estou ficando forte! 💪','Zzz... quase dormindo 😴','Que tal um desafio de matemática?','Amo essa cor de fundo! 🎨'];
 let timerBalaoFala=null;
 function mostrarBalaoFala(texto,duracaoMs=2600){
@@ -863,7 +1071,6 @@ function agendarFalaAleatoria(){
     agendarFalaAleatoria();
   },espera);
 }
-
 let debounceAcao=false;
 function tocarAudioPet(url){
   if(estado.vozSalva){
@@ -873,7 +1080,6 @@ function tocarAudioPet(url){
   }
   try{const a=new Audio(url);a.volume=.55;a.play().catch(()=>{})}catch(e){}
 }
-
 function interagirComPet(e){
   if(debounceAcao)return;
   debounceAcao=true;
@@ -888,7 +1094,6 @@ function interagirComPet(e){
   salvar();
   atualizarTela();
 }
-
 function abrirSurpresaDia(){
   const hoje=hojeLocal();
   if(estado.surpresaResgatadaData===hoje)return;
@@ -903,23 +1108,19 @@ function abrirSurpresaDia(){
   somConquista();
   mostrarAviso('🎁','Surpresa do dia!',`Você ganhou +${moedas} moeda(s) hoje! Volte amanhã para mais.`);
 }
-
 function atualizarBotaoSurpresaDia(){
   const btn=document.getElementById('btn-surpresa-dia');
   if(!btn)return;
   btn.classList.toggle('hidden',estado.surpresaResgatadaData===hojeLocal());
 }
-
 function darRemedio(){obterDadosPetAtual().saude=100;salvar();atualizarTela();mostrarToast('💚 Saúde restaurada!')}
 function criarTextoFlutuante(txt,e){const area=document.getElementById('pet-section-area'),s=document.createElement('div');s.className='floating-text';s.textContent=txt;const r=area.getBoundingClientRect();s.style.left=(e?.clientX?r.left<e.clientX?e.clientX-r.left:80:90)+'px';s.style.top='35%';area.appendChild(s);setTimeout(()=>s.remove(),900)}
 const CORES_CONFETE_PET={gato:['#a78bfa','#1e293b','#f8fafc'],cachorra:['#f4a261','#e76f51','#fff7ed'],cabra:['#f5e6d3','#a0522d','#fefce8'],frango:['#fff9c4','#ff6b6b','#ffcc00']};
 function ganharXP(qtd,e){const p=obterDadosPetAtual();p.xp+=qtd;criarTextoFlutuante(`+${qtd} XP`,e);let subiu=false;while(p.xp>=100){p.xp-=100;p.nivel++;subiu=true;dispararConfetes(140,CORES_CONFETE_PET[estado.petAtual]);navigator.vibrate?.([70,40,70]);}if(subiu)mostrarToast(`🎉 Nível ${p.nivel}!`);salvar();atualizarTela()}
 function dispararConfetes(qtd=75,cores=null){try{window.confetti?.({particleCount:qtd,spread:65,origin:{y:.6},...(cores?{colors:cores}:{})})}catch(e){}}
-
 let tarefaIdFoto=null;
 document.getElementById('camera-input').addEventListener('change',processarFotoCapturada);
 function dispararCamera(id){tarefaIdFoto=id;document.getElementById('camera-input').click()}
-
 function processarFotoCapturada(e){
   const f=e.target.files[0];
   if(!f||!tarefaIdFoto)return;
@@ -946,17 +1147,13 @@ function processarFotoCapturada(e){
   img.src=URL.createObjectURL(f);
   e.target.value='';
 }
-
 function enviarParaAprovacao(id){const t=estado.tarefas.find(t=>t.id===id);if(t){t.status='aguardando_aprovacao';salvar();renderizarTarefas();mostrarToast('⏳ Enviado aos pais!')}}
-
 const DIAS_LABEL=['Dom','Seg','Ter','Qua','Qui','Sex','Sáb'];
 function diaSemanaHoje(){return new Date().getDay()}
 function tarefaEhHoje(t){return !t.dias||t.dias.length===0||t.dias.includes(diaSemanaHoje())}
 function tarefasDeHoje(){return estado.tarefas.filter(tarefaEhHoje)}
 function emPausaHoje(){return !!(estado.pausaAte&&hojeLocal()<=estado.pausaAte)}
-
 function todasObrigatoriasConcluidas(){const o=tarefasDeHoje().filter(t=>t.tipo==='obrigatoria');return o.length>0&&o.every(t=>t.status==='aprovada')}
-
 function atualizarOfensiva(){
   const el=document.getElementById('status-ofensiva');
   if(!el)return;
@@ -978,7 +1175,6 @@ function atualizarOfensiva(){
     el.style.background='#fff7ed';el.style.borderColor='#fed7aa';el.style.color='#9a3412';
   }
 }
-
 function registrarConclusaoDoDia(){
   if(!todasObrigatoriasConcluidas())return false;
   const hoje=hojeLocal();
@@ -993,7 +1189,6 @@ function registrarConclusaoDoDia(){
   dispararConfetes();
   return true;
 }
-
 let idTarefaRecemAprovada=null;
 function renderizarTarefas(){
   const c=document.getElementById('lista-tarefas');
@@ -1008,7 +1203,6 @@ function renderizarTarefas(){
     h.style.cssText="font-size:9px;font-weight:900;color:#475569;margin:7px 2px 4px";
     h.textContent=`${icone} ${titulo}`;
     c.appendChild(h);
-
     lista.forEach(t=>{
       const apr=t.status==='aprovada',pend=t.status==='aguardando_aprovacao';
       const badgeDias=t.dias&&t.dias.length?` • ${t.dias.map(x=>DIAS_LABEL[x]).join(',')}`:'';
@@ -1033,7 +1227,6 @@ function renderizarTarefas(){
   idTarefaRecemAprovada=null;
   atualizarOfensiva();
 }
-
 function verificarPrimeiroAcesso(){
   if(!estado.perfilAtivo){
     abrirModal('modal-selecao-perfil');
@@ -1041,7 +1234,6 @@ function verificarPrimeiroAcesso(){
     abrirPainelPais();
   }
 }
-
 function escolherPerfilInicial(tipo){
   estado.perfilAtivo=tipo;
   salvar();
@@ -1055,27 +1247,62 @@ function escolherPerfilInicial(tipo){
     }
   }
 }
-
 function fecharOnboarding(){
   estado.onboardingVistoCrianca=true;
   salvar();
   fecharModal('modal-onboarding');
 }
-
 function alternarPerfil(){
   estado.perfilAtivo=null;
   salvar();
   abrirModal('modal-selecao-perfil');
 }
-
 let pinDigitado='';
-function abrirPainelPais(){
+  
+ function abrirPainelPais(){
   limparPin();
   montarTecladoPin();
   atualizarEstadoBloqueioPin();
   abrirModal('modal-pin');
 }
-
+function digitar(num) {
+  if (pinDigitado.length < 4) {
+    pinDigitado += String(num);
+    atualizarDisplayPin();
+    
+    if (pinDigitado.length === 4) {
+      setTimeout(() => {
+        if (typeof validarPin === 'function') {
+          validarPin();
+        }
+      }, 150);
+    }
+  }
+}
+function apagar() {
+  if (pinDigitado.length > 0) {
+    pinDigitado = pinDigitado.slice(0, -1);
+    atualizarDisplayPin();
+  }
+}
+function limparPin() {
+  pinDigitado = '';
+  atualizarDisplayPin();
+}
+function atualizarDisplayPin() {
+  for (let i = 1; i <= 4; i++) {
+    const el = document.getElementById('d' + i);
+    if (el) {
+      if (i <= pinDigitado.length) {
+        el.textContent = '•';
+        el.classList.add('preenchido');
+      } else {
+        el.textContent = '';
+        el.classList.remove('preenchido');
+      }
+    }
+  }
+}
 function montarTecladoPin(){
   const c=document.getElementById('pin-pad');
   if(!c)return;
@@ -1105,18 +1332,28 @@ function montarTecladoPin(){
   });
   atualizarDots();
 }
-
-function atualizarDots(){
-  document.querySelectorAll('.pin-dot').forEach((d,i)=>d.classList.toggle('on',i<pinDigitado.length));
+function atualizarDots() {
+  const dots = document.querySelectorAll('.pin-dot');
+  dots.forEach((dot, i) => {
+    if (i < pinDigitado.length) {
+      dot.classList.add('active', 'filled');
+      dot.textContent = '•';
+      dot.style.fontSize = '28px';
+      dot.style.display = 'flex';
+      dot.style.alignItems = 'center';
+      dot.style.justifyContent = 'center';
+      dot.style.color = '#7C3AED';
+    } else {
+      dot.classList.remove('active', 'filled');
+      dot.textContent = '';
+    }
+  });
 }
-
 const PIN_MAX_TENTATIVAS=5;
 const PIN_BLOQUEIO_MS=60000;
-
 function estaPinBloqueado(){
   return !!(estado.pinBloqueadoAte&&Date.now()<estado.pinBloqueadoAte);
 }
-
 function atualizarEstadoBloqueioPin(){
   const erroEl=document.getElementById('pin-erro');
   const bloqueado=estaPinBloqueado();
@@ -1132,7 +1369,6 @@ function atualizarEstadoBloqueioPin(){
     erroEl.textContent='';
   }
 }
-
 async function validarPin(){
   if(estaPinBloqueado())return;
   
@@ -1140,7 +1376,6 @@ async function validarPin(){
     estado.pinHash=await hashPin('1234');
     salvar();
   }
-
   const hashDigitado=await hashPin(pinDigitado);
   if(hashDigitado===estado.pinHash){
     estado.pinTentativasFalhas=0;
@@ -1167,12 +1402,10 @@ async function validarPin(){
     }
   }
 }
-
 function limparPin(){
   pinDigitado='';
   atualizarDots();
 }
-
 function renderizarPainelPais(){
   document.getElementById('input-taxa-cambio').value=estado.taxaCambio;
   document.getElementById('input-idade-crianca').value=estado.idadeCrianca||7;
@@ -1183,7 +1416,6 @@ function renderizarPainelPais(){
   atualizarBotaoLembrete();
   renderizarGerenciamentoPremiosPais();
   renderizarSolicitacoesPremiosPais();
-
   const ap=document.getElementById('lista-aprovacao-pais');
   ap.innerHTML='';
   const ps=estado.tarefas.filter(t=>t.status==='aguardando_aprovacao');
@@ -1210,7 +1442,6 @@ function renderizarPainelPais(){
   `;});
   atualizarEstatisticas();
 }
-
 function abrirVisualizadorFoto(src){
   document.getElementById('foto-viewer-img').src=src;
   document.getElementById('foto-viewer').classList.add('mostrar');
@@ -1218,7 +1449,6 @@ function abrirVisualizadorFoto(src){
 function fecharVisualizadorFoto(){
   document.getElementById('foto-viewer').classList.remove('mostrar');
 }
-
 function reprovarTarefaPais(id){
   const t=estado.tarefas.find(x=>x.id===id);
   if(!t)return;
@@ -1231,20 +1461,36 @@ function reprovarTarefaPais(id){
     mostrarToast('↩️ Devolvida para a criança.');
   });
 }
-
-function trocarFamiliaManualmente(){
-  const novoCodigo=document.getElementById('input-codigo-familia').value.trim().toLowerCase().replace(/[^a-z0-9_-]/g,'');
+async function trocarFamiliaManualmente(){
+  const input=document.getElementById('input-codigo-familia');
+  const novoCodigo=(input?.value||'').trim().toLowerCase().replace(/[^a-z0-9_-]/g,'');
   if(!novoCodigo||novoCodigo.length<8){
     mostrarToast('⚠️ O código deve ter pelo menos 8 caracteres alfanuméricos.');
     return;
   }
+  if(novoCodigo===codigoFamilia){
+    mostrarToast('🏠 Você já está nesta família.');
+    return;
+  }
+  if(dbFirebase)dbFirebase.ref(getCaminhoFirebase()).off();
   codigoFamilia=novoCodigo;
   localStorage.setItem('ROTINAPET_FAMILIA_ID',codigoFamilia);
-  iniciarSincronizacaoNuvem();
+  // Carrega o backup local específico da nova família antes da sincronização.
+  try{
+    const localNovo=localStorage.getItem(`ROTINAPET_SAVE_${codigoFamilia}`);
+    if(localNovo){
+      const d=JSON.parse(localNovo);
+      estado={...estado,...d,pets:{...estado.pets,...(d.pets||{})}};
+    }
+  }catch(e){console.warn('Backup local inválido',e)}
   fecharModal('modal-pais');
-  mostrarToast(`🏠 Sincronizando com a família informada.`);
+  if(sincronizacaoNuvemAtiva){
+    await iniciarSincronizacaoNuvem();
+  }else{
+    atualizarTela();
+  }
+  mostrarToast('🏠 Família alterada com sucesso.');
 }
-
 function alterarTipoTarefa(id,tipo){
   const t=estado.tarefas.find(x=>x.id===id);
   if(!t)return;
@@ -1255,7 +1501,6 @@ function alterarTipoTarefa(id,tipo){
   atualizarTela();
   mostrarToast(t.tipo==='obrigatoria'?'🔥 Tarefa obrigatória.':'⭐ Tarefa extra.');
 }
-
 function abrirBauSemanal(streakAtual){
   const moedasGanhas=15+Math.floor(Math.random()*16);
   const xpGanho=50;
@@ -1269,7 +1514,6 @@ function abrirBauSemanal(streakAtual){
   try{window.confetti?.({particleCount:130,spread:85,origin:{y:.5}})}catch(e){}
   mostrarAviso('🎁',`Baú dos ${streakAtual} Dias!`,`+${moedasGanhas} 🪙 e +${xpGanho} XP adicionados!`);
 }
-
 function registrarNoRelatorioDiario(tarefasSomar,moedasSomar){
   const hoje=hojeLocal();
   estado.registroDiario=estado.registroDiario||{};
@@ -1280,7 +1524,6 @@ function registrarNoRelatorioDiario(tarefasSomar,moedasSomar){
   const chaves=Object.keys(estado.registroDiario).sort();
   if(chaves.length>60)delete estado.registroDiario[chaves[0]];
 }
-
 function aprovarTarefaPais(id){
   const t=estado.tarefas.find(x=>x.id===id);
   if(!t)return;
@@ -1290,7 +1533,6 @@ function aprovarTarefaPais(id){
   estado.tarefasHojeCount=(estado.tarefasHojeCount||0)+1;
   registrarNoRelatorioDiario(1,Number(t.recompensa)||0);
   idTarefaRecemAprovada=id;
-
   const liberouOfensiva=registrarConclusaoDoDia();
   if(liberouOfensiva){
     const s=estado.streak;
@@ -1298,7 +1540,6 @@ function aprovarTarefaPais(id){
       setTimeout(()=>abrirBauSemanal(s),600);
     }
   }
-
   ganharXP(Number(t.xp)||20);
   dispararConfetes();
   marcarConquistas();
@@ -1306,7 +1547,6 @@ function aprovarTarefaPais(id){
   renderizarPainelPais();
   atualizarTela();
 }
-
 function ativarPausa(){
   const dias=Math.max(1,Math.min(30,parseInt(document.getElementById('input-dias-pausa').value)||3));
   const d=new Date();
@@ -1317,7 +1557,6 @@ function ativarPausa(){
   atualizarTela();
   mostrarToast(`🌴 Pausa ativada por ${dias} dia(s).`);
 }
-
 function cancelarPausa(){
   if(!estado.pausaAte)return;
   estado.pausaAte=null;
@@ -1326,7 +1565,6 @@ function cancelarPausa(){
   atualizarTela();
   mostrarToast('▶️ Pausa cancelada.');
 }
-
 function atualizarBannerPausaPainel(){
   const el=document.getElementById('pausa-banner-painel');
   if(!el)return;
@@ -1337,7 +1575,6 @@ function atualizarBannerPausaPainel(){
     el.innerHTML='';
   }
 }
-
 function abrirRelatorioSemanal(){
   const hoje=new Date();
   const dias=[];
@@ -1360,7 +1597,6 @@ function abrirRelatorioSemanal(){
   document.getElementById('rel-total-moedas').textContent=totalMoedas;
   abrirModal('modal-relatorio');
 }
-
 function alternarLembretes(){
   if(!estado.notificacoesAtivas){
     if('Notification' in window){
@@ -1383,14 +1619,12 @@ function alternarLembretes(){
     mostrarToast('🔕 Lembretes desativados.');
   }
 }
-
 function atualizarBotaoLembrete(){
   const b=document.getElementById('btn-toggle-lembrete');
   if(!b)return;
   b.textContent=estado.notificacoesAtivas?'Desativar':'Ativar';
   b.classList.toggle('red-btn',estado.notificacoesAtivas);
 }
-
 function verificarLembreteNoturno(){
   if(!estado.notificacoesAtivas)return;
   const agora=new Date();
@@ -1406,7 +1640,6 @@ function verificarLembreteNoturno(){
   }
   mostrarToast('🔔 '+texto);
 }
-
 function sacarDinheiro(){
   const v=Number(estado.dinheiroAcumulado)||0;
   if(v<=0)return mostrarAviso('💰','Sem saldo','Ainda não há saldo disponível.');
@@ -1419,7 +1652,6 @@ function sacarDinheiro(){
     mostrarAviso('💸','Pagamento registrado','O saldo disponível foi zerado.');
   });
 }
-
 let diasSelecionadosNovaTarefa=[];
 function montarPickerDiasNovaTarefa(){
   const c=document.getElementById('dias-nova-tarefa');
@@ -1437,7 +1669,6 @@ function montarPickerDiasNovaTarefa(){
     c.appendChild(chip);
   });
 }
-
 function adicionarTarefa(){
   const txt=document.getElementById('nova-tarefa-texto').value.trim(),
         moedas=Math.max(1,parseInt(document.getElementById('nova-tarefa-moedas').value)||5),
@@ -1453,7 +1684,6 @@ function adicionarTarefa(){
   atualizarTela();
   mostrarToast(tipo==='obrigatoria'?'🔥 Tarefa criada!':'⭐ Tarefa extra criada!');
 }
-
 function editarDiasTarefa(id){
   const t=estado.tarefas.find(x=>x.id===id);
   if(!t)return;
@@ -1472,14 +1702,12 @@ function editarDiasTarefa(id){
   atualizarTela();
   mostrarToast('📅 Recorrência atualizada.');
 }
-
 function removerTarefa(id){
   estado.tarefas=estado.tarefas.filter(t=>t.id!==id);
   salvar();
   renderizarPainelPais();
   atualizarTela();
 }
-
 async function salvarNovoPin(){
   const input=document.getElementById('novo-pin-pais');
   const p=input.value.trim();
@@ -1491,25 +1719,21 @@ async function salvarNovoPin(){
   salvar();
   mostrarToast('🔑 PIN seguro atualizado!');
 }
-
 function atualizarTaxaCambio(v){
   const n=Number(v);
   estado.taxaCambio=Number.isFinite(n)&&n>=0?n:.01;
   salvar();
   atualizarTela();
 }
-
 function atualizarIdadeCrianca(v){
   estado.idadeCrianca=Math.max(3,Math.min(15,parseInt(v)||7));
   salvar();
   mostrarToast(`👶 Idade: ${estado.idadeCrianca} anos`);
 }
-
 function alternarListaPets(e){
   e?.stopPropagation();
   document.getElementById('lista-pets').classList.toggle('abrir');
 }
-
 function escolherPet(tipo){
   if(nivelJogador()<PETS[tipo].desbloqueioNivel)return mostrarToast(`🔒 Nível ${PETS[tipo].desbloqueioNivel} necessário.`);
   estado.petAtual=tipo;
@@ -1517,12 +1741,10 @@ function escolherPet(tipo){
   atualizarTela();
   document.getElementById('lista-pets').classList.remove('abrir');
 }
-
 document.addEventListener('click',e=>{
   const l=document.getElementById('lista-pets');
   if(l&&!l.contains(e.target)&&e.target.id!=='btn-pet-atual')l.classList.remove('abrir');
 });
-
 function renderizarEvolucoes(){
   const d=PETS[estado.petAtual],p=obterDadosPetAtual(),c=document.getElementById('lista-evolucoes');
   c.innerHTML='';
@@ -1531,7 +1753,6 @@ function renderizarEvolucoes(){
     c.innerHTML+=`<div class="achievement-row"><span style="font-size:18px">${ok?'⭐':'🔒'}</span><div style="flex:1"><b style="font-size:10px;color:${ok?'#6b21a8':'#475569'}">${esc(ev.nome)}</b><div style="font-size:8px;color:#64748b">${esc(ev.desc)} • Nível ${ev.nivel}</div></div><span style="font-size:8px;font-weight:900">${ok?'LIBERADO':'BLOQUEADO'}</span></div>`;
   });
 }
-
 const CONQUISTAS=[
   ['primeira','🥇','Primeiro Passo','Aprove sua primeira tarefa.'],
   ['diaCheio','⚡','Super Produtivo','Conclua 5 tarefas no mesmo dia.'],
@@ -1541,7 +1762,6 @@ const CONQUISTAS=[
   ['nivel10','⭐','Veterano','Chegue ao nível 10 com um pet.'],
   ['pet5','🐾','Colecionador','Desbloqueie todos os pets.']
 ];
-
 function contarFeitas(){return estado.tarefas.filter(t=>t.status==='aprovada').length}
 function marcarConquistas(){
   estado.conquistas=estado.conquistas||{};
@@ -1569,7 +1789,6 @@ function marcarConquistas(){
     dispararConfetes();
   }
 }
-
 function renderizarHeatmap(){
   const g=document.getElementById('grid-heatmap');
   if(!g)return;
@@ -1589,7 +1808,6 @@ function renderizarHeatmap(){
     g.appendChild(div);
   });
 }
-
 function renderizarPainelProgresso(){
   const p=obterDadosPetAtual();
   const nivel=Number(p.nivel)||1;
@@ -1597,7 +1815,6 @@ function renderizarPainelProgresso(){
   const streak=Number(estado.streak)||0;
   const total=CONQUISTAS.length;
   const feitas=CONQUISTAS.filter(x=>estado.conquistas?.[x[0]]).length;
-
   const n=document.getElementById('rpd-nivel');
   const s=document.getElementById('rpd-streak');
   const x=document.getElementById('rpd-xp');
@@ -1606,17 +1823,14 @@ function renderizarPainelProgresso(){
   if(s)s.textContent=streak;
   if(x)x.textContent=`${xp}/100`;
   if(k)k.textContent=`${feitas}/${total}`;
-
   const marcos=[7,14,21,30,50,75,100];
   const proximo=marcos.find(m=>m>streak)||Math.ceil((streak+1)/25)*25;
   const anterior=marcos.filter(m=>m<=streak).pop()||0;
   const perc=proximo===anterior?100:Math.min(100,Math.round(((streak-anterior)/(proximo-anterior))*100));
-
   const titulo=document.getElementById('rpd-proxima-titulo');
   const meta=document.getElementById('rpd-proxima-meta');
   const barra=document.getElementById('rpd-proxima-barra');
   const texto=document.getElementById('rpd-proxima-texto');
-
   if(titulo)titulo.textContent=`🔥 Próximo marco: ${proximo} dias`;
   if(meta)meta.textContent=streak>=proximo?'🎉 Alcançado!':`${Math.max(0,proximo-streak)} dia(s)`;
   if(barra)barra.style.width=`${perc}%`;
@@ -1626,7 +1840,6 @@ function renderizarPainelProgresso(){
     else texto.textContent='Marco alcançado!';
   }
 }
-
 function renderizarConquistas(){
   renderizarPainelProgresso();
   const c=document.getElementById('lista-conquistas');
@@ -1636,12 +1849,10 @@ function renderizarConquistas(){
   const proximoMarco=streak===0?7:(Math.floor(streak/7)+1)*7;
   const diasRestantes=proximoMarco-streak;
   const perc=Math.round(((7-diasRestantes)/7)*100);
-
   const elContador=document.getElementById('bau-contador-dias');
   const elBarra=document.getElementById('bau-barra-progresso');
   const elSub=document.getElementById('bau-status-sub');
   const elIcone=document.getElementById('bau-icone');
-
   if(elContador)elContador.textContent=`${7-diasRestantes}/7 dias`;
   if(elBarra)elBarra.style.width=`${perc}%`;
   if(elSub){
@@ -1653,20 +1864,17 @@ function renderizarConquistas(){
       if(elIcone)elIcone.textContent='🎁';
     }
   }
-
   c.innerHTML='';
   CONQUISTAS.forEach(x=>{
     const ok=!!estado.conquistas?.[x[0]];
     c.innerHTML+=`<div class="achievement-row" style="opacity:${ok?1:.55}"><span style="font-size:22px">${x[1]}</span><div style="flex:1"><b style="font-size:10px">${esc(x[2])}</b><div style="font-size:8px;color:#64748b">${esc(x[3])}</div></div><span>${ok?'✅':'🔒'}</span></div>`;
   });
 }
-
 function atualizarEstatisticas(){
   document.getElementById('stat-feitas').textContent=contarFeitas();
   if(document.getElementById('stat-ofensiva-pais'))document.getElementById('stat-ofensiva-pais').textContent=estado.streak||0;
   document.getElementById('stat-conquistas').textContent=CONQUISTAS.filter(x=>estado.conquistas?.[x[0]]).length;
 }
-
 function recompensarMiniJogo(moedas,xp,msg){
   estado.moedas+=moedas;
   estado.dinheiroAcumulado=(estado.dinheiroAcumulado||0)+moedas*(Number(estado.taxaCambio)||.01);
@@ -1676,7 +1884,6 @@ function recompensarMiniJogo(moedas,xp,msg){
   mostrarToast(`🎉 ${msg} +${moedas} 🪙 +${xp} XP`);
   marcarConquistas();
 }
-
 const TIPOS_JOGO_DESAFIO=['matematica','memoria','reacao'];
 function abrirDesafio(){
   document.getElementById('area-jogo-matematica').classList.add('hidden');
@@ -1701,7 +1908,6 @@ function abrirDesafio(){
   }
   abrirModal('modal-desafio');
 }
-
 let contaCorreta=0;
 function abrirDesafioMatematica(){
   const idade=estado.idadeCrianca||7;
@@ -1719,7 +1925,6 @@ function abrirDesafioMatematica(){
   c.innerHTML='';
   opts.forEach(o=>{const b=document.createElement('button');b.textContent=o;b.onclick=()=>testarMath(o);c.appendChild(b)});
 }
-
 function testarMath(v){
   if(v===contaCorreta){
     estado.desafiosMathAcertos=(estado.desafiosMathAcertos||0)+1;
@@ -1727,7 +1932,6 @@ function testarMath(v){
     recompensarMiniJogo(1,1,'Acertou!');
   }else mostrarToast('❌ Tente novamente!');
 }
-
 const EMOJIS_MEMORIA=['🐱','🐶','🐐','🐔'];
 let sequenciaMemoria=[],progressoMemoria=0,memoriaTravada=true;
 function iniciarJogoMemoria(){
@@ -1749,7 +1953,6 @@ function iniciarJogoMemoria(){
   document.getElementById('memoria-status').textContent='Observe a sequência...';
   setTimeout(reproduzirSequenciaMemoria,600);
 }
-
 function reproduzirSequenciaMemoria(){
   let i=0;
   const passo=()=>{
@@ -1773,7 +1976,6 @@ function reproduzirSequenciaMemoria(){
   };
   passo();
 }
-
 function tocarTileMemoria(i){
   if(memoriaTravada)return;
   const tile=document.getElementById('memoria-tile-'+i);
@@ -1797,7 +1999,6 @@ function tocarTileMemoria(i){
     },900);
   }
 }
-
 const EMOJIS_REACAO=['🍎','🍌','🍇','🍊','🍉','🍓','🥕','🍒'];
 let reacaoAlvoIndex=-1,reacaoTimer=null;
 function iniciarJogoReacao(){
@@ -1823,21 +2024,18 @@ function iniciarJogoReacao(){
     }
   },5000);
 }
-
 function testarReacao(acertou){
   clearTimeout(reacaoTimer);
   fecharModal('modal-desafio');
   if(acertou)recompensarMiniJogo(1,1,'Reflexo rápido!');
   else mostrarToast('❌ Não era esse! Tente de novo.');
 }
-
 function abrirLojaFundos(){
   renderizarGridFundos();
   renderizarGridAcessorios();
   alternarAbaLojaVisual('fundos');
   abrirModal('modal-fundos');
 }
-
 function alternarAbaLojaVisual(aba){
   const ehFundos=aba==='fundos';
   document.getElementById('grid-fundos').classList.toggle('hidden',!ehFundos);
@@ -1847,7 +2045,6 @@ function alternarAbaLojaVisual(aba){
   document.getElementById('titulo-loja-visual').textContent=ehFundos?'🖼️ Loja de Fundos':'🎀 Loja de Acessórios';
   document.getElementById('desc-loja-visual').textContent=ehFundos?'Use suas moedas para personalizar o visual.':'Vista seu pet com acessórios!';
 }
-
 function renderizarGridFundos(){
   const c=document.getElementById('grid-fundos');
   c.innerHTML='';
@@ -1860,7 +2057,6 @@ function renderizarGridFundos(){
     c.appendChild(d);
   });
 }
-
 function selecionarOuComprarFundo(f){
   if(estado.fundosComprados.includes(f.id)){
     estado.fundoAtual=f.id;
@@ -1881,7 +2077,6 @@ function selecionarOuComprarFundo(f){
     mostrarToast('🎉 Fundo desbloqueado!');
   });
 }
-
 function renderizarGridAcessorios(){
   const c=document.getElementById('grid-acessorios');
   if(!c)return;
@@ -1897,7 +2092,6 @@ function renderizarGridAcessorios(){
     c.appendChild(d);
   });
 }
-
 function selecionarOuComprarAcessorio(a){
   if(estado.acessorios.comprados.includes(a.id)){
     estado.acessorios.ativo=estado.acessorios.ativo===a.id?null:a.id;
@@ -1918,7 +2112,6 @@ function selecionarOuComprarAcessorio(a){
     mostrarToast('🎉 Acessório desbloqueado!');
   });
 }
-
 function renderizarAcessorioNoContainer(){
   const c=document.getElementById('camada-acessorio');
   if(!c)return;
@@ -1926,29 +2119,23 @@ function renderizarAcessorioNoContainer(){
   const item=ACESSORIOS.find(a=>a.id===ativo);
   c.innerHTML=item?item.svg:'';
 }
-
 function abrirLojaRecompensas(){
   renderizarLojaRecompensas();
   abrirModal('modal-recompensas');
 }
-
 function premioTemSolicitacaoPendente(id){
   return (estado.solicitacoesPremios||[]).some(s=>s.recompensaId===id&&s.status==='pendente');
 }
-
 function renderizarLojaRecompensas(){
   const c=document.getElementById('lista-itens-loja');
   if(!c)return;
-
   const metaTotal=estado.metaMoedas||50;
   const percMeta=Math.min(100,Math.round((estado.moedas/metaTotal)*100));
   const metaTxt=document.getElementById('texto-meta-progresso');
   const metaBar=document.getElementById('barra-meta-progresso');
   if(metaTxt)metaTxt.textContent=`${estado.moedas} / ${metaTotal} 🪙`;
   if(metaBar)metaBar.style.width=`${percMeta}%`;
-
   const premiosAtivos=(estado.recompensas||[]).filter(r=>r.ativo!==false);
-
   c.innerHTML=`
     <div class="rp-shop-head">
       <div>
@@ -1964,15 +2151,12 @@ function renderizarLojaRecompensas(){
     </div>
     <div class="rp-shop-section-title">✨ Prêmios disponíveis</div>
   `;
-
   if(!premiosAtivos.length){
     c.innerHTML+=`<div class="rp-empty">🎁<br><b>Nenhum prêmio disponível.</b><small>Os pais podem cadastrar no painel.</small></div>`;
     return;
   }
-
   const grid=document.createElement('div');
   grid.className='rp-prize-grid';
-
   premiosAtivos.forEach(r=>{
     const pode=estado.moedas>=r.custo;
     const pendente=premioTemSolicitacaoPendente(r.id);
@@ -1997,7 +2181,6 @@ function renderizarLojaRecompensas(){
     grid.appendChild(card);
   });
   c.appendChild(grid);
-
   const meusPedidos=(estado.solicitacoesPremios||[]).slice().reverse().slice(0,5);
   if(meusPedidos.length){
     const history=document.createElement('div');
@@ -2015,7 +2198,6 @@ function renderizarLojaRecompensas(){
     c.appendChild(history);
   }
 }
-
 function resgatarRecompensa(id){
   const r=estado.recompensas.find(x=>x.id===id);
   if(!r||r.ativo===false||estado.moedas<r.custo||premioTemSolicitacaoPendente(id))return;
@@ -2036,7 +2218,6 @@ function resgatarRecompensa(id){
   renderizarLojaRecompensas();
   mostrarToast('🎟️ Pedido enviado aos pais!');
 }
-
 function aprovarSolicitacaoPremio(id){
   const s=(estado.solicitacoesPremios||[]).find(x=>x.id===id);
   if(!s||s.status!=='pendente')return;
@@ -2051,7 +2232,6 @@ function aprovarSolicitacaoPremio(id){
   atualizarTela();
   renderizarPainelPais();
   renderizarLojaRecompensas();
-
   const r=estado.recompensas.find(x=>x.id===s.recompensaId);
   if((s.tipo==='timer'||r?.tipo==='timer')&&s.minutos){
     iniciarTimerTela(s.minutos);
@@ -2061,7 +2241,6 @@ function aprovarSolicitacaoPremio(id){
     mostrarAviso('🎁','Prêmio aprovado!',`Liberado: ${s.texto}`);
   }
 }
-
 function recusarSolicitacaoPremio(id){
   const s=(estado.solicitacoesPremios||[]).find(x=>x.id===id);
   if(!s||s.status!=='pendente')return;
@@ -2072,7 +2251,6 @@ function recusarSolicitacaoPremio(id){
   renderizarLojaRecompensas();
   mostrarToast('❌ Solicitação recusada.');
 }
-
 function adicionarPremioPais(){
   const texto=window.prompt('Nome do prêmio:');
   if(!texto||!texto.trim())return;
@@ -2093,7 +2271,6 @@ function adicionarPremioPais(){
   renderizarLojaRecompensas();
   mostrarToast('🎁 Prêmio criado!');
 }
-
 function editarPremioPais(id){
   const r=estado.recompensas.find(x=>x.id===id);
   if(!r)return;
@@ -2117,7 +2294,6 @@ function editarPremioPais(id){
   renderizarLojaRecompensas();
   mostrarToast('✏️ Atualizado!');
 }
-
 function alternarPremioPais(id){
   const r=estado.recompensas.find(x=>x.id===id);
   if(!r)return;
@@ -2127,7 +2303,6 @@ function alternarPremioPais(id){
   renderizarLojaRecompensas();
   mostrarToast(r.ativo?'👁️ Ativado.':'🙈 Ocultado.');
 }
-
 function excluirPremioPais(id){
   const r=estado.recompensas.find(x=>x.id===id);
   if(!r)return;
@@ -2140,7 +2315,6 @@ function excluirPremioPais(id){
     mostrarToast('🗑️ Excluído.');
   });
 }
-
 function renderizarGerenciamentoPremiosPais(){
   const c=document.getElementById('lista-gerenciar-premios');
   if(!c)return;
@@ -2164,7 +2338,6 @@ function renderizarGerenciamentoPremiosPais(){
       </div>`;
   });
 }
-
 function renderizarSolicitacoesPremiosPais(){
   const c=document.getElementById('lista-solicitacoes-premios');
   if(!c)return;
@@ -2187,7 +2360,6 @@ function renderizarSolicitacoesPremiosPais(){
       </div>`;
   });
 }
-
 let intervaloTimer=null;
 function iniciarTimerTela(minutos){
   estado.timerFim=Date.now()+(minutos*60*1000);
@@ -2197,7 +2369,6 @@ function iniciarTimerTela(minutos){
   clearInterval(intervaloTimer);
   intervaloTimer=setInterval(atualizarDisplayTimer,1000);
 }
-
 function atualizarDisplayTimer(){
   if(!estado.timerFim)return;
   const restante=Math.max(0,Math.floor((estado.timerFim-Date.now())/1000));
@@ -2215,20 +2386,16 @@ function atualizarDisplayTimer(){
     fecharModal('modal-timer');
   }
 }
-
 function pausarFecharTimer(){
   clearInterval(intervaloTimer);
   estado.timerFim=null;
   salvar();
   fecharModal('modal-timer');
 }
-
 let mediaRecorder=null,pedacosAudio=[],bufferGravado=null,audioBlobFinal=null;
-
 function alternarGravador(){
   abrirModal('modal-gravador');
 }
-
 async function iniciarGravacao(){
   try{
     const stream=await navigator.mediaDevices.getUserMedia({audio:true});
@@ -2251,7 +2418,6 @@ async function iniciarGravacao(){
     mostrarToast('❌ Permissão de microfone negada ou indisponível.');
   }
 }
-
 function pararGravacao(){
   if(mediaRecorder&&mediaRecorder.state!=='inactive'){
     mediaRecorder.stop();
@@ -2260,7 +2426,6 @@ function pararGravacao(){
   document.getElementById('btn-iniciar-grav').style.display='inline-block';
   document.getElementById('btn-parar-grav').style.display='none';
 }
-
 async function aplicarEfeitoVoz(tipo,btnEl){
   if(!bufferGravado)return;
   document.querySelectorAll('#modal-gravador .task-btn').forEach(b=>b.style.background='');
@@ -2293,7 +2458,6 @@ async function aplicarEfeitoVoz(tipo,btnEl){
   document.getElementById('audio-original').src=URL.createObjectURL(wavBlob);
   aviso.classList.add('hidden');
 }
-
 function audioBufferParaWavBlob(buffer){
   const numCanais=buffer.numberOfChannels,taxaAmostragem=buffer.sampleRate,formato=1,profundidadeBits=16;
   const bytesAmostra=profundidadeBits/8,tamanhoBloco=numCanais*bytesAmostra;
@@ -2328,7 +2492,6 @@ function audioBufferParaWavBlob(buffer){
   }
   return new Blob([arrayBuf],{type:'audio/wav'});
 }
-
 function salvarVoz(){
   if(!audioBlobFinal)return;
   const leitor=new FileReader();
@@ -2340,14 +2503,12 @@ function salvarVoz(){
   };
   leitor.readAsDataURL(audioBlobFinal);
 }
-
 function abrirModal(id){
   document.getElementById(id)?.classList.add('mostrar');
 }
 function fecharModal(id){
   document.getElementById(id)?.classList.remove('mostrar');
 }
-
 let toastTimer=null;
 function mostrarToast(txt){
   const el=document.getElementById('toast');
@@ -2357,22 +2518,18 @@ function mostrarToast(txt){
   clearTimeout(toastTimer);
   toastTimer=setTimeout(()=>el.classList.remove('mostrar'),2500);
 }
-
 function mostrarAviso(emoji,titulo,texto){
   document.getElementById('aviso-emoji').textContent=emoji;
   document.getElementById('aviso-titulo').textContent=titulo;
   document.getElementById('aviso-texto').textContent=texto;
   abrirModal('modal-aviso');
 }
-
 function mostrarConfirmacao(msg,cb){
   if(window.confirm(msg))cb();
 }
-
 function esc(str){
   return String(str||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
 }
-
 let disparoInstalacao=null;
 window.addEventListener('beforeinstallprompt',e=>{
   e.preventDefault();
@@ -2380,7 +2537,6 @@ window.addEventListener('beforeinstallprompt',e=>{
   const btn=document.getElementById('btn-instalar-pwa');
   if(btn)btn.classList.remove('hidden');
 });
-
 document.getElementById('btn-instalar-pwa')?.addEventListener('click',async ()=>{
   if(!disparoInstalacao)return;
   disparoInstalacao.prompt();
@@ -2390,7 +2546,6 @@ document.getElementById('btn-instalar-pwa')?.addEventListener('click',async ()=>
   }
   disparoInstalacao=null;
 });
-
 setInterval(()=>{
   const agora=new Date();
   if(agora.getSeconds()===0){
@@ -2398,7 +2553,6 @@ setInterval(()=>{
     if(estado.timerFim)atualizarDisplayTimer();
   }
 },1000);
-
 window.addEventListener('DOMContentLoaded',()=>{
   atualizarTela();
   verificarPrimeiroAcesso();
@@ -2415,6 +2569,5 @@ if ('serviceWorker' in navigator) {
   });
 }
 </script>
-
 </body>
 </html>
