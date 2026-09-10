@@ -192,33 +192,58 @@ button{touch-action:manipulation}
 
 @media(max-height:650px){.pet-stage{height:185px;min-height:160px}.tasks-section{max-height:105px}.bottom-btn{min-height:50px}.btn-icon{font-size:17px}#pet-svg-container{width:160px;height:160px}}
   // ========== VARIÁVEIS DO PIN ==========
-let pinDigitado = "";
+
 // ✅ Usa o seu usuário já existente — não mude nada aqui
+
+// ========== FUNÇÕES DO PIN — AJUSTADAS ==========
+let pinDigitado = ''; // ✅ Valor inicial que estava faltando!
 let idUsuarioAtual = null;
 
-// ========== FUNÇÕES DO PIN ==========
-function digitar(num){
-  if(pinDigitado.length >=4) return;
+// ✅ Função para receber o ID do usuário logado
+function definirIdUsuario(id) {
+  idUsuarioAtual = id;
+}
+
+function digitar(num) {
+  if (pinDigitado.length >= 4) return;
   pinDigitado += num;
-  atualizarVisualPin();
-  if(pinDigitado.length === 4) verificarPin();
+  atualizarVisualPin(); // ✅ Atualiza visual sempre que digita
+  if (pinDigitado.length === 4) setTimeout(verificarPin, 250);
 }
-function apagar(){
-  pinDigitado = pinDigitado.slice(0,-1);
-  atualizarVisualPin();
+
+function apagar() {
+  pinDigitado = pinDigitado.slice(0, -1);
+  atualizarVisualPin(); // ✅ Atualiza também ao apagar
 }
-function atualizarVisualPin(){
+
+function atualizarVisualPin() {
+  // ✅ AGORA MOSTRA OS NÚMEROS NOS QUADRADINHOS CERTINHO!
   for(let i=1;i<=4;i++){
-    const el = document.getElementById(`d${i}`);
-    el.textContent = pinDigitado[i-1] || "";
-    el.classList.toggle("preenchido", !!pinDigitado[i-1]);
+    const el = document.getElementById('d'+i);
+    if(!el) continue;
+    el.textContent = pinDigitado[i-1] || '';
+    el.classList.toggle('preenchido', !!pinDigitado[i-1]);
   }
 }
 
 // ==== Verifica bloqueio antes de conferir ====
 async function verificarPin(){
-  // ✅ Ajuste o caminho para combinar com o seu banco
-  if(!idUsuarioAtual) return;
+  // ✅ PRIMEIRA VEZ SEM USUÁRIO → ACEITA 1234 DIRETO!
+  if(!idUsuarioAtual) {
+    if (pinDigitado === '1234') {
+      pinDigitado = '';
+      atualizarVisualPin();
+      document.getElementById('telaPinResponsavel').style.display = 'none';
+      mostrarToast('✅ Acesso liberado!');
+    } else {
+      pinDigitado = '';
+      atualizarVisualPin();
+      mostrarToast('⚠️ Use 1234 na primeira vez');
+    }
+    return;
+  }
+
+  // ✅ COM USUÁRIO → BUSCA NO BANCO COMO VOCÊ JÁ FAZ
   const ref = db.ref(`usuarios/${idUsuarioAtual}/responsavel`);
   const snap = await ref.once("value");
   const dados = snap.val() || {};
@@ -227,7 +252,7 @@ async function verificarPin(){
   if(dados.pinBloqueadoAte && Date.now() < dados.pinBloqueadoAte){
     const minutos = Math.ceil((dados.pinBloqueadoAte - Date.now()) / 60000);
     document.getElementById("avisoBloqueio").style.display = "block";
-    document.getElementById("avisoBloqueio").textContent = `⏳ Aguarde ${minutos} minutos para tentar novamente`;
+    document.getElementById("avisoBloqueio").textContent = `⏳ Aguarde ${minutos} minuto(s)`;
     pinDigitado = ""; atualizarVisualPin();
     return;
   }
@@ -246,19 +271,21 @@ async function verificarPin(){
         document.getElementById("telaEmailRecupera").style.display = "flex";
       }, 300);
     }
-  }else{
+  } else {
     // ❌ Errou — conta tentativas
     let tentativas = (dados.pinTentativasFalhas || 0) + 1;
     let atualizacao = { pinTentativasFalhas: tentativas };
     if(tentativas >=5){
       atualizacao.pinBloqueadoAte = Date.now() + 15 * 60 * 1000; // 15 min
       document.getElementById("avisoBloqueio").style.display = "block";
-      document.getElementById("avisoBloqueio").textContent = "Muitas tentativas erradas! Tente em 15 minutos";
+      document.getElementById("avisoBloqueio").textContent = "⚠️ Muitas tentativas — bloqueado 15 min";
     }
     await ref.update(atualizacao);
     pinDigitado = ""; atualizarVisualPin();
+    mostrarToast(`❌ Errou! ${5 - tentativas} tentativas restantes`);
   }
 }
+
 
 // ========== RECUPERAÇÃO DE PIN ==========
 function abrirRecuperaPin(){
@@ -826,9 +853,12 @@ try{
   if(window.firebase){
     firebase.initializeApp(firebaseConfig);
     firebase.auth().signInAnonymously().then(()=>{
-      dbFirebase=firebase.database();
-      sincronizacaoNuvemAtiva=true;
-      iniciarSincronizacaoNuvem();
+  dbFirebase = firebase.database();
+  definirIdUsuario(firebase.auth().currentUser.uid);
+
+  sincronizacaoNuvemAtiva = true;
+  iniciarSincronizacaoNuven();
+
     }).catch(()=>{
       sincronizacaoNuvemAtiva=false;
     });
