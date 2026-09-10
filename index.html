@@ -1341,7 +1341,11 @@ async function validarPin(){
     estado.pinTentativasFalhas=0;
     estado.pinBloqueadoAte=null;
     salvar();
+    // Há versões antigas do app que usavam uma tela de PIN separada.
+    // Fechamos as duas estruturas para evitar que uma camada fique sobre o painel.
     fecharModal('modal-pin');
+    const telaPinLegada=document.getElementById('telaPinResponsavel');
+    if(telaPinLegada)telaPinLegada.style.display='none';
     limparPin();
     renderizarPainelPais();
     abrirModal('modal-pais');
