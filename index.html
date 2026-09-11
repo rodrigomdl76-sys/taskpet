@@ -1362,7 +1362,8 @@ async function salvarEmailRecuperacao(){
   const senha=document.getElementById('inputSenhaRecupera').value;
   const auth=obterAuth();
   const user=auth?.currentUser;
-  if(!auth||!user)return mostrarErroRecuperacao('A autenticação ainda não terminou. Tente novamente.');
+  if(!auth)return mostrarErroRecuperacao('O serviço de autenticação não carregou (Código: auth-indisponivel). Verifique sua conexão e recarregue a página.');
+  if(!user)return mostrarErroRecuperacao('Ainda não foi possível confirmar sua sessão neste aparelho (Código: sem-usuario). Aguarde alguns segundos e tente de novo; se persistir, recarregue a página.');
   if(!validarEmail(email))return mostrarErroRecuperacao('Digite um e-mail válido.');
   if(email.toLowerCase()!==emailConfirma.toLowerCase())return mostrarErroRecuperacao('Os dois e-mails digitados são diferentes. Confira e tente de novo.');
   if(senha.length<6)return mostrarErroRecuperacao('A senha precisa ter pelo menos 6 caracteres.');
@@ -1385,7 +1386,7 @@ async function salvarEmailRecuperacao(){
     mostrarAviso('✅','E-mail vinculado','Agora você pode recuperar a senha por e-mail e entrar novamente nesta conta.');
   }catch(error){
     console.warn('Falha ao vincular email:',error);
-    const msg=error?.code==='auth/email-already-in-use'?'Este e-mail já pertence a outra conta. Use outro endereço ou entre com ele.':error?.code==='auth/requires-recent-login'?'Por segurança, entre novamente com sua conta antes de trocar o e-mail.':'Não foi possível vincular o e-mail. Confira os dados e tente novamente.';
+    const msg=error?.code==='auth/email-already-in-use'?'Este e-mail já pertence a outra conta. Use outro endereço ou entre com ele.':error?.code==='auth/requires-recent-login'?'Por segurança, entre novamente com sua conta antes de trocar o e-mail.':`Não foi possível vincular o e-mail. Código técnico: ${error?.code||'desconhecido'} — ${error?.message||''}`;
     mostrarErroRecuperacao(msg);
   }
 }
