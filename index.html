@@ -94,7 +94,7 @@ button{touch-action:manipulation}
 .bottom-btn:active{transform:scale(.94)}
 .btn-voice{background:linear-gradient(135deg,#10b981,#059669)}.btn-game{background:linear-gradient(135deg,#a855f7,#7c3aed)}.btn-fundos{background:linear-gradient(135deg,#0ea5e9,#2563eb)}.btn-premios{background:linear-gradient(135deg,#fb7185,#e11d48)}.pink-btn{background:linear-gradient(135deg,#fb7185,#e11d48);color:#fff}
 .btn-icon{font-size:20px}
-.modal-overlay{position:fixed;inset:0;background:#0f172a99;backdrop-filter:blur(7px);display:flex;align-items:center;justify-content:center;padding:14px;z-index:100;opacity:0;visibility:hidden;transition:.2s}
+.modal-overlay{position:fixed;inset:0;background:#0f172a99;backdrop-filter:blur(7px);display:flex;align-items:center;justify-content:center;padding:14px;z-index:10000;opacity:0;visibility:hidden;transition:.2s}
 .modal-overlay.mostrar{opacity:1;visibility:visible}
 .modal{width:100%;max-width:370px;max-height:88dvh;overflow:auto;background:#fff;border-radius:25px;padding:17px;box-shadow:0 25px 60px #0005}
 .modal-title{display:flex;align-items:center;justify-content:space-between;margin-bottom:12px}
@@ -123,9 +123,9 @@ button{touch-action:manipulation}
 .pin-pad{display:grid;grid-template-columns:repeat(3,1fr);gap:7px}.pin-key{height:48px;border:0;border-radius:12px;background:#f1f5f9;font-size:16px;font-weight:900;cursor:pointer}.pin-key:active{transform:scale(.95)}.pin-key:disabled{opacity:.4}
 .pin-erro{font-size:9px;font-weight:900;color:#ef4444;margin-top:6px;min-height:12px}
 .stat-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:7px}.stat{background:#f8fafc;border-radius:12px;padding:9px}.stat b{font-size:17px}.stat span{display:block;font-size:8px;color:#64748b;font-weight:900}
-.toast{position:fixed;left:50%;bottom:74px;transform:translate(-50%,20px);background:#0f172aee;color:#fff;padding:8px 15px;border-radius:99px;font-size:10px;font-weight:900;z-index:200;opacity:0;pointer-events:none;transition:.25s}
+.toast{position:fixed;left:50%;bottom:74px;transform:translate(-50%,20px);background:#0f172aee;color:#fff;padding:8px 15px;border-radius:99px;font-size:10px;font-weight:900;z-index:10001;opacity:0;pointer-events:none;transition:.25s}
 .toast.mostrar{opacity:1;transform:translate(-50%,0)}
-.banner-offline{position:fixed;top:0;left:0;right:0;background:#b45309;color:#fff;text-align:center;font-size:10px;font-weight:800;padding:6px 10px;z-index:300;transform:translateY(-100%);transition:.25s}
+.banner-offline{position:fixed;top:0;left:0;right:0;background:#b45309;color:#fff;text-align:center;font-size:10px;font-weight:800;padding:6px 10px;z-index:10001;transform:translateY(-100%);transition:.25s}
 .banner-offline.mostrar{transform:translateY(0)}
 .hidden{display:none!important}
 .foto-viewer{position:fixed;inset:0;background:#000d;display:flex;align-items:center;justify-content:center;z-index:300;opacity:0;visibility:hidden;transition:.2s;padding:20px}
@@ -641,6 +641,20 @@ let dbFirebase=null,sincronizacaoNuvemAtiva=false,ignorarProximoSyncNuvem=false;
 // "de fábrica" (ex.: depois de limpar cache) sobrescreva dados reais já salvos
 // no Firebase antes de terminarmos de baixá-los.
 let cargaNuvemPendente=false;
+// Última versão do estado que sabemos que está de fato salva na nuvem (top-level).
+// Usada para enviar só os campos que mudaram, em vez de sobrescrever tudo — assim,
+// se outro aparelho alterar um campo diferente ao mesmo tempo, os dois sobrevivem.
+let ultimoEstadoSincronizado=null;
+function calcularDiffParaNuvem(base,atual){
+  const mudancas={};
+  const chaves=new Set([...Object.keys(base||{}),...Object.keys(atual)]);
+  for(const k of chaves){
+    const antigo=base?base[k]:undefined;
+    const novo=atual[k];
+    if(JSON.stringify(antigo)!==JSON.stringify(novo))mudancas[k]=(novo===undefined)?null:novo;
+  }
+  return mudancas;
+}
 const urlParams=new URLSearchParams(window.location.search);
 // Família agora exige ID com entropia adequada (mínimo 8 caracteres)
 function sanitizarIdFamilia(id){
@@ -791,8 +805,12 @@ if(estado.ultimoDiaAcesso!==hojeStr){
 function salvar(){
   try{localStorage.setItem(`ROTINAPET_SAVE_${codigoFamilia}`,JSON.stringify(estado))}catch(e){mostrarToast('⚠️ Memória cheia; foto não armazenada.')}
   if(sincronizacaoNuvemAtiva&&dbFirebase&&!cargaNuvemPendente){
-    ignorarProximoSyncNuvem=true;
-    dbFirebase.ref(getCaminhoFirebase()).set(estado).catch(()=>{});
+    const mudancas=calcularDiffParaNuvem(ultimoEstadoSincronizado,estado);
+    if(Object.keys(mudancas).length){
+      ignorarProximoSyncNuvem=true;
+      ultimoEstadoSincronizado=JSON.parse(JSON.stringify(estado));
+      dbFirebase.ref(getCaminhoFirebase()).update(mudancas).catch(()=>{});
+    }
   }
 }
 // Suporta até 2 responsáveis com e-mails próprios vinculados à mesma família.
@@ -813,7 +831,11 @@ async function carregarEstadoNuvem(){
     const timeout=new Promise((_,reject)=>setTimeout(()=>reject(new Error('timeout ao buscar dados da família')),timeoutMs));
     const snap=await Promise.race([dbFirebase.ref(getCaminhoFirebase()).once('value'),timeout]);
     const remoto=snap.val();
-    if(!remoto||typeof remoto!=='object')return false;
+    if(!remoto||typeof remoto!=='object'){
+      ultimoEstadoSincronizado=null;
+      return false;
+    }
+    ultimoEstadoSincronizado=JSON.parse(JSON.stringify(remoto));
     estado={...estado,...remoto,pets:{...estado.pets,...(remoto.pets||{})}};
     normalizarEmailsRecuperacao();
     localStorage.setItem(`ROTINAPET_SAVE_${codigoFamilia}`,JSON.stringify(estado));
@@ -841,6 +863,7 @@ async function iniciarSincronizacaoNuvem(){
     if(ignorarProximoSyncNuvem){ignorarProximoSyncNuvem=false;return}
     const d=s.val();
     if(d&&typeof d==='object'){
+      ultimoEstadoSincronizado=JSON.parse(JSON.stringify(d));
       estado={...estado,...d,pets:{...estado.pets,...(d.pets||{})}};
       try{localStorage.setItem(`ROTINAPET_SAVE_${codigoFamilia}`,JSON.stringify(estado))}catch(e){}
       atualizarTela();
