@@ -1346,11 +1346,12 @@ async function reiniciarVinculacaoEmail(){
   if(!ok)return;
   try{
     await auth.signOut();
-    await auth.signInAnonymously();
-    mostrarToast('🔄 Pronto! Agora cadastre o e-mail de novo.');
+    const cred=await auth.signInAnonymously();
+    const u=cred?.user||auth.currentUser;
+    mostrarAviso('🔄','Sessão reiniciada',`Sessão nova criada (${u?.isAnonymous?'sem e-mail vinculado, pronto para cadastrar':'ainda com e-mail: '+u?.email}). Pode preencher o formulário e tocar em "Vincular E-mail".`);
   }catch(e){
     console.error('Falha ao reiniciar vinculação de e-mail:',e);
-    mostrarToast('⚠️ Não foi possível reiniciar. Tente recarregar a página.');
+    mostrarErroRecuperacao(`Não foi possível reiniciar a sessão. Código técnico: ${e?.code||'desconhecido'} — ${e?.message||''}`);
   }
 }
 function abrirTelaEmailRecupera(){
@@ -1401,7 +1402,7 @@ async function salvarEmailRecuperacao(){
     mostrarAviso('✅','E-mail vinculado','Agora você pode recuperar a senha por e-mail e entrar novamente nesta conta.');
   }catch(error){
     console.warn('Falha ao vincular email:',error);
-    const msg=error?.code==='auth/email-already-in-use'?'Este e-mail já pertence a outra conta. Use outro endereço ou entre com ele.':error?.code==='auth/requires-recent-login'?'Por segurança, entre novamente com sua conta antes de trocar o e-mail.':error?.code==='auth/operation-not-allowed'?'Este aparelho já tinha outro e-mail vinculado antes e o Firebase exige confirmar por link para trocar. Toque em "Reiniciar vinculação" abaixo e tente de novo — o acesso à família não é afetado.':`Não foi possível vincular o e-mail. Código técnico: ${error?.code||'desconhecido'} — ${error?.message||''}`;
+    const msg=error?.code==='auth/email-already-in-use'?'Este e-mail já pertence a outra conta. Use outro endereço ou entre com ele.':error?.code==='auth/requires-recent-login'?'Por segurança, entre novamente com sua conta antes de trocar o e-mail.':error?.code==='auth/operation-not-allowed'?`Este aparelho já tinha outro e-mail vinculado (${user?.email||'desconhecido'}) e o Firebase exige confirmar por link para trocar. Toque em "Reiniciar vinculação" abaixo e aguarde a mensagem de confirmação antes de tentar de novo — o acesso à família não é afetado.`:`Não foi possível vincular o e-mail. Código técnico: ${error?.code||'desconhecido'} — ${error?.message||''}`;
     mostrarErroRecuperacao(msg);
   }
 }
