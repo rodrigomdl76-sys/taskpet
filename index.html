@@ -298,6 +298,7 @@ button{touch-action:manipulation}
       O email e a senha serão usados apenas para recuperar a conta. O PIN continua protegendo o painel dos responsáveis. Suporta até 2 responsáveis — para o segundo cadastrar o próprio e-mail, abra o app com o mesmo código de família no aparelho dessa pessoa e repita este passo por lá.
     </p>
     <button class="botao-principal" onclick="salvarEmailRecuperacao()">Vincular E-mail</button>
+    <button class="botao-principal botao-secundario" onclick="reiniciarVinculacaoEmail()" style="font-size:11px">🔄 Já tentei antes / reiniciar vinculação</button>
     <button class="botao-principal botao-secundario" onclick="fecharTelaEmail()">Voltar</button>
   </div>
 </div>
@@ -1338,6 +1339,20 @@ function atualizarBannerOffline(){
 }
 window.addEventListener('online',atualizarBannerOffline);
 window.addEventListener('offline',atualizarBannerOffline);
+async function reiniciarVinculacaoEmail(){
+  const auth=obterAuth();
+  if(!auth)return mostrarErroRecuperacao('O serviço de autenticação não carregou. Recarregue a página.');
+  const ok=window.confirm('Isso desvincula o e-mail de teste que já estava associado a este aparelho, para você cadastrar o e-mail correto do zero. Isso NÃO afeta o acesso à família (que depende só do código da família). Continuar?');
+  if(!ok)return;
+  try{
+    await auth.signOut();
+    await auth.signInAnonymously();
+    mostrarToast('🔄 Pronto! Agora cadastre o e-mail de novo.');
+  }catch(e){
+    console.error('Falha ao reiniciar vinculação de e-mail:',e);
+    mostrarToast('⚠️ Não foi possível reiniciar. Tente recarregar a página.');
+  }
+}
 function abrirTelaEmailRecupera(){
   fecharModal('modal-pais');
   const inputEmail=document.getElementById('inputEmailRecupera');
@@ -1386,7 +1401,7 @@ async function salvarEmailRecuperacao(){
     mostrarAviso('✅','E-mail vinculado','Agora você pode recuperar a senha por e-mail e entrar novamente nesta conta.');
   }catch(error){
     console.warn('Falha ao vincular email:',error);
-    const msg=error?.code==='auth/email-already-in-use'?'Este e-mail já pertence a outra conta. Use outro endereço ou entre com ele.':error?.code==='auth/requires-recent-login'?'Por segurança, entre novamente com sua conta antes de trocar o e-mail.':`Não foi possível vincular o e-mail. Código técnico: ${error?.code||'desconhecido'} — ${error?.message||''}`;
+    const msg=error?.code==='auth/email-already-in-use'?'Este e-mail já pertence a outra conta. Use outro endereço ou entre com ele.':error?.code==='auth/requires-recent-login'?'Por segurança, entre novamente com sua conta antes de trocar o e-mail.':error?.code==='auth/operation-not-allowed'?'Este aparelho já tinha outro e-mail vinculado antes e o Firebase exige confirmar por link para trocar. Toque em "Reiniciar vinculação" abaixo e tente de novo — o acesso à família não é afetado.':`Não foi possível vincular o e-mail. Código técnico: ${error?.code||'desconhecido'} — ${error?.message||''}`;
     mostrarErroRecuperacao(msg);
   }
 }
