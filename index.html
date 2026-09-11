@@ -180,7 +180,7 @@ button{touch-action:manipulation}
 .tela-pin{
   position:fixed;inset:0;
   background:rgba(15,23,42,0.85);
-  display:flex;align-items:center;justify-content:center;
+  display:none;align-items:center;justify-content:center;
   z-index:9999;
 }
 .caixa-pin{
@@ -650,6 +650,8 @@ function calcularDiffParaNuvem(base,atual){
   const mudancas={};
   const chaves=new Set([...Object.keys(base||{}),...Object.keys(atual)]);
   for(const k of chaves){
+    // perfilAtivo pertence a este aparelho e NÃO deve ser sincronizado com a família.
+    if(k==='perfilAtivo')continue;
     const antigo=base?base[k]:undefined;
     const novo=atual[k];
     if(JSON.stringify(antigo)!==JSON.stringify(novo))mudancas[k]=(novo===undefined)?null:novo;
@@ -792,17 +794,29 @@ try{
 }catch(e){}
 estado.tarefas.forEach(t=>{if(!t.tipo)t.tipo='obrigatoria';if(!t.status)t.status='pendente';if(t.foto===undefined)t.foto=null;if(!Array.isArray(t.dias))t.dias=[]});
 if(!Number.isFinite(Number(estado.streak)))estado.streak=0;
-const hojeStr=hojeLocal();
-if(estado.ultimoDiaAcesso!==hojeStr){
+
+// Reseta o estado diário de forma centralizada.
+// Importante: também é chamado DEPOIS da carga do Firebase, pois a nuvem
+// pode trazer o estado de ontem e sobrescrever o reset local feito no início.
+function verificarTrocaDeDia(){
+  const hojeStr=hojeLocal();
+  if(estado.ultimoDiaAcesso===hojeStr)return false;
+
   const emPausa=estado.pausaAte&&hojeStr<=estado.pausaAte;
   if(!emPausa&&estado.ultimoDiaConcluido!==ontemLocal()&&estado.ultimoDiaConcluido!==hojeStr){
     estado.streak=0;
     estado.ultimoStreakPremiado=0;
   }
+
+  // Cada tarefa tem um status próprio para o dia atual.
   estado.tarefas.forEach(t=>{t.status='pendente';t.foto=null});
   estado.tarefasHojeCount=0;
   estado.ultimoDiaAcesso=hojeStr;
+  return true;
 }
+
+verificarTrocaDeDia();
+
 function salvar(){
   try{localStorage.setItem(`ROTINAPET_SAVE_${codigoFamilia}`,JSON.stringify(estado))}catch(e){mostrarToast('⚠️ Memória cheia; foto não armazenada.')}
   if(sincronizacaoNuvemAtiva&&dbFirebase&&!cargaNuvemPendente){
@@ -837,8 +851,13 @@ async function carregarEstadoNuvem(){
       return false;
     }
     ultimoEstadoSincronizado=JSON.parse(JSON.stringify(remoto));
+    const perfilLocal=estado.perfilAtivo;
     estado={...estado,...remoto,pets:{...estado.pets,...(remoto.pets||{})}};
+    // perfilAtivo é local ao aparelho: a criança não deve virar responsável
+    // (ou vice-versa) só porque outro aparelho sincronizou a família.
+    estado.perfilAtivo=perfilLocal||null;
     normalizarEmailsRecuperacao();
+    verificarTrocaDeDia();
     localStorage.setItem(`ROTINAPET_SAVE_${codigoFamilia}`,JSON.stringify(estado));
     atualizarTela();
     return true;
@@ -865,7 +884,10 @@ async function iniciarSincronizacaoNuvem(){
     const d=s.val();
     if(d&&typeof d==='object'){
       ultimoEstadoSincronizado=JSON.parse(JSON.stringify(d));
+      const perfilLocal=estado.perfilAtivo;
       estado={...estado,...d,pets:{...estado.pets,...(d.pets||{})}};
+      estado.perfilAtivo=perfilLocal||null;
+      verificarTrocaDeDia();
       try{localStorage.setItem(`ROTINAPET_SAVE_${codigoFamilia}`,JSON.stringify(estado))}catch(e){}
       atualizarTela();
       mostrarToast('☁️ Sincronizado');
@@ -1186,11 +1208,20 @@ function renderizarTarefas(){
   atualizarOfensiva();
 }
 function verificarPrimeiroAcesso(){
-  if(!estado.perfilAtivo){
-    abrirModal('modal-selecao-perfil');
-  }else if(estado.perfilAtivo==='pais'){
-    abrirPainelPais();
+  const telaPinLegada=document.getElementById('telaPinResponsavel');
+  // Esta é uma tela PIN antiga que ficou no HTML por compatibilidade.
+  // Ela nunca deve aparecer automaticamente.
+  if(telaPinLegada)telaPinLegada.style.display='none';
+
+  if(estado.perfilAtivo==='crianca'){
+    fecharModal('modal-pin');
+    return;
   }
+  if(estado.perfilAtivo==='pais'){
+    abrirPainelPais();
+    return;
+  }
+  abrirModal('modal-selecao-perfil');
 }
 function escolherPerfilInicial(tipo){
   estado.perfilAtivo=tipo;
@@ -2731,6 +2762,11 @@ setInterval(()=>{
   if(agora.getSeconds()===0){
     verificarLembreteNoturno();
     if(estado.timerFim)atualizarDisplayTimer();
+    if(verificarTrocaDeDia()){
+      salvar();
+      atualizarTela();
+      mostrarToast('🌅 Novo dia! As tarefas foram renovadas.');
+    }
   }
 },1000);
 window.addEventListener('DOMContentLoaded',()=>{
