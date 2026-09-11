@@ -11,9 +11,9 @@
 <link rel="apple-touch-icon" href="icon-192.png">
 <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.9.3/dist/confetti.browser.min.js" defer></script>
 <!-- Firebase Compat Core, Auth e Database -->
-<script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
-<script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-auth-compat.js"></script>
-<script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-database-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/12.18.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/12.18.0/firebase-auth-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/12.18.0/firebase-database-compat.js"></script>
 <style>
 @import url('https://fonts.googleapis.com/css2?family=Nunito:wght@600;700;800;900&display=swap');
 *{margin:0;padding:0;box-sizing:border-box;font-family:'Nunito',sans-serif;-webkit-tap-highlight-color:transparent}
@@ -1388,7 +1388,17 @@ async function salvarEmailRecuperacao(){
       const cred=firebase.auth.EmailAuthProvider.credential(email,senha);
       await user.linkWithCredential(cred);
     }else if(user.email!==email){
-      await user.updateEmail(email);
+      // Firebase hoje exige confirmar o e-mail novo por link antes de trocar
+      // (updateEmail() direto não é mais permitido). Isso envia o link e só
+      // atualiza de fato quando a pessoa clicar nele.
+      await user.verifyBeforeUpdateEmail(email);
+      await user.updatePassword(senha).catch(()=>{});
+      normalizarEmailsRecuperacao();
+      salvar();
+      fecharTelaEmail();
+      mostrarAviso('📩','Confirme por e-mail',`Enviamos um link de confirmação para ${email}. O e-mail só passa a valer para login depois que você clicar nesse link.`);
+      return;
+    }else{
       await user.updatePassword(senha);
     }
     normalizarEmailsRecuperacao();
