@@ -180,7 +180,7 @@ button{touch-action:manipulation}
 .tela-pin{
   position:fixed;inset:0;
   background:rgba(15,23,42,0.85);
-  display:none;align-items:center;justify-content:center;
+  display:flex;align-items:center;justify-content:center;
   z-index:9999;
 }
 .caixa-pin{
@@ -364,6 +364,14 @@ button{touch-action:manipulation}
     </div>
   </div>
 </div>
+<div id="modal-selecao-crianca" class="modal-overlay">
+  <div class="modal" style="text-align:center;max-width:320px">
+    <div style="font-size:38px;margin-bottom:6px">🐾</div>
+    <h3 style="font-size:17px;margin-bottom:4px">Quem é você?</h3>
+    <p style="font-size:10px;color:#64748b;margin-bottom:14px">Toque no seu nome para continuar:</p>
+    <div class="stack" id="lista-criancas-selecao" style="gap:8px"></div>
+  </div>
+</div>
 <div id="modal-onboarding" class="modal-overlay"><div class="modal" style="text-align:center;max-width:320px">
   <div style="font-size:40px">🐾</div>
   <h3 style="font-size:16px;margin:5px 0">Como funciona?</h3>
@@ -388,6 +396,12 @@ button{touch-action:manipulation}
 <div id="modal-pais" class="modal-overlay"><div class="modal">
   <div class="modal-title"><h3>👨‍👩‍👧 Painel dos Pais</h3><button class="close-btn" onclick="fecharModal('modal-pais')">×</button></div>
   <div class="stat-grid" style="margin-bottom:9px"><div class="stat">💰 <b>R$ <span id="txt-painel-disponivel">0,00</span></b><span>saldo disponível</span></div><div class="stat">🧾 <b>R$ <span id="txt-total-pago">0,00</span></b><span>total pago</span></div></div>
+  <div class="section-card">
+    <label class="field-label">👨‍👩‍👧‍👦 Filhos</label>
+    <div class="stack" id="lista-criancas-pais" style="margin:4px 0"></div>
+    <button type="button" class="primary-btn blue-btn botao-secundario" style="width:100%;margin-top:4px" onclick="abrirNovoFilho()">+ Adicionar filho</button>
+    <small style="font-size:8px;color:#64748b;margin-top:3px;display:block">Cada filho tem pet, tarefas e moedas separados. Toque num filho para trocar quem está ativo.</small>
+  </div>
   <div class="section-card"><div style="display:flex;justify-content:space-between;align-items:center"><b style="font-size:10px">💸 Cofrinho</b><button class="primary-btn green-btn" onclick="sacarDinheiro()">Pagar / sacar</button></div><div style="font-size:9px;color:#64748b;margin-top:5px">Cada moeda vale R$ <span id="texto-taxa-atual">0,01</span>.</div></div>
   <div class="section-card"><label class="field-label">👶 Idade da criança</label><input class="field" id="input-idade-crianca" type="number" min="3" max="15" onchange="atualizarIdadeCrianca(this.value)"></div>
   <div class="section-card"><label class="field-label">💵 Valor por moeda (R$)</label><input class="field" id="input-taxa-cambio" type="number" min="0" step="0.01" onchange="atualizarTaxaCambio(this.value)"></div>
@@ -650,8 +664,6 @@ function calcularDiffParaNuvem(base,atual){
   const mudancas={};
   const chaves=new Set([...Object.keys(base||{}),...Object.keys(atual)]);
   for(const k of chaves){
-    // perfilAtivo pertence a este aparelho e NÃO deve ser sincronizado com a família.
-    if(k==='perfilAtivo')continue;
     const antigo=base?base[k]:undefined;
     const novo=atual[k];
     if(JSON.stringify(antigo)!==JSON.stringify(novo))mudancas[k]=(novo===undefined)?null:novo;
@@ -737,8 +749,68 @@ async function hashPinLegado(pin,codigo){
 }
 const hojeLocal=()=>{const d=new Date();return `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`};
 const ontemLocal=()=>{const d=new Date();d.setDate(d.getDate()-1);return `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`};
+// Campos que pertencem a UM filho específico (progresso do pet, tarefas, moedas...).
+// Tudo que NÃO está nessa lista é compartilhado pela família inteira (PIN, e-mails, taxa de câmbio).
+const CAMPOS_CRIANCA=['acessorios','conquistas','desafiosMathAcertos','dinheiroAcumulado','fundoAtual','fundosComprados','historicoConclusoes','idadeCrianca','lembreteEnviadoData','metaMoedas','moedas','onboardingVistoCrianca','pausaAte','petAtual','pets','recompensas','registroDiario','solicitacoesPremios','streak','surpresaResgatadaData','tarefas','tarefasHojeCount','timerFim','totalSacado','ultimoDiaAcesso','ultimoDiaConcluido','ultimoStreakPremiado','vozSalva'];
+function valoresPadraoCrianca(){
+  return {
+    petAtual:'gato',moedas:15,dinheiroAcumulado:.15,idadeCrianca:7,
+    fundoAtual:'ceu',fundosComprados:['ceu'],metaMoedas:50,totalSacado:0,
+    ultimoDiaAcesso:hojeLocal(),ultimoDiaConcluido:null,streak:0,ultimoStreakPremiado:0,
+    tarefasHojeCount:0,desafiosMathAcertos:0,timerFim:null,vozSalva:null,
+    pets:{gato:{nivel:1,xp:0,felicidade:100,saude:100},cachorra:{nivel:1,xp:0,felicidade:100,saude:100},cabra:{nivel:1,xp:0,felicidade:100,saude:100},frango:{nivel:1,xp:0,felicidade:100,saude:100}},
+    tarefas:[{id:1,texto:'Escovar os dentes',recompensa:5,xp:20,tipo:'obrigatoria',status:'pendente',foto:null,dias:[]},{id:2,texto:'Arrumar a cama',recompensa:5,xp:20,tipo:'obrigatoria',status:'pendente',foto:null,dias:[]}],
+    recompensas:[
+      {id:1,texto:'15 min de tela',descricao:'Tempo de tela liberado pelos pais.',custo:10,tipo:'timer',minutos:15,icone:'📱',ativo:true},
+      {id:2,texto:'30 min de tela',descricao:'Tempo de tela liberado pelos pais.',custo:18,tipo:'timer',minutos:30,icone:'🎮',ativo:true}
+    ],
+    solicitacoesPremios:[],conquistas:{},acessorios:{comprados:[],ativo:null},pausaAte:null,
+    historicoConclusoes:{},registroDiario:{},onboardingVistoCrianca:false,lembreteEnviadoData:null,
+    surpresaResgatadaData:null
+  };
+}
+function capturarDadosCrianca(){
+  const s={};
+  CAMPOS_CRIANCA.forEach(k=>{s[k]=estado[k]});
+  return JSON.parse(JSON.stringify(s));
+}
+function aplicarDadosCrianca(dados){
+  const padrao=valoresPadraoCrianca();
+  CAMPOS_CRIANCA.forEach(k=>{estado[k]=(dados&&dados[k]!==undefined)?dados[k]:padrao[k]});
+}
+function trocarCriancaAtiva(novoId){
+  if(!estado.criancas[novoId]||novoId===estado.criancaAtivaId)return;
+  estado.criancasDados=estado.criancasDados||{};
+  estado.criancasDados[estado.criancaAtivaId]=capturarDadosCrianca();
+  aplicarDadosCrianca(estado.criancasDados[novoId]);
+  estado.criancaAtivaId=novoId;
+  salvar();
+  atualizarTela();
+  ultimoFundoParticulas=null;
+  renderizarParticulasCenario(estado.fundoAtual);
+  if(document.getElementById('modal-pais')?.classList.contains('mostrar'))renderizarPainelPais();
+  mostrarToast(`🐾 Agora é a vez de ${estado.criancas[novoId].nome}!`);
+}
+function criarNovaCrianca(nome,emoji){
+  const id='c_'+Date.now().toString(36);
+  estado.criancas=estado.criancas||{};
+  estado.criancas[id]={nome:(nome||'Criança').trim().slice(0,30),emoji:emoji||'🐾'};
+  estado.criancasDados=estado.criancasDados||{};
+  estado.criancasDados[id]=valoresPadraoCrianca();
+  return id;
+}
+function garantirCriancaAtiva(){
+  if(!estado.criancas||typeof estado.criancas!=='object'||!Object.keys(estado.criancas).length){
+    estado.criancas={c1:{nome:'Minha Criança',emoji:'🐾'}};
+    estado.criancaAtivaId='c1';
+  }
+  if(!estado.criancaAtivaId||!estado.criancas[estado.criancaAtivaId]){
+    estado.criancaAtivaId=Object.keys(estado.criancas)[0];
+  }
+  estado.criancasDados=estado.criancasDados||{};
+}
 let estado={
-  perfilAtivo:null,
+  perfilAtivo:null,criancaAtivaId:'c1',criancas:{c1:{nome:'Minha Criança',emoji:'🐾'}},criancasDados:{},
   petAtual:'gato',moedas:15,taxaCambio:.01,pinHash:null,dinheiroAcumulado:.15,idadeCrianca:7,
   fundoAtual:'ceu',fundosComprados:['ceu'],metaMoedas:50,totalSacado:0,
   ultimoDiaAcesso:hojeLocal(),ultimoDiaConcluido:null,streak:0,ultimoStreakPremiado:0,
@@ -787,6 +859,10 @@ try{
     estado.historicoConclusoes=estado.historicoConclusoes||{};
     estado.registroDiario=estado.registroDiario||{};
     normalizarEmailsRecuperacao();
+    // Migração: quem já usava o app antes de existir múltiplos filhos não tinha
+    // `criancas` nem `criancaAtivaId` — cria o primeiro perfil com o progresso
+    // que já estava solto no estado, sem mexer em mais nada.
+    garantirCriancaAtiva();
     if(d.pinPais&&!d.pinHash){
       hashPin(d.pinPais).then(h=>{estado.pinHash=h;delete estado.pinPais;salvar();});
     }
@@ -794,29 +870,17 @@ try{
 }catch(e){}
 estado.tarefas.forEach(t=>{if(!t.tipo)t.tipo='obrigatoria';if(!t.status)t.status='pendente';if(t.foto===undefined)t.foto=null;if(!Array.isArray(t.dias))t.dias=[]});
 if(!Number.isFinite(Number(estado.streak)))estado.streak=0;
-
-// Reseta o estado diário de forma centralizada.
-// Importante: também é chamado DEPOIS da carga do Firebase, pois a nuvem
-// pode trazer o estado de ontem e sobrescrever o reset local feito no início.
-function verificarTrocaDeDia(){
-  const hojeStr=hojeLocal();
-  if(estado.ultimoDiaAcesso===hojeStr)return false;
-
+const hojeStr=hojeLocal();
+if(estado.ultimoDiaAcesso!==hojeStr){
   const emPausa=estado.pausaAte&&hojeStr<=estado.pausaAte;
   if(!emPausa&&estado.ultimoDiaConcluido!==ontemLocal()&&estado.ultimoDiaConcluido!==hojeStr){
     estado.streak=0;
     estado.ultimoStreakPremiado=0;
   }
-
-  // Cada tarefa tem um status próprio para o dia atual.
   estado.tarefas.forEach(t=>{t.status='pendente';t.foto=null});
   estado.tarefasHojeCount=0;
   estado.ultimoDiaAcesso=hojeStr;
-  return true;
 }
-
-verificarTrocaDeDia();
-
 function salvar(){
   try{localStorage.setItem(`ROTINAPET_SAVE_${codigoFamilia}`,JSON.stringify(estado))}catch(e){mostrarToast('⚠️ Memória cheia; foto não armazenada.')}
   if(sincronizacaoNuvemAtiva&&dbFirebase&&!cargaNuvemPendente){
@@ -851,13 +915,9 @@ async function carregarEstadoNuvem(){
       return false;
     }
     ultimoEstadoSincronizado=JSON.parse(JSON.stringify(remoto));
-    const perfilLocal=estado.perfilAtivo;
     estado={...estado,...remoto,pets:{...estado.pets,...(remoto.pets||{})}};
-    // perfilAtivo é local ao aparelho: a criança não deve virar responsável
-    // (ou vice-versa) só porque outro aparelho sincronizou a família.
-    estado.perfilAtivo=perfilLocal||null;
     normalizarEmailsRecuperacao();
-    verificarTrocaDeDia();
+    garantirCriancaAtiva();
     localStorage.setItem(`ROTINAPET_SAVE_${codigoFamilia}`,JSON.stringify(estado));
     atualizarTela();
     return true;
@@ -884,10 +944,20 @@ async function iniciarSincronizacaoNuvem(){
     const d=s.val();
     if(d&&typeof d==='object'){
       ultimoEstadoSincronizado=JSON.parse(JSON.stringify(d));
-      const perfilLocal=estado.perfilAtivo;
-      estado={...estado,...d,pets:{...estado.pets,...(d.pets||{})}};
-      estado.perfilAtivo=perfilLocal||null;
-      verificarTrocaDeDia();
+      if(d.criancaAtivaId&&estado.criancaAtivaId&&d.criancaAtivaId!==estado.criancaAtivaId){
+        // Outro aparelho trocou para um filho diferente do que este aparelho
+        // está mostrando agora. Guarda o progresso daquele filho para quando
+        // alguém trocar para ele por aqui, sem sobrescrever a tela atual.
+        estado.criancas={...estado.criancas,...(d.criancas||{})};
+        estado.criancasDados={...estado.criancasDados,...(d.criancasDados||{})};
+        const dadosRecebidos={};
+        CAMPOS_CRIANCA.forEach(k=>{if(d[k]!==undefined)dadosRecebidos[k]=d[k]});
+        estado.criancasDados[d.criancaAtivaId]=dadosRecebidos;
+        Object.keys(d).forEach(k=>{if(!CAMPOS_CRIANCA.includes(k)&&k!=='criancaAtivaId')estado[k]=d[k]});
+      }else{
+        estado={...estado,...d,pets:{...estado.pets,...(d.pets||{})}};
+      }
+      garantirCriancaAtiva();
       try{localStorage.setItem(`ROTINAPET_SAVE_${codigoFamilia}`,JSON.stringify(estado))}catch(e){}
       atualizarTela();
       mostrarToast('☁️ Sincronizado');
@@ -1208,20 +1278,11 @@ function renderizarTarefas(){
   atualizarOfensiva();
 }
 function verificarPrimeiroAcesso(){
-  const telaPinLegada=document.getElementById('telaPinResponsavel');
-  // Esta é uma tela PIN antiga que ficou no HTML por compatibilidade.
-  // Ela nunca deve aparecer automaticamente.
-  if(telaPinLegada)telaPinLegada.style.display='none';
-
-  if(estado.perfilAtivo==='crianca'){
-    fecharModal('modal-pin');
-    return;
-  }
-  if(estado.perfilAtivo==='pais'){
+  if(!estado.perfilAtivo){
+    abrirModal('modal-selecao-perfil');
+  }else if(estado.perfilAtivo==='pais'){
     abrirPainelPais();
-    return;
   }
-  abrirModal('modal-selecao-perfil');
 }
 function escolherPerfilInicial(tipo){
   estado.perfilAtivo=tipo;
@@ -1230,10 +1291,38 @@ function escolherPerfilInicial(tipo){
   if(tipo==='pais'){
     abrirPainelPais();
   }else{
-    mostrarToast('🐾 Bem-vindo ao seu Pet!');
-    if(!estado.onboardingVistoCrianca){
-      setTimeout(()=>abrirModal('modal-onboarding'),450);
+    const ids=Object.keys(estado.criancas||{});
+    if(ids.length>1){
+      abrirSelecaoCrianca();
+    }else{
+      entrarComoCrianca();
     }
+  }
+}
+function abrirSelecaoCrianca(){
+  const c=document.getElementById('lista-criancas-selecao');
+  if(c){
+    c.innerHTML='';
+    Object.keys(estado.criancas).forEach(id=>{
+      const info=estado.criancas[id];
+      const btn=document.createElement('button');
+      btn.className='primary-btn green-btn';
+      btn.style.cssText='padding:12px;font-size:13px;display:flex;align-items:center;justify-content:center;gap:8px';
+      btn.innerHTML=`<span style="font-size:20px">${info.emoji||'🐾'}</span> ${info.nome}`;
+      btn.onclick=()=>{
+        fecharModal('modal-selecao-crianca');
+        trocarCriancaAtiva(id);
+        entrarComoCrianca();
+      };
+      c.appendChild(btn);
+    });
+  }
+  abrirModal('modal-selecao-crianca');
+}
+function entrarComoCrianca(){
+  mostrarToast('🐾 Bem-vindo ao seu Pet!');
+  if(!estado.onboardingVistoCrianca){
+    setTimeout(()=>abrirModal('modal-onboarding'),450);
   }
 }
 function fecharOnboarding(){
@@ -1336,6 +1425,7 @@ function restaurarBackupEstado(arquivo){
     estado.historicoConclusoes=estado.historicoConclusoes||{};
     estado.registroDiario=estado.registroDiario||{};
     normalizarEmailsRecuperacao();
+    garantirCriancaAtiva();
     salvar();
     renderizarPainelPais();
     atualizarTela();
@@ -1612,9 +1702,85 @@ function limparPin(){
   pinDigitado='';
   atualizarDots();
 }
+function renderizarListaCriancasPais(){
+  const c=document.getElementById('lista-criancas-pais');
+  if(!c)return;
+  c.innerHTML='';
+  const ids=Object.keys(estado.criancas||{});
+  ids.forEach(id=>{
+    const info=estado.criancas[id];
+    const ativa=id===estado.criancaAtivaId;
+    const row=document.createElement('div');
+    row.style.cssText='display:flex;align-items:center;gap:6px;padding:6px;border-radius:10px;'+(ativa?'background:#ede9fe;border:1px solid #a78bfa':'background:#fff;border:1px solid #e5e7eb');
+    row.innerHTML=`<span style="font-size:18px">${info.emoji||'🐾'}</span><span style="flex:1;font-size:11px;font-weight:${ativa?'800':'600'}">${info.nome}${ativa?' (ativo agora)':''}</span>`;
+    if(!ativa){
+      const btnTrocar=document.createElement('button');
+      btnTrocar.className='primary-btn blue-btn';
+      btnTrocar.style.cssText='padding:4px 8px;font-size:9px';
+      btnTrocar.textContent='Trocar';
+      btnTrocar.onclick=()=>trocarCriancaAtiva(id);
+      row.appendChild(btnTrocar);
+    }
+    const btnRenomear=document.createElement('button');
+    btnRenomear.className='primary-btn blue-btn botao-secundario';
+    btnRenomear.style.cssText='padding:4px 8px;font-size:9px';
+    btnRenomear.textContent='✏️';
+    btnRenomear.onclick=()=>renomearCrianca(id);
+    row.appendChild(btnRenomear);
+    if(ids.length>1){
+      const btnExcluir=document.createElement('button');
+      btnExcluir.className='primary-btn botao-secundario';
+      btnExcluir.style.cssText='padding:4px 8px;font-size:9px;color:#dc2626';
+      btnExcluir.textContent='🗑️';
+      btnExcluir.onclick=()=>excluirCrianca(id);
+      row.appendChild(btnExcluir);
+    }
+    c.appendChild(row);
+  });
+}
+function abrirNovoFilho(){
+  const nome=window.prompt('Nome do novo filho:');
+  if(!nome||!nome.trim())return;
+  const emoji=window.prompt('Escolha um emoji para representar (ex: 🐱 🦁 🐶 🐸):','🐾')||'🐾';
+  const id=criarNovaCrianca(nome,emoji);
+  trocarCriancaAtiva(id);
+  renderizarListaCriancasPais();
+  mostrarToast(`👨‍👩‍👧‍👦 ${nome} adicionado(a)!`);
+}
+function renomearCrianca(id){
+  if(!estado.criancas[id])return;
+  const nome=window.prompt('Novo nome:',estado.criancas[id].nome);
+  if(!nome||!nome.trim())return;
+  const emoji=window.prompt('Emoji (deixe igual se não quiser trocar):',estado.criancas[id].emoji)||estado.criancas[id].emoji;
+  estado.criancas[id]={...estado.criancas[id],nome:nome.trim().slice(0,30),emoji};
+  salvar();
+  renderizarListaCriancasPais();
+  if(id===estado.criancaAtivaId)atualizarTela();
+}
+function excluirCrianca(id){
+  if(!estado.criancas[id]||Object.keys(estado.criancas).length<=1)return;
+  const ok=window.confirm(`Excluir ${estado.criancas[id].nome}? Todo o progresso desse filho (moedas, tarefas, pet) será apagado para sempre.`);
+  if(!ok)return;
+  const eraAtiva=id===estado.criancaAtivaId;
+  delete estado.criancas[id];
+  if(estado.criancasDados)delete estado.criancasDados[id];
+  if(eraAtiva){
+    const proximoId=Object.keys(estado.criancas)[0];
+    aplicarDadosCrianca(estado.criancasDados&&estado.criancasDados[proximoId]);
+    estado.criancaAtivaId=proximoId;
+    salvar();
+    atualizarTela();
+    ultimoFundoParticulas=null;
+    renderizarParticulasCenario(estado.fundoAtual);
+  }else{
+    salvar();
+  }
+  renderizarListaCriancasPais();
+}
 function renderizarPainelPais(){
   document.getElementById('input-taxa-cambio').value=estado.taxaCambio;
   document.getElementById('input-idade-crianca').value=estado.idadeCrianca||7;
+  renderizarListaCriancasPais();
   const statusEmail=document.getElementById('txt-status-email-recupera');
   if(statusEmail){
     const lista=Array.isArray(estado.emailsRecuperacao)?estado.emailsRecuperacao:[];
@@ -2762,11 +2928,6 @@ setInterval(()=>{
   if(agora.getSeconds()===0){
     verificarLembreteNoturno();
     if(estado.timerFim)atualizarDisplayTimer();
-    if(verificarTrocaDeDia()){
-      salvar();
-      atualizarTela();
-      mostrarToast('🌅 Novo dia! As tarefas foram renovadas.');
-    }
   }
 },1000);
 window.addEventListener('DOMContentLoaded',()=>{
