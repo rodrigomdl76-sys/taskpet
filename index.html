@@ -230,7 +230,7 @@ button{touch-action:manipulation}
 </head>
 <body class="cenario-ceu">
 <!-- Tela de PIN dos Responsáveis -->
-<div class="tela-pin" id="telaPinResponsavel">
+<div class="tela-pin" id="telaPinResponsavel" style="display:none;">
   <div class="caixa-pin">
     <h2>🔐 Área dos Responsáveis</h2>
     <div class="digitos">
@@ -250,9 +250,10 @@ button{touch-action:manipulation}
       <button class="tecla" onclick="digitar(7)">7</button>
       <button class="tecla" onclick="digitar(8)">8</button>
       <button class="tecla" onclick="digitar(9)">9</button>
-      <button class="tecla espaco"></button>
-      <button class="tecla" onclick="apagar()">⌫</button>
-      <button class="tecla espaco"></button>
+      <button type="button" class="tecla" onclick="digitar(0)">0</button>
+      <button type="button" class="tecla" onclick="apagar()">⌫</button>
+      <button type="button" class="tecla" onclick="validarPin()">✓</button>
+
     </div>
     <p class="link-recupera" onclick="abrirRecuperaPin()">❓ Esqueceu seu PIN?</p>
     <p class="link-recupera" onclick="abrirLoginEmail()">🔑 Entrar com e-mail</p>
