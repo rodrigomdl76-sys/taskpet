@@ -69,6 +69,8 @@ button{touch-action:manipulation}
 #pet-svg-container{width:210px;height:210px;position:relative;z-index:2}
 #pet-svg-container svg{width:100%;height:100%;filter:drop-shadow(0 9px 12px rgba(0,0,0,.18))}
 .camada-pet,.camada-acessorio{position:absolute;inset:0}
+@keyframes acessorioPulo{0%{transform:translateY(0) scale(1)}30%{transform:translateY(-14px) scale(1.08)}55%{transform:translateY(2px) scale(.97)}75%{transform:translateY(-6px) scale(1.03)}100%{transform:translateY(0) scale(1)}}
+.acessorio-pulo{animation:acessorioPulo .6s ease;filter:drop-shadow(0 0 10px gold)}
 .camada-acessorio svg{width:100%;height:100%}
 .cat-wrapper{cursor:pointer;animation:catFloat 4s ease-in-out infinite;z-index:3}
 @keyframes catFloat{0%,100%{transform:translateY(0)}50%{transform:translateY(-7px)}}
@@ -382,13 +384,15 @@ button{touch-action:manipulation}
   </div>
   <button class="primary-btn green-btn" style="width:100%;margin-top:12px" onclick="fecharOnboarding()">Entendi, vamos lá! 🚀</button>
 </div></div>
-<div id="modal-fundos" class="modal-overlay"><div class="modal"><div class="modal-title"><h3 id="titulo-loja-visual">🖼️ Loja de Fundos</h3><button class="close-btn" onclick="fecharModal('modal-fundos')">×</button></div>
+<div id="modal-fundos" class="modal-overlay"><div class="modal"><div class="modal-title"><h3 id="titulo-loja-visual">🎨 Temas</h3><button class="close-btn" onclick="fecharModal('modal-fundos')">×</button></div>
   <div class="grid-tabs">
-    <button class="tab-btn ativa" id="tab-fundos" onclick="alternarAbaLojaVisual('fundos')">🖼️ Fundos</button>
+    <button class="tab-btn ativa" id="tab-temas" onclick="alternarAbaLojaVisual('temas')">🎨 Temas</button>
+    <button class="tab-btn" id="tab-fundos" onclick="alternarAbaLojaVisual('fundos')">🖼️ Fundos</button>
     <button class="tab-btn" id="tab-acessorios" onclick="alternarAbaLojaVisual('acessorios')">🎀 Acessórios</button>
   </div>
-  <p style="font-size:9px;color:#64748b;margin-bottom:10px" id="desc-loja-visual">Use suas moedas para personalizar o mundo do seu pet.</p>
-  <div class="grid-fundos" id="grid-fundos"></div>
+  <p style="font-size:9px;color:#64748b;margin-bottom:10px" id="desc-loja-visual">Combos com fundo + acessório combinando, prontos pra usar.</p>
+  <div class="grid-fundos" id="grid-temas"></div>
+  <div class="grid-fundos hidden" id="grid-fundos"></div>
   <div class="grid-fundos hidden" id="grid-acessorios"></div>
 </div></div>
 <div id="modal-timer" class="modal-overlay"><div class="modal" style="text-align:center"><div class="modal-title"><h3>⏳ Tempo de Tela</h3><button class="close-btn" onclick="fecharModal('modal-timer')">×</button></div><p style="font-size:10px;color:#64748b;margin-bottom:10px">Tempo liberado pela recompensa.</p><div id="relogio-timer" class="timer-display">00:00</div><button class="primary-btn red-btn" style="margin-top:10px" onclick="pausarFecharTimer()">Encerrar tempo</button></div></div>
@@ -650,6 +654,62 @@ const ACESSORIOS=[
 ];
 const BANCO_FUNDOS=[
 {id:'ceu',nome:'Céu Azul',emoji:'☀️',preco:0,bg:'linear-gradient(180deg,#4facfe,#00f2fe)'},{id:'chuva',nome:'Chuva',emoji:'🌧️',preco:12,bg:'linear-gradient(180deg,#475569,#94a3b8)'},{id:'noite',nome:'Noite Estrelada',emoji:'🌙',preco:20,bg:'linear-gradient(180deg,#0f172a,#1e3a8a)'},{id:'arcoiris',nome:'Arco-Íris',emoji:'🌈',preco:30,bg:'linear-gradient(180deg,#f87171,#fbbf24 30%,#4ade80 60%,#60a5fa)'},{id:'praia',nome:'Praia Tropical',emoji:'🏖️',preco:25,bg:'linear-gradient(180deg,#fef08a,#38bdf8)'},{id:'floresta',nome:'Floresta Mágica',emoji:'🌲',preco:22,bg:'linear-gradient(180deg,#166534,#84cc16)'},{id:'festa',nome:'Balada Neon',emoji:'🎉',preco:35,bg:'linear-gradient(180deg,#f472b6,#a78bfa 50%,#60a5fa)'},{id:'halloween',nome:'Halloween',emoji:'🎃',preco:40,bg:'linear-gradient(180deg,#1a1033,#2e1065,#7c2d12)'},{id:'estadio',nome:'Estádio Futebol',emoji:'⚽',preco:45,bg:'linear-gradient(180deg,#064e3b,#10b981)'},{id:'quarto',nome:'Quarto Infantil',emoji:'🛏️',preco:35,bg:'linear-gradient(180deg,#fdf4ff,#f5d0fe)'},{id:'mario',nome:'Mundo Mario',emoji:'🍄',preco:50,bg:'linear-gradient(180deg,#22d3ee,#84cc16)'},{id:'dino',nome:'Mundo Dinossauros',emoji:'🦖',preco:45,bg:'linear-gradient(180deg,#fef3c7,#f59e0b,#166534)'},{id:'princesa',nome:'Castelo Princesa',emoji:'👑',preco:40,bg:'linear-gradient(180deg,#fbcfe8,#f9a8d4)'},{id:'astronauta',nome:'Astronauta',emoji:'🚀',preco:50,bg:'linear-gradient(180deg,#020617,#1e1b4b)'},{id:'pirata',nome:'Barco Pirata',emoji:'🏴‍☠️',preco:45,bg:'linear-gradient(180deg,#78350f,#0f172a)'},{id:'fazenda',nome:'Fazenda Feliz',emoji:'🐄',preco:35,bg:'linear-gradient(180deg,#fef08a,#84cc16)'},{id:'neve',nome:'Neve Natal',emoji:'🎄',preco:40,bg:'linear-gradient(180deg,#e0f2fe,#bae6fd)'}];
+// TEMAS = fundo + acessório combinando, vendidos juntos como um combo.
+// O acessório muda de desenho conforme a espécie do pet ativo (svgPorEspecie).
+const SVG_ABRE='<svg viewBox="0 0 270 285" xmlns="http://www.w3.org/2000/svg">',SVG_FECHA='</svg>';
+const TEMAS=[
+  {id:'halloween',nome:'Halloween Assombrado',emoji:'🎃',preco:55,fundoId:'halloween',
+    acessorio:{id:'tema_halloween',nome:'Chapéu de Bruxa',emoji:'🎃',svgPorEspecie:{
+      gato:SVG_ABRE+'<path d="M106 58 L135 4 L164 58Z" fill="#2e1065"/><ellipse cx="135" cy="58" rx="42" ry="8" fill="#1a1033"/><rect x="107" y="52" width="56" height="9" rx="3" fill="#f97316"/><rect x="127" y="49" width="16" height="11" rx="2" fill="#facc15"/>'+SVG_FECHA,
+      cachorra:SVG_ABRE+'<path d="M104 58 L135 2 L166 58Z" fill="#2e1065"/><ellipse cx="135" cy="58" rx="46" ry="8" fill="#1a1033"/><rect x="103" y="52" width="64" height="9" rx="3" fill="#f97316"/><rect x="127" y="49" width="16" height="11" rx="2" fill="#facc15"/>'+SVG_FECHA,
+      cabra:SVG_ABRE+'<path d="M114 55 L135 18 L156 55Z" fill="#2e1065"/><ellipse cx="135" cy="55" rx="30" ry="6" fill="#1a1033"/><rect x="113" y="51" width="44" height="7" rx="3" fill="#f97316"/>'+SVG_FECHA,
+      frango:SVG_ABRE+'<path d="M85 178Q135 198 185 178v18Q135 216 85 196Z" fill="#2e1065" stroke="#f97316" stroke-width="2"/><circle cx="102" cy="188" r="4" fill="#f97316"/><circle cx="168" cy="188" r="4" fill="#f97316"/><circle cx="135" cy="192" r="4" fill="#f97316"/>'+SVG_FECHA
+    }}},
+  {id:'neve',nome:'Natal Nevado',emoji:'🎄',preco:55,fundoId:'neve',
+    acessorio:{id:'tema_neve',nome:'Gorro de Natal',emoji:'🎄',svgPorEspecie:{
+      gato:SVG_ABRE+'<path d="M100 60Q100 15 150 10Q180 20 175 55Q145 40 100 60Z" fill="#dc2626"/><ellipse cx="176" cy="16" rx="11" ry="11" fill="#fff"/><rect x="96" y="52" width="76" height="13" rx="6" fill="#fff"/>'+SVG_FECHA,
+      cachorra:SVG_ABRE+'<path d="M98 60Q98 12 152 8Q184 18 178 54Q142 38 98 60Z" fill="#dc2626"/><ellipse cx="179" cy="14" rx="12" ry="12" fill="#fff"/><rect x="94" y="52" width="80" height="14" rx="7" fill="#fff"/>'+SVG_FECHA,
+      cabra:SVG_ABRE+'<path d="M112 55Q112 25 145 22Q165 30 160 50Q135 40 112 55Z" fill="#dc2626"/><ellipse cx="161" cy="26" rx="9" ry="9" fill="#fff"/><rect x="109" y="49" width="52" height="10" rx="5" fill="#fff"/>'+SVG_FECHA,
+      frango:SVG_ABRE+'<path d="M85 178Q135 198 185 178v18Q135 216 85 196Z" fill="#dc2626"/><rect x="90" y="182" width="90" height="6" fill="#fff"/><rect x="90" y="196" width="90" height="6" fill="#fff"/>'+SVG_FECHA
+    }}},
+  {id:'praia',nome:'Praia Tropical',emoji:'🏖️',preco:50,fundoId:'praia',
+    acessorio:{id:'tema_praia',nome:'Óculos de Sol',emoji:'🕶️',svgPorEspecie:{
+      gato:SVG_ABRE+'<circle cx="108" cy="118" r="24" fill="#0891b2" opacity=".85" stroke="#111827" stroke-width="4"/><circle cx="162" cy="118" r="24" fill="#0891b2" opacity=".85" stroke="#111827" stroke-width="4"/><path d="M132 116h6" stroke="#111827" stroke-width="4"/><g fill="#f472b6"><circle cx="85" cy="150" r="6"/><circle cx="185" cy="150" r="6"/></g>'+SVG_FECHA,
+      cachorra:SVG_ABRE+'<circle cx="105" cy="112" r="25" fill="#0891b2" opacity=".85" stroke="#111827" stroke-width="4"/><circle cx="165" cy="112" r="25" fill="#0891b2" opacity=".85" stroke="#111827" stroke-width="4"/><path d="M130 110h10" stroke="#111827" stroke-width="4"/>'+SVG_FECHA,
+      cabra:SVG_ABRE+'<circle cx="108" cy="118" r="22" fill="#0891b2" opacity=".85" stroke="#111827" stroke-width="4"/><circle cx="162" cy="118" r="22" fill="#0891b2" opacity=".85" stroke="#111827" stroke-width="4"/><path d="M130 116h10" stroke="#111827" stroke-width="4"/>'+SVG_FECHA,
+      frango:SVG_ABRE+'<g fill="#f472b6"><circle cx="90" cy="182" r="8"/><circle cx="118" cy="196" r="8"/><circle cx="152" cy="196" r="8"/><circle cx="180" cy="182" r="8"/></g><g fill="#facc15"><circle cx="90" cy="182" r="3"/><circle cx="118" cy="196" r="3"/><circle cx="152" cy="196" r="3"/><circle cx="180" cy="182" r="3"/></g>'+SVG_FECHA
+    }}},
+  {id:'astronauta',nome:'Missão Espacial',emoji:'🚀',preco:60,fundoId:'astronauta',
+    acessorio:{id:'tema_astronauta',nome:'Capacete Espacial',emoji:'🚀',svgPorEspecie:{
+      gato:SVG_ABRE+'<circle cx="135" cy="120" r="78" fill="#bae6fd" opacity=".28" stroke="#e2e8f0" stroke-width="5"/><path d="M60 130 Q40 100 55 70" stroke="#e2e8f0" stroke-width="6" fill="none" stroke-linecap="round"/><circle cx="70" cy="150" r="6" fill="#f87171"/>'+SVG_FECHA,
+      cachorra:SVG_ABRE+'<circle cx="135" cy="118" r="80" fill="#bae6fd" opacity=".28" stroke="#e2e8f0" stroke-width="5"/><path d="M58 128 Q38 98 53 68" stroke="#e2e8f0" stroke-width="6" fill="none" stroke-linecap="round"/><circle cx="68" cy="148" r="6" fill="#f87171"/>'+SVG_FECHA,
+      cabra:SVG_ABRE+'<circle cx="135" cy="115" r="82" fill="#bae6fd" opacity=".28" stroke="#e2e8f0" stroke-width="5"/><circle cx="70" cy="145" r="6" fill="#f87171"/>'+SVG_FECHA,
+      frango:SVG_ABRE+'<circle cx="135" cy="128" r="82" fill="#bae6fd" opacity=".28" stroke="#e2e8f0" stroke-width="5"/><circle cx="70" cy="158" r="6" fill="#f87171"/>'+SVG_FECHA
+    }}},
+  {id:'princesa',nome:'Castelo Real',emoji:'👑',preco:60,fundoId:'princesa',
+    acessorio:{id:'tema_princesa',nome:'Coroa Dourada',emoji:'👑',svgPorEspecie:{
+      gato:SVG_ABRE+'<path d="M104 58 L112 30 L128 48 L135 20 L142 48 L158 30 L166 58Z" fill="#facc15" stroke="#b8860b" stroke-width="2"/><rect x="104" y="55" width="62" height="9" rx="2" fill="#facc15" stroke="#b8860b" stroke-width="2"/><circle cx="135" cy="42" r="4" fill="#ef4444"/>'+SVG_FECHA,
+      cachorra:SVG_ABRE+'<path d="M100 58 L109 28 L127 47 L135 16 L143 47 L161 28 L170 58Z" fill="#facc15" stroke="#b8860b" stroke-width="2"/><rect x="100" y="55" width="70" height="9" rx="2" fill="#facc15" stroke="#b8860b" stroke-width="2"/><circle cx="135" cy="40" r="4" fill="#ef4444"/>'+SVG_FECHA,
+      cabra:SVG_ABRE+'<path d="M112 55 L118 35 L128 47 L135 28 L142 47 L152 35 L158 55Z" fill="#facc15" stroke="#b8860b" stroke-width="2"/><rect x="112" y="52" width="46" height="7" rx="2" fill="#facc15" stroke="#b8860b" stroke-width="2"/>'+SVG_FECHA,
+      frango:SVG_ABRE+'<path d="M85 178Q135 202 185 178v20Q135 226 85 198Z" fill="#7c3aed" stroke="#facc15" stroke-width="3"/>'+SVG_FECHA
+    }}},
+  {id:'pirata',nome:'Aventura Pirata',emoji:'🏴‍☠️',preco:55,fundoId:'pirata',
+    acessorio:{id:'tema_pirata',nome:'Chapéu Pirata',emoji:'🏴‍☠️',svgPorEspecie:{
+      gato:SVG_ABRE+'<path d="M95 60Q100 25 135 30Q170 25 175 60Q135 45 95 60Z" fill="#1c1917" stroke="#facc15" stroke-width="2"/><circle cx="135" cy="34" r="5" fill="#f87171"/><ellipse cx="111" cy="123" rx="12" ry="14" fill="#1c1917"/>'+SVG_FECHA,
+      cachorra:SVG_ABRE+'<path d="M92 58Q98 22 135 28Q172 22 178 58Q135 42 92 58Z" fill="#1c1917" stroke="#facc15" stroke-width="2"/><circle cx="135" cy="32" r="5" fill="#f87171"/><ellipse cx="108" cy="117" rx="13" ry="15" fill="#1c1917"/>'+SVG_FECHA,
+      cabra:SVG_ABRE+'<path d="M108 55Q112 30 135 34Q158 30 162 55Q135 44 108 55Z" fill="#1c1917" stroke="#facc15" stroke-width="2"/><ellipse cx="111" cy="123" rx="11" ry="13" fill="#1c1917"/>'+SVG_FECHA,
+      frango:SVG_ABRE+'<path d="M85 178Q135 198 185 178v18Q135 216 85 196Z" fill="#1c1917" stroke="#facc15" stroke-width="2"/><circle cx="135" cy="190" r="7" fill="#fff"/>'+SVG_FECHA
+    }}}
+];
+function buscarAcessorioPorId(id){
+  const normal=ACESSORIOS.find(a=>a.id===id);
+  if(normal)return normal;
+  const tema=TEMAS.find(t=>t.acessorio.id===id);
+  return tema?tema.acessorio:null;
+}
+function possuiTema(t){
+  return estado.fundosComprados.includes(t.fundoId)&&estado.acessorios.comprados.includes(t.acessorio.id);
+}
 const firebaseConfig={apiKey:"AIzaSyCiDk3ERIe8_uVqBhRnFRD5Od8nyLNlLVQ",authDomain:"rotinapet-624a9.firebaseapp.com",databaseURL:"https://rotinapet-624a9-default-rtdb.firebaseio.com",projectId:"rotinapet-624a9",storageBucket:"rotinapet-624a9.appspot.com",messagingSenderId:"367302484084",appId:"1:367302484084:web:8a5f8b9e6c1d7a8b"};
 let dbFirebase=null,sincronizacaoNuvemAtiva=false,ignorarProximoSyncNuvem=false;
 // Enquanto true, salvar() NÃO envia nada para a nuvem — evita que um estado local
@@ -810,7 +870,7 @@ function garantirCriancaAtiva(){
   estado.criancasDados=estado.criancasDados||{};
 }
 let estado={
-  perfilAtivo:null,criancaAtivaId:'c1',criancas:{c1:{nome:'Minha Criança',emoji:'🐾'}},criancasDados:{},
+  criancaAtivaId:'c1',criancas:{c1:{nome:'Minha Criança',emoji:'🐾'}},criancasDados:{},
   petAtual:'gato',moedas:15,taxaCambio:.01,pinHash:null,dinheiroAcumulado:.15,idadeCrianca:7,
   fundoAtual:'ceu',fundosComprados:['ceu'],metaMoedas:50,totalSacado:0,
   ultimoDiaAcesso:hojeLocal(),ultimoDiaConcluido:null,streak:0,ultimoStreakPremiado:0,
@@ -870,8 +930,9 @@ try{
 }catch(e){}
 estado.tarefas.forEach(t=>{if(!t.tipo)t.tipo='obrigatoria';if(!t.status)t.status='pendente';if(t.foto===undefined)t.foto=null;if(!Array.isArray(t.dias))t.dias=[]});
 if(!Number.isFinite(Number(estado.streak)))estado.streak=0;
-const hojeStr=hojeLocal();
-if(estado.ultimoDiaAcesso!==hojeStr){
+function verificarResetDiario(){
+  const hojeStr=hojeLocal();
+  if(estado.ultimoDiaAcesso===hojeStr)return false;
   const emPausa=estado.pausaAte&&hojeStr<=estado.pausaAte;
   if(!emPausa&&estado.ultimoDiaConcluido!==ontemLocal()&&estado.ultimoDiaConcluido!==hojeStr){
     estado.streak=0;
@@ -880,7 +941,9 @@ if(estado.ultimoDiaAcesso!==hojeStr){
   estado.tarefas.forEach(t=>{t.status='pendente';t.foto=null});
   estado.tarefasHojeCount=0;
   estado.ultimoDiaAcesso=hojeStr;
+  return true;
 }
+verificarResetDiario();
 function salvar(){
   try{localStorage.setItem(`ROTINAPET_SAVE_${codigoFamilia}`,JSON.stringify(estado))}catch(e){mostrarToast('⚠️ Memória cheia; foto não armazenada.')}
   if(sincronizacaoNuvemAtiva&&dbFirebase&&!cargaNuvemPendente){
@@ -1143,6 +1206,16 @@ function interagirComPet(e){
   else mostrarToast(`❤️ ${PETS[estado.petAtual].nome} adorou!`);
   salvar();
   atualizarTela();
+  animarAcessorioTema();
+}
+function animarAcessorioTema(){
+  const ativo=estado.acessorios?.ativo;
+  if(!ativo||!ativo.startsWith('tema_'))return;
+  const c=document.getElementById('camada-acessorio');
+  if(!c)return;
+  c.classList.remove('acessorio-pulo');
+  void c.offsetWidth;
+  c.classList.add('acessorio-pulo');
 }
 function abrirSurpresaDia(){
   const hoje=hojeLocal();
@@ -1277,16 +1350,20 @@ function renderizarTarefas(){
   idTarefaRecemAprovada=null;
   atualizarOfensiva();
 }
+// Quem está usando o app AGORA (criança ou responsável) — é só da sessão atual,
+// nunca salva/sincroniza. Assim, cada vez que o app abre, ele pergunta de novo
+// "quem é você" em vez de ficar travado no último perfil usado por qualquer
+// pessoa da família em qualquer aparelho.
+let perfilAtivo=null;
 function verificarPrimeiroAcesso(){
-  if(!estado.perfilAtivo){
+  if(!perfilAtivo){
     abrirModal('modal-selecao-perfil');
-  }else if(estado.perfilAtivo==='pais'){
+  }else if(perfilAtivo==='pais'){
     abrirPainelPais();
   }
 }
 function escolherPerfilInicial(tipo){
-  estado.perfilAtivo=tipo;
-  salvar();
+  perfilAtivo=tipo;
   fecharModal('modal-selecao-perfil');
   if(tipo==='pais'){
     abrirPainelPais();
@@ -1331,8 +1408,7 @@ function fecharOnboarding(){
   fecharModal('modal-onboarding');
 }
 function alternarPerfil(){
-  estado.perfilAtivo=null;
-  salvar();
+  perfilAtivo=null;
   abrirModal('modal-selecao-perfil');
 }
 let pinDigitado='';
@@ -2408,19 +2484,66 @@ function testarReacao(acertou){
   else mostrarToast('❌ Não era esse! Tente de novo.');
 }
 function abrirLojaFundos(){
+  renderizarGridTemas();
   renderizarGridFundos();
   renderizarGridAcessorios();
-  alternarAbaLojaVisual('fundos');
+  alternarAbaLojaVisual('temas');
   abrirModal('modal-fundos');
 }
 function alternarAbaLojaVisual(aba){
-  const ehFundos=aba==='fundos';
-  document.getElementById('grid-fundos').classList.toggle('hidden',!ehFundos);
-  document.getElementById('grid-acessorios').classList.toggle('hidden',ehFundos);
-  document.getElementById('tab-fundos').classList.toggle('ativa',ehFundos);
-  document.getElementById('tab-acessorios').classList.toggle('ativa',!ehFundos);
-  document.getElementById('titulo-loja-visual').textContent=ehFundos?'🖼️ Loja de Fundos':'🎀 Loja de Acessórios';
-  document.getElementById('desc-loja-visual').textContent=ehFundos?'Use suas moedas para personalizar o visual.':'Vista seu pet com acessórios!';
+  document.getElementById('grid-temas').classList.toggle('hidden',aba!=='temas');
+  document.getElementById('grid-fundos').classList.toggle('hidden',aba!=='fundos');
+  document.getElementById('grid-acessorios').classList.toggle('hidden',aba!=='acessorios');
+  document.getElementById('tab-temas').classList.toggle('ativa',aba==='temas');
+  document.getElementById('tab-fundos').classList.toggle('ativa',aba==='fundos');
+  document.getElementById('tab-acessorios').classList.toggle('ativa',aba==='acessorios');
+  const titulos={temas:'🎨 Temas',fundos:'🖼️ Loja de Fundos',acessorios:'🎀 Loja de Acessórios'};
+  const descs={temas:'Combos com fundo + acessório combinando, prontos pra usar.',fundos:'Use suas moedas para personalizar o visual.',acessorios:'Vista seu pet com acessórios!'};
+  document.getElementById('titulo-loja-visual').textContent=titulos[aba];
+  document.getElementById('desc-loja-visual').textContent=descs[aba];
+}
+function renderizarGridTemas(){
+  const c=document.getElementById('grid-temas');
+  if(!c)return;
+  c.innerHTML='';
+  TEMAS.forEach(t=>{
+    const fundo=BANCO_FUNDOS.find(f=>f.id===t.fundoId);
+    const possui=possuiTema(t),ativo=estado.fundoAtual===t.fundoId&&estado.acessorios.ativo===t.acessorio.id,d=document.createElement('div');
+    d.className='fundo-card '+(ativo?'ativo':'');
+    d.style.background=fundo?fundo.bg:'linear-gradient(160deg,#ede9fe,#ddd6fe)';
+    d.innerHTML=`<span style="font-size:25px">${t.emoji}</span><b style="font-size:10px;margin-top:3px">${esc(t.nome)}</b><span class="shop-tag">${ativo?'✓ Em uso':possui?'Usar':t.preco+' 🪙'}</span>`;
+    d.onclick=()=>selecionarOuComprarTema(t);
+    c.appendChild(d);
+  });
+}
+function selecionarOuComprarTema(t){
+  if(possuiTema(t)){
+    estado.fundoAtual=t.fundoId;
+    estado.acessorios.ativo=t.acessorio.id;
+    salvar();
+    aplicarFundoTela(t.fundoId);
+    atualizarTela();
+    renderizarGridTemas();
+    renderizarGridFundos();
+    renderizarGridAcessorios();
+    return mostrarToast(`🎨 Tema ${t.nome} aplicado!`);
+  }
+  if(estado.moedas<t.preco)return mostrarToast(`🪙 Faltam ${t.preco-estado.moedas} moedas.`);
+  mostrarConfirmacao(`Comprar o tema "${t.nome}" (fundo + acessório) por ${t.preco} moedas?`,()=>{
+    estado.moedas-=t.preco;
+    if(!estado.fundosComprados.includes(t.fundoId))estado.fundosComprados.push(t.fundoId);
+    if(!estado.acessorios.comprados.includes(t.acessorio.id))estado.acessorios.comprados.push(t.acessorio.id);
+    estado.fundoAtual=t.fundoId;
+    estado.acessorios.ativo=t.acessorio.id;
+    salvar();
+    aplicarFundoTela(t.fundoId);
+    atualizarTela();
+    renderizarGridTemas();
+    renderizarGridFundos();
+    renderizarGridAcessorios();
+    dispararConfetes();
+    mostrarToast('🎉 Tema desbloqueado!');
+  });
 }
 function renderizarGridFundos(){
   const c=document.getElementById('grid-fundos');
@@ -2493,8 +2616,9 @@ function renderizarAcessorioNoContainer(){
   const c=document.getElementById('camada-acessorio');
   if(!c)return;
   const ativo=estado.acessorios?.ativo;
-  const item=ACESSORIOS.find(a=>a.id===ativo);
-  c.innerHTML=item?item.svg:'';
+  const item=buscarAcessorioPorId(ativo);
+  if(!item){c.innerHTML='';return;}
+  c.innerHTML=item.svgPorEspecie?(item.svgPorEspecie[estado.petAtual]||item.svgPorEspecie.gato):item.svg;
 }
 function abrirLojaRecompensas(){
   renderizarLojaRecompensas();
@@ -2938,6 +3062,20 @@ window.addEventListener('DOMContentLoaded',()=>{
   if(estado.timerFim&&estado.timerFim>Date.now()){
     iniciarTimerTela(Math.ceil((estado.timerFim-Date.now())/60000));
   }
+  // O reset diário (tarefas voltarem a pendente à meia-noite) só era checado
+  // quando a página carregava — se o app ficasse aberto passando da meia-noite,
+  // nunca resetava sozinho. Agora checamos de novo sempre que o app volta a
+  // ficar visível (celular desbloqueado, aba focada) e a cada minuto como reforço.
+  function checarEAplicarResetDiario(){
+    if(verificarResetDiario()){
+      salvar();
+      atualizarTela();
+    }
+  }
+  document.addEventListener('visibilitychange',()=>{
+    if(document.visibilityState==='visible')checarEAplicarResetDiario();
+  });
+  setInterval(checarEAplicarResetDiario,60000);
 });
 </script>
   <script>
