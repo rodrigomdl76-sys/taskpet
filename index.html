@@ -1350,20 +1350,29 @@ function renderizarTarefas(){
   idTarefaRecemAprovada=null;
   atualizarOfensiva();
 }
-// Quem está usando o app AGORA (criança ou responsável) — é só da sessão atual,
-// nunca salva/sincroniza. Assim, cada vez que o app abre, ele pergunta de novo
-// "quem é você" em vez de ficar travado no último perfil usado por qualquer
-// pessoa da família em qualquer aparelho.
-let perfilAtivo=null;
+// Quem está usando o app agora (criança ou responsável) — fica salvo só neste
+// aparelho (localStorage), nunca sincroniza com a família. Assim, cada aparelho
+// lembra sozinho o último perfil usado nele e pula a telinha de escolha da
+// próxima vez — mas o PIN continua sendo pedido sempre que o perfil for "pais".
+const CHAVE_PERFIL_LOCAL='ROTINAPET_PERFIL_'+codigoFamilia;
+let perfilAtivo=(()=>{try{return localStorage.getItem(CHAVE_PERFIL_LOCAL)}catch(e){return null}})();
 function verificarPrimeiroAcesso(){
   if(!perfilAtivo){
     abrirModal('modal-selecao-perfil');
   }else if(perfilAtivo==='pais'){
     abrirPainelPais();
+  }else{
+    const ids=Object.keys(estado.criancas||{});
+    if(ids.length>1){
+      abrirSelecaoCrianca();
+    }else{
+      entrarComoCrianca();
+    }
   }
 }
 function escolherPerfilInicial(tipo){
   perfilAtivo=tipo;
+  try{localStorage.setItem(CHAVE_PERFIL_LOCAL,tipo)}catch(e){}
   fecharModal('modal-selecao-perfil');
   if(tipo==='pais'){
     abrirPainelPais();
@@ -1409,6 +1418,7 @@ function fecharOnboarding(){
 }
 function alternarPerfil(){
   perfilAtivo=null;
+  try{localStorage.removeItem(CHAVE_PERFIL_LOCAL)}catch(e){}
   abrirModal('modal-selecao-perfil');
 }
 let pinDigitado='';
