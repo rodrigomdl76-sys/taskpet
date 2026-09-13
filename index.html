@@ -82,7 +82,7 @@ button{touch-action:manipulation}
 .evo-name{font-size:9px;font-weight:900;color:#fff;text-shadow:0 1px 3px #0007;margin-top:3px;max-width:260px;text-align:center}
 .floating-text{position:absolute;font-weight:900;font-size:16px;color:#fff;text-shadow:0 2px 5px #0007;pointer-events:none;animation:floatUp .9s forwards;z-index:50}
 @keyframes floatUp{to{transform:translateY(-55px) scale(1.15);opacity:0}}
-.tasks-section{background:rgba(255,255,255,.94);border-radius:18px;padding:8px 10px;flex-shrink:0;max-height:130px;overflow:auto;box-shadow:0 5px 16px #0002}
+.tasks-section{background:rgba(255,255,255,.94);border-radius:18px;padding:8px 10px;flex-shrink:0;max-height:130px;overflow:auto;box-shadow:0 5px 16px #0002;backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);border:1px solid rgba(255,255,255,.55)}
 .task-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:5px}
 .task-row{display:grid;grid-template-columns:1fr auto;gap:5px;align-items:center;padding:6px 0;border-bottom:1px solid #eef2f7}
 .task-row:last-child{border:0}
@@ -178,6 +178,397 @@ button{touch-action:manipulation}
 .tab-btn{border:0;background:#f1f5f9;color:#64748b;border-radius:10px;padding:8px;font-size:10px;font-weight:900;cursor:pointer}
 .tab-btn.ativa{background:#7c3aed;color:#fff}
 @media(max-height:650px){.pet-stage{height:185px;min-height:160px}.tasks-section{max-height:105px}.bottom-btn{min-height:50px}.btn-icon{font-size:17px}#pet-svg-container{width:160px;height:160px}}
+
+/* ===== Refino visual & animações ===== */
+.top-pill{
+  backdrop-filter:blur(12px);
+  -webkit-backdrop-filter:blur(12px);
+  transition:transform .18s cubic-bezier(.34,1.56,.64,1),box-shadow .2s ease,background .25s;
+}
+.top-pill:active{transform:scale(.92)}
+.mini-card,.happiness-box{
+  backdrop-filter:blur(10px);
+  transition:transform .18s ease,box-shadow .2s;
+}
+.mini-card:active{transform:scale(.94)}
+.pet-stage{
+  backdrop-filter:blur(8px);
+  transition:box-shadow .4s ease;
+  animation:stageGlow 5s ease-in-out infinite alternate;
+}
+@keyframes stageGlow{
+  0%{box-shadow:inset 0 0 40px rgba(255,255,255,.12),0 8px 28px rgba(124,58,237,.08)}
+  100%{box-shadow:inset 0 0 50px rgba(255,255,255,.2),0 12px 36px rgba(124,58,237,.18)}
+}
+.cat-wrapper{
+  transition:filter .35s ease;
+  animation:catFloat 3.6s ease-in-out infinite;
+}
+@keyframes catFloat{
+  0%,100%{transform:translateY(0) rotate(0deg)}
+  25%{transform:translateY(-5px) rotate(-1.2deg)}
+  50%{transform:translateY(-10px) rotate(0deg)}
+  75%{transform:translateY(-5px) rotate(1.2deg)}
+}
+.cat-wrapper:active{transform:scale(1.08)!important;filter:brightness(1.08)}
+.level-badge{transition:transform .3s cubic-bezier(.34,1.56,.64,1),box-shadow .3s}
+.level-badge.level-up-pop{animation:levelUpPop .7s cubic-bezier(.34,1.56,.64,1)}
+@keyframes levelUpPop{
+  0%{transform:scale(1)}
+  40%{transform:scale(1.22);box-shadow:0 0 24px rgba(124,58,237,.45)}
+  100%{transform:scale(1)}
+}
+.xp-bar-fill{
+  background:linear-gradient(90deg,#8b5cf6,#a855f7,#ec4899);
+  background-size:200% 100%;
+  animation:xpShimmer 2.8s linear infinite;
+  transition:width .55s cubic-bezier(.22,1,.36,1);
+}
+@keyframes xpShimmer{0%{background-position:0% 50%}100%{background-position:200% 50%}}
+.bottom-btn{
+  transition:transform .18s cubic-bezier(.34,1.56,.64,1),box-shadow .2s,filter .2s;
+  position:relative;overflow:hidden;
+}
+.bottom-btn::after{
+  content:"";position:absolute;inset:0;
+  background:linear-gradient(180deg,rgba(255,255,255,.22),transparent 55%);
+  pointer-events:none;border-radius:inherit;
+}
+.bottom-btn:active{transform:scale(.9);filter:brightness(.95)}
+.btn-voice{box-shadow:0 6px 16px rgba(16,185,129,.35)}
+.btn-game{box-shadow:0 6px 16px rgba(124,58,237,.35)}
+.btn-fundos{box-shadow:0 6px 16px rgba(14,165,233,.35)}
+.btn-premios{box-shadow:0 6px 16px rgba(225,29,72,.3)}
+.task-row{transition:background .25s,transform .2s}
+.task-row.pop-anim{animation:taskPop .55s cubic-bezier(.34,1.56,.64,1)}
+@keyframes taskPop{
+  0%{transform:scale(1);background:transparent}
+  35%{transform:scale(1.03);background:#ecfdf5}
+  100%{transform:scale(1);background:transparent}
+}
+.modal-overlay{transition:opacity .28s ease,visibility .28s}
+.modal{
+  transform:translateY(14px) scale(.96);
+  transition:transform .32s cubic-bezier(.22,1,.36,1),opacity .28s;
+  opacity:0;
+}
+.modal-overlay.mostrar .modal{transform:translateY(0) scale(1);opacity:1}
+.toast{transition:opacity .3s,transform .35s cubic-bezier(.22,1,.36,1)}
+.floating-text{animation:floatUp .95s cubic-bezier(.22,1,.36,1) forwards}
+@keyframes floatUp{
+  0%{opacity:1;transform:translateY(0) scale(1)}
+  100%{opacity:0;transform:translateY(-62px) scale(1.2)}
+}
+.balao-fala{transition:opacity .3s,transform .35s cubic-bezier(.34,1.56,.64,1)}
+.pet-unico-btn{transition:transform .2s cubic-bezier(.34,1.56,.64,1),box-shadow .25s}
+.pet-unico-btn:active{transform:scale(1.12)}
+.lista-pet-dropdown{transition:opacity .25s,visibility .25s,transform .28s cubic-bezier(.22,1,.36,1)}
+.opcao-pet{transition:transform .15s,background .2s}
+.opcao-pet:active{transform:scale(.9)}
+.fundo-card{transition:transform .2s cubic-bezier(.34,1.56,.64,1),box-shadow .25s,border-color .2s}
+.fundo-card:active{transform:scale(.96)}
+.fundo-card.ativo{animation:cardPulse .9s ease}
+@keyframes cardPulse{
+  0%,100%{box-shadow:0 0 0 2px #22c55e55}
+  50%{box-shadow:0 0 0 5px #22c55e33}
+}
+.btn-ajuda-flutuante{
+  position:fixed;
+  right:max(12px,env(safe-area-inset-right));
+  bottom:max(88px,calc(env(safe-area-inset-bottom) + 78px));
+  width:48px;height:48px;border-radius:50%;
+  border:2px solid rgba(255,255,255,.9);
+  background:linear-gradient(145deg,#7c3aed,#a855f7);
+  color:#fff;font-size:22px;font-weight:900;
+  display:flex;align-items:center;justify-content:center;
+  box-shadow:0 8px 24px rgba(124,58,237,.45);
+  z-index:80;cursor:pointer;
+  transition:transform .2s cubic-bezier(.34,1.56,.64,1),box-shadow .25s;
+  animation:ajudaPulse 2.8s ease-in-out infinite;
+}
+.btn-ajuda-flutuante:active{transform:scale(.88)}
+@keyframes ajudaPulse{
+  0%,100%{box-shadow:0 8px 24px rgba(124,58,237,.4)}
+  50%{box-shadow:0 8px 28px rgba(124,58,237,.65),0 0 0 8px rgba(124,58,237,.12)}
+}
+.ajuda-item{
+  display:flex;gap:10px;align-items:flex-start;
+  padding:10px;border-radius:14px;background:#f8fafc;
+  border:1px solid #eef2f7;margin-bottom:8px;
+}
+.ajuda-item .ajuda-ico{font-size:22px;flex-shrink:0;line-height:1.1}
+.ajuda-item b{font-size:11px;display:block;color:#1e293b}
+.ajuda-item span{font-size:9px;color:#64748b;line-height:1.35;display:block;margin-top:2px}
+.ajuda-tabs{display:grid;grid-template-columns:1fr 1fr;gap:6px;margin-bottom:12px}
+.ajuda-tabs .tab-btn{padding:9px}
+.bar-fill{transition:width .55s cubic-bezier(.22,1,.36,1)}
+.surpresa-dia-btn{animation:pulseSurpresa 1.4s infinite,surpresaWiggle 3s ease-in-out infinite}
+@keyframes surpresaWiggle{
+  0%,90%,100%{transform:rotate(0)}
+  93%{transform:rotate(-12deg)}
+  96%{transform:rotate(10deg)}
+}
+.primary-btn{transition:transform .15s,filter .15s,box-shadow .2s}
+.primary-btn:active{transform:scale(.96);filter:brightness(.95)}
+.close-btn{transition:transform .15s,background .2s}
+.close-btn:active{transform:scale(.9)}
+
+/* ===== Animações CSS avançadas ===== */
+:root{
+  --spring:cubic-bezier(.34,1.56,.64,1);
+  --smooth:cubic-bezier(.22,1,.36,1);
+  --snappy:cubic-bezier(.2,.8,.2,1);
+}
+
+/* Idle do pet com múltiplos eixos (flutuar + respirar + leve inclinação) */
+@keyframes petIdleAdvanced{
+  0%{transform:translate3d(0,0,0) rotate(-.6deg) scale(1)}
+  20%{transform:translate3d(0,-4px,0) rotate(.4deg) scale(1.012)}
+  40%{transform:translate3d(0,-9px,0) rotate(-.3deg) scale(1.02)}
+  60%{transform:translate3d(0,-5px,0) rotate(.5deg) scale(1.01)}
+  80%{transform:translate3d(0,-2px,0) rotate(-.2deg) scale(1.006)}
+  100%{transform:translate3d(0,0,0) rotate(-.6deg) scale(1)}
+}
+.cat-wrapper{
+  animation:petIdleAdvanced 4.2s var(--smooth) infinite;
+  will-change:transform;
+  transform-origin:50% 70%;
+}
+.cat-wrapper.mood-feliz{animation-duration:2.4s}
+.cat-wrapper.mood-triste{animation-duration:6s;filter:saturate(.7) brightness(.94)}
+.cat-wrapper.mood-doente{animation-duration:7s;filter:saturate(.45) brightness(.88) hue-rotate(-8deg)}
+.cat-wrapper.pet-dormindo{animation-duration:8s;filter:brightness(.8) saturate(.8)}
+
+/* Bounce elástico ao tocar o pet (sobrescreve idle temporariamente) */
+@keyframes petBounceSpring{
+  0%{transform:scale(1) translateY(0) rotate(0)}
+  18%{transform:scale(1.14,.88) translateY(6px) rotate(-2deg)}
+  36%{transform:scale(.92,1.1) translateY(-18px) rotate(2deg)}
+  54%{transform:scale(1.06,.96) translateY(-4px) rotate(-1deg)}
+  72%{transform:scale(.98,1.03) translateY(-10px) rotate(.5deg)}
+  100%{transform:scale(1) translateY(0) rotate(0)}
+}
+.cat-wrapper.pet-bounce{
+  animation:petBounceSpring .55s var(--spring) both;
+}
+
+/* Aura/glow reativo no palco */
+@keyframes stageRipple{
+  0%{box-shadow:inset 0 0 40px rgba(255,255,255,.15),0 0 0 0 rgba(168,85,247,.35)}
+  70%{box-shadow:inset 0 0 50px rgba(255,255,255,.25),0 0 0 18px rgba(168,85,247,0)}
+  100%{box-shadow:inset 0 0 40px rgba(255,255,255,.15),0 0 0 0 rgba(168,85,247,0)}
+}
+.pet-stage.stage-react{animation:stageRipple .7s var(--smooth)}
+
+/* Partículas de coração em CSS puro */
+.heart-burst{
+  position:absolute;pointer-events:none;z-index:40;
+  left:50%;top:42%;width:0;height:0;
+}
+.heart-burst i{
+  position:absolute;font-style:normal;font-size:14px;
+  animation:heartFly var(--dur,.9s) var(--ease,ease-out) forwards;
+  offset-path:path(var(--path));
+  /* fallback se offset-path não existir: usa transform */
+}
+@keyframes heartFly{
+  0%{opacity:0;transform:translate(-50%,-50%) scale(.4) rotate(0deg)}
+  15%{opacity:1}
+  100%{opacity:0;transform:translate(calc(-50% + var(--dx,0px)),calc(-50% + var(--dy,-50px))) scale(1.25) rotate(var(--rot,20deg))}
+}
+
+/* Shimmer diagonal em botões e pills */
+@keyframes diagonalShimmer{
+  0%{background-position:-120% 0}
+  100%{background-position:220% 0}
+}
+.bottom-btn,.top-pill{
+  background-size:200% 100%;
+}
+.bottom-btn.shine-once::before{
+  content:"";position:absolute;inset:0;border-radius:inherit;pointer-events:none;
+  background:linear-gradient(105deg,transparent 35%,rgba(255,255,255,.45) 50%,transparent 65%);
+  background-size:220% 100%;
+  animation:diagonalShimmer .7s var(--smooth);
+}
+
+/* Stagger de entrada nas listas de ajuda / conquistas */
+.ajuda-item,.achievement-row,.task-row{
+  animation:rowEnter .45s var(--smooth) both;
+}
+.ajuda-item:nth-child(1),.task-row:nth-child(1){animation-delay:.02s}
+.ajuda-item:nth-child(2),.task-row:nth-child(2){animation-delay:.06s}
+.ajuda-item:nth-child(3),.task-row:nth-child(3){animation-delay:.1s}
+.ajuda-item:nth-child(4),.task-row:nth-child(4){animation-delay:.14s}
+.ajuda-item:nth-child(5),.task-row:nth-child(5){animation-delay:.18s}
+.ajuda-item:nth-child(6),.task-row:nth-child(6){animation-delay:.22s}
+.ajuda-item:nth-child(7),.task-row:nth-child(7){animation-delay:.26s}
+.ajuda-item:nth-child(8),.task-row:nth-child(8){animation-delay:.3s}
+@keyframes rowEnter{
+  from{opacity:0;transform:translateY(10px) scale(.98)}
+  to{opacity:1;transform:translateY(0) scale(1)}
+}
+
+/* Moeda “spin” ao atualizar */
+@keyframes coinSpin{
+  0%{transform:rotateY(0) scale(1)}
+  40%{transform:rotateY(180deg) scale(1.15)}
+  100%{transform:rotateY(360deg) scale(1)}
+}
+.coin-dot.spin{animation:coinSpin .6s var(--spring)}
+#txt-moedas.bump{
+  display:inline-block;
+  animation:numBump .45s var(--spring);
+}
+@keyframes numBump{
+  0%{transform:scale(1)}
+  40%{transform:scale(1.35);color:#7c3aed}
+  100%{transform:scale(1)}
+}
+
+/* Barra de felicidade com glow quando alta */
+.bar-fill.glow-happy{
+  box-shadow:0 0 10px rgba(34,197,94,.55),0 0 18px rgba(250,204,21,.25);
+}
+
+/* Skeleton pulse para estados de carregamento futuros */
+@keyframes skeletonWave{
+  0%{background-position:100% 0}
+  100%{background-position:-100% 0}
+}
+.skeleton{
+  background:linear-gradient(90deg,#e2e8f0 25%,#f1f5f9 50%,#e2e8f0 75%);
+  background-size:200% 100%;
+  animation:skeletonWave 1.2s linear infinite;
+  border-radius:8px;
+}
+
+/* Modal com blur progressivo no backdrop */
+.modal-overlay{
+  backdrop-filter:blur(0px);
+  -webkit-backdrop-filter:blur(0px);
+  transition:opacity .28s ease,visibility .28s,backdrop-filter .35s ease;
+}
+.modal-overlay.mostrar{
+  backdrop-filter:blur(10px);
+  -webkit-backdrop-filter:blur(10px);
+}
+
+/* 3D leve no seletor de pet */
+.pet-unico-btn{
+  transform-style:preserve-3d;
+  perspective:400px;
+}
+.pet-unico-btn:active{
+  transform:scale(1.12) rotateX(12deg);
+}
+
+/* Confete CSS mínimo (complemento ao canvas-confetti) */
+@keyframes confettiFall{
+  0%{transform:translateY(0) rotate(0);opacity:1}
+  100%{transform:translateY(80px) rotate(280deg);opacity:0}
+}
+.css-confetti{
+  position:fixed;pointer-events:none;z-index:10050;
+  width:8px;height:8px;border-radius:2px;
+  animation:confettiFall .9s ease-out forwards;
+}
+
+/* Foco acessível animado */
+button:focus-visible,input:focus-visible,.top-pill:focus-visible{
+  outline:2px solid #a855f7;
+  outline-offset:3px;
+  animation:focusRing .5s var(--spring);
+}
+@keyframes focusRing{
+  0%{outline-offset:0;outline-color:#c4b5fd}
+  100%{outline-offset:3px;outline-color:#a855f7}
+}
+
+/* Preferência de movimento reduzido */
+@media (prefers-reduced-motion:reduce){
+  .cat-wrapper,.pet-stage,.xp-bar-fill,.bottom-btn,.top-pill,
+  .btn-ajuda-flutuante,.surpresa-dia-btn,.ajuda-item,.task-row,
+  .level-badge,.floating-text,.heart-burst i{
+    animation:none!important;
+    transition:none!important;
+  }
+}
+
+/* ===== View Transitions API ===== */
+::view-transition-old(root),
+::view-transition-new(root){
+  animation-duration:.32s;
+  animation-timing-function:cubic-bezier(.22,1,.36,1);
+}
+::view-transition-old(rp-modal),
+::view-transition-new(rp-modal){
+  animation-duration:.38s;
+  animation-timing-function:cubic-bezier(.34,1.56,.64,1);
+  height:100%;
+  overflow:clip;
+}
+::view-transition-old(rp-modal){
+  animation-name:vtModalOut;
+}
+::view-transition-new(rp-modal){
+  animation-name:vtModalIn;
+}
+@keyframes vtModalOut{
+  to{opacity:0;transform:scale(.92) translateY(12px);filter:blur(4px)}
+}
+@keyframes vtModalIn{
+  from{opacity:0;transform:scale(.92) translateY(16px);filter:blur(4px)}
+  to{opacity:1;transform:scale(1) translateY(0);filter:blur(0)}
+}
+.modal-overlay.mostrar .modal{
+  view-transition-name:rp-modal;
+}
+
+/* ===== Scroll-driven (lista de tarefas) ===== */
+@supports (animation-timeline:scroll()){
+  .tasks-section{
+    scroll-timeline:--tasks-scroll y;
+    scroll-timeline-axis:block;
+  }
+  .task-row{
+    animation:taskScrollFade linear both;
+    animation-timeline:view();
+    animation-range:entry 0% cover 35%;
+  }
+  @keyframes taskScrollFade{
+    from{opacity:.35;transform:translateY(8px) scale(.98)}
+    to{opacity:1;transform:translateY(0) scale(1)}
+  }
+}
+
+/* ===== Modo Demo de animações ===== */
+.demo-hud{
+  position:fixed;left:50%;bottom:max(100px,calc(env(safe-area-inset-bottom)+90px));
+  transform:translateX(-50%);
+  background:#0f172aee;color:#fff;padding:10px 16px;border-radius:99px;
+  font-size:11px;font-weight:900;z-index:10060;
+  box-shadow:0 10px 30px #0006;
+  opacity:0;pointer-events:none;transition:opacity .25s,transform .3s cubic-bezier(.22,1,.36,1);
+  white-space:nowrap;max-width:92vw;text-align:center;
+}
+.demo-hud.mostrar{opacity:1;pointer-events:auto;transform:translateX(-50%) translateY(0)}
+.demo-hud.mostrar{animation:demoHudIn .4s cubic-bezier(.34,1.56,.64,1)}
+@keyframes demoHudIn{
+  from{opacity:0;transform:translateX(-50%) translateY(12px) scale(.95)}
+  to{opacity:1;transform:translateX(-50%) translateY(0) scale(1)}
+}
+.demo-spotlight{
+  position:fixed;inset:0;pointer-events:none;z-index:10040;
+  background:radial-gradient(circle at var(--sx,50%) var(--sy,40%),transparent 80px,rgba(15,23,42,.55) 160px);
+  opacity:0;transition:opacity .35s;
+}
+.demo-spotlight.mostrar{opacity:1}
+.btn-demo-anim{
+  width:100%;margin-top:8px;
+  background:linear-gradient(135deg,#6366f1,#a855f7)!important;
+}
+
 /* --- Tela PIN Responsáveis --- */
 .tela-pin{
   position:fixed;inset:0;
@@ -341,6 +732,7 @@ button{touch-action:manipulation}
   </div>
   <div class="tasks-section">
     <div class="task-header"><b style="font-size:10px">🛡️ TAREFAS DE HOJE</b><span style="font-size:8px;font-weight:900;color:#0284c7" id="qtd-tarefas">2 tarefas</span></div>
+    <div id="banner-aprovacoes-pendentes" class="hidden" style="margin-bottom:6px;padding:7px 9px;border-radius:12px;background:#fffbeb;border:1px solid #fcd34d;font-size:9px;font-weight:900;color:#92400e;display:none;align-items:center;gap:6px">⏳ <span id="txt-aprovacoes-pendentes">Há tarefas aguardando os pais</span></div>
     <div id="lista-tarefas"></div>
     <div id="status-ofensiva" style="margin-top:7px;padding:7px 9px;border-radius:12px;background:#fff7ed;border:1px solid #fed7aa;font-size:9px;font-weight:900;color:#9a3412">🔥 Ofensiva: complete todas as obrigatórias para liberar o dia.</div>
   </div>
@@ -351,6 +743,7 @@ button{touch-action:manipulation}
     <button class="bottom-btn btn-premios" onclick="abrirLojaRecompensas()"><span class="btn-icon">🎁</span>Prêmios</button>
   </div>
 </div>
+<button type="button" class="btn-ajuda-flutuante" id="btn-ajuda" onclick="abrirModalAjuda()" title="Ajuda" aria-label="Abrir ajuda">❓</button>
 <button id="btn-instalar-pwa" class="primary-btn green-btn hidden" style="position:fixed;bottom:14px;left:50%;transform:translateX(-50%);z-index:90;box-shadow:0 8px 24px rgba(0,0,0,.3);padding:10px 18px;font-size:11px;border-radius:99px;display:flex;align-items:center;gap:6px"><span>📲</span> Instalar RotinaPet</button>
 <div id="modal-selecao-perfil" class="modal-overlay">
   <div class="modal" style="text-align:center;max-width:320px">
@@ -385,6 +778,20 @@ button{touch-action:manipulation}
   </div>
   <button class="primary-btn green-btn" style="width:100%;margin-top:12px" onclick="fecharOnboarding()">Entendi, vamos lá! 🚀</button>
 </div></div>
+<div id="modal-onboarding-pais" class="modal-overlay">
+  <div class="modal" style="text-align:center;max-width:340px">
+    <div style="font-size:36px;margin-bottom:4px">👨‍👩‍👧</div>
+    <h3 style="font-size:16px;margin-bottom:4px">Painel dos pais — início rápido</h3>
+    <p style="font-size:10px;color:#64748b;margin-bottom:12px;line-height:1.4">3 passos para deixar o RotinaPet redondo em casa:</p>
+    <div class="stack" style="text-align:left">
+      <div class="achievement-row"><span style="font-size:20px">1️⃣</span><div><b style="font-size:10px">PIN e privacidade</b><div style="font-size:8px;color:#64748b">Você já configurou. Guarde o PIN e, se puder, cadastre e-mail de recuperação.</div></div></div>
+      <div class="achievement-row"><span style="font-size:20px">2️⃣</span><div><b style="font-size:10px">Tarefas e prêmios</b><div style="font-size:8px;color:#64748b">Ajuste as tarefas do dia e cadastre prêmios que façam sentido para sua família.</div></div></div>
+      <div class="achievement-row"><span style="font-size:20px">3️⃣</span><div><b style="font-size:10px">Código da família</b><div style="font-size:8px;color:#64748b">Convide a criança (WhatsApp ou QR) com o mesmo código para sincronizar os aparelhos.</div></div></div>
+    </div>
+    <button class="primary-btn green-btn" style="width:100%;margin-top:12px" onclick="fecharOnboardingPais()">Abrir o painel 🚀</button>
+    <button class="primary-btn" style="width:100%;margin-top:6px;background:#e2e8f0;color:#475569" onclick="fecharOnboardingPais();setTimeout(()=>document.getElementById('input-codigo-familia')?.scrollIntoView({behavior:'smooth',block:'center'}),400)">Ver código da família</button>
+  </div>
+</div>
 <div id="modal-fundos" class="modal-overlay"><div class="modal"><div class="modal-title"><h3 id="titulo-loja-visual">🎨 Temas</h3><button class="close-btn" onclick="fecharModal('modal-fundos')">×</button></div>
   <div class="grid-tabs">
     <button class="tab-btn ativa" id="tab-temas" onclick="alternarAbaLojaVisual('temas')">🎨 Temas</button>
@@ -398,6 +805,50 @@ button{touch-action:manipulation}
 </div></div>
 <div id="modal-timer" class="modal-overlay"><div class="modal" style="text-align:center"><div class="modal-title"><h3>⏳ Tempo de Tela</h3><button class="close-btn" onclick="fecharModal('modal-timer')">×</button></div><p style="font-size:10px;color:#64748b;margin-bottom:10px">Tempo liberado pela recompensa.</p><div id="relogio-timer" class="timer-display">00:00</div><button class="primary-btn red-btn" style="margin-top:10px" onclick="pausarFecharTimer()">Encerrar tempo</button></div></div>
 <div id="modal-pin" class="modal-overlay"><div class="modal" style="text-align:center;max-width:310px"><h3 style="font-size:17px">🔐 Área dos responsáveis</h3><p style="font-size:10px;color:#64748b;margin-top:4px">Digite o PIN de 4 dígitos</p><div class="pin-dots" id="pin-dots"><i class="pin-dot"></i><i class="pin-dot"></i><i class="pin-dot"></i><i class="pin-dot"></i></div><div class="pin-erro" id="pin-erro"></div><div class="pin-pad" id="pin-pad"></div><button class="primary-btn" style="margin-top:9px;background:#e2e8f0;color:#475569" onclick="fecharModal('modal-pin');limparPin()">Cancelar</button></div></div>
+<div id="modal-definir-pin" class="modal-overlay">
+  <div class="modal" style="max-width:340px;text-align:center">
+    <div style="font-size:36px;margin-bottom:4px">🔐</div>
+    <h3 style="font-size:16px;margin-bottom:4px" id="titulo-definir-pin">Crie seu PIN</h3>
+    <p style="font-size:10px;color:#64748b;margin-bottom:12px;line-height:1.4" id="desc-definir-pin">
+      Por segurança, defina um PIN de 4 dígitos para a área dos responsáveis. Não use 1234, 0000 ou números repetidos.
+    </p>
+    <label class="field-label" style="text-align:left">Novo PIN</label>
+    <input class="field" id="input-pin-obrigatorio" inputmode="numeric" maxlength="4" placeholder="4 dígitos" autocomplete="off" style="text-align:center;font-size:18px;letter-spacing:6px;margin-bottom:8px">
+    <label class="field-label" style="text-align:left">Confirmar PIN</label>
+    <input class="field" id="input-pin-obrigatorio-confirma" inputmode="numeric" maxlength="4" placeholder="Repita o PIN" autocomplete="off" style="text-align:center;font-size:18px;letter-spacing:6px;margin-bottom:8px">
+    <p id="erro-definir-pin" style="font-size:10px;font-weight:900;color:#dc2626;min-height:16px;margin-bottom:8px"></p>
+    <button class="primary-btn green-btn" style="width:100%" onclick="confirmarPinObrigatorio()">Salvar PIN e continuar</button>
+    <p style="font-size:8px;color:#94a3b8;margin-top:10px;line-height:1.35">Este passo é obrigatório antes de usar o painel dos pais.</p>
+  </div>
+</div>
+<div id="modal-privacidade" class="modal-overlay">
+  <div class="modal" style="max-width:360px">
+    <div class="modal-title">
+      <h3>🔒 Privacidade</h3>
+      <button class="close-btn" onclick="fecharModal('modal-privacidade')">×</button>
+    </div>
+    <div style="font-size:10px;color:#475569;line-height:1.45;max-height:55dvh;overflow:auto" id="texto-privacidade">
+      <p style="margin-bottom:8px"><b>RotinaPet</b> é um app familiar para rotina infantil com pet virtual. Respeitamos a LGPD e o uso supervisionado por responsáveis.</p>
+      <p style="margin-bottom:6px"><b>1. Dados que tratamos</b></p>
+      <p style="margin-bottom:8px">Progresso do pet, tarefas, moedas, configurações da família, e-mail de recuperação (se cadastrado) e fotos enviadas como comprovante de tarefas. Dados ficam no aparelho e, se a sincronização estiver ativa, no Firebase da sua família.</p>
+      <p style="margin-bottom:6px"><b>2. Fotos</b></p>
+      <p style="margin-bottom:8px">Fotos de tarefas são opcionais, comprimidas no aparelho e visíveis aos responsáveis da mesma família. Não use o app para compartilhar imagens sensíveis de terceiros.</p>
+      <p style="margin-bottom:6px"><b>3. Crianças</b></p>
+      <p style="margin-bottom:8px">O uso por menores deve ser acompanhado por um responsável. O painel dos pais é protegido por PIN. Moedas e “saldo em R$” são controle familiar — não constituem conta bancária nem pagamento automático.</p>
+      <p style="margin-bottom:6px"><b>4. Conta e sincronização</b></p>
+      <p style="margin-bottom:8px">O código da família une aparelhos. Quem tiver o código e o PIN (ou e-mail vinculado) pode acessar os dados da família. Guarde o PIN com cuidado.</p>
+      <p style="margin-bottom:6px"><b>5. Seus direitos</b></p>
+      <p style="margin-bottom:8px">Você pode exportar backup, apagar dados no aparelho, desvincular e-mail e solicitar exclusão dos dados na nuvem deixando de usar o código da família / removendo o projeto no Firebase do mantenedor, conforme a operação do serviço.</p>
+      <p style="margin-bottom:6px"><b>6. Contato</b></p>
+      <p style="margin-bottom:8px">Para dúvidas sobre privacidade, use o canal de suporte indicado na página do app. Este texto é informativo e pode ser atualizado.</p>
+    </div>
+    <label style="display:flex;align-items:flex-start;gap:8px;margin:12px 0;font-size:10px;font-weight:800;color:#334155;text-align:left;cursor:pointer">
+      <input type="checkbox" id="check-privacidade" style="margin-top:2px;width:16px;height:16px;flex-shrink:0">
+      <span>Li e compreendi as informações de privacidade (LGPD / uso familiar).</span>
+    </label>
+    <button class="primary-btn green-btn" style="width:100%" id="btn-aceitar-privacidade" onclick="aceitarPrivacidade()">Continuar</button>
+  </div>
+</div>
 <div id="modal-pais" class="modal-overlay"><div class="modal">
   <div class="modal-title"><h3>👨‍👩‍👧 Painel dos Pais</h3><button class="close-btn" onclick="fecharModal('modal-pais')">×</button></div>
   <div class="stat-grid" style="margin-bottom:9px"><div class="stat">💰 <b>R$ <span id="txt-painel-disponivel">0,00</span></b><span>saldo disponível</span></div><div class="stat">🧾 <b>R$ <span id="txt-total-pago">0,00</span></b><span>total pago</span></div></div>
@@ -410,7 +861,14 @@ button{touch-action:manipulation}
   <div class="section-card"><div style="display:flex;justify-content:space-between;align-items:center"><b style="font-size:10px">💸 Cofrinho</b><button class="primary-btn green-btn" onclick="sacarDinheiro()">Pagar / sacar</button></div><div style="font-size:9px;color:#64748b;margin-top:5px">Cada moeda vale R$ <span id="texto-taxa-atual">0,01</span>.</div></div>
   <div class="section-card"><label class="field-label">👶 Idade da criança</label><input class="field" id="input-idade-crianca" type="number" min="3" max="15" onchange="atualizarIdadeCrianca(this.value)"></div>
   <div class="section-card"><label class="field-label">💵 Valor por moeda (R$)</label><input class="field" id="input-taxa-cambio" type="number" min="0" step="0.01" onchange="atualizarTaxaCambio(this.value)"></div>
-  <div class="section-card"><label class="field-label">🔑 Alterar PIN</label><div style="display:flex;gap:5px"><input class="field" id="novo-pin-pais" inputmode="numeric" maxlength="4" placeholder="4 dígitos"><button class="primary-btn" onclick="salvarNovoPin()">Salvar</button></div></div>
+  <div class="section-card"><label class="field-label">🔑 Alterar PIN</label><div style="display:flex;gap:5px"><input class="field" id="novo-pin-pais" inputmode="numeric" maxlength="4" placeholder="4 dígitos"><button class="primary-btn" onclick="salvarNovoPin()">Salvar</button></div>
+    <small style="font-size:8px;color:#64748b;margin-top:4px;display:block" id="txt-status-pin">Use um PIN forte (não use 1234 ou sequências óbvias).</small>
+  </div>
+  <div class="section-card">
+    <label class="field-label">🔒 Privacidade</label>
+    <button type="button" class="primary-btn blue-btn botao-secundario" style="width:100%" onclick="abrirPrivacidade(false)">Ver política de privacidade</button>
+    <small style="font-size:8px;color:#64748b;margin-top:3px;display:block">LGPD · dados da família, fotos e e-mail de recuperação.</small>
+  </div>
   <div class="section-card">
     <label class="field-label">📧 E-mail de recuperação</label>
     <div style="font-size:9px;color:#64748b;margin-bottom:6px" id="txt-status-email-recupera">Nenhum e-mail vinculado ainda.</div>
@@ -537,6 +995,43 @@ button{touch-action:manipulation}
 </div></div>
 <div id="modal-recompensas" class="modal-overlay"><div class="modal"><div class="modal-title"><h3>🎁 Resgatar Prêmios</h3><button class="close-btn" onclick="fecharModal('modal-recompensas')">×</button></div><div class="section-card"><div style="display:flex;justify-content:space-between;font-size:9px;font-weight:900"><span>🎯 Meta: Passeio Especial</span><span id="texto-meta-progresso">0 / 50 🪙</span></div><div class="progress" style="margin-top:5px"><div id="barra-meta-progresso" style="width:0"></div></div></div><div class="stack" id="lista-itens-loja"></div></div></div>
 <div id="modal-aviso" class="modal-overlay"><div class="modal" style="text-align:center;max-width:320px"><div id="aviso-emoji" style="font-size:35px">🎉</div><h3 id="aviso-titulo" style="font-size:16px;margin:5px 0">Tudo certo!</h3><p id="aviso-texto" style="font-size:10px;color:#64748b"></p><button class="primary-btn" style="margin-top:10px" onclick="fecharModal('modal-aviso')">OK</button></div></div>
+<div id="modal-ajuda" class="modal-overlay">
+  <div class="modal" style="max-width:360px">
+    <div class="modal-title">
+      <h3>❓ Ajuda — RotinaPet</h3>
+      <button class="close-btn" onclick="fecharModal('modal-ajuda')">×</button>
+    </div>
+    <div class="ajuda-tabs">
+      <button type="button" class="tab-btn ativa" id="tab-ajuda-crianca" onclick="alternarAbaAjuda('crianca')">👶 Criança</button>
+      <button type="button" class="tab-btn" id="tab-ajuda-pais" onclick="alternarAbaAjuda('pais')">👨‍👩‍👧 Pais</button>
+    </div>
+    <div id="painel-ajuda-crianca">
+      <div class="ajuda-item"><span class="ajuda-ico">👆</span><div><b>Toque no pet</b><span>Dê carinho: sobe a felicidade e o pet responde com sons e falas.</span></div></div>
+      <div class="ajuda-item"><span class="ajuda-ico">🛡️</span><div><b>Tarefas do dia</b><span>Tire foto ou envie para os pais aprovarem. Obrigatórias 🔥 liberam a ofensiva; extras ⭐ dão moedas extras.</span></div></div>
+      <div class="ajuda-item"><span class="ajuda-ico">🪙</span><div><b>Moedas e XP</b><span>Ganhe moedas e XP ao completar tarefas e desafios. XP sobe o nível e desbloqueia evoluções e novos pets.</span></div></div>
+      <div class="ajuda-item"><span class="ajuda-ico">🎮</span><div><b>Desafio</b><span>Matemática, memória ou reação rápida — acerte e ganhe moedas + XP.</span></div></div>
+      <div class="ajuda-item"><span class="ajuda-ico">🖼️</span><div><b>Fundos e temas</b><span>Personalize o cenário e vista o pet com acessórios e combos de tema.</span></div></div>
+      <div class="ajuda-item"><span class="ajuda-ico">🎁</span><div><b>Prêmios</b><span>Peça recompensas com suas moedas. Os pais precisam aprovar o resgate.</span></div></div>
+      <div class="ajuda-item"><span class="ajuda-ico">🔥</span><div><b>Ofensiva</b><span>Complete todas as tarefas obrigatórias todos os dias para manter a sequência e ganhar o baú semanal.</span></div></div>
+      <div class="ajuda-item"><span class="ajuda-ico">🎁</span><div><b>Surpresa do dia</b><span>Toque no presente no canto do pet (quando aparecer) para ganhar moedas bônus.</span></div></div>
+    </div>
+    <div id="painel-ajuda-pais" class="hidden">
+      <div class="ajuda-item"><span class="ajuda-ico">🔐</span><div><b>PIN dos responsáveis</b><span>Toque em moedas ou saldo para abrir o painel. No primeiro acesso você cria um PIN próprio (obrigatório). Evite 1234 e senhas óbvias.</span></div></div>
+      <div class="ajuda-item"><span class="ajuda-ico">🔒</span><div><b>Privacidade</b><span>No painel dos pais há a política de privacidade (LGPD): dados da família, fotos e e-mail.</span></div></div>
+      <div class="ajuda-item"><span class="ajuda-ico">✅</span><div><b>Aprovar tarefas</b><span>Veja fotos e aprove ou recuse. Só após aprovar a criança recebe moedas e XP.</span></div></div>
+      <div class="ajuda-item"><span class="ajuda-ico">📋</span><div><b>Gerenciar tarefas</b><span>Crie obrigatórias e extras, escolha dias da semana e valores de recompensa.</span></div></div>
+      <div class="ajuda-item"><span class="ajuda-ico">🎁</span><div><b>Prêmios e solicitações</b><span>Cadastre prêmios (incluindo tempo de tela). Aprove pedidos antes de descontar moedas.</span></div></div>
+      <div class="ajuda-item"><span class="ajuda-ico">👨‍👩‍👧‍👦</span><div><b>Vários filhos</b><span>Cada filho tem pet, moedas e tarefas separados. Troque o filho ativo no painel.</span></div></div>
+      <div class="ajuda-item"><span class="ajuda-ico">🏠</span><div><b>Código da família</b><span>Use o mesmo código (mín. 8 caracteres) em todos os aparelhos para sincronizar. Convide por WhatsApp ou QR Code.</span></div></div>
+      <div class="ajuda-item"><span class="ajuda-ico">📧</span><div><b>E-mail de recuperação</b><span>Cadastre e-mail + senha para recuperar acesso se esquecer o PIN. Até 2 responsáveis.</span></div></div>
+      <div class="ajuda-item"><span class="ajuda-ico">💾</span><div><b>Backup</b><span>Baixe um arquivo .json de segurança e restaure quando precisar — funciona offline.</span></div></div>
+    </div>
+    <button class="primary-btn btn-demo-anim" style="width:100%;margin-top:10px" onclick="iniciarDemoAnimacoes()">✨ Demo das animações</button>
+    <button class="primary-btn green-btn" style="width:100%;margin-top:8px" onclick="fecharModal('modal-ajuda')">Entendi! 🚀</button>
+  </div>
+</div>
+<div class="demo-spotlight" id="demo-spotlight" aria-hidden="true"></div>
+<div class="demo-hud" id="demo-hud" role="status"></div>
 <div id="modal-qrcode" class="modal-overlay"><div class="modal" style="text-align:center;max-width:280px"><div class="modal-title"><h3>📷 Convite por QR Code</h3><button class="close-btn" onclick="fecharModal('modal-qrcode')">×</button></div><p style="font-size:9px;color:#64748b;margin-bottom:8px">Peça para a outra pessoa escanear com a câmera do celular.</p><img id="img-qr-convite" src="" alt="QR code de convite" style="width:220px;height:220px;border-radius:12px;background:#fff;padding:6px"><p id="txt-link-qr-convite" style="font-size:8px;color:#94a3b8;margin-top:8px;word-break:break-all"></p></div></div>
 <div class="foto-viewer" id="foto-viewer" onclick="fecharVisualizadorFoto()"><img id="foto-viewer-img" src=""></div>
 <div class="toast" id="toast"></div>
@@ -741,14 +1236,15 @@ function sanitizarIdFamilia(id){
 let codigoFamilia=sanitizarIdFamilia(urlParams.get('familia')||localStorage.getItem('ROTINAPET_FAMILIA_ID'));
 localStorage.setItem('ROTINAPET_FAMILIA_ID',codigoFamilia);
   function obterLinkConvite(){
+    // URL pública do deploy (pasta histórica taskpet); marca do produto: RotinaPet
     return 'https://rodrigomdl76-sys.github.io/taskpet/?familia=' + encodeURIComponent(codigoFamilia);
   }
   function compartilharConviteFamilia() {
   const linkConvite = obterLinkConvite();
-  const texto = 'Entre no TaskPet comigo para cuidarmos do nosso pet juntos! Acesse: ' + linkConvite;
+  const texto = 'Entre no RotinaPet comigo para cuidarmos do nosso pet juntos! Acesse: ' + linkConvite;
   if (navigator.share) {
     navigator.share({
-      title: 'Convite TaskPet',
+      title: 'Convite RotinaPet',
       text: texto,
       url: linkConvite
     }).catch(function(){});
@@ -884,7 +1380,7 @@ let estado={
   ],
   solicitacoesPremios:[],
   conquistas:{},
-  pinBloqueadoAte:null,pinTentativasFalhas:0,
+  pinBloqueadoAte:null,pinTentativasFalhas:0,pinPersonalizado:false,privacidadeAceita:false,onboardingVistoPais:false,
   acessorios:{comprados:[],ativo:null},
   pausaAte:null,
   historicoConclusoes:{},
@@ -1107,7 +1603,11 @@ function atualizarTela(){
   const btnStreak=document.getElementById('btn-pill-streak');
   if(btnStreak)btnStreak.classList.toggle('streak-fogo',streakVal>=3);
   document.getElementById('val-felicidade').textContent=p.felicidade;
-  document.getElementById('barra-felicidade').style.width=p.felicidade+'%';
+  const barraFel=document.getElementById('barra-felicidade');
+  if(barraFel){
+    barraFel.style.width=p.felicidade+'%';
+    barraFel.classList.toggle('glow-happy',p.felicidade>=80);
+  }
   document.getElementById('txt-saude').textContent=p.saude+'%';
   document.getElementById('numero-nivel').textContent=p.nivel;
   document.getElementById('texto-xp').textContent=`${p.xp}/100`;
@@ -1197,17 +1697,78 @@ function tocarAudioPet(url){
 function interagirComPet(e){
   if(debounceAcao)return;
   debounceAcao=true;
-  setTimeout(()=>debounceAcao=false,250);
+  setTimeout(()=>debounceAcao=false,280);
   const d=obterDadosPetAtual();
   d.felicidade=Math.min(100,d.felicidade+5);
   tocarAudioPet(PETS[estado.petAtual].som);
   navigator.vibrate?.(25);
   criarTextoFlutuante('❤️ +5',e);
+  animarPetToque(e);
   if(Math.random()<.5)mostrarBalaoFala(FALAS_PET[Math.floor(Math.random()*FALAS_PET.length)]);
   else mostrarToast(`❤️ ${PETS[estado.petAtual].nome} adorou!`);
   salvar();
   atualizarTela();
   animarAcessorioTema();
+  animarMoedasBump();
+}
+function animarPetToque(e){
+  const wrap=document.getElementById('pet-principal');
+  const stage=document.querySelector('.pet-stage');
+  if(wrap){
+    wrap.classList.remove('pet-bounce');
+    void wrap.offsetWidth;
+    wrap.classList.add('pet-bounce');
+    setTimeout(()=>wrap.classList.remove('pet-bounce'),600);
+  }
+  if(stage){
+    stage.classList.remove('stage-react');
+    void stage.offsetWidth;
+    stage.classList.add('stage-react');
+    setTimeout(()=>stage.classList.remove('stage-react'),750);
+  }
+  dispararHeartsBurst(e);
+}
+function dispararHeartsBurst(e){
+  const area=document.getElementById('pet-section-area');
+  if(!area)return;
+  const host=document.createElement('div');
+  host.className='heart-burst';
+  if(e&&e.clientX){
+    const r=area.getBoundingClientRect();
+    host.style.left=(e.clientX-r.left)+'px';
+    host.style.top=(e.clientY-r.top)+'px';
+  }
+  const hearts=['❤️','💖','💕','✨','💜'];
+  for(let i=0;i<6;i++){
+    const el=document.createElement('i');
+    const ang=(-60+Math.random()*120)*Math.PI/180;
+    const dist=36+Math.random()*48;
+    el.textContent=hearts[i%hearts.length];
+    el.style.setProperty('--dx',Math.cos(ang)*dist+'px');
+    el.style.setProperty('--dy',(-Math.abs(Math.sin(ang))*dist-20)+'px');
+    el.style.setProperty('--rot',(-25+Math.random()*50)+'deg');
+    el.style.setProperty('--dur',(.7+Math.random()*.45)+'s');
+    el.style.fontSize=(12+Math.random()*10)+'px';
+    host.appendChild(el);
+  }
+  area.appendChild(host);
+  setTimeout(()=>host.remove(),1200);
+}
+function animarMoedasBump(){
+  const coin=document.querySelector('.coin-dot');
+  const txt=document.getElementById('txt-moedas');
+  if(coin){
+    coin.classList.remove('spin');
+    void coin.offsetWidth;
+    coin.classList.add('spin');
+    setTimeout(()=>coin.classList.remove('spin'),650);
+  }
+  if(txt){
+    txt.classList.remove('bump');
+    void txt.offsetWidth;
+    txt.classList.add('bump');
+    setTimeout(()=>txt.classList.remove('bump'),500);
+  }
 }
 function animarAcessorioTema(){
   const ativo=estado.acessorios?.ativo;
@@ -1240,7 +1801,31 @@ function atualizarBotaoSurpresaDia(){
 function darRemedio(){obterDadosPetAtual().saude=100;salvar();atualizarTela();mostrarToast('💚 Saúde restaurada!')}
 function criarTextoFlutuante(txt,e){const area=document.getElementById('pet-section-area'),s=document.createElement('div');s.className='floating-text';s.textContent=txt;const r=area.getBoundingClientRect();s.style.left=(e?.clientX?r.left<e.clientX?e.clientX-r.left:80:90)+'px';s.style.top='35%';area.appendChild(s);setTimeout(()=>s.remove(),900)}
 const CORES_CONFETE_PET={gato:['#a78bfa','#1e293b','#f8fafc'],cachorra:['#f4a261','#e76f51','#fff7ed'],cabra:['#f5e6d3','#a0522d','#fefce8'],frango:['#fff9c4','#ff6b6b','#ffcc00']};
-function ganharXP(qtd,e){const p=obterDadosPetAtual();p.xp+=qtd;criarTextoFlutuante(`+${qtd} XP`,e);let subiu=false;while(p.xp>=100){p.xp-=100;p.nivel++;subiu=true;dispararConfetes(140,CORES_CONFETE_PET[estado.petAtual]);navigator.vibrate?.([70,40,70]);}if(subiu)mostrarToast(`🎉 Nível ${p.nivel}!`);salvar();atualizarTela()}
+function ganharXP(qtd,e){
+  const p=obterDadosPetAtual();
+  p.xp+=qtd;
+  criarTextoFlutuante(`+${qtd} XP`,e);
+  let subiu=false;
+  while(p.xp>=100){
+    p.xp-=100;
+    p.nivel++;
+    subiu=true;
+    dispararConfetes(140,CORES_CONFETE_PET[estado.petAtual]);
+    navigator.vibrate?.([70,40,70]);
+  }
+  if(subiu){
+    mostrarToast(`🎉 Nível ${p.nivel}!`);
+    const badge=document.querySelector('.level-badge');
+    if(badge){
+      badge.classList.remove('level-up-pop');
+      void badge.offsetWidth;
+      badge.classList.add('level-up-pop');
+      setTimeout(()=>badge.classList.remove('level-up-pop'),800);
+    }
+  }
+  salvar();
+  atualizarTela();
+}
 function dispararConfetes(qtd=75,cores=null){try{window.confetti?.({particleCount:qtd,spread:65,origin:{y:.6},...(cores?{colors:cores}:{})})}catch(e){}}
 let tarefaIdFoto=null;
 document.getElementById('camera-input').addEventListener('change',processarFotoCapturada);
@@ -1320,6 +1905,20 @@ function renderizarTarefas(){
   const hojeLista=tarefasDeHoje();
   const o=hojeLista.filter(t=>t.tipo==='obrigatoria'),x=hojeLista.filter(t=>t.tipo!=='obrigatoria');
   document.getElementById('qtd-tarefas').textContent=`${o.length} obrig. • ${x.length} extras`;
+  const pendentes=(estado.tarefas||[]).filter(t=>t.status==='aguardando_aprovacao');
+  const bannerPend=document.getElementById('banner-aprovacoes-pendentes');
+  const txtPend=document.getElementById('txt-aprovacoes-pendentes');
+  if(bannerPend){
+    const n=pendentes.length;
+    if(n>0){
+      bannerPend.style.display='flex';
+      bannerPend.classList.remove('hidden');
+      if(txtPend)txtPend.textContent=n===1?'1 tarefa aguardando aprovação dos pais':`${n} tarefas aguardando aprovação dos pais`;
+    }else{
+      bannerPend.style.display='none';
+      bannerPend.classList.add('hidden');
+    }
+  }
   
   const bloco=(titulo,lista,icone)=>{
     if(!lista.length)return;
@@ -1470,11 +2069,16 @@ async function entrarComEmail(){
     await auth.signInWithEmailAndPassword(email,senha);
     fecharLoginEmail();
     atualizarTela();
-    // O login por e-mail já comprova que é um responsável de verdade —
-    // não precisa forçar troca de PIN. Isso também permite que um segundo
-    // responsável entre com a própria conta, sem depender do PIN compartilhado.
-    renderizarPainelPais();
-    abrirModal('modal-pais');
+    // Login por e-mail autentica o responsável. Ainda exigimos privacidade e PIN personalizado se faltarem.
+    if(!estado.privacidadeAceita){
+      abrirPrivacidade(true);
+      return;
+    }
+    if(!estado.pinPersonalizado){
+      abrirDefinirPinObrigatorio(estado.pinHash?'trocar':'criar');
+      return;
+    }
+    entrarPainelPaisPosAuth();
     mostrarAviso('✅','Acesso liberado','Bem-vindo(a) de volta! Se quiser, você pode alterar o PIN aqui no painel.');
   }catch(error){
     console.warn('Falha no login por email:',error);
@@ -1625,6 +2229,15 @@ async function salvarEmailRecuperacao(){
   }
 }
 function abrirPainelPais(){
+  // Primeiro acesso: criar PIN do zero (sem senha padrão 1234 em produção).
+  if(!estado.pinPersonalizado&&!estado.pinHash){
+    if(!estado.privacidadeAceita){
+      abrirPrivacidade(true);
+      return;
+    }
+    abrirDefinirPinObrigatorio('criar');
+    return;
+  }
   limparPin();
   montarTecladoPin();
   atualizarEstadoBloqueioPin();
@@ -1737,9 +2350,17 @@ function atualizarEstadoBloqueioPin(){
 async function validarPin(){
   if(estaPinBloqueado())return;
   
+  // Famílias antigas sem hash: não gravamos mais 1234 em silêncio.
+  // Pedimos criação de PIN seguro.
   if(!estado.pinHash){
-    estado.pinHash=await hashPin('1234');
-    salvar();
+    fecharModal('modal-pin');
+    limparPin();
+    if(!estado.privacidadeAceita){
+      abrirPrivacidade(true);
+      return;
+    }
+    abrirDefinirPinObrigatorio('criar');
+    return;
   }
   const hashDigitado=await hashPin(pinDigitado);
   let pinCorreto=hashDigitado===estado.pinHash;
@@ -1755,19 +2376,32 @@ async function validarPin(){
       }
     }
   }
+  // Detecta PIN legado inseguro 1234 ainda em uso.
+  const aindaPinPadrao=pinCorreto&&(await hashPin('1234'))===estado.pinHash;
   if(pinCorreto){
     estado.pinHash=hashDigitado;
     estado.pinTentativasFalhas=0;
     estado.pinBloqueadoAte=null;
+    if(aindaPinPadrao)estado.pinPersonalizado=false;
     salvar();
-    // Há versões antigas do app que usavam uma tela de PIN separada.
-    // Fechamos as duas estruturas para evitar que uma camada fique sobre o painel.
     fecharModal('modal-pin');
     const telaPinLegada=document.getElementById('telaPinResponsavel');
     if(telaPinLegada)telaPinLegada.style.display='none';
     limparPin();
-    renderizarPainelPais();
-    abrirModal('modal-pais');
+    // Obrigatório trocar PIN padrão / não personalizado antes do painel.
+    if(!estado.pinPersonalizado||aindaPinPadrao){
+      if(!estado.privacidadeAceita){
+        abrirPrivacidade(true);
+        return;
+      }
+      abrirDefinirPinObrigatorio('trocar');
+      return;
+    }
+    if(!estado.privacidadeAceita){
+      abrirPrivacidade(true);
+      return;
+    }
+    entrarPainelPaisPosAuth();
   }else{
     estado.pinTentativasFalhas=(estado.pinTentativasFalhas||0)+1;
     limparPin();
@@ -1868,6 +2502,8 @@ function renderizarPainelPais(){
   document.getElementById('input-taxa-cambio').value=estado.taxaCambio;
   document.getElementById('input-idade-crianca').value=estado.idadeCrianca||7;
   renderizarListaCriancasPais();
+  const stPin=document.getElementById('txt-status-pin');
+  if(stPin)stPin.textContent=estado.pinPersonalizado?'✅ PIN personalizado ativo.':'⚠️ Defina um PIN personalizado o quanto antes.';
   const statusEmail=document.getElementById('txt-status-email-recupera');
   if(statusEmail){
     const lista=Array.isArray(estado.emailsRecuperacao)?estado.emailsRecuperacao:[];
@@ -2172,16 +2808,117 @@ function removerTarefa(id){
   renderizarPainelPais();
   atualizarTela();
 }
+function pinEhFraco(p){
+  return !/^\d{4}$/.test(p)||p==='1234'||p==='0000'||p==='1111'||p==='2222'||p==='4321'||/^(\d)\1{3}$/.test(p)||p==='0123'||p==='9876';
+}
 async function salvarNovoPin(){
   const input=document.getElementById('novo-pin-pais');
   const p=input.value.trim();
   if(!/^\d{4}$/.test(p))return mostrarToast('PIN precisa ter 4 dígitos.');
-  if(p==='1234'||p==='0000'||/^(\d)\1{3}$/.test(p))return mostrarToast('⚠️ Evite senhas fáceis ou números repetidos.');
+  if(pinEhFraco(p))return mostrarToast('⚠️ Evite senhas fáceis ou números repetidos.');
   
   estado.pinHash=await hashPin(p);
+  estado.pinPersonalizado=true;
   input.value='';
   salvar();
+  const st=document.getElementById('txt-status-pin');
+  if(st)st.textContent='✅ PIN personalizado ativo.';
   mostrarToast('🔑 PIN seguro atualizado!');
+}
+let privacidadePosAceite=null;
+function abrirPrivacidade(obrigatorio){
+  const check=document.getElementById('check-privacidade');
+  const btn=document.getElementById('btn-aceitar-privacidade');
+  if(check){
+    check.checked=!!estado.privacidadeAceita;
+    check.disabled=false;
+  }
+  if(btn){
+    btn.textContent=obrigatorio?'Aceitar e continuar':'Fechar';
+  }
+  privacidadePosAceite=obrigatorio?()=>{
+    if(!estado.pinPersonalizado){
+      abrirDefinirPinObrigatorio(estado.pinHash?'trocar':'criar');
+    }else{
+      entrarPainelPaisPosAuth();
+    }
+  }:null;
+  abrirModal('modal-privacidade');
+}
+function aceitarPrivacidade(){
+  const check=document.getElementById('check-privacidade');
+  if(privacidadePosAceite){
+    if(!check?.checked){
+      mostrarToast('Marque a opção para continuar.');
+      return;
+    }
+    estado.privacidadeAceita=true;
+    salvar();
+    fecharModal('modal-privacidade');
+    const cb=privacidadePosAceite;
+    privacidadePosAceite=null;
+    cb();
+    return;
+  }
+  if(check?.checked){
+    estado.privacidadeAceita=true;
+    salvar();
+  }
+  fecharModal('modal-privacidade');
+}
+function abrirDefinirPinObrigatorio(modo){
+  const tit=document.getElementById('titulo-definir-pin');
+  const desc=document.getElementById('desc-definir-pin');
+  const erro=document.getElementById('erro-definir-pin');
+  if(erro)erro.textContent='';
+  document.getElementById('input-pin-obrigatorio').value='';
+  document.getElementById('input-pin-obrigatorio-confirma').value='';
+  if(tit)tit.textContent=modo==='trocar'?'Troque o PIN padrão':'Crie seu PIN';
+  if(desc)desc.textContent=modo==='trocar'
+    ?'Detectamos um PIN inseguro ou ainda não personalizado. Defina um PIN de 4 dígitos novo para proteger o painel.'
+    :'Por segurança, defina um PIN de 4 dígitos para a área dos responsáveis. Não use 1234, 0000 ou números repetidos.';
+  abrirModal('modal-definir-pin');
+}
+async function confirmarPinObrigatorio(){
+  const p=document.getElementById('input-pin-obrigatorio')?.value.trim()||'';
+  const c=document.getElementById('input-pin-obrigatorio-confirma')?.value.trim()||'';
+  const erro=document.getElementById('erro-definir-pin');
+  if(!/^\d{4}$/.test(p)){
+    if(erro)erro.textContent='Digite exatamente 4 números.';
+    return;
+  }
+  if(pinEhFraco(p)){
+    if(erro)erro.textContent='PIN fraco. Evite 1234, 0000, sequências e dígitos iguais.';
+    return;
+  }
+  if(p!==c){
+    if(erro)erro.textContent='Os dois PINs não são iguais.';
+    return;
+  }
+  estado.pinHash=await hashPin(p);
+  estado.pinPersonalizado=true;
+  estado.pinTentativasFalhas=0;
+  estado.pinBloqueadoAte=null;
+  salvar();
+  fecharModal('modal-definir-pin');
+  mostrarAviso('🔐','PIN definido','Seu PIN foi salvo. Guarde-o em local seguro. Você pode alterá-lo depois no painel.');
+  setTimeout(()=>entrarPainelPaisPosAuth(),400);
+}
+function fecharOnboardingPais(){
+  estado.onboardingVistoPais=true;
+  salvar();
+  fecharModal('modal-onboarding-pais');
+  renderizarPainelPais();
+  abrirModal('modal-pais');
+  mostrarToast('👨‍👩‍👧 Painel pronto — bom uso em família!');
+}
+function entrarPainelPaisPosAuth(){
+  if(!estado.onboardingVistoPais){
+    abrirModal('modal-onboarding-pais');
+    return;
+  }
+  renderizarPainelPais();
+  abrirModal('modal-pais');
 }
 function atualizarTaxaCambio(v){
   const n=Number(v);
@@ -3015,12 +3752,131 @@ function salvarVoz(){
   };
   leitor.readAsDataURL(audioBlobFinal);
 }
+function comViewTransition(fn){
+  if(typeof document.startViewTransition==='function'&&!window.matchMedia('(prefers-reduced-motion: reduce)').matches){
+    try{return document.startViewTransition(fn)}catch(e){fn()}
+  }else{fn()}
+}
 function abrirModal(id){
-  document.getElementById(id)?.classList.add('mostrar');
+  comViewTransition(()=>{
+    document.getElementById(id)?.classList.add('mostrar');
+  });
 }
 function fecharModal(id){
-  document.getElementById(id)?.classList.remove('mostrar');
+  comViewTransition(()=>{
+    document.getElementById(id)?.classList.remove('mostrar');
+  });
 }
+function abrirModalAjuda(){
+  alternarAbaAjuda(perfilAtivo==='pais'?'pais':'crianca');
+  abrirModal('modal-ajuda');
+}
+function alternarAbaAjuda(aba){
+  const crianca=aba==='crianca';
+  document.getElementById('painel-ajuda-crianca')?.classList.toggle('hidden',!crianca);
+  document.getElementById('painel-ajuda-pais')?.classList.toggle('hidden',crianca);
+  document.getElementById('tab-ajuda-crianca')?.classList.toggle('ativa',crianca);
+  document.getElementById('tab-ajuda-pais')?.classList.toggle('ativa',!crianca);
+}
+let demoRodando=false;
+function setDemoHud(txt){
+  const el=document.getElementById('demo-hud');
+  if(!el)return;
+  el.textContent=txt;
+  el.classList.add('mostrar');
+}
+function hideDemoHud(){
+  document.getElementById('demo-hud')?.classList.remove('mostrar');
+  document.getElementById('demo-spotlight')?.classList.remove('mostrar');
+}
+function apontarSpotlight(el){
+  const spot=document.getElementById('demo-spotlight');
+  if(!spot||!el)return;
+  const r=el.getBoundingClientRect();
+  spot.style.setProperty('--sx',(r.left+r.width/2)+'px');
+  spot.style.setProperty('--sy',(r.top+r.height/2)+'px');
+  spot.classList.add('mostrar');
+}
+async function iniciarDemoAnimacoes(){
+  if(demoRodando)return;
+  if(window.matchMedia('(prefers-reduced-motion: reduce)').matches){
+    mostrarToast('Animações reduzidas neste aparelho.');
+    return;
+  }
+  demoRodando=true;
+  fecharModal('modal-ajuda');
+  await esperar(350);
+  const passos=[
+    async()=>{
+      setDemoHud('1/6 · Bounce do pet + corações');
+      const pet=document.getElementById('pet-principal');
+      apontarSpotlight(pet);
+      animarPetToque({clientX:window.innerWidth/2,clientY:window.innerHeight*0.38});
+      await esperar(1100);
+    },
+    async()=>{
+      setDemoHud('2/6 · Moedas e contador');
+      apontarSpotlight(document.querySelector('.top-pill'));
+      animarMoedasBump();
+      await esperar(900);
+    },
+    async()=>{
+      setDemoHud('3/6 · Level-up pop');
+      apontarSpotlight(document.querySelector('.level-badge'));
+      const badge=document.querySelector('.level-badge');
+      if(badge){
+        badge.classList.remove('level-up-pop');
+        void badge.offsetWidth;
+        badge.classList.add('level-up-pop');
+        setTimeout(()=>badge.classList.remove('level-up-pop'),800);
+      }
+      dispararConfetes(90);
+      await esperar(1000);
+    },
+    async()=>{
+      setDemoHud('4/6 · Aura do palco');
+      apontarSpotlight(document.querySelector('.pet-stage'));
+      const stage=document.querySelector('.pet-stage');
+      if(stage){
+        stage.classList.remove('stage-react');
+        void stage.offsetWidth;
+        stage.classList.add('stage-react');
+        setTimeout(()=>stage.classList.remove('stage-react'),750);
+      }
+      await esperar(900);
+    },
+    async()=>{
+      setDemoHud('5/6 · Brilho nos botões');
+      apontarSpotlight(document.querySelector('.bottom-buttons'));
+      document.querySelectorAll('.bottom-btn').forEach((b,i)=>{
+        setTimeout(()=>{
+          b.classList.remove('shine-once');
+          void b.offsetWidth;
+          b.classList.add('shine-once');
+          setTimeout(()=>b.classList.remove('shine-once'),750);
+        },i*120);
+      });
+      await esperar(1100);
+    },
+    async()=>{
+      setDemoHud('6/6 · View Transition no modal');
+      hideDemoHud();
+      await esperar(200);
+      abrirModal('modal-aviso');
+      document.getElementById('aviso-emoji').textContent='✨';
+      document.getElementById('aviso-titulo').textContent='Demo concluída!';
+      document.getElementById('aviso-texto').textContent='View Transitions, bounce, partículas CSS, shimmer e confetes — tudo no RotinaPet.';
+      await esperar(400);
+    }
+  ];
+  try{
+    for(const passo of passos)await passo();
+  }finally{
+    demoRodando=false;
+    setTimeout(hideDemoHud,500);
+  }
+}
+function esperar(ms){return new Promise(r=>setTimeout(r,ms))}
 let toastTimer=null;
 function mostrarToast(txt){
   const el=document.getElementById('toast');
