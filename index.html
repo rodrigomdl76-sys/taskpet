@@ -19,23 +19,34 @@
 *{margin:0;padding:0;box-sizing:border-box;font-family:'Nunito',sans-serif;-webkit-tap-highlight-color:transparent}
 html,body{width:100%;height:100%;overflow:hidden}
 body{min-height:100dvh;color:#172033;transition:background .5s ease}
-body.cenario-ceu,.bg-layer.cenario-ceu{background:linear-gradient(180deg,#4facfe,#00f2fe)}
-body.cenario-chuva,.bg-layer.cenario-chuva{background:linear-gradient(180deg,#475569,#94a3b8)}
-body.cenario-noite,.bg-layer.cenario-noite{background:linear-gradient(180deg,#0f172a,#1e3a8a);color:#f8fafc}
-body.cenario-arcoiris,.bg-layer.cenario-arcoiris{background:linear-gradient(180deg,#f87171,#fbbf24 30%,#4ade80 60%,#60a5fa)}
-body.cenario-praia,.bg-layer.cenario-praia{background:linear-gradient(180deg,#fef08a,#38bdf8)}
-body.cenario-floresta,.bg-layer.cenario-floresta{background:linear-gradient(180deg,#166534,#84cc16)}
-body.cenario-festa,.bg-layer.cenario-festa{background:linear-gradient(180deg,#f472b6,#a78bfa 50%,#60a5fa)}
-body.cenario-halloween,.bg-layer.cenario-halloween{background:linear-gradient(180deg,#1a1033,#2e1065 50%,#7c2d12);color:#fff}
-body.cenario-estadio,.bg-layer.cenario-estadio{background:linear-gradient(180deg,#064e3b,#10b981);color:#fff}
-body.cenario-quarto,.bg-layer.cenario-quarto{background:linear-gradient(180deg,#fdf4ff,#f5d0fe)}
-body.cenario-mario,.bg-layer.cenario-mario{background:linear-gradient(180deg,#22d3ee,#84cc16)}
-body.cenario-dino,.bg-layer.cenario-dino{background:linear-gradient(180deg,#fef3c7,#f59e0b 50%,#166534)}
-body.cenario-princesa,.bg-layer.cenario-princesa{background:linear-gradient(180deg,#fbcfe8,#f9a8d4)}
-body.cenario-astronauta,.bg-layer.cenario-astronauta{background:linear-gradient(180deg,#020617,#1e1b4b);color:#fff}
-body.cenario-pirata,.bg-layer.cenario-pirata{background:linear-gradient(180deg,#78350f,#0f172a);color:#fff}
-body.cenario-fazenda,.bg-layer.cenario-fazenda{background:linear-gradient(180deg,#fef08a,#84cc16)}
-body.cenario-neve,.bg-layer.cenario-neve{background:linear-gradient(180deg,#e0f2fe,#bae6fd)}
+body.cenario-ceu,.bg-layer.cenario-ceu{background:linear-gradient(180deg,#38bdf8 0%,#7dd3fc 40%,#e0f2fe 70%,#fef9c3 100%)}
+body.cenario-chuva,.bg-layer.cenario-chuva{background:linear-gradient(180deg,#334155 0%,#64748b 55%,#94a3b8 100%)}
+body.cenario-noite,.bg-layer.cenario-noite{background:radial-gradient(ellipse at 70% 20%,#1e3a8a 0%,#0f172a 45%,#020617 100%);color:#f8fafc}
+body.cenario-arcoiris,.bg-layer.cenario-arcoiris{background:linear-gradient(180deg,#f87171,#fbbf24 25%,#4ade80 50%,#38bdf8 75%,#a78bfa 100%)}
+body.cenario-praia,.bg-layer.cenario-praia{background:linear-gradient(180deg,#7dd3fc 0%,#38bdf8 35%,#fde68a 62%,#fcd34d 78%,#fbbf24 100%)}
+body.cenario-floresta,.bg-layer.cenario-floresta{background:linear-gradient(180deg,#86efac 0%,#22c55e 35%,#166534 70%,#14532d 100%)}
+body.cenario-festa,.bg-layer.cenario-festa{background:linear-gradient(160deg,#f472b6 0%,#a78bfa 40%,#6366f1 70%,#22d3ee 100%)}
+body.cenario-halloween,.bg-layer.cenario-halloween{background:linear-gradient(180deg,#1a1033 0%,#2e1065 40%,#7c2d12 85%,#451a03 100%);color:#fff}
+body.cenario-estadio,.bg-layer.cenario-estadio{background:linear-gradient(180deg,#0c4a6e 0%,#0369a1 18%,#15803d 42%,#16a34a 70%,#14532d 100%);color:#fff}
+body.cenario-quarto,.bg-layer.cenario-quarto{background:linear-gradient(180deg,#faf5ff 0%,#f5d0fe 55%,#e9d5ff 100%)}
+body.cenario-mario,.bg-layer.cenario-mario{background:linear-gradient(180deg,#67e8f9 0%,#22d3ee 40%,#4ade80 75%,#a3e635 100%)}
+body.cenario-dino,.bg-layer.cenario-dino{background:linear-gradient(180deg,#fef3c7 0%,#fcd34d 40%,#84cc16 70%,#166534 100%)}
+body.cenario-princesa,.bg-layer.cenario-princesa{background:linear-gradient(180deg,#fdf2f8 0%,#fbcfe8 40%,#f9a8d4 70%,#e879f9 100%)}
+body.cenario-astronauta,.bg-layer.cenario-astronauta{background:radial-gradient(ellipse at 50% 30%,#312e81 0%,#1e1b4b 40%,#020617 100%);color:#fff}
+body.cenario-pirata,.bg-layer.cenario-pirata{background:linear-gradient(180deg,#0ea5e9 0%,#0369a1 30%,#78350f 55%,#1c1917 100%);color:#fff}
+body.cenario-fazenda,.bg-layer.cenario-fazenda{background:linear-gradient(180deg,#7dd3fc 0%,#fde68a 40%,#86efac 70%,#4ade80 100%)}
+body.cenario-neve,.bg-layer.cenario-neve{background:linear-gradient(180deg,#e0f2fe 0%,#bae6fd 40%,#f8fafc 75%,#fff 100%)}
+/* Camada de detalhes ilustrados dos cenários */
+.cenario-detalhes{position:fixed;inset:0;z-index:-1;pointer-events:none;overflow:hidden}
+.cenario-detalhes svg{width:100%;height:100%;display:block}
+@keyframes bolaRola{0%{transform:translateX(0)}50%{transform:translateX(18px)}100%{transform:translateX(0)}}
+@keyframes bandeiraVento{0%,100%{transform:skewX(0)}50%{transform:skewX(-8deg)}}
+@keyframes ondaPraia{0%{transform:translateX(0)}100%{transform:translateX(-40px)}}
+@keyframes nuvemPassa{0%{transform:translateX(-10%)}100%{transform:translateX(110%)}}
+.anim-bola{animation:bolaRola 3.2s ease-in-out infinite;transform-origin:center}
+.anim-bandeira{animation:bandeiraVento 2.4s ease-in-out infinite;transform-box:fill-box;transform-origin:left center}
+.anim-onda{animation:ondaPraia 6s linear infinite}
+.anim-nuvem{animation:nuvemPassa 28s linear infinite}
 button,input,select{font:inherit}
 button{touch-action:manipulation}
 .app{width:100%;max-width:430px;height:100dvh;margin:auto;padding:max(8px,env(safe-area-inset-top)) 12px max(8px,env(safe-area-inset-bottom));display:flex;flex-direction:column;gap:6px;position:relative;overflow:hidden}
@@ -55,7 +66,7 @@ button{touch-action:manipulation}
 .happiness-box{padding:5px 9px}
 .bar-bg{height:7px;background:#e2e8f0;border-radius:99px;overflow:hidden;margin-top:3px}
 .bar-fill{height:100%;width:100%;background:linear-gradient(90deg,#22c55e,#facc15,#f97316);border-radius:99px;transition:width .5s}
-.pet-selector{height:42px;display:flex;justify-content:center;position:relative;z-index:20}
+.pet-selector{height:42px;display:flex;justify-content:center;align-items:center;gap:10px;position:relative;z-index:20}
 .pet-unico-btn{width:42px;height:42px;border-radius:50%;border:3px solid #7c3aed;background:#fff;display:flex;align-items:center;justify-content:center;font-size:21px;box-shadow:0 5px 15px #7c3aed55;cursor:pointer}
 .lista-pet-dropdown{position:absolute;top:47px;background:#fff;border-radius:18px;padding:7px;display:flex;gap:6px;box-shadow:0 12px 30px #0003;opacity:0;visibility:hidden;transform:translateY(-7px);transition:.2s}
 .lista-pet-dropdown.abrir{opacity:1;visibility:visible;transform:translateY(0)}
@@ -273,23 +284,21 @@ button{touch-action:manipulation}
   50%{box-shadow:0 0 0 5px #22c55e33}
 }
 .btn-ajuda-flutuante{
-  position:fixed;
-  right:max(12px,env(safe-area-inset-right));
-  bottom:max(88px,calc(env(safe-area-inset-bottom) + 78px));
-  width:48px;height:48px;border-radius:50%;
-  border:2px solid rgba(255,255,255,.9);
+  position:static;
+  width:42px;height:42px;border-radius:50%;
+  border:3px solid rgba(255,255,255,.95);
   background:linear-gradient(145deg,#7c3aed,#a855f7);
-  color:#fff;font-size:22px;font-weight:900;
+  color:#fff;font-size:18px;font-weight:900;
   display:flex;align-items:center;justify-content:center;
-  box-shadow:0 8px 24px rgba(124,58,237,.45);
-  z-index:80;cursor:pointer;
+  box-shadow:0 5px 15px rgba(124,58,237,.4);
+  z-index:20;cursor:pointer;flex-shrink:0;
   transition:transform .2s cubic-bezier(.34,1.56,.64,1),box-shadow .25s;
   animation:ajudaPulse 2.8s ease-in-out infinite;
 }
-.btn-ajuda-flutuante:active{transform:scale(.88)}
+.btn-ajuda-flutuante:active{transform:scale(.9)}
 @keyframes ajudaPulse{
-  0%,100%{box-shadow:0 8px 24px rgba(124,58,237,.4)}
-  50%{box-shadow:0 8px 28px rgba(124,58,237,.65),0 0 0 8px rgba(124,58,237,.12)}
+  0%,100%{box-shadow:0 5px 14px rgba(124,58,237,.35)}
+  50%{box-shadow:0 5px 18px rgba(124,58,237,.55),0 0 0 6px rgba(124,58,237,.12)}
 }
 .ajuda-item{
   display:flex;gap:10px;align-items:flex-start;
@@ -495,6 +504,33 @@ button:focus-visible,input:focus-visible,.top-pill:focus-visible{
   }
 }
 
+/* ===== Polimento visual premium ===== */
+.pet-stage{
+  background:radial-gradient(ellipse at 50% 32%,rgba(255,255,255,.34),rgba(255,255,255,.07) 72%);
+  border:1px solid rgba(255,255,255,.45);
+  box-shadow:inset 0 0 50px rgba(255,255,255,.2),inset 0 -22px 42px rgba(0,0,0,.07),0 16px 36px rgba(15,23,42,.16);
+}
+.pet-stage:after{
+  width:150px;height:20px;bottom:15px;
+  background:radial-gradient(ellipse,rgba(0,0,0,.3),transparent 72%);
+  filter:blur(3px);
+}
+.top-pill,.mini-card,.happiness-box{
+  box-shadow:0 1px 0 rgba(255,255,255,.75) inset,0 6px 16px rgba(15,23,42,.10);
+  border-color:rgba(255,255,255,.9);
+}
+.tasks-section{box-shadow:0 1px 0 rgba(255,255,255,.6) inset,0 8px 20px rgba(15,23,42,.12)}
+.bottom-btn{box-shadow:0 1px 0 rgba(255,255,255,.35) inset,0 9px 20px rgba(15,23,42,.2)}
+.level-badge{
+  background:linear-gradient(180deg,#fff,#f8f5ff);
+  box-shadow:0 1px 0 rgba(255,255,255,.85) inset,0 6px 16px rgba(76,29,149,.16);
+  border:1px solid rgba(221,214,254,.85);
+}
+.modal{box-shadow:0 30px 70px rgba(15,23,42,.38),0 1px 0 rgba(255,255,255,.6) inset}
+.xp-bar-bg{box-shadow:0 2px 8px rgba(0,0,0,.1) inset,0 1px 0 rgba(255,255,255,.45)}
+.task-btn,.primary-btn,.rp-prize-btn,.pink-btn{box-shadow:0 1px 0 rgba(255,255,255,.3) inset,0 4px 10px rgba(15,23,42,.14)}
+.fundo-card,.rp-prize-card{box-shadow:0 1px 0 rgba(255,255,255,.7) inset,0 6px 16px rgba(15,23,42,.08)}
+
 /* ===== View Transitions API ===== */
 ::view-transition-old(root),
 ::view-transition-new(root){
@@ -698,6 +734,7 @@ button:focus-visible,input:focus-visible,.top-pill:focus-visible{
 </div>
   <div class="bg-layer cenario-ceu ativa" id="bg-layer-a"></div>
 <div class="bg-layer" id="bg-layer-b"></div>
+<div class="cenario-detalhes" id="cenario-detalhes" aria-hidden="true"></div>
 <div class="particulas-cenario" id="particulas-cenario"></div>
 <input type="file" id="camera-input" accept="image/*" capture="environment" class="hidden">
 <div class="app">
@@ -705,10 +742,11 @@ button:focus-visible,input:focus-visible,.top-pill:focus-visible{
     <button class="top-pill" onclick="abrirPainelPais()"><span class="coin-dot"></span><span class="top-pill-text"><span id="txt-moedas">0</span> 🪙</span></button>
     <button class="top-pill" onclick="abrirPainelPais()"><span style="font-size:13px">💰</span><span><span class="top-pill-text">R$ <span id="txt-dinheiro">0,00</span></span><span class="top-pill-sub" id="txt-status-nuvem">🔒 pais</span></span></button>
     <button class="top-pill" onclick="abrirModal('modal-evolucoes')"><span style="font-size:13px">⭐</span><span><span class="top-pill-text">Evoluções</span><span class="top-pill-sub">ver fases</span></span></button>
-    <button class="top-pill" id="btn-pill-streak" onclick="abrirModal('modal-conquistas')" title="Ofensiva diária"><span style="font-size:13px">🔥</span><span><span class="top-pill-text"><span id="txt-streak">0</span> dias</span><span class="top-pill-sub">ofensiva</span></span></button>
+    <button class="top-pill" id="btn-pill-streak" onclick="abrirModal('modal-conquistas')" title="Sequência diária"><span style="font-size:13px">🔥</span><span><span class="top-pill-text"><span id="txt-streak">0</span> dias</span><span class="top-pill-sub">sequência</span></span></button>
   </div>
   <div class="pet-selector">
     <button class="pet-unico-btn" id="btn-pet-atual" onclick="alternarListaPets(event)">🐱</button>
+    <button type="button" class="btn-ajuda-flutuante" id="btn-ajuda" onclick="abrirModalAjuda()" title="Ajuda" aria-label="Abrir ajuda">❓</button>
     <div class="lista-pet-dropdown" id="lista-pets">
       <div class="opcao-pet" data-pet="gato" onclick="escolherPet('gato')">🐱</div>
       <div class="opcao-pet" data-pet="cachorra" onclick="escolherPet('cachorra')">🐶</div>
@@ -718,7 +756,7 @@ button:focus-visible,input:focus-visible,.top-pill:focus-visible{
   </div>
   <div class="status-row">
     <button class="mini-card" onclick="darRemedio()"><span>💚</span><b style="font-size:9px;color:#059669" id="txt-saude">100%</b></button>
-    <div class="happiness-box"><div style="display:flex;justify-content:space-between"><span style="font-size:8px;font-weight:900;color:#64748b">❤️ FELICIDADE</span><b style="font-size:8px"><span id="val-felicidade">100</span>%</b></div><div class="bar-bg"><div class="bar-fill" id="barra-felicidade"></div></div></div>
+    <div class="happiness-box"><div style="display:flex;justify-content:space-between"><span style="font-size:8px;font-weight:900;color:#64748b">✨ Humor</span><b style="font-size:8px"><span id="val-felicidade">100</span>%</b></div><div class="bar-bg"><div class="bar-fill" id="barra-felicidade"></div></div></div>
   </div>
   <div class="cat-section" id="pet-section-area">
     <div class="pet-stage">
@@ -731,19 +769,18 @@ button:focus-visible,input:focus-visible,.top-pill:focus-visible{
     <div class="evo-name" id="pet-evol-nome">Pipoca • Gatinho Sombra</div>
   </div>
   <div class="tasks-section">
-    <div class="task-header"><b style="font-size:10px">🛡️ TAREFAS DE HOJE</b><span style="font-size:8px;font-weight:900;color:#0284c7" id="qtd-tarefas">2 tarefas</span></div>
+    <div class="task-header"><b style="font-size:10px">✨ Missões de hoje</b><span style="font-size:8px;font-weight:900;color:#0284c7" id="qtd-tarefas">2 missões</span></div>
     <div id="banner-aprovacoes-pendentes" class="hidden" style="margin-bottom:6px;padding:7px 9px;border-radius:12px;background:#fffbeb;border:1px solid #fcd34d;font-size:9px;font-weight:900;color:#92400e;display:none;align-items:center;gap:6px">⏳ <span id="txt-aprovacoes-pendentes">Há tarefas aguardando os pais</span></div>
     <div id="lista-tarefas"></div>
-    <div id="status-ofensiva" style="margin-top:7px;padding:7px 9px;border-radius:12px;background:#fff7ed;border:1px solid #fed7aa;font-size:9px;font-weight:900;color:#9a3412">🔥 Ofensiva: complete todas as obrigatórias para liberar o dia.</div>
+    <div id="status-ofensiva" style="margin-top:7px;padding:7px 9px;border-radius:12px;background:#fff7ed;border:1px solid #fed7aa;font-size:9px;font-weight:900;color:#9a3412">🔥 Complete as missões fixas para manter a sequência</div>
   </div>
   <div class="bottom-buttons">
-    <button class="bottom-btn btn-voice" onclick="alternarGravador()"><span class="btn-icon">🎙️</span>Gravar</button>
-    <button class="bottom-btn btn-game" onclick="abrirDesafio()"><span class="btn-icon">🎮</span>Desafio</button>
-    <button class="bottom-btn btn-fundos" onclick="abrirLojaFundos()"><span class="btn-icon">🖼️</span>Fundos</button>
-    <button class="bottom-btn btn-premios" onclick="abrirLojaRecompensas()"><span class="btn-icon">🎁</span>Prêmios</button>
+    <button class="bottom-btn btn-voice" onclick="alternarGravador()"><span class="btn-icon">🎤</span>Voz</button>
+    <button class="bottom-btn btn-game" onclick="abrirDesafio()"><span class="btn-icon">⚡</span>Jogar</button>
+    <button class="bottom-btn btn-fundos" onclick="abrirLojaFundos()"><span class="btn-icon">🎨</span>Visual</button>
+    <button class="bottom-btn btn-premios" onclick="abrirLojaRecompensas()"><span class="btn-icon">🏆</span>Loja</button>
   </div>
 </div>
-<button type="button" class="btn-ajuda-flutuante" id="btn-ajuda" onclick="abrirModalAjuda()" title="Ajuda" aria-label="Abrir ajuda">❓</button>
 <button id="btn-instalar-pwa" class="primary-btn green-btn hidden" style="position:fixed;bottom:14px;left:50%;transform:translateX(-50%);z-index:90;box-shadow:0 8px 24px rgba(0,0,0,.3);padding:10px 18px;font-size:11px;border-radius:99px;display:flex;align-items:center;gap:6px"><span>📲</span> Instalar RotinaPet</button>
 <div id="modal-selecao-perfil" class="modal-overlay">
   <div class="modal" style="text-align:center;max-width:320px">
@@ -1052,9 +1089,26 @@ cabra:{id:'cabra',nome:'Nuvem',emoji:'🐐',desbloqueioNivel:10,som:'https://ass
 frango:{id:'frango',nome:'Piu-Piu',emoji:'🐔',desbloqueioNivel:15,som:'https://assets.mixkit.co/sfx/preview/mixkit-chicken-cluck-1.mp3',evolucoes:[
 {nivel:1,nome:'Pintinho Amarelinho',desc:'Penas fofinhas'},{nivel:21,nome:'Franguinho Colorido',desc:'Penas vibrantes'},{nivel:41,nome:'Galo Arco-Íris',desc:'Cauda colorida + crista'},{nivel:61,nome:'Imperador das Cores',desc:'Penas brilhantes + coroa'},{nivel:81,nome:'Fênix Dourada',desc:'Asas de fogo + brilho intenso'}]}
 };
+function ajustarCor(hex,amt){
+  hex=String(hex).replace('#','');
+  if(hex.length===3)hex=hex.split('').map(x=>x+x).join('');
+  const num=parseInt(hex,16)||0;
+  let r=(num>>16)+amt,g=((num>>8)&0xff)+amt,b=(num&0xff)+amt;
+  r=Math.max(0,Math.min(255,r));g=Math.max(0,Math.min(255,g));b=Math.max(0,Math.min(255,b));
+  return '#'+((1<<24)+(r<<16)+(g<<8)+b).toString(16).slice(1);
+}
 function petSVG(tipo,fase){
-const colors={gato:'#1A1A1A',cachorra:'#F4A261',cabra:'#F5E6D3',frango:'#FFF9C4'};
+const colors={gato:'#33333d',cachorra:'#F4A261',cabra:'#F5E6D3',frango:'#FFF9C4'};
 const c=colors[tipo],dark=tipo==='gato'?'#111827':tipo==='cachorra'?'#2D1B10':tipo==='cabra'?'#8B5A2B':'#552200';
+const acento={gato:c,cachorra:'#E76F51',cabra:'#8B5A2B',frango:'#ff3344'}[tipo];
+const corClara=ajustarCor(c,60),corEscura=ajustarCor(c,-45);
+const acClara=ajustarCor(acento,55),acEscura=ajustarCor(acento,-40);
+const defsPet=`<defs>
+<radialGradient id="gradCorpo${tipo}" cx="38%" cy="26%" r="80%"><stop offset="0%" stop-color="${corClara}"/><stop offset="55%" stop-color="${c}"/><stop offset="100%" stop-color="${corEscura}"/></radialGradient>
+<radialGradient id="gradAcento${tipo}" cx="35%" cy="22%" r="85%"><stop offset="0%" stop-color="${acClara}"/><stop offset="100%" stop-color="${acEscura}"/></radialGradient>
+<radialGradient id="gradBochecha${tipo}" cx="50%" cy="50%" r="50%"><stop offset="0%" stop-color="#ff9ebb" stop-opacity=".8"/><stop offset="100%" stop-color="#ff9ebb" stop-opacity="0"/></radialGradient>
+<filter id="sombraMacia${tipo}" x="-60%" y="-60%" width="220%" height="220%"><feGaussianBlur stdDeviation="4.5"/></filter>
+</defs>`;
 let extra='';
 if(tipo==='gato'){
  if(fase>=2)extra+='<circle cx="135" cy="80" r="9" fill="#F0F0FF"/><path d="M135 75v20" stroke="#c8c8ff" stroke-width="4"/>';
@@ -1077,11 +1131,15 @@ if(tipo==='gato'){
  if(fase>=4)extra+='<path d="M115 40l10-20 10 15 10-15 10 20z" fill="#ffd700"/>';
  if(fase>=5)extra+='<path d="M50 100Q10 60 20 100q15 30 40 15zM220 100q40-40 30 0-15 30-40 15z" fill="#ff4500" opacity=".6"/>';
 }
-let ears=tipo==='gato'?'<path d="M80 85L65 40l40 35zM190 85l15-45-40 35z" fill="'+c+'"/>':
-tipo==='cachorra'?'<ellipse cx="85" cy="80" rx="22" ry="35" fill="#E76F51"/><ellipse cx="185" cy="80" rx="22" ry="35" fill="#E76F51"/>':
-tipo==='cabra'?'<path d="M90 60Q70 35 85 25q15 10 10 30zM180 60q20-25 5-35-15 10-10 30z" fill="#8B5A2B"/>':
-'<path d="M135 48Q120 28 108 42 95 18 110 35 90 15 110 32 125 12 135 28 145 12 135 32 160 15 140 35 165 25 155 45z" fill="#ff3344"/>';
+let ears=tipo==='gato'?`<path d="M80 85L65 40l40 35zM190 85l15-45-40 35z" fill="url(#gradCorpo${tipo})"/><path d="M78 78L68 46l26 24z" fill="#ffc4d6" opacity=".55"/><path d="M192 78l10-32-26 24z" fill="#ffc4d6" opacity=".55"/>`:
+tipo==='cachorra'?`<ellipse cx="85" cy="80" rx="22" ry="35" fill="url(#gradAcento${tipo})"/><ellipse cx="185" cy="80" rx="22" ry="35" fill="url(#gradAcento${tipo})"/><ellipse cx="88" cy="86" rx="11" ry="21" fill="#ffd6c2" opacity=".5"/><ellipse cx="182" cy="86" rx="11" ry="21" fill="#ffd6c2" opacity=".5"/>`:
+tipo==='cabra'?`<path d="M90 60Q70 35 85 25q15 10 10 30zM180 60q20-25 5-35-15 10-10 30z" fill="url(#gradAcento${tipo})"/>`:
+`<path d="M135 48Q120 28 108 42 95 18 110 35 90 15 110 32 125 12 135 28 145 12 135 32 160 15 140 35 165 25 155 45z" fill="url(#gradAcento${tipo})"/>`;
+const olhoLx=tipo==='frango'?100:108,olhoRx=tipo==='frango'?170:162,olhoY=tipo==='gato'?125:115;
+const pupLx=tipo==='frango'?107:115,pupRx=tipo==='frango'?163:155,pupY=tipo==='gato'?130:120;
+const brLx=tipo==='frango'?103:111,brRx=tipo==='frango'?159:151,brY=tipo==='gato'?122:112;
 return `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 270 285">
+${defsPet}
 <style>.blink{animation:blink 4s infinite;transform-origin:center}@keyframes blink{0%,92%,100%{transform:scaleY(1)}95%{transform:scaleY(.05)}}
 .rp-progress-dashboard{margin:0 0 10px;padding:11px;border-radius:18px;background:linear-gradient(135deg,#eef2ff,#faf5ff);border:1px solid #ddd6fe;box-shadow:0 6px 18px rgba(76,29,149,.08)}
 .rpd-head{display:flex;justify-content:space-between;align-items:center;gap:8px}
@@ -1133,14 +1191,21 @@ return `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 270 285">
 .rp-order.wait{border-left-color:#f59e0b;background:#fffbeb}
 @media(max-width:360px){.rp-prize-grid{grid-template-columns:1fr}.rp-shop-title{font-size:16px}}
 </style>
-<ellipse cx="135" cy="270" rx="55" ry="10" fill="#0002"/><ellipse cx="135" cy="205" rx="57" ry="49" fill="${c}"/><circle cx="135" cy="125" r="68" fill="${c}"/>${ears}
-<ellipse class="blink" cx="${tipo==='frango'?'100':'108'}" cy="${tipo==='gato'?'125':'115'}" rx="27" ry="31" fill="white"/><ellipse class="blink" cx="${tipo==='frango'?'170':'162'}" cy="${tipo==='gato'?'125':'115'}" rx="27" ry="31" fill="white"/>
-<circle cx="${tipo==='frango'?'107':'115'}" cy="${tipo==='gato'?'130':'120'}" r="13" fill="${fase>=5?'#FFD000':dark}"/><circle cx="${tipo==='frango'?'163':'155'}" cy="${tipo==='gato'?'130':'120'}" r="13" fill="${fase>=5?'#FFD000':dark}"/>
-<circle cx="${tipo==='frango'?'103':'111'}" cy="${tipo==='gato'?'122':'112'}" r="5" fill="white"/><circle cx="${tipo==='frango'?'159':'151'}" cy="${tipo==='gato'?'122':'112'}" r="5" fill="white"/>
+<ellipse cx="135" cy="271" rx="58" ry="11" fill="#000" opacity=".16" filter="url(#sombraMacia${tipo})"/>
+${tipo==='cachorra'?`<path d="M196 208q38-8 38 22q0 27-27 22" stroke="url(#gradCorpo${tipo})" stroke-width="15" fill="none" stroke-linecap="round" class="anim-bandeira" style="transform-origin:196px 208px"/>`:''}
+<ellipse cx="135" cy="205" rx="57" ry="49" fill="url(#gradCorpo${tipo})"/><circle cx="135" cy="125" r="68" fill="url(#gradCorpo${tipo})"/>${ears}
+<ellipse cx="118" cy="88" rx="30" ry="17" fill="#fff" opacity=".16" transform="rotate(-16 118 88)"/>
+<ellipse cx="120" cy="195" rx="34" ry="24" fill="#fff" opacity=".1"/>
+<ellipse class="blink" cx="${olhoLx}" cy="${olhoY}" rx="27" ry="31" fill="white"/><ellipse class="blink" cx="${olhoRx}" cy="${olhoY}" rx="27" ry="31" fill="white"/>
+<circle cx="${pupLx}" cy="${pupY}" r="13" fill="${fase>=5?'#FFD000':dark}"/><circle cx="${pupRx}" cy="${pupY}" r="13" fill="${fase>=5?'#FFD000':dark}"/>
+<circle cx="${brLx}" cy="${brY}" r="5" fill="white"/><circle cx="${brRx}" cy="${brY}" r="5" fill="white"/>
+<circle cx="${pupLx+5}" cy="${pupY+6}" r="2.2" fill="white" opacity=".85"/><circle cx="${pupRx+5}" cy="${pupY+6}" r="2.2" fill="white" opacity=".85"/>
 ${tipo==='frango'?'<path d="M135 138l-23 14h46z" fill="#ffcc00"/><ellipse cx="135" cy="150" rx="12" ry="8" fill="#552200"/>':tipo==='cabra'?'<ellipse cx="135" cy="150" rx="10" ry="7" fill="#ff9ebb"/><path d="M125 158q10 10 20 0" stroke="#2d1b10" stroke-width="2.5" fill="none"/>':tipo==='gato'?'<ellipse cx="135" cy="155" rx="7" ry="5" fill="#ff9ebb"/>':'<ellipse cx="135" cy="150" rx="12" ry="9" fill="#2d1b10"/><path d="M135 162l-7 10h14z" fill="#ff9ebb"/>'}
-<ellipse cx="85" cy="145" rx="10" ry="7" fill="#ff9ebb" opacity=".5"/><ellipse cx="185" cy="145" rx="10" ry="7" fill="#ff9ebb" opacity=".5"/>
-<path d="M95 235Q90 255 105 255M175 235Q180 255 165 255" stroke="${c}" stroke-width="14" fill="none" stroke-linecap="round"/>
-${tipo==='gato'?'<path d="M200 220q40 20 30 50" stroke="#1A1A1A" stroke-width="16" fill="none" stroke-linecap="round"/>':''}${extra}</svg>`;
+<ellipse cx="85" cy="145" rx="12" ry="8" fill="url(#gradBochecha${tipo})"/><ellipse cx="185" cy="145" rx="12" ry="8" fill="url(#gradBochecha${tipo})"/>
+${tipo==='gato'?'<g stroke="#fff" stroke-width="2" stroke-linecap="round" opacity=".8"><path d="M62 148h-27M64 156h-29M66 164h-26"/><path d="M208 148h27M206 156h29M204 164h26"/></g>':''}
+<path d="M95 235Q90 255 105 255M175 235Q180 255 165 255" stroke="url(#gradCorpo${tipo})" stroke-width="14" fill="none" stroke-linecap="round"/>
+<ellipse cx="99" cy="253" rx="6" ry="4" fill="${corEscura}" opacity=".5"/><ellipse cx="171" cy="253" rx="6" ry="4" fill="${corEscura}" opacity=".5"/>
+${tipo==='gato'?`<path d="M200 220q40 20 30 50" stroke="url(#gradCorpo${tipo})" stroke-width="16" fill="none" stroke-linecap="round"/>`:''}${extra}</svg>`;
 }
 const ACESSORIOS=[
 {id:'chapeu',nome:'Chapéu de Festa',emoji:'🎉',preco:15,svg:'<svg viewBox="0 0 270 285" xmlns="http://www.w3.org/2000/svg"><path d="M108 58 L135 8 L162 58 Z" fill="#f43f5e" stroke="#fff" stroke-width="3"/><circle cx="135" cy="8" r="7" fill="#fbbf24"/><path d="M100 60h70" stroke="#fff" stroke-width="4" stroke-linecap="round"/></svg>'},
@@ -1149,7 +1214,7 @@ const ACESSORIOS=[
 {id:'cachecol',nome:'Cachecol',emoji:'🧣',preco:20,svg:'<svg viewBox="0 0 270 285" xmlns="http://www.w3.org/2000/svg"><path d="M85 178Q135 200 185 178v20Q135 222 85 198Z" fill="#0ea5e9" stroke="#fff" stroke-width="2"/><rect x="150" y="196" width="14" height="34" rx="3" fill="#0ea5e9"/></svg>'}
 ];
 const BANCO_FUNDOS=[
-{id:'ceu',nome:'Céu Azul',emoji:'☀️',preco:0,bg:'linear-gradient(180deg,#4facfe,#00f2fe)'},{id:'chuva',nome:'Chuva',emoji:'🌧️',preco:12,bg:'linear-gradient(180deg,#475569,#94a3b8)'},{id:'noite',nome:'Noite Estrelada',emoji:'🌙',preco:20,bg:'linear-gradient(180deg,#0f172a,#1e3a8a)'},{id:'arcoiris',nome:'Arco-Íris',emoji:'🌈',preco:30,bg:'linear-gradient(180deg,#f87171,#fbbf24 30%,#4ade80 60%,#60a5fa)'},{id:'praia',nome:'Praia Tropical',emoji:'🏖️',preco:25,bg:'linear-gradient(180deg,#fef08a,#38bdf8)'},{id:'floresta',nome:'Floresta Mágica',emoji:'🌲',preco:22,bg:'linear-gradient(180deg,#166534,#84cc16)'},{id:'festa',nome:'Balada Neon',emoji:'🎉',preco:35,bg:'linear-gradient(180deg,#f472b6,#a78bfa 50%,#60a5fa)'},{id:'halloween',nome:'Halloween',emoji:'🎃',preco:40,bg:'linear-gradient(180deg,#1a1033,#2e1065,#7c2d12)'},{id:'estadio',nome:'Estádio Futebol',emoji:'⚽',preco:45,bg:'linear-gradient(180deg,#064e3b,#10b981)'},{id:'quarto',nome:'Quarto Infantil',emoji:'🛏️',preco:35,bg:'linear-gradient(180deg,#fdf4ff,#f5d0fe)'},{id:'mario',nome:'Mundo Mario',emoji:'🍄',preco:50,bg:'linear-gradient(180deg,#22d3ee,#84cc16)'},{id:'dino',nome:'Mundo Dinossauros',emoji:'🦖',preco:45,bg:'linear-gradient(180deg,#fef3c7,#f59e0b,#166534)'},{id:'princesa',nome:'Castelo Princesa',emoji:'👑',preco:40,bg:'linear-gradient(180deg,#fbcfe8,#f9a8d4)'},{id:'astronauta',nome:'Astronauta',emoji:'🚀',preco:50,bg:'linear-gradient(180deg,#020617,#1e1b4b)'},{id:'pirata',nome:'Barco Pirata',emoji:'🏴‍☠️',preco:45,bg:'linear-gradient(180deg,#78350f,#0f172a)'},{id:'fazenda',nome:'Fazenda Feliz',emoji:'🐄',preco:35,bg:'linear-gradient(180deg,#fef08a,#84cc16)'},{id:'neve',nome:'Neve Natal',emoji:'🎄',preco:40,bg:'linear-gradient(180deg,#e0f2fe,#bae6fd)'}];
+{id:'ceu',nome:'Céu de Verão',emoji:'☀️',preco:0,bg:'linear-gradient(180deg,#38bdf8,#e0f2fe,#fef9c3)'},{id:'chuva',nome:'Chuva Suave',emoji:'🌧️',preco:12,bg:'linear-gradient(180deg,#334155,#94a3b8)'},{id:'noite',nome:'Noite Estrelada',emoji:'🌙',preco:20,bg:'radial-gradient(ellipse at 70% 20%,#1e3a8a,#020617)'},{id:'arcoiris',nome:'Arco-Íris',emoji:'🌈',preco:30,bg:'linear-gradient(180deg,#f87171,#fbbf24,#4ade80,#38bdf8,#a78bfa)'},{id:'praia',nome:'Praia Tropical',emoji:'🏖️',preco:25,bg:'linear-gradient(180deg,#7dd3fc,#38bdf8,#fde68a,#fbbf24)'},{id:'floresta',nome:'Floresta Mágica',emoji:'🌲',preco:22,bg:'linear-gradient(180deg,#86efac,#166534)'},{id:'festa',nome:'Balada Neon',emoji:'🎉',preco:35,bg:'linear-gradient(160deg,#f472b6,#a78bfa,#22d3ee)'},{id:'halloween',nome:'Noite de Halloween',emoji:'🎃',preco:40,bg:'linear-gradient(180deg,#1a1033,#7c2d12)'},{id:'estadio',nome:'Campo de Futebol',emoji:'⚽',preco:45,bg:'linear-gradient(180deg,#0c4a6e,#16a34a,#14532d)'},{id:'quarto',nome:'Quarto Fofo',emoji:'🛏️',preco:35,bg:'linear-gradient(180deg,#faf5ff,#e9d5ff)'},{id:'mario',nome:'Mundo Aventura',emoji:'🍄',preco:50,bg:'linear-gradient(180deg,#67e8f9,#4ade80)'},{id:'dino',nome:'Era dos Dinos',emoji:'🦖',preco:45,bg:'linear-gradient(180deg,#fef3c7,#84cc16,#166534)'},{id:'princesa',nome:'Castelo Real',emoji:'👑',preco:40,bg:'linear-gradient(180deg,#fdf2f8,#f9a8d4)'},{id:'astronauta',nome:'Espaço Sideral',emoji:'🚀',preco:50,bg:'radial-gradient(ellipse at 50% 30%,#312e81,#020617)'},{id:'pirata',nome:'Mar dos Piratas',emoji:'🏴‍☠️',preco:45,bg:'linear-gradient(180deg,#0ea5e9,#78350f,#1c1917)'},{id:'fazenda',nome:'Fazenda Feliz',emoji:'🐄',preco:35,bg:'linear-gradient(180deg,#7dd3fc,#fde68a,#4ade80)'},{id:'neve',nome:'Natal Nevado',emoji:'🎄',preco:40,bg:'linear-gradient(180deg,#e0f2fe,#fff)'}];
 // TEMAS = fundo + acessório combinando, vendidos juntos como um combo.
 // O acessório muda de desenho conforme a espécie do pet ativo (svgPorEspecie).
 const SVG_ABRE='<svg viewBox="0 0 270 285" xmlns="http://www.w3.org/2000/svg">',SVG_FECHA='</svg>';
@@ -1195,6 +1260,13 @@ const TEMAS=[
       cachorra:SVG_ABRE+'<path d="M92 58Q98 22 135 28Q172 22 178 58Q135 42 92 58Z" fill="#1c1917" stroke="#facc15" stroke-width="2"/><circle cx="135" cy="32" r="5" fill="#f87171"/><ellipse cx="108" cy="117" rx="13" ry="15" fill="#1c1917"/>'+SVG_FECHA,
       cabra:SVG_ABRE+'<path d="M108 55Q112 30 135 34Q158 30 162 55Q135 44 108 55Z" fill="#1c1917" stroke="#facc15" stroke-width="2"/><ellipse cx="111" cy="123" rx="11" ry="13" fill="#1c1917"/>'+SVG_FECHA,
       frango:SVG_ABRE+'<path d="M85 178Q135 198 185 178v18Q135 216 85 196Z" fill="#1c1917" stroke="#facc15" stroke-width="2"/><circle cx="135" cy="190" r="7" fill="#fff"/>'+SVG_FECHA
+    }}},
+  {id:'estadio',nome:'Campeonato',emoji:'⚽',preco:58,fundoId:'estadio',
+    acessorio:{id:'tema_estadio',nome:'Faixa de Capitão',emoji:'⚽',svgPorEspecie:{
+      gato:SVG_ABRE+'<path d="M85 175Q135 198 185 175v16Q135 218 85 191Z" fill="#fff" stroke="#16a34a" stroke-width="3"/><text x="118" y="198" font-size="14" font-weight="900" fill="#16a34a">C</text>'+SVG_FECHA,
+      cachorra:SVG_ABRE+'<path d="M82 172Q135 196 188 172v16Q135 216 82 188Z" fill="#fff" stroke="#16a34a" stroke-width="3"/><text x="118" y="195" font-size="14" font-weight="900" fill="#16a34a">C</text>'+SVG_FECHA,
+      cabra:SVG_ABRE+'<path d="M90 175Q135 195 180 175v14Q135 212 90 189Z" fill="#fff" stroke="#16a34a" stroke-width="3"/>'+SVG_FECHA,
+      frango:SVG_ABRE+'<path d="M85 178Q135 200 185 178v16Q135 218 85 194Z" fill="#fff" stroke="#16a34a" stroke-width="3"/>'+SVG_FECHA
     }}}
 ];
 function buscarAcessorioPorId(id){
@@ -1525,28 +1597,137 @@ async function iniciarSincronizacaoNuvem(){
   });
 }
 const CONFIG_PARTICULAS={
-  floresta:{emojis:['🍃','🍂'],modo:'cair',qtd:12},
-  neve:{emojis:['❄️'],modo:'cair',qtd:16},
-  praia:{emojis:['🫧'],modo:'subir',qtd:10},
-  noite:{emojis:['✨'],modo:'piscar',qtd:18},
-  astronauta:{emojis:['✨','⭐'],modo:'piscar',qtd:18},
-  festa:{emojis:['🎊','🎉'],modo:'cair',qtd:12},
-  halloween:{emojis:['🦇'],modo:'lateral',qtd:6},
-  chuva:{emojis:['💧'],modo:'cair',qtd:18},
-  pirata:{emojis:['☁️'],modo:'lateral',qtd:5},
-  fazenda:{emojis:['🌾'],modo:'cair',qtd:8},
-  mario:{emojis:['⭐','🍄'],modo:'cair',qtd:8},
-  dino:{emojis:['🍃'],modo:'cair',qtd:8},
-  princesa:{emojis:['✨'],modo:'piscar',qtd:14},
-  arcoiris:{emojis:['✨'],modo:'piscar',qtd:10}
+  floresta:{emojis:['🍃','🍂','🌿'],modo:'cair',qtd:14},
+  neve:{emojis:['❄️','❄'],modo:'cair',qtd:18},
+  praia:{emojis:['🫧','✨'],modo:'subir',qtd:12},
+  noite:{emojis:['✨','⭐'],modo:'piscar',qtd:20},
+  astronauta:{emojis:['✨','⭐','🌟'],modo:'piscar',qtd:22},
+  festa:{emojis:['🎊','🎉','✨'],modo:'cair',qtd:14},
+  halloween:{emojis:['🦇','🎃'],modo:'lateral',qtd:7},
+  chuva:{emojis:['💧'],modo:'cair',qtd:20},
+  pirata:{emojis:['☁️'],modo:'lateral',qtd:6},
+  fazenda:{emojis:['🌾','🌻'],modo:'cair',qtd:10},
+  mario:{emojis:['⭐','🍄'],modo:'cair',qtd:10},
+  dino:{emojis:['🍃','🦴'],modo:'cair',qtd:10},
+  princesa:{emojis:['✨','💎'],modo:'piscar',qtd:16},
+  arcoiris:{emojis:['✨','🌟'],modo:'piscar',qtd:12},
+  estadio:{emojis:['⚽','🟡'],modo:'cair',qtd:8},
+  ceu:{emojis:['☁️'],modo:'lateral',qtd:5}
+};
+const DETALHES_CENARIO={
+  estadio(){return `<svg viewBox="0 0 400 700" preserveAspectRatio="xMidYMax slice" xmlns="http://www.w3.org/2000/svg">
+    <!-- arquibancadas -->
+    <rect x="0" y="210" width="48" height="320" fill="#1e293b"/><rect x="352" y="210" width="48" height="320" fill="#1e293b"/>
+    <g fill="#334155">${[0,1,2,3,4,5,6,7].map(i=>`<rect x="4" y="${220+i*36}" width="40" height="14" rx="2"/><rect x="356" y="${220+i*36}" width="40" height="14" rx="2"/>`).join('')}</g>
+    <g fill="#fbbf24" opacity=".7">${[0,1,2,3,4,5,6].map(i=>`<circle cx="12" cy="${228+i*36}" r="2.5"/><circle cx="36" cy="${228+i*36}" r="2.5"/><circle cx="364" cy="${228+i*36}" r="2.5"/><circle cx="388" cy="${228+i*36}" r="2.5"/>`).join('')}</g>
+    <!-- gramado com faixas -->
+    <rect x="48" y="240" width="304" height="360" fill="#16a34a"/>
+    ${[0,1,2,3,4,5,6,7,8].map(i=>`<rect x="48" y="${240+i*40}" width="304" height="20" fill="${i%2?'#15803d':'#16a34a'}" opacity=".55"/>`).join('')}
+    <!-- linhas do campo -->
+    <rect x="58" y="255" width="284" height="320" fill="none" stroke="#fff" stroke-width="3" opacity=".9"/>
+    <line x1="200" y1="255" x2="200" y2="575" stroke="#fff" stroke-width="2.5" opacity=".85"/>
+    <circle cx="200" cy="415" r="42" fill="none" stroke="#fff" stroke-width="2.5"/>
+    <circle cx="200" cy="415" r="4" fill="#fff"/>
+    <!-- áreas -->
+    <rect x="110" y="255" width="180" height="70" fill="none" stroke="#fff" stroke-width="2"/>
+    <rect x="140" y="255" width="120" height="36" fill="none" stroke="#fff" stroke-width="2"/>
+    <rect x="110" y="505" width="180" height="70" fill="none" stroke="#fff" stroke-width="2"/>
+    <rect x="140" y="539" width="120" height="36" fill="none" stroke="#fff" stroke-width="2"/>
+    <!-- traves -->
+    <path d="M155 255 V230 H245 V255" fill="none" stroke="#f8fafc" stroke-width="5" stroke-linejoin="round"/>
+    <path d="M155 575 V600 H245 V575" fill="none" stroke="#f8fafc" stroke-width="5" stroke-linejoin="round"/>
+    <path d="M160 232 H240" stroke="#e2e8f0" stroke-width="2" opacity=".5"/>
+    <path d="M160 598 H240" stroke="#e2e8f0" stroke-width="2" opacity=".5"/>
+    <!-- bandeiras de escanteio -->
+    <g class="anim-bandeira"><line x1="58" y1="255" x2="58" y2="235" stroke="#fff" stroke-width="2"/><path d="M58 235 L78 242 L58 249Z" fill="#ef4444"/></g>
+    <g class="anim-bandeira" style="animation-delay:.4s"><line x1="342" y1="255" x2="342" y2="235" stroke="#fff" stroke-width="2"/><path d="M342 235 L322 242 L342 249Z" fill="#3b82f6"/></g>
+    <!-- bola -->
+    <g class="anim-bola"><circle cx="175" cy="390" r="14" fill="#fff"/><path d="M175 376 L182 388 L175 400 L168 388Z" fill="#0f172a"/><circle cx="175" cy="390" r="14" fill="none" stroke="#0f172a" stroke-width="1.5"/></g>
+    <!-- plateia topo -->
+    <rect x="48" y="180" width="304" height="60" fill="#0f172a"/>
+    <g fill="#475569">${[0,1,2].map(r=>[0,1,2,3,4,5,6,7,8,9,10,11].map(c=>`<rect x="${56+c*24}" y="${188+r*16}" width="18" height="10" rx="1"/>`).join('')).join('')}</g>
+  </svg>`},
+  praia(){return `<svg viewBox="0 0 400 700" preserveAspectRatio="xMidYMax slice" xmlns="http://www.w3.org/2000/svg">
+    <defs><radialGradient id="rpSolPraia" cx="40%" cy="35%" r="65%"><stop offset="0%" stop-color="#fff8dc"/><stop offset="55%" stop-color="#fde047"/><stop offset="100%" stop-color="#f59e0b"/></radialGradient></defs>
+    <circle cx="320" cy="90" r="58" fill="#fde047" opacity=".2"/><circle cx="320" cy="90" r="42" fill="url(#rpSolPraia)"/>
+    <g class="anim-nuvem" opacity=".85"><ellipse cx="80" cy="70" rx="36" ry="18" fill="#fff"/><ellipse cx="105" cy="70" rx="24" ry="14" fill="#fff"/><ellipse cx="55" cy="72" rx="20" ry="12" fill="#fff"/></g>
+    <path d="M0 420 Q100 400 200 420 T400 420 V700 H0Z" fill="#38bdf8" opacity=".55"/>
+    <path class="anim-onda" d="M-40 440 Q40 420 120 440 T280 440 T440 440 V700 H-40Z" fill="#0ea5e9" opacity=".4"/>
+    <path d="M0 500 Q150 480 300 505 T400 500 V700 H0Z" fill="#fbbf24"/>
+    <path d="M0 560 Q200 540 400 565 V700 H0Z" fill="#f59e0b" opacity=".5"/>
+    <!-- coqueiro -->
+    <path d="M55 520 Q50 400 62 300" stroke="#78350f" stroke-width="10" fill="none"/>
+    <g fill="#16a34a"><ellipse cx="40" cy="290" rx="28" ry="12" transform="rotate(-30 40 290)"/><ellipse cx="80" cy="288" rx="30" ry="12" transform="rotate(25 80 288)"/><ellipse cx="55" cy="275" rx="26" ry="11"/><ellipse cx="70" cy="300" rx="24" ry="10" transform="rotate(40 70 300)"/></g>
+    <ellipse cx="300" cy="530" rx="22" ry="10" fill="#fff" opacity=".5"/>
+    <circle cx="250" cy="545" r="8" fill="#ef4444"/><circle cx="270" cy="550" r="6" fill="#f97316"/>
+  </svg>`},
+  floresta(){return `<svg viewBox="0 0 400 700" preserveAspectRatio="xMidYMax slice" xmlns="http://www.w3.org/2000/svg">
+    <g fill="#14532d">${[[30,380,50],[90,360,60],[160,370,55],[240,350,70],[320,365,58],[370,380,45]].map(([x,y,s])=>`<path d="M${x} ${y+s*1.6} L${x-s} ${y} L${x+s} ${y}Z"/><path d="M${x} ${y+s} L${x-s*.75} ${y-s*.3} L${x+s*.75} ${y-s*.3}Z"/><rect x="${x-6}" y="${y+s}" width="12" height="${s*.5}" fill="#78350f"/>`).join('')}</g>
+    <ellipse cx="200" cy="620" rx="180" ry="40" fill="#166534" opacity=".35"/>
+  </svg>`},
+  noite(){return `<svg viewBox="0 0 400 700" preserveAspectRatio="xMidYMax slice" xmlns="http://www.w3.org/2000/svg">
+    <defs><radialGradient id="rpLuaNoite" cx="38%" cy="32%" r="70%"><stop offset="0%" stop-color="#ffffff"/><stop offset="70%" stop-color="#e2e8f0"/><stop offset="100%" stop-color="#cbd5e1"/></radialGradient></defs>
+    <circle cx="310" cy="100" r="60" fill="#f8fafc" opacity=".14"/><circle cx="310" cy="100" r="48" fill="url(#rpLuaNoite)"/><circle cx="328" cy="90" r="42" fill="#0f172a"/>
+    ${[[40,60],[80,120],[150,40],[200,90],[260,50],[100,200],[180,160],[340,180],[50,280]].map(([x,y],i)=>`<circle cx="${x}" cy="${y}" r="${1+i%3}" fill="#fff" opacity="${.5+.5*(i%3)/3}"/>`).join('')}
+  </svg>`},
+  astronauta(){return `<svg viewBox="0 0 400 700" preserveAspectRatio="xMidYMax slice" xmlns="http://www.w3.org/2000/svg">
+    ${[[30,80],[70,150],[120,40],[180,110],[250,70],[300,140],[350,50],[90,220],[200,200],[320,240]].map(([x,y],i)=>`<circle cx="${x}" cy="${y}" r="${.8+(i%4)*.6}" fill="#e0e7ff"/>`).join('')}
+    <ellipse cx="80" cy="500" rx="50" ry="18" fill="#a78bfa" opacity=".35"/>
+    <circle cx="320" cy="420" r="28" fill="#6366f1" opacity=".4"/><circle cx="330" cy="412" r="8" fill="#c7d2fe" opacity=".5"/>
+    <path d="M0 600 Q200 560 400 600 V700 H0Z" fill="#1e1b4b" opacity=".6"/>
+  </svg>`},
+  neve(){return `<svg viewBox="0 0 400 700" preserveAspectRatio="xMidYMax slice" xmlns="http://www.w3.org/2000/svg">
+    <path d="M0 480 Q100 450 200 480 T400 470 V700 H0Z" fill="#f8fafc"/>
+    <path d="M0 560 Q200 530 400 555 V700 H0Z" fill="#e2e8f0" opacity=".7"/>
+    <!-- árvore de natal -->
+    <path d="M300 520 L260 580 H340Z" fill="#15803d"/><path d="M300 490 L270 545 H330Z" fill="#16a34a"/><path d="M300 465 L280 515 H320Z" fill="#22c55e"/>
+    <rect x="294" y="580" width="12" height="20" fill="#78350f"/><circle cx="300" cy="460" r="8" fill="#fbbf24"/>
+  </svg>`},
+  pirata(){return `<svg viewBox="0 0 400 700" preserveAspectRatio="xMidYMax slice" xmlns="http://www.w3.org/2000/svg">
+    <path d="M0 420 Q200 390 400 420 V700 H0Z" fill="#0369a1"/>
+    <path d="M0 500 Q200 470 400 500 V700 H0Z" fill="#0c4a6e"/>
+    <path d="M60 480 L200 300 L340 480 Z" fill="#78350f"/>
+    <rect x="190" y="220" width="20" height="90" fill="#44403c"/>
+    <path d="M210 230 L280 255 L210 280Z" fill="#dc2626"/>
+    <ellipse cx="200" cy="490" rx="150" ry="25" fill="#1c1917" opacity=".4"/>
+  </svg>`},
+  fazenda(){return `<svg viewBox="0 0 400 700" preserveAspectRatio="xMidYMax slice" xmlns="http://www.w3.org/2000/svg">
+    <path d="M0 400 Q200 370 400 400 V700 H0Z" fill="#4ade80"/>
+    <path d="M0 500 Q200 470 400 505 V700 H0Z" fill="#22c55e"/>
+    <rect x="240" y="380" width="100" height="70" fill="#b45309"/><path d="M230 380 L290 330 L350 380Z" fill="#dc2626"/>
+    <rect x="280" y="410" width="24" height="40" fill="#78350f"/>
+    <circle cx="70" cy="120" r="36" fill="#fde047"/>
+  </svg>`},
+  halloween(){return `<svg viewBox="0 0 400 700" preserveAspectRatio="xMidYMax slice" xmlns="http://www.w3.org/2000/svg">
+    <defs><radialGradient id="rpLuaHall" cx="38%" cy="32%" r="70%"><stop offset="0%" stop-color="#fff8dc"/><stop offset="100%" stop-color="#fde68a"/></radialGradient></defs>
+    <circle cx="300" cy="90" r="54" fill="#fde68a" opacity=".18"/><circle cx="300" cy="90" r="40" fill="url(#rpLuaHall)"/>
+    <path d="M0 520 Q120 480 200 530 T400 510 V700 H0Z" fill="#1c1917"/>
+    <path d="M40 520 L55 420 L70 520Z" fill="#365314"/><circle cx="55" cy="410" r="22" fill="#ea580c"/>
+    <path d="M48 405 L55 395 L62 405" fill="#166534"/>
+    <path d="M300 520 L320 400 L340 520Z" fill="#365314"/><circle cx="320" cy="390" r="26" fill="#c2410c"/>
+  </svg>`},
+  ceu(){return `<svg viewBox="0 0 400 700" preserveAspectRatio="xMidYMax slice" xmlns="http://www.w3.org/2000/svg">
+    <defs><radialGradient id="rpSolCeu" cx="40%" cy="35%" r="65%"><stop offset="0%" stop-color="#fffbea"/><stop offset="55%" stop-color="#fde047"/><stop offset="100%" stop-color="#facc15"/></radialGradient>
+    <linearGradient id="rpNuvemCeu" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#fff"/><stop offset="100%" stop-color="#e7edf7"/></linearGradient></defs>
+    <circle cx="300" cy="90" r="60" fill="#fde047" opacity=".16"/><circle cx="300" cy="90" r="44" fill="url(#rpSolCeu)"/>
+    <g class="anim-nuvem" opacity=".92"><ellipse cx="90" cy="130" rx="40" ry="20" fill="url(#rpNuvemCeu)"/><ellipse cx="120" cy="128" rx="28" ry="16" fill="url(#rpNuvemCeu)"/><ellipse cx="60" cy="132" rx="22" ry="14" fill="url(#rpNuvemCeu)"/></g>
+    <g class="anim-nuvem" opacity=".55" style="animation-delay:-12s"><ellipse cx="220" cy="210" rx="34" ry="16" fill="url(#rpNuvemCeu)"/><ellipse cx="245" cy="208" rx="22" ry="12" fill="url(#rpNuvemCeu)"/></g>
+  </svg>`}
 };
 let ultimoFundoParticulas=null;
+function renderizarDetalhesCenario(fundoId){
+  const el=document.getElementById('cenario-detalhes');
+  if(!el)return;
+  const fn=DETALHES_CENARIO[fundoId];
+  el.innerHTML=fn?fn():'';
+}
 function renderizarParticulasCenario(fundoId){
   if(fundoId===ultimoFundoParticulas)return;
   ultimoFundoParticulas=fundoId;
   const c=document.getElementById('particulas-cenario');
   if(!c)return;
   c.innerHTML='';
+  renderizarDetalhesCenario(fundoId);
   const cfg=CONFIG_PARTICULAS[fundoId];
   if(!cfg)return;
   for(let i=0;i<cfg.qtd;i++){
@@ -1584,6 +1765,7 @@ function aplicarFundoTela(id){
     atual.classList.remove('ativa');
   });
   camadaFundoAtiva=camadaFundoAtiva==='a'?'b':'a';
+  ultimoFundoParticulas=null;
   renderizarParticulasCenario(id||'ceu');
 }
 function obterDadosPetAtual(){if(!estado.pets[estado.petAtual])estado.pets[estado.petAtual]={nivel:1,xp:0,felicidade:100,saude:100};return estado.pets[estado.petAtual]}
@@ -1868,19 +2050,19 @@ function atualizarOfensiva(){
   if(!el)return;
   if(emPausaHoje()){
     const dias=Math.max(0,Math.ceil((new Date(estado.pausaAte+'T00:00:00')-new Date(hojeLocal()+'T00:00:00'))/86400000)+1);
-    el.textContent=`🌴 Ofensiva em pausa (${dias} dia(s) restante(s)).`;
+    el.textContent=`🌴 Sequência em pausa (${dias} dia(s) restante(s)).`;
     el.style.background='#ecfeff';el.style.borderColor='#a5f3fc';el.style.color='#0e7490';
     return;
   }
   const o=tarefasDeHoje().filter(t=>t.tipo==='obrigatoria'),f=o.filter(t=>t.status==='aprovada').length;
   if(!o.length){
-    el.textContent='🔥 Ofensiva: defina tarefas obrigatórias no painel dos pais.';
+    el.textContent='🔥 Defina missões obrigatórias no painel dos pais.';
     el.style.background='#fef2f2';el.style.borderColor='#fecaca';el.style.color='#b91c1c';
   }else if(todasObrigatoriasConcluidas()){
-    el.textContent=`🔥 Ofensiva liberada! ${f}/${o.length} concluídas. Sequência: ${estado.streak||0} dia(s).`;
+    el.textContent=`🔥 Dia completo! ${f}/${o.length} · Sequência: ${estado.streak||0} dia(s)`;
     el.style.background='#ecfdf5';el.style.borderColor='#bbf7d0';el.style.color='#047857';
   }else{
-    el.textContent=`🔥 Ofensiva: ${f}/${o.length} concluídas. Termine todas para liberar o dia.`;
+    el.textContent=`🔥 Progresso: ${f}/${o.length} · Complete todas para manter a sequência`;
     el.style.background='#fff7ed';el.style.borderColor='#fed7aa';el.style.color='#9a3412';
   }
 }
@@ -1904,7 +2086,7 @@ function renderizarTarefas(){
   c.innerHTML='';
   const hojeLista=tarefasDeHoje();
   const o=hojeLista.filter(t=>t.tipo==='obrigatoria'),x=hojeLista.filter(t=>t.tipo!=='obrigatoria');
-  document.getElementById('qtd-tarefas').textContent=`${o.length} obrig. • ${x.length} extras`;
+  document.getElementById('qtd-tarefas').textContent=`${o.length} fixas · ${x.length} extras`;
   const pendentes=(estado.tarefas||[]).filter(t=>t.status==='aguardando_aprovacao');
   const bannerPend=document.getElementById('banner-aprovacoes-pendentes');
   const txtPend=document.getElementById('txt-aprovacoes-pendentes');
