@@ -2545,8 +2545,23 @@ async function salvarTokenFcmNaFamilia(token){
   }
 }
 async function registrarTokenFcm(){
-  if(!window.firebase||!firebase.messaging)return null;
-  if(!('Notification' in window)||Notification.permission!=='granted')return null;
+  if(!window.firebase||!firebase.messaging){
+    console.error('FCM indisponível: SDK Firebase Messaging não carregado.',{
+      firebase:!!window.firebase,
+      messaging:!!window.firebase?.messaging,
+      firebaseVersion:window.firebase?.SDK_VERSION||null
+    });
+    return null;
+  }
+  if(!('Notification' in window)){
+    console.error('FCM indisponível: este navegador não expõe a API Notification.');
+    return null;
+  }
+  if(Notification.permission!=='granted'){
+    console.warn('FCM não iniciado: permissão de notificações é',Notification.permission);
+    mostrarAviso('🔔','Permissão necessária',`Permissão atual: ${Notification.permission}. Libere as notificações nas configurações do site e tente novamente.`);
+    return null;
+  }
   if(!FIREBASE_VAPID_KEY||FIREBASE_VAPID_KEY==='COLE_SUA_CHAVE_VAPID_AQUI'){
     console.warn('Defina FIREBASE_VAPID_KEY no HTML (Console Firebase → Cloud Messaging → Web Push certificates).');
     return null;
@@ -2572,10 +2587,56 @@ async function registrarTokenFcm(){
     });
     return token;
   }catch(e){
-    console.warn('FCM getToken falhou:',e);
+    const detalhes={
+      code:e?.code||null,
+      name:e?.name||null,
+      message:e?.message||String(e),
+      stack:e?.stack||null,
+      permission:(('Notification' in window)?Notification.permission:'indisponivel'),
+      online:navigator.onLine,
+      url:location.href,
+      serviceWorker:'serviceWorker' in navigator,
+      firebaseVersion:window.firebase?.SDK_VERSION||null
+    };
+    console.error('FCM getToken falhou — diagnóstico completo:',detalhes,e);
+    try{
+      localStorage.setItem('ROTINAPET_ULTIMO_ERRO_FCM',JSON.stringify({
+        ...detalhes,em:new Date().toISOString()
+      }));
+    }catch(storageError){
+      console.warn('Não foi possível salvar diagnóstico FCM:',storageError);
+    }
+    const codigo=detalhes.code||detalhes.name||'erro-desconhecido';
+    const mensagem=detalhes.message||'Não foi possível gerar o token.';
+    mostrarAviso(
+      '⚠️',
+      'Erro detalhado do FCM',
+      `${codigo}: ${mensagem}`
+    );
     return null;
   }
 }
+function diagnosticoFcmAtual(){
+  let ultimo=null;
+  try{ultimo=JSON.parse(localStorage.getItem('ROTINAPET_ULTIMO_ERRO_FCM')||'null')}catch(e){}
+  const resultado={
+    sdk:window.firebase?.SDK_VERSION||null,
+    messaging:typeof window.firebase?.messaging==='function',
+    notification:('Notification' in window)?Notification.permission:'indisponivel',
+    online:navigator.onLine,
+    serviceWorker:'serviceWorker' in navigator,
+    registrosServiceWorker:[],
+    ultimoErro:ultimo
+  };
+  return navigator.serviceWorker?.getRegistrations?.()
+    .then(regs=>{
+      resultado.registrosServiceWorker=regs.map(r=>({scope:r.scope,active:!!r.active,script:r.active?.scriptURL||null}));
+      console.table(resultado.registrosServiceWorker);
+      console.log('Diagnóstico FCM:',resultado);
+      return resultado;
+    })||Promise.resolve(resultado);
+}
+
 async function inicializarPushBase(){
   if(!('Notification' in window)||!('serviceWorker' in navigator))return;
   try{
@@ -2605,7 +2666,7 @@ async function ativarPushCompleto(){
   }
   mostrarAviso('🔔','Notificações locais ativas',
     FIREBASE_VAPID_KEY==='COLE_SUA_CHAVE_VAPID_AQUI'
-      ?'Cole a chave VAPID no código (FIREBASE_VAPID_KEY) e publique sw.js na raiz do app.'
+      ?'Execute diagnosticoFcmAtual() no console e verifique se sw.js está publicado na raiz do app.'
       :'Token FCM não foi gerado. Verifique o Service Worker e o domínio autorizado no Firebase.');
   return false;
 }
