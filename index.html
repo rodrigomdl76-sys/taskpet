@@ -10,10 +10,11 @@
 <link rel="manifest" href="manifest.json">
 <link rel="apple-touch-icon" href="icon-192.png">
 <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.9.3/dist/confetti.browser.min.js" defer></script>
-<!-- Firebase Compat Core, Auth e Database -->
+<!-- Firebase Compat Core, Auth, Database e Messaging (FCM) -->
 <script src="https://www.gstatic.com/firebasejs/12.18.0/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/12.18.0/firebase-auth-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/12.18.0/firebase-database-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/12.18.0/firebase-messaging-compat.js"></script>
 <style>
 @import url('https://fonts.googleapis.com/css2?family=Nunito:wght@600;700;800;900&display=swap');
 *{margin:0;padding:0;box-sizing:border-box;font-family:'Nunito',sans-serif;-webkit-tap-highlight-color:transparent}
@@ -36,6 +37,7 @@ body.cenario-astronauta,.bg-layer.cenario-astronauta{background:radial-gradient(
 body.cenario-pirata,.bg-layer.cenario-pirata{background:linear-gradient(180deg,#0ea5e9 0%,#0369a1 30%,#78350f 55%,#1c1917 100%);color:#fff}
 body.cenario-fazenda,.bg-layer.cenario-fazenda{background:linear-gradient(180deg,#7dd3fc 0%,#fde68a 40%,#86efac 70%,#4ade80 100%)}
 body.cenario-neve,.bg-layer.cenario-neve{background:linear-gradient(180deg,#e0f2fe 0%,#bae6fd 40%,#f8fafc 75%,#fff 100%)}
+body.cenario-aniversario,.bg-layer.cenario-aniversario{background:linear-gradient(160deg,#c4b5fd 0%,#f9a8d4 55%,#fde68a 100%)}
 /* Camada de detalhes ilustrados dos cenários */
 .cenario-detalhes{position:fixed;inset:0;z-index:-1;pointer-events:none;overflow:hidden}
 .cenario-detalhes svg{width:100%;height:100%;display:block}
@@ -43,12 +45,12 @@ body.cenario-neve,.bg-layer.cenario-neve{background:linear-gradient(180deg,#e0f2
 @keyframes bandeiraVento{0%,100%{transform:skewX(0)}50%{transform:skewX(-8deg)}}
 @keyframes ondaPraia{0%{transform:translateX(0)}100%{transform:translateX(-40px)}}
 @keyframes nuvemPassa{0%{transform:translateX(-10%)}100%{transform:translateX(110%)}}
-@keyframes balaoFlutua{0%,100%{transform:translateY(0) rotate(-2deg)}50%{transform:translateY(-12px) rotate(2deg)}}
 .anim-bola{animation:bolaRola 3.2s ease-in-out infinite;transform-origin:center}
 .anim-bandeira{animation:bandeiraVento 2.4s ease-in-out infinite;transform-box:fill-box;transform-origin:left center}
 .anim-onda{animation:ondaPraia 6s linear infinite}
 .anim-nuvem{animation:nuvemPassa 28s linear infinite}
 .anim-balao{animation:balaoFlutua 3.6s ease-in-out infinite;transform-box:fill-box;transform-origin:center}
+@keyframes balaoFlutua{0%,100%{transform:translateY(0) rotate(-2deg)}50%{transform:translateY(-12px) rotate(2deg)}}
 button,input,select{font:inherit}
 button{touch-action:manipulation}
 .app{width:100%;max-width:430px;height:100dvh;margin:auto;padding:max(8px,env(safe-area-inset-top)) 12px max(8px,env(safe-area-inset-bottom));display:flex;flex-direction:column;gap:6px;position:relative;overflow:hidden}
@@ -65,6 +67,22 @@ button{touch-action:manipulation}
 .status-row{display:grid;grid-template-columns:auto 1fr;gap:6px;flex-shrink:0}
 .mini-card,.happiness-box{background:rgba(255,255,255,.93);border-radius:14px;box-shadow:0 4px 12px rgba(15,23,42,.08)}
 .mini-card{padding:6px 9px;display:flex;align-items:center;gap:4px;border:0;cursor:pointer}
+.pet-actions{display:flex;gap:5px;justify-content:center;margin-top:4px;flex-wrap:wrap}
+.pet-action-btn{border:0;border-radius:12px;padding:6px 10px;font-size:10px;font-weight:900;background:rgba(255,255,255,.92);color:#312e81;box-shadow:0 3px 10px rgba(15,23,42,.1);cursor:pointer;display:flex;align-items:center;gap:4px;transition:transform .15s}
+.pet-action-btn:active{transform:scale(.94)}
+.pet-action-btn:disabled{opacity:.45;cursor:not-allowed}
+.colecao-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:8px}
+.colecao-card{background:#f8fafc;border:1px solid #e2e8f0;border-radius:14px;padding:10px 8px;text-align:center;position:relative}
+.colecao-card.locked{opacity:.55;filter:grayscale(.4)}
+.colecao-card.ativo-agora{border-color:#a78bfa;box-shadow:0 0 0 2px #a78bfa44}
+.colecao-emoji{font-size:28px;line-height:1.2}
+.colecao-nome{font-size:10px;font-weight:900;color:#1e293b;margin-top:4px}
+.colecao-sub{font-size:8px;color:#64748b;margin-top:2px;line-height:1.3}
+.colecao-badge{position:absolute;top:6px;right:6px;font-size:9px}
+.colecao-progress{margin-top:6px;height:5px;background:#e2e8f0;border-radius:99px;overflow:hidden}
+.colecao-progress>div{height:100%;background:linear-gradient(90deg,#8b5cf6,#ec4899);border-radius:99px}
+.colecao-resumo{display:grid;grid-template-columns:repeat(3,1fr);gap:6px;margin-bottom:10px}
+.colecao-resumo .stat{text-align:center;padding:8px 4px}
 .happiness-box{padding:5px 9px}
 .bar-bg{height:7px;background:#e2e8f0;border-radius:99px;overflow:hidden;margin-top:3px}
 .bar-fill{height:100%;width:100%;background:linear-gradient(90deg,#22c55e,#facc15,#f97316);border-radius:99px;transition:width .5s}
@@ -142,6 +160,13 @@ button{touch-action:manipulation}
 .toast.mostrar{opacity:1;transform:translate(-50%,0)}
 .banner-offline{position:fixed;top:0;left:0;right:0;background:#b45309;color:#fff;text-align:center;font-size:10px;font-weight:800;padding:6px 10px;z-index:10001;transform:translateY(-100%);transition:.25s}
 .banner-offline.mostrar{transform:translateY(0)}
+.banner-offline.syncing{background:#0369a1}
+.banner-offline.synced{background:#15803d}
+.banner-evento{position:fixed;top:0;left:0;right:0;background:linear-gradient(90deg,#7c3aed,#db2777);color:#fff;text-align:center;font-size:10px;font-weight:800;padding:7px 10px;z-index:10000;transform:translateY(-100%);transition:.3s;cursor:pointer}
+.banner-evento.mostrar{transform:translateY(0)}
+.meta-familiar-card{background:linear-gradient(135deg,#fef3c7,#fde68a);border:1px solid #fbbf24;border-radius:14px;padding:10px;margin-bottom:9px}
+.meta-familiar-card .progress{margin-top:6px;height:8px;background:#fef9c3}
+.meta-familiar-card .progress>div{background:linear-gradient(90deg,#f59e0b,#ea580c)}
 .hidden{display:none!important}
 .foto-viewer{position:fixed;inset:0;background:#000d;display:flex;align-items:center;justify-content:center;z-index:300;opacity:0;visibility:hidden;transition:.2s;padding:20px}
 .foto-viewer.mostrar{opacity:1;visibility:visible}
@@ -607,33 +632,7 @@ button:focus-visible,input:focus-visible,.top-pill:focus-visible{
   background:linear-gradient(135deg,#6366f1,#a855f7)!important;
 }
 
-/* --- Tela PIN Responsáveis --- */
-.tela-pin{
-  position:fixed;inset:0;
-  background:rgba(15,23,42,0.85);
-  display:flex;align-items:center;justify-content:center;
-  z-index:9999;
-}
-.caixa-pin{
-  background:#fff;border-radius:24px;padding:32px 24px;width:90%;max-width:380px;
-  box-shadow:0 10px 40px rgba(0,0,0,0.25);
-}
-.caixa-pin h2{text-align:center;color:#1e293b;margin-bottom:20px;}
-.digitos{display:flex;gap:12px;justify-content:center;margin:24px 0;}
-.digito{
-  width:48px;height:56px;border:2px solid #cbd5e1;border-radius:12px;
-  display:flex;align-items:center;justify-content:center;font-size:24px;font-weight:800;color:#1e293b;
-  transition:all 0.2s;
-}
-.digito.preenchido{border-color:#7c3aed;background:#f5f3ff;}
-.teclado{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-top:20px;}
-.tecla{
-  padding:14px;background:#e2e8f0;border-radius:12px;border:none;font-size:20px;font-weight:700;
-  color:#1e293b;cursor:pointer;transition:background 0.2s;
-}
-.tecla:active{background:#cbd5e1;}
-.tecla.espaco{visibility:hidden;}
-.aviso-bloqueio{color:#dc2626;text-align:center;margin:12px 0;font-size:14px;display:none;}
+/* --- Tela PIN Responsáveis (legado removido: ver #modal-pin) --- */
 .link-recupera{
   text-align:center;margin-top:16px;font-size:14px;color:#4f46e5;
   cursor:pointer;text-decoration:underline;
@@ -658,36 +657,6 @@ button:focus-visible,input:focus-visible,.top-pill:focus-visible{
 </style>
 </head>
 <body class="cenario-ceu">
-<!-- Tela de PIN dos Responsáveis -->
-<div class="tela-pin" id="telaPinResponsavel" style="display:none;">
-  <div class="caixa-pin">
-    <h2>🔐 Área dos Responsáveis</h2>
-    <div class="digitos">
-      <div class="digito" id="d1"></div>
-      <div class="digito" id="d2"></div>
-      <div class="digito" id="d3"></div>
-      <div class="digito" id="d4"></div>
-    </div>
-    <div class="aviso-bloqueio" id="avisoBloqueio"></div>
-    <div class="teclado">
-      <button class="tecla" onclick="digitar(1)">1</button>
-      <button class="tecla" onclick="digitar(2)">2</button>
-      <button class="tecla" onclick="digitar(3)">3</button>
-      <button class="tecla" onclick="digitar(4)">4</button>
-      <button class="tecla" onclick="digitar(5)">5</button>
-      <button class="tecla" onclick="digitar(6)">6</button>
-      <button class="tecla" onclick="digitar(7)">7</button>
-      <button class="tecla" onclick="digitar(8)">8</button>
-      <button class="tecla" onclick="digitar(9)">9</button>
-      <button type="button" class="tecla" onclick="digitar(0)">0</button>
-      <button type="button" class="tecla" onclick="apagar()">⌫</button>
-      <button type="button" class="tecla" onclick="validarPin()">✓</button>
-
-    </div>
-    <p class="link-recupera" onclick="abrirRecuperaPin()">❓ Esqueceu seu PIN?</p>
-    <p class="link-recupera" onclick="abrirLoginEmail()">🔑 Entrar com e-mail</p>
-  </div>
-</div>
 <!-- Tela Login por E-mail -->
 <div class="tela-pin" id="telaLoginEmail" style="display:none;">
   <div class="caixa-pin">
@@ -743,7 +712,7 @@ button:focus-visible,input:focus-visible,.top-pill:focus-visible{
   <div class="top-row">
     <button class="top-pill" onclick="abrirPainelPais()"><span class="coin-dot"></span><span class="top-pill-text"><span id="txt-moedas">0</span> 🪙</span></button>
     <button class="top-pill" onclick="abrirPainelPais()"><span style="font-size:13px">💰</span><span><span class="top-pill-text">R$ <span id="txt-dinheiro">0,00</span></span><span class="top-pill-sub" id="txt-status-nuvem">🔒 pais</span></span></button>
-    <button class="top-pill" onclick="abrirModal('modal-evolucoes')"><span style="font-size:13px">⭐</span><span><span class="top-pill-text">Evoluções</span><span class="top-pill-sub">ver fases</span></span></button>
+    <button class="top-pill" onclick="abrirColecao()" title="Coleção"><span style="font-size:13px">📚</span><span><span class="top-pill-text">Coleção</span><span class="top-pill-sub">pets e itens</span></span></button>
     <button class="top-pill" id="btn-pill-streak" onclick="abrirModal('modal-conquistas')" title="Sequência diária"><span style="font-size:13px">🔥</span><span><span class="top-pill-text"><span id="txt-streak">0</span> dias</span><span class="top-pill-sub">sequência</span></span></button>
   </div>
   <div class="pet-selector">
@@ -757,14 +726,19 @@ button:focus-visible,input:focus-visible,.top-pill:focus-visible{
     </div>
   </div>
   <div class="status-row">
-    <button class="mini-card" onclick="darRemedio()"><span>💚</span><b style="font-size:9px;color:#059669" id="txt-saude">100%</b></button>
+    <button class="mini-card" onclick="darRemedio()" aria-label="Dar remédio ao pet"><span>💚</span><b style="font-size:9px;color:#059669" id="txt-saude">100%</b></button>
     <div class="happiness-box"><div style="display:flex;justify-content:space-between"><span style="font-size:8px;font-weight:900;color:#64748b">✨ Humor</span><b style="font-size:8px"><span id="val-felicidade">100</span>%</b></div><div class="bar-bg"><div class="bar-fill" id="barra-felicidade"></div></div></div>
+  </div>
+  <div class="pet-actions" id="pet-actions">
+    <button type="button" class="pet-action-btn" id="btn-alimentar" onclick="acaoPet('alimentar')" aria-label="Alimentar o pet">🍖 Alimentar</button>
+    <button type="button" class="pet-action-btn" id="btn-brincar" onclick="acaoPet('brincar')" aria-label="Brincar com o pet">🎾 Brincar</button>
+    <button type="button" class="pet-action-btn" id="btn-dormir" onclick="acaoPet('dormir')" aria-label="Colocar o pet para dormir">😴 Dormir</button>
   </div>
   <div class="cat-section" id="pet-section-area">
     <div class="pet-stage">
-      <button class="surpresa-dia-btn hidden" id="btn-surpresa-dia" onclick="abrirSurpresaDia()">🎁</button>
-      <div class="balao-fala" id="balao-fala"></div>
-      <div class="cat-wrapper" id="pet-principal" onclick="interagirComPet(event)"><div id="pet-svg-container"></div></div>
+      <button class="surpresa-dia-btn hidden" id="btn-surpresa-dia" onclick="abrirSurpresaDia()" aria-label="Abrir surpresa do dia">🎁</button>
+      <div class="balao-fala" id="balao-fala" role="status" aria-live="polite"></div>
+      <div class="cat-wrapper" id="pet-principal" onclick="interagirComPet(event)" role="button" tabindex="0" aria-label="Dar carinho no pet"><div id="pet-svg-container"></div></div>
     </div>
     <div class="level-badge">⭐ <span class="level-number">Nível <span id="numero-nivel">1</span></span></div>
     <div class="xp-bar-bg"><div class="xp-bar-fill" id="barra-xp"></div><span class="xp-text">XP <span id="texto-xp">0/100</span></span></div>
@@ -815,7 +789,8 @@ button:focus-visible,input:focus-visible,.top-pill:focus-visible{
     <div class="achievement-row"><span style="font-size:20px">🛡️</span><div><b style="font-size:10px">Complete as tarefas</b><div style="font-size:8px;color:#64748b">Ganhe moedas e XP para seu pet crescer.</div></div></div>
     <div class="achievement-row"><span style="font-size:20px">🎁</span><div><b style="font-size:10px">Troque moedas por prêmios</b><div style="font-size:8px;color:#64748b">Fundos, acessórios e tempo de tela!</div></div></div>
   </div>
-  <button class="primary-btn green-btn" style="width:100%;margin-top:12px" onclick="fecharOnboarding()">Entendi, vamos lá! 🚀</button>
+  <button class="primary-btn green-btn" style="width:100%;margin-top:12px" onclick="fecharOnboarding(true)">✨ Tour guiado (recomendado)</button>
+  <button class="primary-btn" style="width:100%;margin-top:6px;background:#e2e8f0;color:#475569" onclick="fecharOnboarding(false)">Pular e começar</button>
 </div></div>
 <div id="modal-onboarding-pais" class="modal-overlay">
   <div class="modal" style="text-align:center;max-width:340px">
@@ -843,7 +818,7 @@ button:focus-visible,input:focus-visible,.top-pill:focus-visible{
   <div class="grid-fundos hidden" id="grid-acessorios"></div>
 </div></div>
 <div id="modal-timer" class="modal-overlay"><div class="modal" style="text-align:center"><div class="modal-title"><h3>⏳ Tempo de Tela</h3><button class="close-btn" onclick="fecharModal('modal-timer')">×</button></div><p style="font-size:10px;color:#64748b;margin-bottom:10px">Tempo liberado pela recompensa.</p><div id="relogio-timer" class="timer-display">00:00</div><button class="primary-btn red-btn" style="margin-top:10px" onclick="pausarFecharTimer()">Encerrar tempo</button></div></div>
-<div id="modal-pin" class="modal-overlay"><div class="modal" style="text-align:center;max-width:310px"><h3 style="font-size:17px">🔐 Área dos responsáveis</h3><p style="font-size:10px;color:#64748b;margin-top:4px">Digite o PIN de 4 dígitos</p><div class="pin-dots" id="pin-dots"><i class="pin-dot"></i><i class="pin-dot"></i><i class="pin-dot"></i><i class="pin-dot"></i></div><div class="pin-erro" id="pin-erro"></div><div class="pin-pad" id="pin-pad"></div><button class="primary-btn" style="margin-top:9px;background:#e2e8f0;color:#475569" onclick="fecharModal('modal-pin');limparPin()">Cancelar</button></div></div>
+<div id="modal-pin" class="modal-overlay"><div class="modal" style="text-align:center;max-width:310px"><h3 style="font-size:17px">🔐 Área dos responsáveis</h3><p style="font-size:10px;color:#64748b;margin-top:4px">Digite o PIN de 4 dígitos</p><div class="pin-dots" id="pin-dots"><i class="pin-dot"></i><i class="pin-dot"></i><i class="pin-dot"></i><i class="pin-dot"></i></div><div class="pin-erro" id="pin-erro"></div><div class="pin-pad" id="pin-pad"></div><button class="primary-btn" style="margin-top:9px;background:#e2e8f0;color:#475569" onclick="fecharModal('modal-pin');limparPin()">Cancelar</button><p class="link-recupera" style="font-size:10px;margin-top:10px" onclick="fecharModal('modal-pin');limparPin();abrirRecuperaPin()">❓ Esqueceu seu PIN?</p><p class="link-recupera" style="font-size:10px;margin-top:4px" onclick="fecharModal('modal-pin');limparPin();abrirLoginEmail()">🔑 Entrar com e-mail</p></div></div>
 <div id="modal-definir-pin" class="modal-overlay">
   <div class="modal" style="max-width:340px;text-align:center">
     <div style="font-size:36px;margin-bottom:4px">🔐</div>
@@ -891,6 +866,20 @@ button:focus-visible,input:focus-visible,.top-pill:focus-visible{
 <div id="modal-pais" class="modal-overlay"><div class="modal">
   <div class="modal-title"><h3>👨‍👩‍👧 Painel dos Pais</h3><button class="close-btn" onclick="fecharModal('modal-pais')">×</button></div>
   <div class="stat-grid" style="margin-bottom:9px"><div class="stat">💰 <b>R$ <span id="txt-painel-disponivel">0,00</span></b><span>saldo disponível</span></div><div class="stat">🧾 <b>R$ <span id="txt-total-pago">0,00</span></b><span>total pago</span></div></div>
+  <div class="meta-familiar-card" id="card-meta-familiar">
+    <div style="display:flex;justify-content:space-between;align-items:center">
+      <b style="font-size:11px;color:#92400e">👨‍👩‍👧‍👦 Meta familiar</b>
+      <span style="font-size:9px;font-weight:900;color:#c2410c" id="txt-meta-familiar-status">0/5 dias</span>
+    </div>
+    <div style="font-size:8px;color:#a16207;margin-top:3px">Quando todos os filhos ativos mantiverem ofensiva juntos, a família ganha um baú extra.</div>
+    <div class="progress"><div id="barra-meta-familiar" style="width:0%"></div></div>
+    <div style="display:flex;gap:5px;margin-top:8px;align-items:center">
+      <label class="field-label" style="margin:0;white-space:nowrap">Meta (dias)</label>
+      <input class="field" id="input-meta-familiar-dias" type="number" min="3" max="30" value="5" style="width:60px" onchange="atualizarMetaFamiliarDias(this.value)">
+      <button class="primary-btn green-btn" style="padding:6px 10px;font-size:9px" onclick="resgatarBauFamiliar()">🎁 Baú</button>
+    </div>
+    <small style="font-size:8px;color:#a16207;margin-top:4px;display:block" id="txt-meta-familiar-dica">Complete a meta para liberar o baú.</small>
+  </div>
   <div class="section-card">
     <label class="field-label">👨‍👩‍👧‍👦 Filhos</label>
     <div class="stack" id="lista-criancas-pais" style="margin:4px 0"></div>
@@ -923,6 +912,24 @@ button:focus-visible,input:focus-visible,.top-pill:focus-visible{
     <small style="font-size:8px;color:#64748b;margin-top:3px;display:block">⚠️ Substitui os dados atuais desta família pelo conteúdo do arquivo.</small>
   </div>
   <div class="section-card">
+    <label class="field-label">🔊 Volume dos sons</label>
+    <input type="range" id="input-volume-som" min="0" max="100" value="55" style="width:100%" oninput="atualizarVolumeSom(this.value)">
+    <div style="display:flex;justify-content:space-between;font-size:8px;color:#64748b;margin-top:2px">
+      <span>Mudo</span><span id="txt-volume-som">55%</span><span>Alto</span>
+    </div>
+    <small style="font-size:8px;color:#64748b;margin-top:3px;display:block">Controla meows, efeitos e voz gravada do pet.</small>
+  </div>
+  <div class="section-card">
+    <label class="field-label">📸 Fotos das tarefas</label>
+    <button type="button" class="primary-btn red-btn" style="width:100%" onclick="limparTodasFotosTarefas()">🗑️ Apagar todas as fotos</button>
+    <small style="font-size:8px;color:#64748b;margin-top:3px;display:block">Remove as imagens de comprovante já enviadas (não desfaz moedas/XP já concedidos).</small>
+  </div>
+  <div class="section-card">
+    <label class="field-label">📜 Log de atividades</label>
+    <div class="stack" id="lista-log-atividades" style="max-height:120px;overflow:auto;margin-top:4px"></div>
+    <button type="button" class="primary-btn botao-secundario" style="width:100%;margin-top:6px" onclick="limparLogAtividades()">Limpar log</button>
+  </div>
+  <div class="section-card">
     <label class="field-label">🏠 Código da Família</label>
     <div style="display:flex;gap:5px">
       <input class="field" id="input-codigo-familia" placeholder="mínimo 8 caracteres">
@@ -933,11 +940,13 @@ button:focus-visible,input:focus-visible,.top-pill:focus-visible{
     <small style="font-size:8px;color:#64748b;margin-top:3px;display:block">Use um código único de no mínimo 8 caracteres para sincronizar seus aparelhos com segurança.</small>
   </div>
   <div class="section-card" id="card-lembrete">
-    <b style="font-size:10px">🔔 Lembrete antes de dormir</b>
+    <b style="font-size:10px">🔔 Lembretes e push</b>
     <div style="display:flex;justify-content:space-between;align-items:center;margin-top:6px">
-      <span style="font-size:9px;color:#64748b">Avisar às 20h se ainda faltar tarefa obrigatória</span>
+      <span style="font-size:9px;color:#64748b">Avisar à tarde/noite e receber push da família</span>
       <button class="primary-btn" id="btn-toggle-lembrete" onclick="alternarLembretes()">Ativar</button>
     </div>
+    <button type="button" class="primary-btn blue-btn botao-secundario" style="width:100%;margin-top:8px" onclick="ativarPushCompleto()">📲 Ativar push neste aparelho</button>
+    <small style="font-size:8px;color:#64748b;margin-top:4px;display:block">Requer chave VAPID no código e arquivo firebase-messaging-sw.js no mesmo diretório do app (HTTPS).</small>
   </div>
   <div class="section-card" id="card-pausa">
     <b style="font-size:10px">🌴 Pausa da Ofensiva (férias/doença)</b>
@@ -970,10 +979,41 @@ button:focus-visible,input:focus-visible,.top-pill:focus-visible{
   <button class="primary-btn" style="width:100%;margin-top:5px;background:#e2e8f0;color:#475569" onclick="fecharModal('modal-pais');alternarPerfil()">🔄 Trocar Perfil de Usuário</button>
 </div></div>
 <div id="modal-relatorio" class="modal-overlay"><div class="modal"><div class="modal-title"><h3>📊 Relatório Semanal</h3><button class="close-btn" onclick="fecharModal('modal-relatorio')">×</button></div>
-  <div class="stat-grid" style="margin-bottom:9px"><div class="stat">📋 <b id="rel-total-tarefas">0</b><span>tarefas na semana</span></div><div class="stat">🪙 <b id="rel-total-moedas">0</b><span>moedas ganhas</span></div></div>
+  <div class="stat-grid" style="margin-bottom:9px">
+    <div class="stat">📋 <b id="rel-total-tarefas">0</b><span>tarefas na semana</span></div>
+    <div class="stat">🪙 <b id="rel-total-moedas">0</b><span>moedas ganhas</span></div>
+    <div class="stat">🔥 <b id="rel-streak-atual">0</b><span>dias de ofensiva</span></div>
+    <div class="stat">⭐ <b id="rel-media-dia">0</b><span>média tarefas/dia</span></div>
+  </div>
+  <div class="section-card" style="margin-bottom:9px">
+    <b style="font-size:10px">📈 Atividade da semana</b>
+    <div id="rel-barras-semana" style="display:flex;align-items:flex-end;gap:6px;height:72px;margin-top:10px;padding:0 2px"></div>
+    <div id="rel-labels-semana" style="display:flex;gap:6px;margin-top:4px;font-size:7px;font-weight:800;color:#94a3b8;justify-content:space-between"></div>
+  </div>
   <div class="section-card"><div class="stack" id="rel-lista-dias"></div></div>
+  <p id="rel-insight" style="font-size:9px;font-weight:800;color:#475569;margin-top:8px;text-align:center;line-height:1.35"></p>
 </div></div>
 <div id="modal-evolucoes" class="modal-overlay"><div class="modal"><div class="modal-title"><h3>⭐ Evoluções — <span id="modal-pet-evol-nome">Pipoca</span></h3><button class="close-btn" onclick="fecharModal('modal-evolucoes')">×</button></div><div class="stack" id="lista-evolucoes"></div></div></div>
+<div id="modal-colecao" class="modal-overlay">
+  <div class="modal" style="max-width:380px">
+    <div class="modal-title">
+      <h3>📚 Coleção</h3>
+      <button class="close-btn" onclick="fecharModal('modal-colecao')">×</button>
+    </div>
+    <div class="colecao-resumo" id="colecao-resumo"></div>
+    <div class="grid-tabs" style="grid-template-columns:repeat(4,1fr);margin-bottom:10px">
+      <button type="button" class="tab-btn ativa" id="tab-col-pets" onclick="alternarAbaColecao('pets')">🐾 Pets</button>
+      <button type="button" class="tab-btn" id="tab-col-evos" onclick="alternarAbaColecao('evos')">⭐ Evos</button>
+      <button type="button" class="tab-btn" id="tab-col-itens" onclick="alternarAbaColecao('itens')">🎀 Itens</button>
+      <button type="button" class="tab-btn" id="tab-col-fundos" onclick="alternarAbaColecao('fundos')">🖼️ Fundos</button>
+    </div>
+    <div id="painel-col-pets"></div>
+    <div id="painel-col-evos" class="hidden"></div>
+    <div id="painel-col-itens" class="hidden"></div>
+    <div id="painel-col-fundos" class="hidden"></div>
+    <button class="primary-btn" style="width:100%;margin-top:10px;background:#e2e8f0;color:#475569" onclick="fecharModal('modal-colecao');abrirModal('modal-evolucoes')">Ver evoluções do pet atual</button>
+  </div>
+</div>
 <div id="modal-conquistas" class="modal-overlay"><div class="modal">
   <div class="modal-title"><h3>🏆 Conquistas</h3><button class="close-btn" onclick="fecharModal('modal-conquistas')">×</button></div>
   <div class="section-card" id="card-bau-semanal" style="background:linear-gradient(135deg,#fef3c7,#fed7aa);border-color:#fb923c;margin-bottom:12px">
@@ -1034,6 +1074,19 @@ button:focus-visible,input:focus-visible,.top-pill:focus-visible{
 </div></div>
 <div id="modal-recompensas" class="modal-overlay"><div class="modal"><div class="modal-title"><h3>🎁 Resgatar Prêmios</h3><button class="close-btn" onclick="fecharModal('modal-recompensas')">×</button></div><div class="section-card"><div style="display:flex;justify-content:space-between;font-size:9px;font-weight:900"><span>🎯 Meta: Passeio Especial</span><span id="texto-meta-progresso">0 / 50 🪙</span></div><div class="progress" style="margin-top:5px"><div id="barra-meta-progresso" style="width:0"></div></div></div><div class="stack" id="lista-itens-loja"></div></div></div>
 <div id="modal-aviso" class="modal-overlay"><div class="modal" style="text-align:center;max-width:320px"><div id="aviso-emoji" style="font-size:35px">🎉</div><h3 id="aviso-titulo" style="font-size:16px;margin:5px 0">Tudo certo!</h3><p id="aviso-texto" style="font-size:10px;color:#64748b"></p><button class="primary-btn" style="margin-top:10px" onclick="fecharModal('modal-aviso')">OK</button></div></div>
+<div id="modal-evento" class="modal-overlay">
+  <div class="modal" style="text-align:center;max-width:340px">
+    <div id="evento-emoji" style="font-size:42px;margin-bottom:4px">🎃</div>
+    <h3 id="evento-titulo" style="font-size:16px;margin-bottom:6px">Evento</h3>
+    <p id="evento-desc" style="font-size:10px;color:#64748b;line-height:1.4;margin-bottom:12px"></p>
+    <div class="section-card" style="text-align:left;margin-bottom:10px">
+      <b style="font-size:10px">🎁 Recompensas do evento</b>
+      <div id="evento-recompensas" style="font-size:9px;margin-top:6px;line-height:1.5"></div>
+    </div>
+    <button class="primary-btn green-btn" style="width:100%" id="btn-resgatar-evento" onclick="resgatarBonusEvento()">Resgatar bônus do dia</button>
+    <button class="primary-btn" style="width:100%;margin-top:6px;background:#e2e8f0;color:#475569" onclick="fecharModal('modal-evento')">Fechar</button>
+  </div>
+</div>
 <div id="modal-ajuda" class="modal-overlay">
   <div class="modal" style="max-width:360px">
     <div class="modal-title">
@@ -1046,12 +1099,14 @@ button:focus-visible,input:focus-visible,.top-pill:focus-visible{
     </div>
     <div id="painel-ajuda-crianca">
       <div class="ajuda-item"><span class="ajuda-ico">👆</span><div><b>Toque no pet</b><span>Dê carinho: sobe a felicidade e o pet responde com sons e falas.</span></div></div>
+      <div class="ajuda-item"><span class="ajuda-ico">🍖</span><div><b>Alimentar, brincar e dormir</b><span>Botões abaixo do humor. Cada ação sobe felicidade/saúde (com um tempinho de espera entre usos).</span></div></div>
       <div class="ajuda-item"><span class="ajuda-ico">🛡️</span><div><b>Tarefas do dia</b><span>Tire foto ou envie para os pais aprovarem. Obrigatórias 🔥 liberam a ofensiva; extras ⭐ dão moedas extras.</span></div></div>
       <div class="ajuda-item"><span class="ajuda-ico">🪙</span><div><b>Moedas e XP</b><span>Ganhe moedas e XP ao completar tarefas e desafios. XP sobe o nível e desbloqueia evoluções e novos pets.</span></div></div>
       <div class="ajuda-item"><span class="ajuda-ico">🎮</span><div><b>Desafio</b><span>Matemática, memória ou reação rápida — acerte e ganhe moedas + XP.</span></div></div>
       <div class="ajuda-item"><span class="ajuda-ico">🖼️</span><div><b>Fundos e temas</b><span>Personalize o cenário e vista o pet com acessórios e combos de tema.</span></div></div>
       <div class="ajuda-item"><span class="ajuda-ico">🎁</span><div><b>Prêmios</b><span>Peça recompensas com suas moedas. Os pais precisam aprovar o resgate.</span></div></div>
       <div class="ajuda-item"><span class="ajuda-ico">🔥</span><div><b>Ofensiva</b><span>Complete todas as tarefas obrigatórias todos os dias para manter a sequência e ganhar o baú semanal.</span></div></div>
+      <div class="ajuda-item"><span class="ajuda-ico">📚</span><div><b>Coleção</b><span>No topo, toque em Coleção para ver pets, evoluções, acessórios e fundos que você já liberou.</span></div></div>
       <div class="ajuda-item"><span class="ajuda-ico">🎁</span><div><b>Surpresa do dia</b><span>Toque no presente no canto do pet (quando aparecer) para ganhar moedas bônus.</span></div></div>
     </div>
     <div id="painel-ajuda-pais" class="hidden">
@@ -1064,8 +1119,10 @@ button:focus-visible,input:focus-visible,.top-pill:focus-visible{
       <div class="ajuda-item"><span class="ajuda-ico">🏠</span><div><b>Código da família</b><span>Use o mesmo código (mín. 8 caracteres) em todos os aparelhos para sincronizar. Convide por WhatsApp ou QR Code.</span></div></div>
       <div class="ajuda-item"><span class="ajuda-ico">📧</span><div><b>E-mail de recuperação</b><span>Cadastre e-mail + senha para recuperar acesso se esquecer o PIN. Até 2 responsáveis.</span></div></div>
       <div class="ajuda-item"><span class="ajuda-ico">💾</span><div><b>Backup</b><span>Baixe um arquivo .json de segurança e restaure quando precisar — funciona offline.</span></div></div>
+      <div class="ajuda-item"><span class="ajuda-ico">🔊</span><div><b>Volume e fotos</b><span>Controle o volume dos sons do pet, apague fotos de comprovante e veja o log de aprovações.</span></div></div>
     </div>
-    <button class="primary-btn btn-demo-anim" style="width:100%;margin-top:10px" onclick="iniciarDemoAnimacoes()">✨ Demo das animações</button>
+    <button class="primary-btn btn-demo-anim" style="width:100%;margin-top:10px" onclick="iniciarTourGuiado()">🗺️ Tour guiado do app</button>
+    <button class="primary-btn btn-demo-anim" style="width:100%;margin-top:6px;background:linear-gradient(135deg,#0ea5e9,#6366f1)!important" onclick="iniciarDemoAnimacoes()">✨ Demo das animações</button>
     <button class="primary-btn green-btn" style="width:100%;margin-top:8px" onclick="fecharModal('modal-ajuda')">Entendi! 🚀</button>
   </div>
 </div>
@@ -1075,10 +1132,11 @@ button:focus-visible,input:focus-visible,.top-pill:focus-visible{
 <div class="foto-viewer" id="foto-viewer" onclick="fecharVisualizadorFoto()"><img id="foto-viewer-img" src=""></div>
 <div class="toast" id="toast"></div>
 <div class="banner-offline" id="banner-offline">📡 Sem conexão — as alterações serão sincronizadas quando a internet voltar.</div>
+<div class="banner-evento" id="banner-evento" onclick="abrirModalEventoSazonal()"></div>
 <script>
 let audioCtx=null;
 function obterAudioContext(){if(!audioCtx)audioCtx=new(window.AudioContext||window.webkitAudioContext)();if(audioCtx.state==='suspended')audioCtx.resume();return audioCtx}
-function tocarTom(f,t,d,delay=0,v=.15){try{const ctx=obterAudioContext(),o=ctx.createOscillator(),g=ctx.createGain();o.type=t;o.frequency.setValueAtTime(f,ctx.currentTime+delay);g.gain.setValueAtTime(v,ctx.currentTime+delay);g.gain.exponentialRampToValueAtTime(.001,ctx.currentTime+delay+d);o.connect(g);g.connect(ctx.destination);o.start(ctx.currentTime+delay);o.stop(ctx.currentTime+delay+d)}catch(e){}}
+function tocarTom(f,t,d,delay=0,v=.15){try{const vol=typeof obterVolumeSom==='function'?obterVolumeSom():0.55;if(vol<=0.01)return;const ctx=obterAudioContext(),o=ctx.createOscillator(),g=ctx.createGain();o.type=t;o.frequency.setValueAtTime(f,ctx.currentTime+delay);const amp=v*vol;g.gain.setValueAtTime(amp,ctx.currentTime+delay);g.gain.exponentialRampToValueAtTime(.001,ctx.currentTime+delay+d);o.connect(g);g.connect(ctx.destination);o.start(ctx.currentTime+delay);o.stop(ctx.currentTime+delay+d)}catch(e){}}
 function somConquista(){[523.25,659.25,783.99,1046.50].forEach((f,i)=>tocarTom(f,'triangle',.18,i*.08,.2))}
 function somBauLendario(){tocarTom(440,'sine',.08,0);tocarTom(554.37,'sine',.08,.07);tocarTom(659.25,'sine',.12,.14);setTimeout(()=>{tocarTom(587.33,'triangle',.15,0,.25);tocarTom(739.99,'triangle',.15,.12,.25);tocarTom(880,'triangle',.35,.24,.3);tocarTom(1174.66,'sine',.45,.24,.2)},220)}
 const PETS={
@@ -1308,6 +1366,61 @@ let cargaNuvemPendente=false;
 // Usada para enviar só os campos que mudaram, em vez de sobrescrever tudo — assim,
 // se outro aparelho alterar um campo diferente ao mesmo tempo, os dois sobrevivem.
 let ultimoEstadoSincronizado=null;
+let filaSyncPendente=false;
+let ultimaSyncOkEm=null;
+let statusSyncAtual='local'; // local | offline | syncing | online | erro
+function atualizarStatusSyncUI(){
+  const statusEl=document.getElementById('txt-status-nuvem');
+  const banner=document.getElementById('banner-offline');
+  if(!navigator.onLine){
+    statusSyncAtual='offline';
+    if(statusEl)statusEl.textContent=filaSyncPendente?'📡 offline · fila':'📡 offline';
+    if(banner){
+      banner.classList.add('mostrar');
+      banner.classList.remove('syncing','synced');
+      banner.textContent=filaSyncPendente
+        ?'📡 Offline — há alterações na fila. Sincronizam quando a internet voltar.'
+        :'📡 Sem conexão — as alterações ficam salvas neste aparelho.';
+    }
+    return;
+  }
+  if(banner){
+    if(statusSyncAtual==='syncing'){
+      banner.classList.add('mostrar','syncing');
+      banner.classList.remove('synced');
+      banner.textContent='☁️ Sincronizando com a família…';
+    }else if(statusSyncAtual==='online'&&filaSyncPendente===false&&ultimaSyncOkEm&&(Date.now()-ultimaSyncOkEm<4000)){
+      banner.classList.add('mostrar','synced');
+      banner.classList.remove('syncing');
+      banner.textContent='✅ Sincronizado com a nuvem';
+      setTimeout(()=>{
+        if(statusSyncAtual==='online'&&navigator.onLine){
+          banner.classList.remove('mostrar','synced');
+        }
+      },2500);
+    }else if(!filaSyncPendente){
+      banner.classList.remove('mostrar','syncing','synced');
+    }
+  }
+  if(!statusEl)return;
+  if(!sincronizacaoNuvemAtiva){
+    statusEl.textContent='📱 só neste aparelho';
+    return;
+  }
+  if(statusSyncAtual==='syncing')statusEl.textContent='☁️ sync…';
+  else if(statusSyncAtual==='erro')statusEl.textContent='⚠️ sync falhou';
+  else if(ultimaSyncOkEm){
+    const d=new Date(ultimaSyncOkEm);
+    const hh=String(d.getHours()).padStart(2,'0');
+    const mm=String(d.getMinutes()).padStart(2,'0');
+    statusEl.textContent=`☁️ ${hh}:${mm}`;
+  }else statusEl.textContent='☁️ online';
+}
+function marcarFilaSync(pendente){
+  filaSyncPendente=!!pendente;
+  try{localStorage.setItem('ROTINAPET_FILA_SYNC_'+codigoFamilia,filaSyncPendente?'1':'0')}catch(e){}
+  atualizarStatusSyncUI();
+}
 function calcularDiffParaNuvem(base,atual){
   const mudancas={};
   const chaves=new Set([...Object.keys(base||{}),...Object.keys(atual)]);
@@ -1363,18 +1476,19 @@ try{
     }).catch((error)=>{
       console.error('Firebase indisponível:',error);
       sincronizacaoNuvemAtiva = false;
-      const statusEl=document.getElementById('txt-status-nuvem');
-      if(statusEl)statusEl.textContent='📱 somente neste aparelho';
+      statusSyncAtual='local';
+      atualizarStatusSyncUI();
     });
   }
 }catch(error){
   console.error('Falha ao inicializar Firebase:',error);
   sincronizacaoNuvemAtiva=false;
+  statusSyncAtual='local';
 }
 function definirIdUsuario(uid){
   if(uid) localStorage.setItem('ROTINAPET_UID', uid);
-  const statusEl=document.getElementById('txt-status-nuvem');
-  if(statusEl)statusEl.textContent='☁️ online';
+  statusSyncAtual='online';
+  atualizarStatusSyncUI();
 }
 function getCaminhoFirebase(){
   return `rotinapet/familias/${codigoFamilia}/estado`;
@@ -1400,7 +1514,7 @@ const hojeLocal=()=>{const d=new Date();return `${d.getFullYear()}-${String(d.ge
 const ontemLocal=()=>{const d=new Date();d.setDate(d.getDate()-1);return `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`};
 // Campos que pertencem a UM filho específico (progresso do pet, tarefas, moedas...).
 // Tudo que NÃO está nessa lista é compartilhado pela família inteira (PIN, e-mails, taxa de câmbio).
-const CAMPOS_CRIANCA=['acessorios','conquistas','desafiosMathAcertos','dinheiroAcumulado','fundoAtual','fundosComprados','historicoConclusoes','idadeCrianca','lembreteEnviadoData','metaMoedas','moedas','onboardingVistoCrianca','pausaAte','petAtual','pets','recompensas','registroDiario','solicitacoesPremios','streak','surpresaResgatadaData','tarefas','tarefasHojeCount','timerFim','totalSacado','ultimoDiaAcesso','ultimoDiaConcluido','ultimoStreakPremiado','vozSalva'];
+const CAMPOS_CRIANCA=['acessorios','conquistas','desafiosMathAcertos','dinheiroAcumulado','fundoAtual','fundosComprados','historicoConclusoes','idadeCrianca','lembreteEnviadoData','metaMoedas','moedas','onboardingVistoCrianca','pausaAte','petAtual','pets','recompensas','registroDiario','solicitacoesPremios','streak','surpresaResgatadaData','tarefas','tarefasHojeCount','timerFim','totalSacado','ultimoDiaAcesso','ultimoDiaConcluido','ultimoStreakPremiado','vozSalva','ultimoAcaoPet','ultimoDecay'];
 function valoresPadraoCrianca(){
   return {
     petAtual:'gato',moedas:15,dinheiroAcumulado:.15,idadeCrianca:7,
@@ -1415,7 +1529,7 @@ function valoresPadraoCrianca(){
     ],
     solicitacoesPremios:[],conquistas:{},acessorios:{comprados:[],ativo:null},pausaAte:null,
     historicoConclusoes:{},registroDiario:{},onboardingVistoCrianca:false,lembreteEnviadoData:null,
-    surpresaResgatadaData:null
+    surpresaResgatadaData:null,ultimoAcaoPet:{},ultimoDecay:null
   };
 }
 function capturarDadosCrianca(){
@@ -1480,7 +1594,11 @@ let estado={
   onboardingVistoCrianca:false,
   lembreteEnviadoData:null,
   notificacoesAtivas:false,
-  surpresaResgatadaData:null
+  surpresaResgatadaData:null,
+  volumeSom:0.55,
+  logAtividades:[],
+  ultimoAcaoPet:{},
+  ultimoDecay:null
 };
 try{
   const salvo=localStorage.getItem(`ROTINAPET_SAVE_${codigoFamilia}`);
@@ -1535,14 +1653,36 @@ function verificarResetDiario(){
 verificarResetDiario();
 function salvar(){
   try{localStorage.setItem(`ROTINAPET_SAVE_${codigoFamilia}`,JSON.stringify(estado))}catch(e){mostrarToast('⚠️ Memória cheia; foto não armazenada.')}
-  if(sincronizacaoNuvemAtiva&&dbFirebase&&!cargaNuvemPendente){
-    const mudancas=calcularDiffParaNuvem(ultimoEstadoSincronizado,estado);
-    if(Object.keys(mudancas).length){
-      ignorarProximoSyncNuvem=true;
-      ultimoEstadoSincronizado=JSON.parse(JSON.stringify(estado));
-      dbFirebase.ref(getCaminhoFirebase()).update(mudancas).catch(()=>{});
-    }
+  if(!sincronizacaoNuvemAtiva||!dbFirebase){
+    marcarFilaSync(false);
+    return;
   }
+  if(cargaNuvemPendente||!navigator.onLine){
+    marcarFilaSync(true);
+    return;
+  }
+  const mudancas=calcularDiffParaNuvem(ultimoEstadoSincronizado,estado);
+  if(!Object.keys(mudancas).length){
+    marcarFilaSync(false);
+    return;
+  }
+  statusSyncAtual='syncing';
+  marcarFilaSync(true);
+  atualizarStatusSyncUI();
+  ignorarProximoSyncNuvem=true;
+  const snapshot=JSON.parse(JSON.stringify(estado));
+  dbFirebase.ref(getCaminhoFirebase()).update(mudancas).then(()=>{
+    ultimoEstadoSincronizado=snapshot;
+    ultimaSyncOkEm=Date.now();
+    statusSyncAtual='online';
+    marcarFilaSync(false);
+    atualizarStatusSyncUI();
+  }).catch(err=>{
+    console.warn('Falha ao sincronizar:',err);
+    statusSyncAtual='erro';
+    marcarFilaSync(true);
+    atualizarStatusSyncUI();
+  });
 }
 // Suporta até 2 responsáveis com e-mails próprios vinculados à mesma família.
 // Migra o campo antigo (um único e-mail em string) para a lista nova.
@@ -1581,25 +1721,28 @@ async function carregarEstadoNuvem(){
 async function iniciarSincronizacaoNuvem(){
   if(!sincronizacaoNuvemAtiva||!dbFirebase)return;
   cargaNuvemPendente=true;
+  statusSyncAtual='syncing';
+  atualizarStatusSyncUI();
   const ref=dbFirebase.ref(getCaminhoFirebase());
-  const statusEl=document.getElementById('txt-status-nuvem');
-  if(statusEl)statusEl.textContent='☁️ online';
   ref.off();
   await carregarEstadoNuvem();
   cargaNuvemPendente=false;
+  ultimaSyncOkEm=Date.now();
+  statusSyncAtual='online';
   // Se algo tiver sido alterado localmente enquanto aguardávamos a carga
   // (ex.: PIN padrão), reenvia agora o estado já mesclado — sem risco de
   // sobrescrever a nuvem, pois carregarEstadoNuvem() já trouxe os dados reais.
   salvar();
+  atualizarStatusSyncUI();
   ref.on('value',s=>{
     if(ignorarProximoSyncNuvem){ignorarProximoSyncNuvem=false;return}
     const d=s.val();
     if(d&&typeof d==='object'){
       ultimoEstadoSincronizado=JSON.parse(JSON.stringify(d));
+      ultimaSyncOkEm=Date.now();
+      statusSyncAtual='online';
+      marcarFilaSync(false);
       if(d.criancaAtivaId&&estado.criancaAtivaId&&d.criancaAtivaId!==estado.criancaAtivaId){
-        // Outro aparelho trocou para um filho diferente do que este aparelho
-        // está mostrando agora. Guarda o progresso daquele filho para quando
-        // alguém trocar para ele por aqui, sem sobrescrever a tela atual.
         estado.criancas={...estado.criancas,...(d.criancas||{})};
         estado.criancasDados={...estado.criancasDados,...(d.criancasDados||{})};
         const dadosRecebidos={};
@@ -1612,6 +1755,7 @@ async function iniciarSincronizacaoNuvem(){
       garantirCriancaAtiva();
       try{localStorage.setItem(`ROTINAPET_SAVE_${codigoFamilia}`,JSON.stringify(estado))}catch(e){}
       atualizarTela();
+      atualizarStatusSyncUI();
       mostrarToast('☁️ Sincronizado');
     }
   });
@@ -1633,8 +1777,10 @@ const CONFIG_PARTICULAS={
   arcoiris:{emojis:['✨','🌟'],modo:'piscar',qtd:12},
   estadio:{emojis:['⚽','🟡'],modo:'cair',qtd:8},
   ceu:{emojis:['☁️'],modo:'lateral',qtd:5},
+  quarto:{emojis:['✨','💤'],modo:'piscar',qtd:10},
   aniversario:{emojis:['🎈','🎉','✨'],modo:'cair',qtd:14}
-};const DETALHES_CENARIO={
+};
+const DETALHES_CENARIO={
   estadio(){return `<svg viewBox="0 0 400 700" preserveAspectRatio="xMidYMax slice" xmlns="http://www.w3.org/2000/svg">
     <!-- arquibancadas -->
     <rect x="0" y="210" width="48" height="320" fill="#1e293b"/><rect x="352" y="210" width="48" height="320" fill="#1e293b"/>
@@ -1977,7 +2123,29 @@ function criarTextoFlutuanteZzz(){
   area.appendChild(s);
   setTimeout(()=>s.remove(),2700);
 }
-const FALAS_PET=['Comi minha ração! 🍖','Vamos brincar? 🎾','Você é o melhor! 💜','Hoje tá um dia ótimo!','Adorei o carinho! 🥰','Cadê minha tarefa de hoje?','Estou ficando forte! 💪','Zzz... quase dormindo 😴','Que tal um desafio de matemática?','Amo essa cor de fundo! 🎨'];
+const FALAS_PET={
+  geral:['Você é o melhor! 💜','Hoje tá um dia ótimo!','Estou ficando forte! 💪','Amo essa cor de fundo! 🎨','Que tal um desafio? ⚡','Vamos completar as missões?'],
+  carinho:['Adorei o carinho! 🥰','Mais um pouquinho? 💕','Fiquei todo feliz!','Purr... que gostoso!'],
+  alimentar:['Comi minha ração! 🍖','Que delícia! 😋','Obrigado pela comida!','Estou cheio e feliz!'],
+  brincar:['Vamos brincar? 🎾','Essa foi divertida!','De novo, de novo!','Sou o mais rápido!'],
+  dormir:['Zzz... quase dormindo 😴','Boa noite! 🌙','Hora de descansar...','Sonhando com você!'],
+  manha:['Bom dia! Vamos às tarefas? ☀️','Acordei com energia!','Hora de começar o dia!'],
+  noite:['Já está tarde... 🌙','Hora de dormir em breve','Boa noite, campeão!'],
+  triste:['Estou um pouco triste...','Preciso de carinho 💙','Vamos brincar um pouco?'],
+  doente:['Não estou bem... 🤢','Um remédio ajudaria','Cuide de mim, por favor'],
+  aposTarefa:['Mandou bem na missão! 🏆','Que orgulho!','Continue assim!']
+};
+function escolherFalaContextual(tipo){
+  const h=new Date().getHours();
+  const p=obterDadosPetAtual();
+  let pool=FALAS_PET.geral;
+  if(tipo&&FALAS_PET[tipo])pool=FALAS_PET[tipo];
+  else if(p.saude<40)pool=FALAS_PET.doente;
+  else if(p.felicidade<35)pool=FALAS_PET.triste;
+  else if(h>=21||h<6)pool=FALAS_PET.noite;
+  else if(h>=6&&h<11)pool=FALAS_PET.manha;
+  return pool[Math.floor(Math.random()*pool.length)];
+}
 let timerBalaoFala=null;
 function mostrarBalaoFala(texto,duracaoMs=2600){
   const el=document.getElementById('balao-fala');
@@ -1988,21 +2156,34 @@ function mostrarBalaoFala(texto,duracaoMs=2600){
   timerBalaoFala=setTimeout(()=>el.classList.remove('mostrar'),duracaoMs);
 }
 function agendarFalaAleatoria(){
-  const espera=25000+Math.random()*35000;
+  const espera=28000+Math.random()*40000;
   setTimeout(()=>{
     if(document.getElementById('modal-selecao-perfil')?.classList.contains('mostrar')){agendarFalaAleatoria();return}
-    mostrarBalaoFala(FALAS_PET[Math.floor(Math.random()*FALAS_PET.length)]);
+    if(document.querySelector('.modal-overlay.mostrar')){agendarFalaAleatoria();return}
+    mostrarBalaoFala(escolherFalaContextual());
     agendarFalaAleatoria();
   },espera);
 }
 let debounceAcao=false;
+function obterVolumeSom(){
+  const v=Number(estado.volumeSom);
+  return Number.isFinite(v)?Math.max(0,Math.min(1,v)):0.55;
+}
 function tocarAudioPet(url){
+  const vol=obterVolumeSom();
+  if(vol<=0.01)return;
   if(estado.vozSalva){
     const a=new Audio(estado.vozSalva);
+    a.volume=vol;
     a.play().catch(()=>{});
     return;
   }
-  try{const a=new Audio(url);a.volume=.55;a.play().catch(()=>{})}catch(e){}
+  try{const a=new Audio(url);a.volume=vol;a.play().catch(()=>{})}catch(e){}
+}
+function registrarLogAtividade(texto){
+  estado.logAtividades=Array.isArray(estado.logAtividades)?estado.logAtividades:[];
+  estado.logAtividades.unshift({t:Date.now(),txt:String(texto).slice(0,120)});
+  if(estado.logAtividades.length>40)estado.logAtividades.length=40;
 }
 function interagirComPet(e){
   if(debounceAcao)return;
@@ -2014,12 +2195,72 @@ function interagirComPet(e){
   navigator.vibrate?.(25);
   criarTextoFlutuante('❤️ +5',e);
   animarPetToque(e);
-  if(Math.random()<.5)mostrarBalaoFala(FALAS_PET[Math.floor(Math.random()*FALAS_PET.length)]);
+  if(Math.random()<.55)mostrarBalaoFala(escolherFalaContextual('carinho'));
   else mostrarToast(`❤️ ${PETS[estado.petAtual].nome} adorou!`);
   salvar();
   atualizarTela();
   animarAcessorioTema();
   animarMoedasBump();
+}
+function acaoPet(tipo){
+  if(debounceAcao)return;
+  const agora=Date.now();
+  estado.ultimoAcaoPet=estado.ultimoAcaoPet||{};
+  const ultimo=Number(estado.ultimoAcaoPet[tipo])||0;
+  const cooldownMs={alimentar:45000,brincar:35000,dormir:90000}[tipo]||30000;
+  if(agora-ultimo<cooldownMs){
+    const seg=Math.ceil((cooldownMs-(agora-ultimo))/1000);
+    return mostrarToast(`⏳ Aguarde ${seg}s para ${tipo} de novo`);
+  }
+  debounceAcao=true;
+  setTimeout(()=>debounceAcao=false,400);
+  const d=obterDadosPetAtual();
+  const nome=PETS[estado.petAtual].nome;
+  estado.ultimoAcaoPet[tipo]=agora;
+  if(tipo==='alimentar'){
+    d.felicidade=Math.min(100,d.felicidade+12);
+    d.saude=Math.min(100,d.saude+8);
+    criarTextoFlutuante('🍖 +12',null);
+    mostrarBalaoFala(escolherFalaContextual('alimentar'));
+    mostrarToast(`🍖 ${nome} comeu e ficou mais feliz!`);
+  }else if(tipo==='brincar'){
+    d.felicidade=Math.min(100,d.felicidade+15);
+    ganharXP(2);
+    criarTextoFlutuante('🎾 +15',null);
+    mostrarBalaoFala(escolherFalaContextual('brincar'));
+    mostrarToast(`🎾 ${nome} adorou brincar! +2 XP`);
+    dispararHeartsBurst(null);
+  }else if(tipo==='dormir'){
+    d.felicidade=Math.min(100,d.felicidade+6);
+    d.saude=Math.min(100,d.saude+12);
+    criarTextoFlutuante('😴 +saúde',null);
+    mostrarBalaoFala(escolherFalaContextual('dormir'));
+    mostrarToast(`😴 ${nome} descansou e recuperou saúde!`);
+    const wrap=document.getElementById('pet-principal');
+    if(wrap){wrap.classList.add('pet-dormindo');setTimeout(()=>wrap.classList.remove('pet-dormindo'),2500)}
+    criarTextoFlutuanteZzz();
+  }
+  tocarAudioPet(PETS[estado.petAtual].som);
+  navigator.vibrate?.(30);
+  animarPetToque(null);
+  salvar();
+  atualizarTela();
+}
+function aplicarDecayPet(){
+  const agora=Date.now();
+  const ultimo=Number(estado.ultimoDecay)||agora;
+  const horas=Math.min(12,(agora-ultimo)/3600000);
+  if(horas<0.25)return;
+  estado.ultimoDecay=agora;
+  const p=obterDadosPetAtual();
+  if(!p)return;
+  // Decaimento suave: ~3 felicidade e ~1.5 saúde por hora (capado)
+  const perdaFel=Math.floor(horas*3);
+  const perdaSaude=Math.floor(horas*1.5);
+  if(perdaFel>0)p.felicidade=Math.max(5,p.felicidade-perdaFel);
+  if(perdaSaude>0)p.saude=Math.max(10,p.saude-perdaSaude);
+  salvar();
+  atualizarTela();
 }
 function animarPetToque(e){
   const wrap=document.getElementById('pet-principal');
@@ -2092,23 +2333,265 @@ function animarAcessorioTema(){
 function abrirSurpresaDia(){
   const hoje=hojeLocal();
   if(estado.surpresaResgatadaData===hoje)return;
-  const moedas=1+Math.floor(Math.random()*3);
+  const moedas=1+Math.floor(Math.random()*4);
+  const xpBonus=Math.random()<.4?3:0;
   estado.surpresaResgatadaData=hoje;
   estado.moedas+=moedas;
   estado.dinheiroAcumulado=(estado.dinheiroAcumulado||0)+moedas*(Number(estado.taxaCambio)||.01);
   registrarNoRelatorioDiario(0,moedas);
+  if(xpBonus)ganharXP(xpBonus);
+  const p=obterDadosPetAtual();
+  if(p)p.felicidade=Math.min(100,p.felicidade+8);
   salvar();
   atualizarTela();
   dispararConfetes();
   somConquista();
-  mostrarAviso('🎁','Surpresa do dia!',`Você ganhou +${moedas} moeda(s) hoje! Volte amanhã para mais.`);
+  const extra=xpBonus?` e +${xpBonus} XP`:'' ;
+  mostrarAviso('🎁','Surpresa do dia!',`Você ganhou +${moedas} moeda(s)${extra}! O pet ficou mais feliz. Volte amanhã!`);
 }
 function atualizarBotaoSurpresaDia(){
   const btn=document.getElementById('btn-surpresa-dia');
   if(!btn)return;
   btn.classList.toggle('hidden',estado.surpresaResgatadaData===hojeLocal());
 }
-function darRemedio(){obterDadosPetAtual().saude=100;salvar();atualizarTela();mostrarToast('💚 Saúde restaurada!')}
+// ===== Eventos sazonais =====
+const EVENTOS_SAZONAIS=[
+  {id:'carnaval',nome:'Carnaval',emoji:'🎊',mesInicio:2,diaInicio:10,mesFim:3,diaFim:5,fundoId:'festa',desc:'É tempo de festa! Complete missões e ganhe bônus coloridos.',bonusMoedas:3,bonusXp:5},
+  {id:'pascoa',nome:'Páscoa',emoji:'🐰',mesInicio:3,diaInicio:20,mesFim:4,diaFim:25,fundoId:'fazenda',desc:'Caça aos ovos virtual! Cuide do pet e ganhe recompensas especiais.',bonusMoedas:4,bonusXp:6},
+  {id:'ferias_julho',nome:'Férias de Julho',emoji:'☀️',mesInicio:7,diaInicio:1,mesFim:7,diaFim:31,fundoId:'praia',desc:'Férias! Mantenha a rotina leve e resgate o bônus diário de verão.',bonusMoedas:3,bonusXp:4},
+  {id:'halloween',nome:'Halloween',emoji:'🎃',mesInicio:10,diaInicio:20,mesFim:11,diaFim:2,fundoId:'halloween',desc:'Noite de travessuras! Missões e pet com clima assombrosamente divertido.',bonusMoedas:5,bonusXp:8},
+  {id:'natal',nome:'Natal',emoji:'🎄',mesInicio:12,diaInicio:1,mesFim:12,diaFim:26,fundoId:'neve',desc:'Clima de Natal! Complete a ofensiva e ganhe neve de recompensas.',bonusMoedas:5,bonusXp:10},
+  {id:'ano_novo',nome:'Ano Novo',emoji:'🎆',mesInicio:12,diaInicio:27,mesFim:1,diaFim:5,fundoId:'festa',desc:'Virada do ano! Comece a sequência com energia e bônus extra.',bonusMoedas:4,bonusXp:8}
+];
+function dataNoIntervaloEvento(ev,d=new Date()){
+  const m=d.getMonth()+1,day=d.getDate();
+  const atual=m*100+day;
+  const ini=ev.mesInicio*100+ev.diaInicio;
+  const fim=ev.mesFim*100+ev.diaFim;
+  if(ini<=fim)return atual>=ini&&atual<=fim;
+  // Cruza virada de ano (ex.: 27/12–05/01)
+  return atual>=ini||atual<=fim;
+}
+function obterEventoAtivo(){
+  return EVENTOS_SAZONAIS.find(ev=>dataNoIntervaloEvento(ev))||null;
+}
+function atualizarBannerEvento(){
+  const el=document.getElementById('banner-evento');
+  if(!el)return;
+  const ev=obterEventoAtivo();
+  if(!ev){el.classList.remove('mostrar');el.textContent='';return}
+  el.textContent=`${ev.emoji} Evento: ${ev.nome} — toque para ver bônus`;
+  el.classList.add('mostrar');
+  // Ajusta top do banner offline se ambos visíveis
+  const off=document.getElementById('banner-offline');
+  if(off&&off.classList.contains('mostrar'))el.style.top='28px';
+  else el.style.top='0';
+}
+function abrirModalEventoSazonal(){
+  const ev=obterEventoAtivo();
+  if(!ev)return mostrarToast('Nenhum evento ativo no momento.');
+  document.getElementById('evento-emoji').textContent=ev.emoji;
+  document.getElementById('evento-titulo').textContent=ev.nome;
+  document.getElementById('evento-desc').textContent=ev.desc;
+  document.getElementById('evento-recompensas').innerHTML=
+    `• Bônus diário: <b>+${ev.bonusMoedas} 🪙</b> e <b>+${ev.bonusXp} XP</b><br>`+
+    `• Fundo sugerido: <b>${ev.fundoId}</b> (se você já tiver na coleção)<br>`+
+    `• Surpresa do dia continua valendo normalmente`;
+  const ja=estado.eventoBonusData===hojeLocal()&&estado.eventoBonusId===ev.id;
+  const btn=document.getElementById('btn-resgatar-evento');
+  if(btn){
+    btn.disabled=!!ja;
+    btn.textContent=ja?'✅ Bônus de hoje já resgatado':'🎁 Resgatar bônus do dia';
+  }
+  abrirModal('modal-evento');
+}
+function resgatarBonusEvento(){
+  const ev=obterEventoAtivo();
+  if(!ev)return;
+  if(estado.eventoBonusData===hojeLocal()&&estado.eventoBonusId===ev.id){
+    return mostrarToast('Você já resgatou o bônus de hoje.');
+  }
+  estado.eventoBonusData=hojeLocal();
+  estado.eventoBonusId=ev.id;
+  estado.moedas+=ev.bonusMoedas;
+  estado.dinheiroAcumulado=(estado.dinheiroAcumulado||0)+ev.bonusMoedas*(Number(estado.taxaCambio)||.01);
+  registrarNoRelatorioDiario(0,ev.bonusMoedas);
+  ganharXP(ev.bonusXp);
+  // Oferece aplicar fundo do evento se já comprado
+  if((estado.fundosComprados||[]).includes(ev.fundoId)){
+    estado.fundoAtual=ev.fundoId;
+    aplicarFundoTela(ev.fundoId);
+  }
+  salvar();
+  atualizarTela();
+  dispararConfetes();
+  somConquista();
+  fecharModal('modal-evento');
+  mostrarAviso(ev.emoji,`${ev.nome}!`,`+${ev.bonusMoedas} 🪙 e +${ev.bonusXp} XP de bônus do evento.`);
+  registrarLogAtividade(`Bônus evento ${ev.nome}`);
+}
+// ===== Meta familiar =====
+function obterProgressoMetaFamiliar(){
+  const meta=Math.max(3,Math.min(30,Number(estado.metaFamiliarDias)||5));
+  // Conta quantos dias recentes TODOS os filhos com dados tiveram ofensiva
+  // Simplificação: usa o streak mínimo entre filhos com registro, ou o streak do ativo se só 1
+  const ids=Object.keys(estado.criancas||{});
+  let minStreak=Number(estado.streak)||0;
+  if(ids.length>1&&estado.criancasDados){
+    ids.forEach(id=>{
+      if(id===estado.criancaAtivaId)return;
+      const s=Number(estado.criancasDados[id]?.streak)||0;
+      minStreak=Math.min(minStreak,s);
+    });
+  }
+  const progresso=Math.min(meta,minStreak);
+  return {meta,progresso,minStreak,pct:Math.round((progresso/meta)*100)};
+}
+function renderizarMetaFamiliar(){
+  const {meta,progresso,pct}=obterProgressoMetaFamiliar();
+  const st=document.getElementById('txt-meta-familiar-status');
+  const barra=document.getElementById('barra-meta-familiar');
+  const dica=document.getElementById('txt-meta-familiar-dica');
+  const input=document.getElementById('input-meta-familiar-dias');
+  if(input)input.value=meta;
+  if(st)st.textContent=`${progresso}/${meta} dias`;
+  if(barra)barra.style.width=`${pct}%`;
+  const jaResgatou=(estado.metaFamiliarUltimoResgate||0)>=meta&&estado.metaFamiliarResgatadaEm;
+  if(dica){
+    if(progresso>=meta)dica.textContent=jaResgatou&&estado.metaFamiliarResgatadaStreak===progresso?'Baú já resgatado para esta meta.':'🎉 Meta atingida! Resgate o baú familiar.';
+    else dica.textContent=`Faltam ${meta-progresso} dia(s) de ofensiva conjunta.`;
+  }
+}
+function atualizarMetaFamiliarDias(v){
+  estado.metaFamiliarDias=Math.max(3,Math.min(30,parseInt(v,10)||5));
+  salvar();
+  renderizarMetaFamiliar();
+  mostrarToast(`Meta familiar: ${estado.metaFamiliarDias} dias`);
+}
+function resgatarBauFamiliar(){
+  const {meta,progresso}=obterProgressoMetaFamiliar();
+  if(progresso<meta)return mostrarToast(`Ainda faltam ${meta-progresso} dia(s) de ofensiva conjunta.`);
+  if(estado.metaFamiliarResgatadaStreak===progresso&&estado.metaFamiliarResgatadaEm){
+    return mostrarToast('Baú desta meta já foi resgatado.');
+  }
+  const moedas=20+Math.floor(Math.random()*15);
+  const xp=40;
+  estado.moedas+=moedas;
+  estado.dinheiroAcumulado=(estado.dinheiroAcumulado||0)+moedas*(Number(estado.taxaCambio)||.01);
+  estado.metaFamiliarResgatadaEm=Date.now();
+  estado.metaFamiliarResgatadaStreak=progresso;
+  estado.metaFamiliarUltimoResgate=meta;
+  ganharXP(xp);
+  salvar();
+  atualizarTela();
+  renderizarMetaFamiliar();
+  dispararConfetes(120);
+  somBauLendario();
+  registrarLogAtividade(`Baú familiar resgatado (+${moedas}🪙)`);
+  mostrarAviso('🎁','Baú familiar!',`A família completou a meta de ${meta} dias! +${moedas} 🪙 e +${xp} XP.`);
+}
+// ===== FCM / Push =====
+// Cole aqui a chave pública VAPID gerada em:
+// Firebase Console → Project settings → Cloud Messaging → Web Push certificates
+// (pares de chaves → gerar par de chaves)
+const FIREBASE_VAPID_KEY='BKI1F3y46HUD2RLIsdq5sWTPox-6FeUE3y7EnmhC6S5G8gLGqrQYkIoX_J5mEu9bDl3Aaze8diaThF38gqdcCVM';
+let fcmMessaging=null;
+let fcmTokenAtual=null;
+function caminhoTokensFcm(){
+  return `rotinapet/familias/${codigoFamilia}/fcmTokens`;
+}
+async function salvarTokenFcmNaFamilia(token){
+  if(!token||!dbFirebase)return;
+  const uid=localStorage.getItem('ROTINAPET_UID')||'anon';
+  const perfil=perfilAtivo||'desconhecido';
+  try{
+    await dbFirebase.ref(caminhoTokensFcm()+'/'+uid).set({
+      token,
+      perfil,
+      atualizadoEm:Date.now(),
+      userAgent:(navigator.userAgent||'').slice(0,120)
+    });
+    fcmTokenAtual=token;
+    console.info('FCM token salvo na família');
+  }catch(e){
+    console.warn('Não foi possível salvar token FCM:',e);
+  }
+}
+async function registrarTokenFcm(){
+  if(!window.firebase||!firebase.messaging)return null;
+  if(!('Notification' in window)||Notification.permission!=='granted')return null;
+  if(!FIREBASE_VAPID_KEY||FIREBASE_VAPID_KEY==='COLE_SUA_CHAVE_VAPID_AQUI'){
+    console.warn('Defina FIREBASE_VAPID_KEY no HTML (Console Firebase → Cloud Messaging → Web Push certificates).');
+    return null;
+  }
+  try{
+    // Garante SW de messaging na raiz
+    const reg=await navigator.serviceWorker.register('firebase-messaging-sw.js');
+    fcmMessaging=firebase.messaging();
+    const token=await fcmMessaging.getToken({
+      vapidKey:FIREBASE_VAPID_KEY,
+      serviceWorkerRegistration:reg
+    });
+    if(token)await salvarTokenFcmNaFamilia(token);
+    fcmMessaging.onMessage(payload=>{
+      const n=payload.notification||{};
+      const d=payload.data||{};
+      const titulo=n.title||d.title||'🐾 RotinaPet';
+      const corpo=n.body||d.body||'Nova atividade na família';
+      mostrarToast('🔔 '+titulo+': '+corpo);
+      if(Notification.permission==='granted'){
+        try{new Notification(titulo,{body:corpo,tag:d.tag||'rotinapet-fg'})}catch(e){}
+      }
+    });
+    return token;
+  }catch(e){
+    console.warn('FCM getToken falhou:',e);
+    return null;
+  }
+}
+async function inicializarPushBase(){
+  if(!('Notification' in window)||!('serviceWorker' in navigator))return;
+  try{
+    if(Notification.permission==='granted'&&estado.notificacoesAtivas){
+      await registrarTokenFcm();
+    }
+  }catch(e){}
+}
+async function ativarPushCompleto(){
+  if(!('Notification' in window)){
+    mostrarToast('Este aparelho não suporta notificações.');
+    return false;
+  }
+  let perm=Notification.permission;
+  if(perm==='default')perm=await Notification.requestPermission();
+  if(perm!=='granted'){
+    mostrarToast('Permissão de notificação negada no sistema.');
+    return false;
+  }
+  estado.notificacoesAtivas=true;
+  salvar();
+  atualizarBotaoLembrete();
+  const token=await registrarTokenFcm();
+  if(token){
+    mostrarAviso('🔔','Push ativado','Este aparelho receberá avisos da família mesmo com o app em segundo plano (após configurar a VAPID key).');
+    return true;
+  }
+  mostrarAviso('🔔','Notificações locais ativas',
+    FIREBASE_VAPID_KEY==='COLE_SUA_CHAVE_VAPID_AQUI'
+      ?'Cole a chave VAPID no código (FIREBASE_VAPID_KEY) e publique firebase-messaging-sw.js na mesma pasta do app.'
+      :'Token FCM não foi gerado. Verifique o Service Worker e o domínio autorizado no Firebase.');
+  return false;
+}
+function darRemedio(){
+  const p=obterDadosPetAtual();
+  p.saude=100;
+  p.felicidade=Math.min(100,p.felicidade+5);
+  salvar();
+  atualizarTela();
+  mostrarBalaoFala(escolherFalaContextual('alimentar'));
+  mostrarToast('💚 Saúde restaurada!');
+  registrarLogAtividade('Remédio dado ao pet');
+}
 function criarTextoFlutuante(txt,e){const area=document.getElementById('pet-section-area'),s=document.createElement('div');s.className='floating-text';s.textContent=txt;const r=area.getBoundingClientRect();s.style.left=(e?.clientX?r.left<e.clientX?e.clientX-r.left:80:90)+'px';s.style.top='35%';area.appendChild(s);setTimeout(()=>s.remove(),900)}
 const CORES_CONFETE_PET={gato:['#a78bfa','#1e293b','#f8fafc'],cachorra:['#f4a261','#e76f51','#fff7ed'],cabra:['#f5e6d3','#a0522d','#fefce8'],frango:['#fff9c4','#ff6b6b','#ffcc00']};
 function ganharXP(qtd,e){
@@ -2166,7 +2649,30 @@ function processarFotoCapturada(e){
   img.src=URL.createObjectURL(f);
   e.target.value='';
 }
-function enviarParaAprovacao(id){const t=estado.tarefas.find(t=>t.id===id);if(t){t.status='aguardando_aprovacao';salvar();renderizarTarefas();mostrarToast('⏳ Enviado aos pais!')}}
+function enfileirarPushFamilia(title,body,opts={}){
+  if(!dbFirebase||!sincronizacaoNuvemAtiva)return;
+  try{
+    dbFirebase.ref(`rotinapet/familias/${codigoFamilia}/pushQueue`).push({
+      title:title||'🐾 RotinaPet',
+      body:body||'',
+      tag:opts.tag||'rotinapet',
+      onlyPerfil:opts.onlyPerfil||null,
+      url:opts.url||(typeof location!=='undefined'?location.pathname+location.search:'/'),
+      createdAt:Date.now()
+    });
+  }catch(e){console.warn('Fila push:',e)}
+}
+function enviarParaAprovacao(id){
+  const t=estado.tarefas.find(t=>t.id===id);
+  if(!t)return;
+  t.status='aguardando_aprovacao';
+  salvar();
+  renderizarTarefas();
+  mostrarToast('⏳ Enviado aos pais!');
+  registrarLogAtividade(`Pedido de aprovação: ${t.texto}`);
+  enviarNotificacaoLocal('📋 Tarefa para aprovar',`${t.texto} — abra o painel dos pais.`,'rotinapet-aprovacao');
+  enfileirarPushFamilia('📋 Tarefa para aprovar',t.texto,{tag:'rotinapet-aprovacao',onlyPerfil:'pais'});
+}
 const DIAS_LABEL=['Dom','Seg','Ter','Qua','Qui','Sex','Sáb'];
 function diaSemanaHoje(){return new Date().getDay()}
 function tarefaEhHoje(t){return !t.dias||t.dias.length===0||t.dias.includes(diaSemanaHoje())}
@@ -2321,10 +2827,13 @@ function entrarComoCrianca(){
     setTimeout(()=>abrirModal('modal-onboarding'),450);
   }
 }
-function fecharOnboarding(){
+function fecharOnboarding(iniciarTour){
   estado.onboardingVistoCrianca=true;
   salvar();
   fecharModal('modal-onboarding');
+  if(iniciarTour){
+    setTimeout(()=>iniciarTourGuiado(),400);
+  }
 }
 function alternarPerfil(){
   perfilAtivo=null;
@@ -2455,9 +2964,20 @@ function baixarBackupEstado(){
   }
 }
 function atualizarBannerOffline(){
-  const b=document.getElementById('banner-offline');
-  if(!b)return;
-  b.classList.toggle('mostrar',!navigator.onLine);
+  if(!navigator.onLine){
+    statusSyncAtual='offline';
+    atualizarStatusSyncUI();
+    return;
+  }
+  // Voltou online: tenta descarregar a fila
+  if(filaSyncPendente||localStorage.getItem('ROTINAPET_FILA_SYNC_'+codigoFamilia)==='1'){
+    statusSyncAtual='syncing';
+    atualizarStatusSyncUI();
+    if(sincronizacaoNuvemAtiva&&dbFirebase&&!cargaNuvemPendente)salvar();
+  }else{
+    statusSyncAtual=sincronizacaoNuvemAtiva?'online':'local';
+    atualizarStatusSyncUI();
+  }
 }
 window.addEventListener('online',atualizarBannerOffline);
 window.addEventListener('offline',atualizarBannerOffline);
@@ -2553,43 +3073,9 @@ function abrirPainelPais(){
   atualizarEstadoBloqueioPin();
   abrirModal('modal-pin');
 }
-function digitar(num) {
-  if (pinDigitado.length < 4) {
-    pinDigitado += String(num);
-    atualizarDisplayPin();
-    
-    if (pinDigitado.length === 4) {
-      setTimeout(() => {
-        if (typeof validarPin === 'function') {
-          validarPin();
-        }
-      }, 150);
-    }
-  }
-}
-function apagar() {
-  if (pinDigitado.length > 0) {
-    pinDigitado = pinDigitado.slice(0, -1);
-    atualizarDisplayPin();
-  }
-}
-function limparPin() {
-  pinDigitado = '';
-  atualizarDisplayPin();
-}
-function atualizarDisplayPin() {
-  for (let i = 1; i <= 4; i++) {
-    const el = document.getElementById('d' + i);
-    if (el) {
-      if (i <= pinDigitado.length) {
-        el.textContent = '•';
-        el.classList.add('preenchido');
-      } else {
-        el.textContent = '';
-        el.classList.remove('preenchido');
-      }
-    }
-  }
+function limparPin(){
+  pinDigitado='';
+  atualizarDots();
 }
 function montarTecladoPin(){
   const c=document.getElementById('pin-pad');
@@ -2695,8 +3181,6 @@ async function validarPin(){
     if(aindaPinPadrao)estado.pinPersonalizado=false;
     salvar();
     fecharModal('modal-pin');
-    const telaPinLegada=document.getElementById('telaPinResponsavel');
-    if(telaPinLegada)telaPinLegada.style.display='none';
     limparPin();
     // Obrigatório trocar PIN padrão / não personalizado antes do painel.
     if(!estado.pinPersonalizado||aindaPinPadrao){
@@ -2728,10 +3212,6 @@ async function validarPin(){
       navigator.vibrate?.(120);
     }
   }
-}
-function limparPin(){
-  pinDigitado='';
-  atualizarDots();
 }
 function renderizarListaCriancasPais(){
   const c=document.getElementById('lista-criancas-pais');
@@ -2851,6 +3331,55 @@ function renderizarPainelPais(){
     </div>
   `;});
   atualizarEstatisticas();
+  renderizarVolumeSomPainel();
+  renderizarLogAtividades();
+  renderizarMetaFamiliar();
+}
+function atualizarVolumeSom(val){
+  const n=Math.max(0,Math.min(100,parseInt(val,10)||0));
+  estado.volumeSom=n/100;
+  const txt=document.getElementById('txt-volume-som');
+  if(txt)txt.textContent=n+'%';
+  salvar();
+}
+function renderizarVolumeSomPainel(){
+  const input=document.getElementById('input-volume-som');
+  const txt=document.getElementById('txt-volume-som');
+  const pct=Math.round(obterVolumeSom()*100);
+  if(input)input.value=pct;
+  if(txt)txt.textContent=pct+'%';
+}
+function limparTodasFotosTarefas(){
+  const qtd=(estado.tarefas||[]).filter(t=>t.foto).length;
+  if(!qtd)return mostrarToast('Nenhuma foto para apagar.');
+  mostrarConfirmacao(`Apagar ${qtd} foto(s) de tarefas?`,()=>{
+    estado.tarefas.forEach(t=>{t.foto=null});
+    registrarLogAtividade(`Fotos de tarefas apagadas (${qtd})`);
+    salvar();
+    renderizarPainelPais();
+    atualizarTela();
+    mostrarToast('🗑️ Fotos removidas.');
+  });
+}
+function renderizarLogAtividades(){
+  const c=document.getElementById('lista-log-atividades');
+  if(!c)return;
+  const logs=Array.isArray(estado.logAtividades)?estado.logAtividades:[];
+  if(!logs.length){
+    c.innerHTML='<span style="font-size:9px;color:#94a3b8">Nenhuma atividade registrada ainda.</span>';
+    return;
+  }
+  c.innerHTML=logs.slice(0,20).map(l=>{
+    const d=new Date(l.t||Date.now());
+    const hora=`${String(d.getDate()).padStart(2,'0')}/${String(d.getMonth()+1).padStart(2,'0')} ${String(d.getHours()).padStart(2,'0')}:${String(d.getMinutes()).padStart(2,'0')}`;
+    return `<div style="font-size:9px;padding:5px 0;border-bottom:1px solid #f1f5f9"><b style="color:#64748b">${hora}</b> — ${esc(l.txt)}</div>`;
+  }).join('');
+}
+function limparLogAtividades(){
+  estado.logAtividades=[];
+  salvar();
+  renderizarLogAtividades();
+  mostrarToast('Log limpo.');
 }
 function abrirVisualizadorFoto(src){
   document.getElementById('foto-viewer-img').src=src;
@@ -2953,7 +3482,9 @@ function aprovarTarefaPais(id){
   ganharXP(Number(t.xp)||20);
   dispararConfetes();
   marcarConquistas();
+  registrarLogAtividade(`Tarefa aprovada: ${t.texto} (+${Number(t.recompensa)||0}🪙)`);
   mostrarAviso('🎉','Tarefa aprovada!',liberouOfensiva?'Obrigatórias concluídas! Ofensiva liberada 🔥':'Moedas e XP adicionados.');
+  mostrarBalaoFala(escolherFalaContextual('aposTarefa'));
   renderizarPainelPais();
   atualizarTela();
 }
@@ -2988,40 +3519,79 @@ function atualizarBannerPausaPainel(){
 function abrirRelatorioSemanal(){
   const hoje=new Date();
   const dias=[];
+  const labelsCurto=['Dom','Seg','Ter','Qua','Qui','Sex','Sáb'];
   for(let i=6;i>=0;i--){
     const d=new Date(hoje);
     d.setDate(d.getDate()-i);
-    dias.push(`${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`);
+    dias.push({
+      data:`${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`,
+      label:labelsCurto[d.getDay()],
+      diaNum:String(d.getDate()).padStart(2,'0'),
+      mes:String(d.getMonth()+1).padStart(2,'0')
+    });
   }
-  let totalTarefas=0,totalMoedas=0;
-  const c=document.getElementById('rel-lista-dias');
-  c.innerHTML='';
-  dias.forEach(dataStr=>{
-    const r=estado.registroDiario?.[dataStr]||{tarefas:0,moedas:0};
+  let totalTarefas=0,totalMoedas=0,diasAtivos=0;
+  const valores=dias.map(d=>{
+    const r=estado.registroDiario?.[d.data]||{tarefas:0,moedas:0};
     totalTarefas+=r.tarefas;
     totalMoedas+=r.moedas;
-    const [ano,mes,dia]=dataStr.split('-');
-    c.innerHTML+=`<div class="relatorio-dia-row"><span>${dia}/${mes}</span><span>${r.tarefas} tarefa(s)</span><span>${r.moedas} 🪙</span></div>`;
+    if(r.tarefas>0)diasAtivos++;
+    return {...d,...r};
   });
+  const maxT=Math.max(1,...valores.map(v=>v.tarefas));
+  const barras=document.getElementById('rel-barras-semana');
+  const labels=document.getElementById('rel-labels-semana');
+  if(barras){
+    barras.innerHTML=valores.map(v=>{
+      const h=Math.max(6,Math.round((v.tarefas/maxT)*64));
+      const cor=v.tarefas===0?'#e2e8f0':v.tarefas>=3?'#22c55e':'#a78bfa';
+      return `<div title="${v.tarefas} tarefas" style="flex:1;height:${h}px;background:${cor};border-radius:6px 6px 2px 2px;min-width:0"></div>`;
+    }).join('');
+  }
+  if(labels){
+    labels.innerHTML=valores.map(v=>`<span style="flex:1;text-align:center">${v.label}</span>`).join('');
+  }
+  const c=document.getElementById('rel-lista-dias');
+  if(c){
+    c.innerHTML='';
+    valores.forEach(v=>{
+      const feito=!!estado.historicoConclusoes?.[v.data];
+      c.innerHTML+=`<div class="relatorio-dia-row"><span>${v.diaNum}/${v.mes}</span><span>${v.tarefas} tarefa(s)${feito?' · 🔥':''}</span><span>${v.moedas} 🪙</span></div>`;
+    });
+  }
   document.getElementById('rel-total-tarefas').textContent=totalTarefas;
   document.getElementById('rel-total-moedas').textContent=totalMoedas;
+  const elSt=document.getElementById('rel-streak-atual');
+  if(elSt)elSt.textContent=estado.streak||0;
+  const elMed=document.getElementById('rel-media-dia');
+  if(elMed)elMed.textContent=(totalTarefas/7).toFixed(1).replace('.',',');
+  const insight=document.getElementById('rel-insight');
+  if(insight){
+    if(totalTarefas===0)insight.textContent='Semana ainda sem registros — complete missões para ver o gráfico crescer!';
+    else if(diasAtivos>=6)insight.textContent='🔥 Semana excelente! Quase todos os dias com atividade.';
+    else if(diasAtivos>=3)insight.textContent='👍 Bom ritmo. Tente manter a ofensiva nos próximos dias.';
+    else insight.textContent='Dá para melhorar: foque nas obrigatórias para subir a ofensiva.';
+  }
   abrirModal('modal-relatorio');
+}
+function enviarNotificacaoLocal(titulo,corpo,tag){
+  if(!estado.notificacoesAtivas)return false;
+  if(!('Notification' in window)||Notification.permission!=='granted')return false;
+  try{
+    const n=new Notification(titulo||'🐾 RotinaPet',{
+      body:corpo,
+      tag:tag||'rotinapet',
+      silent:false
+    });
+    setTimeout(()=>{try{n.close()}catch(e){}},8000);
+    return true;
+  }catch(e){return false}
 }
 function alternarLembretes(){
   if(!estado.notificacoesAtivas){
-    if('Notification' in window){
-      Notification.requestPermission().then(perm=>{
-        estado.notificacoesAtivas=true;
-        salvar();
-        atualizarBotaoLembrete();
-        mostrarToast(perm==='granted'?'🔔 Lembretes ativados!':'🔔 Lembretes ativados no app.');
-      });
-    }else{
-      estado.notificacoesAtivas=true;
-      salvar();
-      atualizarBotaoLembrete();
-      mostrarToast('🔔 Lembretes ativados!');
-    }
+    ativarPushCompleto().then(ok=>{
+      if(ok)enviarNotificacaoLocal('🐾 RotinaPet','Lembretes e push ligados.','rotinapet-on');
+    });
   }else{
     estado.notificacoesAtivas=false;
     salvar();
@@ -3045,10 +3615,22 @@ function verificarLembreteNoturno(){
   estado.lembreteEnviadoData=hoje;
   salvar();
   const texto='Ainda faltam tarefas obrigatórias hoje! Bora terminar? 🌙';
-  if('Notification' in window&&Notification.permission==='granted'){
-    try{new Notification('🐾 RotinaPet',{body:texto})}catch(e){}
-  }
+  enviarNotificacaoLocal('🐾 Missões pendentes',texto,'rotinapet-noite');
   mostrarToast('🔔 '+texto);
+}
+function verificarLembreteTarde(){
+  if(!estado.notificacoesAtivas)return;
+  const agora=new Date();
+  if(agora.getHours()<16||agora.getHours()>=20)return;
+  const hoje=hojeLocal();
+  if(estado.lembreteTardeData===hoje)return;
+  if(emPausaHoje()||todasObrigatoriasConcluidas())return;
+  const pend=estado.tarefas.filter(t=>t.tipo==='obrigatoria'&&t.status!=='aprovada'&&(!t.dias||!t.dias.length||t.dias.includes(new Date().getDay())));
+  if(!pend.length)return;
+  estado.lembreteTardeData=hoje;
+  salvar();
+  const texto=`Faltam ${pend.length} missão(ões) obrigatória(s). Ainda dá tempo! ⚡`;
+  enviarNotificacaoLocal('🐾 Lembrete da tarde',texto,'rotinapet-tarde');
 }
 function sacarDinheiro(){
   const v=Number(estado.dinheiroAcumulado)||0;
@@ -3258,11 +3840,181 @@ document.addEventListener('click',e=>{
 });
 function renderizarEvolucoes(){
   const d=PETS[estado.petAtual],p=obterDadosPetAtual(),c=document.getElementById('lista-evolucoes');
+  if(!c)return;
   c.innerHTML='';
   d.evolucoes.forEach(ev=>{
     const ok=p.nivel>=ev.nivel;
     c.innerHTML+=`<div class="achievement-row"><span style="font-size:18px">${ok?'⭐':'🔒'}</span><div style="flex:1"><b style="font-size:10px;color:${ok?'#6b21a8':'#475569'}">${esc(ev.nome)}</b><div style="font-size:8px;color:#64748b">${esc(ev.desc)} • Nível ${ev.nivel}</div></div><span style="font-size:8px;font-weight:900">${ok?'LIBERADO':'BLOQUEADO'}</span></div>`;
   });
+}
+function abrirColecao(){
+  renderizarColecao();
+  alternarAbaColecao('pets');
+  abrirModal('modal-colecao');
+}
+function alternarAbaColecao(aba){
+  ['pets','evos','itens','fundos'].forEach(id=>{
+    document.getElementById('painel-col-'+id)?.classList.toggle('hidden',id!==aba);
+    document.getElementById('tab-col-'+id)?.classList.toggle('ativa',id===aba);
+  });
+}
+function renderizarColecao(){
+  const nivel=nivelJogador();
+  const petsLiberados=Object.keys(PETS).filter(k=>nivel>=PETS[k].desbloqueioNivel).length;
+  const totalPets=Object.keys(PETS).length;
+  const itensPossuidos=(estado.acessorios?.comprados||[]).length;
+  // Conta também acessórios de tema
+  const temasAcessorios=TEMAS.filter(t=>(estado.acessorios?.comprados||[]).includes(t.acessorio.id)).length;
+  const totalItens=ACESSORIOS.length+TEMAS.length;
+  const fundosPossuidos=(estado.fundosComprados||[]).length;
+  const totalFundos=BANCO_FUNDOS.length;
+  const conquistasFeitas=CONQUISTAS.filter(x=>estado.conquistas?.[x[0]]).length;
+  const resumo=document.getElementById('colecao-resumo');
+  if(resumo){
+    resumo.innerHTML=`
+      <div class="stat"><b>${petsLiberados}/${totalPets}</b><span>pets</span></div>
+      <div class="stat"><b>${fundosPossuidos}/${totalFundos}</b><span>fundos</span></div>
+      <div class="stat"><b>${conquistasFeitas}/${CONQUISTAS.length}</b><span>conquistas</span></div>`;
+  }
+  // Pets
+  const pPets=document.getElementById('painel-col-pets');
+  if(pPets){
+    pPets.innerHTML='<div class="colecao-grid"></div>';
+    const grid=pPets.querySelector('.colecao-grid');
+    Object.values(PETS).forEach(pet=>{
+      const dados=estado.pets[pet.id]||{nivel:1,xp:0};
+      const liberado=nivel>=pet.desbloqueioNivel;
+      const ativo=estado.petAtual===pet.id;
+      const fase=calcularFase(dados.nivel||1);
+      const evoNome=pet.evolucoes[fase-1]?.nome||'';
+      const card=document.createElement('div');
+      card.className='colecao-card'+(liberado?'':' locked')+(ativo?' ativo-agora':'');
+      card.innerHTML=`
+        <span class="colecao-badge">${liberado?(ativo?'✓':'⭐'):'🔒'}</span>
+        <div class="colecao-emoji">${pet.emoji}</div>
+        <div class="colecao-nome">${esc(pet.nome)}</div>
+        <div class="colecao-sub">${liberado?`Nv. ${dados.nivel} · ${esc(evoNome)}`:`Libera no nível ${pet.desbloqueioNivel}`}</div>
+        ${liberado?`<div class="colecao-progress"><div style="width:${Math.min(100,dados.xp)}%"></div></div>`:''}
+      `;
+      if(liberado){
+        card.style.cursor='pointer';
+        card.onclick=()=>{escolherPet(pet.id);fecharModal('modal-colecao');mostrarToast(`${pet.emoji} ${pet.nome} selecionado!`)};
+      }
+      grid.appendChild(card);
+    });
+  }
+  // Evoluções de todos os pets
+  const pEvos=document.getElementById('painel-col-evos');
+  if(pEvos){
+    pEvos.innerHTML='';
+    Object.values(PETS).forEach(pet=>{
+      const dados=estado.pets[pet.id]||{nivel:1};
+      const liberadoPet=nivel>=pet.desbloqueioNivel;
+      const bloco=document.createElement('div');
+      bloco.className='section-card';
+      bloco.style.marginBottom='8px';
+      let html=`<b style="font-size:10px">${pet.emoji} ${esc(pet.nome)}</b>`;
+      if(!liberadoPet){
+        html+=`<div style="font-size:8px;color:#94a3b8;margin-top:4px">🔒 Desbloqueie no nível ${pet.desbloqueioNivel}</div>`;
+      }else{
+        html+='<div class="stack" style="margin-top:6px">';
+        pet.evolucoes.forEach(ev=>{
+          const ok=(dados.nivel||1)>=ev.nivel;
+          html+=`<div class="achievement-row" style="opacity:${ok?1:.5}"><span>${ok?'⭐':'🔒'}</span><div style="flex:1"><b style="font-size:9px">${esc(ev.nome)}</b><div style="font-size:7px;color:#64748b">${esc(ev.desc)} · Nv. ${ev.nivel}</div></div></div>`;
+        });
+        html+='</div>';
+      }
+      bloco.innerHTML=html;
+      pEvos.appendChild(bloco);
+    });
+  }
+  // Acessórios + temas
+  const pItens=document.getElementById('painel-col-itens');
+  if(pItens){
+    pItens.innerHTML=`<div style="font-size:9px;color:#64748b;margin-bottom:8px">Itens e combos de tema que você já comprou.</div><div class="colecao-grid"></div>`;
+    const grid=pItens.querySelector('.colecao-grid');
+    const comprados=estado.acessorios?.comprados||[];
+    ACESSORIOS.forEach(a=>{
+      const tem=comprados.includes(a.id);
+      const ativo=estado.acessorios?.ativo===a.id;
+      const card=document.createElement('div');
+      card.className='colecao-card'+(tem?'':' locked')+(ativo?' ativo-agora':'');
+      card.innerHTML=`
+        <span class="colecao-badge">${tem?(ativo?'✓':'🎀'):'🔒'}</span>
+        <div class="colecao-emoji">${a.emoji}</div>
+        <div class="colecao-nome">${esc(a.nome)}</div>
+        <div class="colecao-sub">${tem?(ativo?'Equipado':'Toque para equipar'):a.preco+' 🪙'}</div>
+      `;
+      if(tem){
+        card.style.cursor='pointer';
+        card.onclick=()=>{
+          estado.acessorios.ativo=estado.acessorios.ativo===a.id?null:a.id;
+          salvar();
+          atualizarTela();
+          renderizarColecao();
+          mostrarToast(estado.acessorios.ativo?`🎀 ${a.nome}`:'Acessório removido');
+        };
+      }
+      grid.appendChild(card);
+    });
+    TEMAS.forEach(t=>{
+      const tem=possuiTema(t);
+      const ativo=estado.fundoAtual===t.fundoId&&estado.acessorios?.ativo===t.acessorio.id;
+      const card=document.createElement('div');
+      card.className='colecao-card'+(tem?'':' locked')+(ativo?' ativo-agora':'');
+      card.innerHTML=`
+        <span class="colecao-badge">${tem?(ativo?'✓':'🎨'):'🔒'}</span>
+        <div class="colecao-emoji">${t.emoji}</div>
+        <div class="colecao-nome">${esc(t.nome)}</div>
+        <div class="colecao-sub">${tem?(ativo?'Em uso':'Combo tema'):t.preco+' 🪙'}</div>
+      `;
+      if(tem){
+        card.style.cursor='pointer';
+        card.onclick=()=>{
+          estado.fundoAtual=t.fundoId;
+          estado.acessorios.ativo=t.acessorio.id;
+          salvar();
+          aplicarFundoTela(t.fundoId);
+          atualizarTela();
+          renderizarColecao();
+          mostrarToast(`🎨 ${t.nome}`);
+        };
+      }
+      grid.appendChild(card);
+    });
+  }
+  // Fundos
+  const pFundos=document.getElementById('painel-col-fundos');
+  if(pFundos){
+    pFundos.innerHTML='<div class="colecao-grid"></div>';
+    const grid=pFundos.querySelector('.colecao-grid');
+    BANCO_FUNDOS.forEach(f=>{
+      const tem=(estado.fundosComprados||[]).includes(f.id);
+      const ativo=estado.fundoAtual===f.id;
+      const card=document.createElement('div');
+      card.className='colecao-card'+(tem?'':' locked')+(ativo?' ativo-agora':'');
+      card.style.background=tem?f.bg:'#f1f5f9';
+      card.style.color=tem&&(f.id==='noite'||f.id==='halloween'||f.id==='astronauta'||f.id==='pirata'||f.id==='estadio')?'#fff':'#1e293b';
+      card.innerHTML=`
+        <span class="colecao-badge">${tem?(ativo?'✓':'🖼️'):'🔒'}</span>
+        <div class="colecao-emoji">${f.emoji}</div>
+        <div class="colecao-nome">${esc(f.nome)}</div>
+        <div class="colecao-sub">${tem?(ativo?'Em uso':'Toque para usar'):(f.preco?f.preco+' 🪙':'Grátis')}</div>
+      `;
+      if(tem){
+        card.style.cursor='pointer';
+        card.onclick=()=>{
+          estado.fundoAtual=f.id;
+          salvar();
+          aplicarFundoTela(f.id);
+          atualizarTela();
+          renderizarColecao();
+          mostrarToast(`🖼️ ${f.nome}`);
+        };
+      }
+      grid.appendChild(card);
+    });
+  }
 }
 const CONQUISTAS=[
   ['primeira','🥇','Primeiro Passo','Aprove sua primeira tarefa.'],
@@ -3776,6 +4528,9 @@ function resgatarRecompensa(id){
   atualizarTela();
   renderizarLojaRecompensas();
   mostrarToast('🎟️ Pedido enviado aos pais!');
+  registrarLogAtividade(`Pedido de prêmio: ${r.texto}`);
+  enviarNotificacaoLocal('🎟️ Pedido de prêmio',`${r.texto} — ${r.custo}🪙`,'rotinapet-premio');
+  enfileirarPushFamilia('🎟️ Pedido de prêmio',`${r.texto} (${r.custo}🪙)`,{tag:'rotinapet-premio',onlyPerfil:'pais'});
 }
 function aprovarSolicitacaoPremio(id){
   const s=(estado.solicitacoesPremios||[]).find(x=>x.id===id);
@@ -3787,6 +4542,7 @@ function aprovarSolicitacaoPremio(id){
   estado.moedas-=s.custo;
   s.status='aprovado';
   s.aprovadoEm=Date.now();
+  registrarLogAtividade(`Prêmio aprovado: ${s.texto} (−${Number(s.custo)||0}🪙)`);
   salvar();
   atualizarTela();
   renderizarPainelPais();
@@ -3805,6 +4561,7 @@ function recusarSolicitacaoPremio(id){
   if(!s||s.status!=='pendente')return;
   s.status='recusado';
   s.recusadoEm=Date.now();
+  registrarLogAtividade(`Prêmio recusado: ${s.texto}`);
   salvar();
   renderizarPainelPais();
   renderizarLojaRecompensas();
@@ -4089,6 +4846,7 @@ function alternarAbaAjuda(aba){
   document.getElementById('tab-ajuda-pais')?.classList.toggle('ativa',!crianca);
 }
 let demoRodando=false;
+let tourRodando=false;
 function setDemoHud(txt){
   const el=document.getElementById('demo-hud');
   if(!el)return;
@@ -4106,6 +4864,48 @@ function apontarSpotlight(el){
   spot.style.setProperty('--sx',(r.left+r.width/2)+'px');
   spot.style.setProperty('--sy',(r.top+r.height/2)+'px');
   spot.classList.add('mostrar');
+}
+async function iniciarTourGuiado(){
+  if(tourRodando||demoRodando)return;
+  tourRodando=true;
+  fecharModal('modal-ajuda');
+  fecharModal('modal-onboarding');
+  await esperar(300);
+  const passos=[
+    async()=>{
+      setDemoHud('1/5 · Toque no pet para dar carinho ❤️');
+      apontarSpotlight(document.getElementById('pet-principal'));
+      await esperar(2200);
+    },
+    async()=>{
+      setDemoHud('2/5 · Alimentar, brincar ou dormir');
+      apontarSpotlight(document.getElementById('pet-actions')||document.getElementById('btn-alimentar'));
+      await esperar(2200);
+    },
+    async()=>{
+      setDemoHud('3/5 · Complete as missões do dia');
+      apontarSpotlight(document.querySelector('.tasks-section'));
+      await esperar(2200);
+    },
+    async()=>{
+      setDemoHud('4/5 · Jogue, personalize e resgate prêmios');
+      apontarSpotlight(document.querySelector('.bottom-buttons'));
+      await esperar(2200);
+    },
+    async()=>{
+      setDemoHud('5/5 · Moedas, ofensiva e evoluções ficam aqui em cima');
+      apontarSpotlight(document.querySelector('.top-row'));
+      await esperar(2200);
+    }
+  ];
+  try{
+    for(const p of passos)await p();
+    hideDemoHud();
+    mostrarAviso('🚀','Tour concluído!','Agora é com você: complete uma missão e cuide do seu pet.');
+  }finally{
+    tourRodando=false;
+    setTimeout(hideDemoHud,400);
+  }
 }
 async function iniciarDemoAnimacoes(){
   if(demoRodando)return;
@@ -4228,31 +5028,53 @@ setInterval(()=>{
   const agora=new Date();
   if(agora.getSeconds()===0){
     verificarLembreteNoturno();
+    verificarLembreteTarde();
     if(estado.timerFim)atualizarDisplayTimer();
   }
 },1000);
 window.addEventListener('DOMContentLoaded',()=>{
+  if(typeof estado.volumeSom!=='number')estado.volumeSom=0.55;
+  if(!Array.isArray(estado.logAtividades))estado.logAtividades=[];
+  if(!estado.ultimoAcaoPet||typeof estado.ultimoAcaoPet!=='object')estado.ultimoAcaoPet={};
+  if(!estado.metaFamiliarDias)estado.metaFamiliarDias=5;
+  try{
+    filaSyncPendente=localStorage.getItem('ROTINAPET_FILA_SYNC_'+codigoFamilia)==='1';
+  }catch(e){}
+  aplicarDecayPet();
   atualizarTela();
+  atualizarBannerEvento();
+  atualizarStatusSyncUI();
   verificarPrimeiroAcesso();
   agendarFalaAleatoria();
   atualizarBannerOffline();
+  inicializarPushBase();
   if(estado.timerFim&&estado.timerFim>Date.now()){
     iniciarTimerTela(Math.ceil((estado.timerFim-Date.now())/60000));
   }
-  // O reset diário (tarefas voltarem a pendente à meia-noite) só era checado
-  // quando a página carregava — se o app ficasse aberto passando da meia-noite,
-  // nunca resetava sozinho. Agora checamos de novo sempre que o app volta a
-  // ficar visível (celular desbloqueado, aba focada) e a cada minuto como reforço.
+  // Banner de evento no primeiro acesso do dia
+  const ev=obterEventoAtivo();
+  if(ev&&estado.eventoAvisoData!==hojeLocal()&&estado.onboardingVistoCrianca){
+    estado.eventoAvisoData=hojeLocal();
+    salvar();
+    setTimeout(()=>abrirModalEventoSazonal(),1200);
+  }
   function checarEAplicarResetDiario(){
     if(verificarResetDiario()){
       salvar();
       atualizarTela();
+      atualizarBannerEvento();
     }
   }
   document.addEventListener('visibilitychange',()=>{
-    if(document.visibilityState==='visible')checarEAplicarResetDiario();
+    if(document.visibilityState==='visible'){
+      checarEAplicarResetDiario();
+      aplicarDecayPet();
+      atualizarBannerEvento();
+      if(navigator.onLine&&filaSyncPendente)atualizarBannerOffline();
+    }
   });
   setInterval(checarEAplicarResetDiario,60000);
+  setInterval(aplicarDecayPet,5*60*1000);
 });
 </script>
   <script>
