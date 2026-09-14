@@ -1368,6 +1368,8 @@ let cargaNuvemPendente=false;
 let ultimoEstadoSincronizado=null;
 let filaSyncPendente=false;
 let ultimaSyncOkEm=null;
+let filaEscritaNuvem=Promise.resolve();
+const SCHEMA_TAREFAS_V2=2;
 let statusSyncAtual='local'; // local | offline | syncing | online | erro
 function atualizarStatusSyncUI(){
   const statusEl=document.getElementById('txt-status-nuvem');
@@ -1636,6 +1638,7 @@ try{
   }
 }catch(e){}
 estado.tarefas.forEach(t=>{if(!t.tipo)t.tipo='obrigatoria';if(!t.status)t.status='pendente';if(t.foto===undefined)t.foto=null;if(!Array.isArray(t.dias))t.dias=[]});
+prepararTarefasV2NoEstado();
 if(!Number.isFinite(Number(estado.streak)))estado.streak=0;
 function verificarResetDiario(){
   const hojeStr=hojeLocal();
@@ -1645,14 +1648,26 @@ function verificarResetDiario(){
     estado.streak=0;
     estado.ultimoStreakPremiado=0;
   }
-  estado.tarefas.forEach(t=>{t.status='pendente';t.foto=null});
+  estado.tarefas.forEach(t=>{
+    // Preserva comprovantes e tarefas que ainda aguardam os responsáveis.
+    if(t.status==='aguardando_aprovacao')return;
+    t.status='pendente';
+    t.foto=null;
+    t.ultimoResetEm=hojeStr;
+  });
   estado.tarefasHojeCount=0;
   estado.ultimoDiaAcesso=hojeStr;
   return true;
 }
 verificarResetDiario();
-function salvar(){
-  try{localStorage.setItem(`ROTINAPET_SAVE_${codigoFamilia}`,JSON.stringify(estado))}catch(e){mostrarToast('⚠️ Memória cheia; foto não armazenada.')}
+function salvarLocalmente(){
+  try{
+    localStorage.setItem(`ROTINAPET_SAVE_${codigoFamilia}`,JSON.stringify(estado));
+  }catch(e){
+    mostrarToast('⚠️ Memória cheia; foto não armazenada.');
+  }
+}
+async function persistirNuvemAgora(){
   if(!sincronizacaoNuvemAtiva||!dbFirebase){
     marcarFilaSync(false);
     return;
@@ -1669,20 +1684,32 @@ function salvar(){
   statusSyncAtual='syncing';
   marcarFilaSync(true);
   atualizarStatusSyncUI();
-  ignorarProximoSyncNuvem=true;
   const snapshot=JSON.parse(JSON.stringify(estado));
-  dbFirebase.ref(getCaminhoFirebase()).update(mudancas).then(()=>{
-    ultimoEstadoSincronizado=snapshot;
-    ultimaSyncOkEm=Date.now();
-    statusSyncAtual='online';
+  await dbFirebase.ref(getCaminhoFirebase()).update(mudancas);
+  ultimoEstadoSincronizado=snapshot;
+  ultimaSyncOkEm=Date.now();
+  statusSyncAtual='online';
+  marcarFilaSync(false);
+  atualizarStatusSyncUI();
+}
+function salvar(){
+  salvarLocalmente();
+  if(!sincronizacaoNuvemAtiva||!dbFirebase){
     marcarFilaSync(false);
-    atualizarStatusSyncUI();
-  }).catch(err=>{
-    console.warn('Falha ao sincronizar:',err);
-    statusSyncAtual='erro';
+    return;
+  }
+  if(cargaNuvemPendente||!navigator.onLine){
     marcarFilaSync(true);
-    atualizarStatusSyncUI();
-  });
+    return;
+  }
+  filaEscritaNuvem=filaEscritaNuvem
+    .then(()=>persistirNuvemAgora())
+    .catch(err=>{
+      console.warn('Erro na fila de sincronização:',err);
+      statusSyncAtual='erro';
+      marcarFilaSync(true);
+      atualizarStatusSyncUI();
+    });
 }
 // Suporta até 2 responsáveis com e-mails próprios vinculados à mesma família.
 // Migra o campo antigo (um único e-mail em string) para a lista nova.
@@ -2526,7 +2553,7 @@ async function registrarTokenFcm(){
   }
   try{
     // Garante SW de messaging na raiz
-    const reg=await navigator.serviceWorker.register('firebase-messaging-sw.js');
+    const reg=await navigator.serviceWorker.register('sw.js');
     fcmMessaging=firebase.messaging();
     const token=await fcmMessaging.getToken({
       vapidKey:FIREBASE_VAPID_KEY,
@@ -2578,7 +2605,7 @@ async function ativarPushCompleto(){
   }
   mostrarAviso('🔔','Notificações locais ativas',
     FIREBASE_VAPID_KEY==='COLE_SUA_CHAVE_VAPID_AQUI'
-      ?'Cole a chave VAPID no código (FIREBASE_VAPID_KEY) e publique firebase-messaging-sw.js na mesma pasta do app.'
+      ?'Cole a chave VAPID no código (FIREBASE_VAPID_KEY) e publique sw.js na raiz do app.'
       :'Token FCM não foi gerado. Verifique o Service Worker e o domínio autorizado no Firebase.');
   return false;
 }
@@ -2662,10 +2689,80 @@ function enfileirarPushFamilia(title,body,opts={}){
     });
   }catch(e){console.warn('Fila push:',e)}
 }
+function caminhoTarefasV2(criancaId=estado.criancaAtivaId){
+  return `rotinapet/familias/${codigoFamilia}/filhos/${criancaId}/tarefas`;
+}
+function novoIdTarefa(){
+  return `t_${Date.now()}_${Math.random().toString(36).slice(2,10)}`;
+}
+function idTarefaSeguro(id){
+  return String(id??novoIdTarefa()).replace(/[.#$[\]/]/g,'_').slice(0,80);
+}
+function registroTarefaHoje(t){
+  t.registros=t.registros||{};
+  const dia=hojeLocal();
+  t.registros[dia]=t.registros[dia]||{status:'pendente',foto:null};
+  return t.registros[dia];
+}
+function statusTarefaAtual(t){
+  return t.registros?.[hojeLocal()]?.status||t.status||'pendente';
+}
+async function persistirTarefaIndividualV2(t){
+  if(!dbFirebase||!sincronizacaoNuvemAtiva||!navigator.onLine||cargaNuvemPendente)return;
+  const id=idTarefaSeguro(t.id);
+  await dbFirebase.ref(`${caminhoTarefasV2()}/${id}`).set({...t,id,atualizadoEm:Date.now()});
+}
+function prepararTarefaParaHoje(t){
+  const r=t.registros?.[hojeLocal()];
+  if(r){
+    t.status=r.status||'pendente';
+    t.foto=r.foto||null;
+  }else if(t.status==='aguardando_aprovacao'){
+    t.registros=t.registros||{};
+    t.registros[hojeLocal()]={status:t.status,foto:t.foto||null,atualizadoEm:Date.now()};
+  }
+  return t;
+}
+function prepararTarefasV2NoEstado(){
+  if(!Array.isArray(estado.tarefas))estado.tarefas=[];
+  estado.tarefas.forEach(prepararTarefaParaHoje);
+}
+async function migrarTarefasParaNosIndividuais(){
+  if(!dbFirebase||!sincronizacaoNuvemAtiva)throw new Error('Firebase indisponível');
+  prepararTarefasV2NoEstado();
+  const updates={};
+  const base=caminhoTarefasV2();
+  for(const t of estado.tarefas){
+    const id=idTarefaSeguro(t.id);
+    t.id=id;
+    updates[`${base}/${id}`]={...t,atualizadoEm:Date.now()};
+  }
+  updates[`rotinapet/familias/${codigoFamilia}/meta/schemaTarefas`]=SCHEMA_TAREFAS_V2;
+  updates[`rotinapet/familias/${codigoFamilia}/meta/tarefasMigradasEm`]=Date.now();
+  await dbFirebase.ref().update(updates);
+  estado.schemaTarefas=SCHEMA_TAREFAS_V2;
+  salvarLocalmente();
+  return true;
+}
+async function carregarTarefasIndividuaisComFallback(){
+  if(!dbFirebase||!sincronizacaoNuvemAtiva)return false;
+  const snap=await dbFirebase.ref(caminhoTarefasV2()).once('value');
+  const dados=snap.val();
+  if(!dados||typeof dados!=='object')return false;
+  estado.tarefas=Object.values(dados).map(prepararTarefaParaHoje);
+  salvarLocalmente();
+  renderizarTarefas();
+  return true;
+}
+
 function enviarParaAprovacao(id){
-  const t=estado.tarefas.find(t=>t.id===id);
+  const t=estado.tarefas.find(t=>String(t.id)===String(id));
   if(!t)return;
+  const r=registroTarefaHoje(t);
+  r.status='aguardando_aprovacao';
+  r.enviadaEm=Date.now();
   t.status='aguardando_aprovacao';
+  persistirTarefaIndividualV2(t).catch(e=>console.warn('Tarefa individual:',e));
   salvar();
   renderizarTarefas();
   mostrarToast('⏳ Enviado aos pais!');
@@ -2678,7 +2775,7 @@ function diaSemanaHoje(){return new Date().getDay()}
 function tarefaEhHoje(t){return !t.dias||t.dias.length===0||t.dias.includes(diaSemanaHoje())}
 function tarefasDeHoje(){return estado.tarefas.filter(tarefaEhHoje)}
 function emPausaHoje(){return !!(estado.pausaAte&&hojeLocal()<=estado.pausaAte)}
-function todasObrigatoriasConcluidas(){const o=tarefasDeHoje().filter(t=>t.tipo==='obrigatoria');return o.length>0&&o.every(t=>t.status==='aprovada')}
+function todasObrigatoriasConcluidas(){const o=tarefasDeHoje().filter(t=>t.tipo==='obrigatoria');return o.length>0&&o.every(t=>statusTarefaAtual(t)==='aprovada')}
 function atualizarOfensiva(){
   const el=document.getElementById('status-ofensiva');
   if(!el)return;
@@ -2688,7 +2785,7 @@ function atualizarOfensiva(){
     el.style.background='#ecfeff';el.style.borderColor='#a5f3fc';el.style.color='#0e7490';
     return;
   }
-  const o=tarefasDeHoje().filter(t=>t.tipo==='obrigatoria'),f=o.filter(t=>t.status==='aprovada').length;
+  const o=tarefasDeHoje().filter(t=>t.tipo==='obrigatoria'),f=o.filter(t=>statusTarefaAtual(t)==='aprovada').length;
   if(!o.length){
     el.textContent='🔥 Defina missões obrigatórias no painel dos pais.';
     el.style.background='#fef2f2';el.style.borderColor='#fecaca';el.style.color='#b91c1c';
@@ -2721,7 +2818,7 @@ function renderizarTarefas(){
   const hojeLista=tarefasDeHoje();
   const o=hojeLista.filter(t=>t.tipo==='obrigatoria'),x=hojeLista.filter(t=>t.tipo!=='obrigatoria');
   document.getElementById('qtd-tarefas').textContent=`${o.length} fixas · ${x.length} extras`;
-  const pendentes=(estado.tarefas||[]).filter(t=>t.status==='aguardando_aprovacao');
+  const pendentes=(estado.tarefas||[]).filter(t=>statusTarefaAtual(t)==='aguardando_aprovacao');
   const bannerPend=document.getElementById('banner-aprovacoes-pendentes');
   const txtPend=document.getElementById('txt-aprovacoes-pendentes');
   if(bannerPend){
@@ -2743,7 +2840,7 @@ function renderizarTarefas(){
     h.textContent=`${icone} ${titulo}`;
     c.appendChild(h);
     lista.forEach(t=>{
-      const apr=t.status==='aprovada',pend=t.status==='aguardando_aprovacao';
+      const apr=statusTarefaAtual(t)==='aprovada',pend=statusTarefaAtual(t)==='aguardando_aprovacao';
       const badgeDias=t.dias&&t.dias.length?` • ${t.dias.map(x=>DIAS_LABEL[x]).join(',')}`:'';
       const animar=idTarefaRecemAprovada===t.id?' pop-anim':'';
       
@@ -3308,7 +3405,7 @@ function renderizarPainelPais(){
   renderizarSolicitacoesPremiosPais();
   const ap=document.getElementById('lista-aprovacao-pais');
   ap.innerHTML='';
-  const ps=estado.tarefas.filter(t=>t.status==='aguardando_aprovacao');
+  const ps=estado.tarefas.filter(t=>statusTarefaAtual(t)==='aguardando_aprovacao');
   if(!ps.length)ap.innerHTML='<span style="font-size:9px;color:#94a3b8">Nenhuma pendente.</span>';
   ps.forEach(t=>{
     const fotoHtml=t.foto?`<img class="approval-foto" src="${t.foto}" onclick="abrirVisualizadorFoto('${t.foto}')">`:'';
@@ -3394,6 +3491,9 @@ function reprovarTarefaPais(id){
   mostrarConfirmacao(`Recusar a tarefa "${t.texto}"?`,()=>{
     t.status='pendente';
     t.foto=null;
+    const r=t.registros?.[hojeLocal()];
+    if(r){r.status='pendente';r.foto=null;r.atualizadoEm=Date.now();}
+    persistirTarefaIndividualV2(t).catch(e=>console.warn('Tarefa individual:',e));
     salvar();
     renderizarPainelPais();
     atualizarTela();
@@ -3467,6 +3567,12 @@ function aprovarTarefaPais(id){
   const t=estado.tarefas.find(x=>x.id===id);
   if(!t)return;
   t.status='aprovada';
+  const registroAprovacao=t.registros?.[hojeLocal()];
+  if(registroAprovacao){
+    registroAprovacao.status='aprovada';
+    registroAprovacao.aprovadaEm=Date.now();
+  }
+  persistirTarefaIndividualV2(t).catch(e=>console.warn('Tarefa individual:',e));
   estado.moedas+=Number(t.recompensa)||0;
   estado.dinheiroAcumulado=(estado.dinheiroAcumulado||0)+(Number(t.recompensa)||0)*(Number(estado.taxaCambio)||.01);
   estado.tarefasHojeCount=(estado.tarefasHojeCount||0)+1;
@@ -4025,7 +4131,7 @@ const CONQUISTAS=[
   ['nivel10','⭐','Veterano','Chegue ao nível 10 com um pet.'],
   ['pet5','🐾','Colecionador','Desbloqueie todos os pets.']
 ];
-function contarFeitas(){return estado.tarefas.filter(t=>t.status==='aprovada').length}
+function contarFeitas(){return estado.tarefas.filter(t=>statusTarefaAtual(t)==='aprovada').length}
 function marcarConquistas(){
   estado.conquistas=estado.conquistas||{};
   let nova=false;
