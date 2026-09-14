@@ -2567,13 +2567,20 @@ async function registrarTokenFcm(){
     return null;
   }
   try{
-    // Garante SW de messaging na raiz
-    const reg=await navigator.serviceWorker.register('sw.js');
+    // 1. Registra o Service Worker no caminho do repositório.
+    await navigator.serviceWorker.register('./sw.js');
+
+    // 2. Aguarda o Service Worker ficar pronto e ativo.
+    const reg=await navigator.serviceWorker.ready;
+
     fcmMessaging=firebase.messaging();
+
+    // 3. Só chama o Firebase depois que o registro está ativo.
     const token=await fcmMessaging.getToken({
       vapidKey:FIREBASE_VAPID_KEY,
       serviceWorkerRegistration:reg
     });
+
     if(token)await salvarTokenFcmNaFamilia(token);
     fcmMessaging.onMessage(payload=>{
       const n=payload.notification||{};
