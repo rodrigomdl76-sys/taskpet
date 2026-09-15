@@ -168,7 +168,7 @@ button{touch-action:manipulation}
 .meta-familiar-card .progress{margin-top:6px;height:8px;background:#fef9c3}
 .meta-familiar-card .progress>div{background:linear-gradient(90deg,#f59e0b,#ea580c)}
 .hidden{display:none!important}
-.foto-viewer{position:fixed;inset:0;background:#000d;display:flex;align-items:center;justify-content:center;z-index:300;opacity:0;visibility:hidden;transition:.2s;padding:20px}
+.modal-overlay.modal-top{z-index:12000}.foto-viewer{position:fixed;inset:0;background:#000d;display:flex;align-items:center;justify-content:center;z-index:13000;opacity:0;visibility:hidden;transition:.2s;padding:20px}
 .foto-viewer.mostrar{opacity:1;visibility:visible}
 .foto-viewer img{max-width:100%;max-height:100%;border-radius:14px}
 .bg-layer{position:fixed;inset:0;z-index:-2;transition:opacity 1s ease;opacity:0}
@@ -910,6 +910,8 @@ button:focus-visible,input:focus-visible,.top-pill:focus-visible{
     <input type="file" id="input-restaurar-backup" accept="application/json" style="display:none" onchange="restaurarBackupEstado(this.files[0])">
     <button type="button" class="primary-btn blue-btn botao-secundario" style="width:100%;margin-top:6px" onclick="document.getElementById('input-restaurar-backup').click()">⬆️ Restaurar backup</button>
     <small style="font-size:8px;color:#64748b;margin-top:3px;display:block">⚠️ Substitui os dados atuais desta família pelo conteúdo do arquivo.</small>
+    <button type="button" id="btn-migrar-tarefas" class="primary-btn green-btn botao-secundario" style="width:100%;margin-top:8px" onclick="iniciarMigracaoPeloPainel()">🔄 Ativar sincronização avançada das tarefas</button>
+    <small id="txt-status-migracao-tarefas" style="font-size:8px;color:#64748b;margin-top:3px;display:block">Migra as tarefas para nós individuais no Firebase. O formato antigo será mantido como compatibilidade.</small>
   </div>
   <div class="section-card">
     <label class="field-label">🔊 Volume dos sons</label>
@@ -2812,6 +2814,44 @@ async function migrarTarefasParaNosIndividuais(){
   salvarLocalmente();
   return true;
 }
+async function iniciarMigracaoPeloPainel(){
+  const botao=document.getElementById('btn-migrar-tarefas');
+  const status=document.getElementById('txt-status-migracao-tarefas');
+  const atualizar=(texto,cor)=>{
+    if(status){status.textContent=texto;if(cor)status.style.color=cor;}
+  };
+  if(!sincronizacaoNuvemAtiva||!dbFirebase){
+    atualizar('⚠️ Firebase ainda não está conectado. Aguarde o status online.', '#dc2626');
+    mostrarToast('⚠️ Sincronização indisponível no momento.');
+    return;
+  }
+  if(!navigator.onLine){
+    atualizar('⚠️ Sem internet. Conecte-se e tente novamente.', '#dc2626');
+    mostrarToast('⚠️ É necessário estar online para migrar.');
+    return;
+  }
+  if(Number(estado.schemaTarefas)===SCHEMA_TAREFAS_V2){
+    atualizar('✅ Tarefas já estão na sincronização avançada.', '#15803d');
+    mostrarToast('✅ Migração já realizada.');
+    return;
+  }
+  const confirmado=window.confirm('Antes de continuar, confirme que você já baixou um backup. Migrar agora?');
+  if(!confirmado)return;
+  try{
+    if(botao){botao.disabled=true;botao.textContent='⏳ Migrando tarefas...';}
+    atualizar('⏳ Enviando tarefas individuais para a nuvem...', '#2563eb');
+    await migrarTarefasParaNosIndividuais();
+    atualizar('✅ Migração concluída. O formato antigo foi preservado.', '#15803d');
+    if(botao){botao.textContent='✅ Sincronização avançada ativa';botao.classList.remove('green-btn');botao.classList.add('blue-btn');}
+    mostrarAviso('✅','Migração concluída','As tarefas agora também estão salvas em nós individuais no Firebase.');
+  }catch(error){
+    console.error('Falha na migração de tarefas:',error);
+    atualizar(`⚠️ Falha: ${error?.message||'erro desconhecido'}`, '#dc2626');
+    if(botao){botao.disabled=false;botao.textContent='🔄 Tentar migração novamente';}
+    mostrarAviso('⚠️','Migração não concluída',error?.message||'Não foi possível migrar as tarefas.');
+  }
+}
+
 async function carregarTarefasIndividuaisComFallback(){
   if(!dbFirebase||!sincronizacaoNuvemAtiva)return false;
   const snap=await dbFirebase.ref(caminhoTarefasV2()).once('value');
@@ -5000,12 +5040,15 @@ function comViewTransition(fn){
 }
 function abrirModal(id){
   comViewTransition(()=>{
-    document.getElementById(id)?.classList.add('mostrar');
+    // O último modal aberto sempre fica acima do painel dos pais e dos demais.
+    document.querySelectorAll('.modal-overlay.modal-top').forEach(el=>el.classList.remove('modal-top'));
+    document.getElementById(id)?.classList.add('mostrar','modal-top');
   });
 }
 function fecharModal(id){
   comViewTransition(()=>{
-    document.getElementById(id)?.classList.remove('mostrar');
+    const el=document.getElementById(id);
+    el?.classList.remove('mostrar','modal-top');
   });
 }
 function abrirModalAjuda(){
