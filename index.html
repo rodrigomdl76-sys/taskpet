@@ -15,6 +15,7 @@
 <script src="https://www.gstatic.com/firebasejs/12.18.0/firebase-auth-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/12.18.0/firebase-database-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/12.18.0/firebase-messaging-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/12.18.0/firebase-storage-compat.js"></script>
 <style>
 @import url('https://fonts.googleapis.com/css2?family=Nunito:wght@600;700;800;900&display=swap');
 *{margin:0;padding:0;box-sizing:border-box;font-family:'Nunito',sans-serif;-webkit-tap-highlight-color:transparent}
@@ -677,6 +678,8 @@ button:focus-visible,input:focus-visible,.top-pill:focus-visible{
 .historico-tarefa{padding:7px 0;border-bottom:1px solid #f1f5f9;font-size:8px;line-height:1.3}.historico-tarefa:last-child{border-bottom:0}.historico-tarefa .hist-data{font-size:7px;color:#94a3b8;font-weight:800}.historico-tarefa .hist-ok{color:#15803d;font-weight:900}.historico-tarefa .hist-no{color:#b91c1c;font-weight:900}.historico-tarefa .hist-motivo{margin-top:3px;background:#fef2f2;border-radius:6px;padding:4px;color:#991b1b;font-weight:700}
 
 .mes-comparacao{display:grid;grid-template-columns:repeat(3,1fr);gap:5px;margin-top:7px}.mes-comp-item{background:#fff7ed;border:1px solid #fed7aa;border-radius:9px;padding:6px 3px;text-align:center;font-size:8px}.mes-comp-item b{display:block;font-size:10px;color:#9a3412}.mes-comp-item small{display:block;color:#64748b;font-size:7px;margin-top:2px}.mes-calendario{display:grid;grid-template-columns:repeat(7,1fr);gap:3px;margin-top:8px}.mes-dia{aspect-ratio:1;border-radius:5px;background:#f1f5f9;display:flex;align-items:center;justify-content:center;font-size:7px;color:#94a3b8;font-weight:800}.mes-dia.ativo{background:#86efac;color:#166534}.mes-dia.hoje{outline:2px solid #7c3aed;outline-offset:1px}
+
+.metas-crianca-card{background:linear-gradient(135deg,#eff6ff,#eef2ff);border:1px solid #bfdbfe;border-radius:16px;padding:9px 10px;margin-top:7px}.metas-crianca-titulo{font-size:10px;font-weight:900;color:#1e40af;margin-bottom:6px}.meta-item{padding:6px 0;border-bottom:1px solid #e0e7ff}.meta-item:last-child{border-bottom:0}.meta-top{display:flex;justify-content:space-between;gap:5px;font-size:8px;font-weight:900;color:#334155}.meta-bar{height:6px;background:#dbeafe;border-radius:99px;overflow:hidden;margin-top:4px}.meta-bar>div{height:100%;background:linear-gradient(90deg,#60a5fa,#7c3aed);border-radius:99px;transition:width .4s}.meta-sub{font-size:7px;color:#64748b;margin-top:3px}.meta-concluida{color:#15803d}.meta-pais-row{padding:7px 0;border-bottom:1px solid #f1f5f9;font-size:8px}.meta-pais-row:last-child{border-bottom:0}.meta-pais-row button{float:right}
 </style>
 </head>
 <body class="cenario-ceu">
@@ -774,6 +777,7 @@ button:focus-visible,input:focus-visible,.top-pill:focus-visible{
     <div class="crianca-progresso-bottom"><span id="crianca-progresso-contagem">0/0 missões</span><span id="crianca-progresso-recompensa">🪙 0 hoje</span></div>
     <div class="crianca-proxima" id="crianca-proxima-missao">🎯 Sua próxima missão aparecerá aqui.</div>
   </div>
+  <div class="metas-crianca-card" id="metas-crianca-card"><div class="metas-crianca-titulo">🎯 Minhas metas</div><div id="lista-metas-crianca"></div></div>
   <div class="tasks-section">
     <div class="task-header"><b style="font-size:10px">✨ Missões de hoje</b><span style="font-size:8px;font-weight:900;color:#0284c7" id="qtd-tarefas">2 missões</span></div>
     <div id="banner-aprovacoes-pendentes" class="hidden" style="margin-bottom:6px;padding:7px 9px;border-radius:12px;background:#fffbeb;border:1px solid #fcd34d;font-size:9px;font-weight:900;color:#92400e;display:none;align-items:center;gap:6px">⏳ <span id="txt-aprovacoes-pendentes">Há tarefas aguardando os pais</span></div>
@@ -951,6 +955,8 @@ button:focus-visible,input:focus-visible,.top-pill:focus-visible{
     <small style="font-size:8px;color:#64748b;margin-top:3px;display:block">⚠️ Substitui os dados atuais desta família pelo conteúdo do arquivo.</small>
     <button type="button" id="btn-migrar-tarefas" class="primary-btn green-btn botao-secundario" style="width:100%;margin-top:8px" onclick="iniciarMigracaoPeloPainel()">🔄 Ativar sincronização avançada das tarefas</button>
     <small id="txt-status-migracao-tarefas" style="font-size:8px;color:#64748b;margin-top:3px;display:block">Migra as tarefas para nós individuais no Firebase. O formato antigo será mantido como compatibilidade.</small>
+    <button type="button" id="btn-migrar-fotos" class="primary-btn pink-btn botao-secundario" style="width:100%;margin-top:8px" onclick="iniciarMigracaoFotosStorage()">☁️ Migrar fotos antigas para o Storage</button>
+    <small id="txt-status-migracao-fotos" style="font-size:8px;color:#64748b;margin-top:3px;display:block">O Base64 só será removido depois que cada foto for confirmada no Storage.</small>
   </div>
   <div class="section-card">
     <label class="field-label">🔊 Volume dos sons</label>
@@ -1005,6 +1011,11 @@ button:focus-visible,input:focus-visible,.top-pill:focus-visible{
     <small style="font-size:8px;color:#64748b;margin-top:4px;display:block">Durante a pausa, o streak não é perdido mesmo sem tarefas.</small>
   </div>
   <div class="section-card"><b style="font-size:10px">📋 Aprovações pendentes</b><div class="stack" id="lista-aprovacao-pais" style="margin-top:6px"></div></div>
+  <div class="section-card">
+    <div style="display:flex;justify-content:space-between;align-items:center"><b style="font-size:10px">🎯 Metas personalizadas</b><button class="primary-btn pink-btn" onclick="adicionarMetaPersonalizada()">＋ Nova meta</button></div>
+    <small style="font-size:8px;color:#64748b;margin-top:4px;display:block">Crie objetivos para motivar a criança durante o mês.</small>
+    <div class="stack" id="lista-metas-pais" style="margin-top:7px"></div>
+  </div>
   <div class="section-card">
     <div style="display:flex;justify-content:space-between;align-items:center">
       <b style="font-size:10px">🎁 Gerenciar Prêmios</b>
@@ -1428,7 +1439,7 @@ function possuiTema(t){
   return estado.fundosComprados.includes(t.fundoId)&&estado.acessorios.comprados.includes(t.acessorio.id);
 }
 const firebaseConfig={apiKey:"AIzaSyCiDk3ERIe8_uVqBhRnFRD5Od8nyLNlLVQ",authDomain:"rotinapet-624a9.firebaseapp.com",databaseURL:"https://rotinapet-624a9-default-rtdb.firebaseio.com",projectId:"rotinapet-624a9",storageBucket:"rotinapet-624a9.appspot.com",messagingSenderId:"218579871240",appId:"1:218579871240:web:c681389aacd70f677693bd"};
-let dbFirebase=null,sincronizacaoNuvemAtiva=false,ignorarProximoSyncNuvem=false;
+let dbFirebase=null,storageFirebase=null,sincronizacaoNuvemAtiva=false,ignorarProximoSyncNuvem=false;
 // Enquanto true, salvar() NÃO envia nada para a nuvem — evita que um estado local
 // "de fábrica" (ex.: depois de limpar cache) sobrescreva dados reais já salvos
 // no Firebase antes de terminarmos de baixá-los.
@@ -1543,6 +1554,7 @@ try{
     firebase.initializeApp(firebaseConfig);
     firebase.auth().signInAnonymously().then(async ()=>{
       dbFirebase = firebase.database();
+      try{storageFirebase=firebase.storage()}catch(storageError){console.warn('Firebase Storage indisponível:',storageError)}
       definirIdUsuario(firebase.auth().currentUser.uid);
       sincronizacaoNuvemAtiva = true;
       await iniciarSincronizacaoNuvem();
@@ -1602,7 +1614,7 @@ function valoresPadraoCrianca(){
     ],
     solicitacoesPremios:[],conquistas:{},acessorios:{comprados:[],ativo:null},pausaAte:null,
     historicoConclusoes:{},registroDiario:{},onboardingVistoCrianca:false,lembreteEnviadoData:null,
-    surpresaResgatadaData:null,ultimoAcaoPet:{},ultimoDecay:null
+    surpresaResgatadaData:null,metasPersonalizadas:[],ultimoAcaoPet:{},ultimoDecay:null
   };
 }
 function capturarDadosCrianca(){
@@ -1668,6 +1680,7 @@ let estado={
   lembreteEnviadoData:null,
   notificacoesAtivas:false,
   surpresaResgatadaData:null,
+  metasPersonalizadas:[],
   volumeSom:0.55,
   logAtividades:[],
   ultimoAcaoPet:{},
@@ -1708,7 +1721,7 @@ try{
     }
   }
 }catch(e){}
-estado.tarefas.forEach(t=>{if(!t.tipo)t.tipo='obrigatoria';if(!t.status)t.status='pendente';if(t.foto===undefined)t.foto=null;if(!Array.isArray(t.dias))t.dias=[]});
+estado.tarefas.forEach(t=>{if(!t.tipo)t.tipo='obrigatoria';if(!t.status)t.status='pendente';if(t.foto===undefined)t.foto=null;if(t.fotoUrl===undefined)t.fotoUrl=null;if(t.fotoPath===undefined)t.fotoPath=null;if(!Array.isArray(t.dias))t.dias=[];if(!Number(t.atualizadoEm))t.atualizadoEm=0});
 prepararTarefasV2NoEstado();
 if(!Number.isFinite(Number(estado.streak)))estado.streak=0;
 function verificarResetDiario(){
@@ -1805,7 +1818,7 @@ async function carregarEstadoNuvem(){
       return false;
     }
     ultimoEstadoSincronizado=JSON.parse(JSON.stringify(remoto));
-    estado={...estado,...remoto,pets:{...estado.pets,...(remoto.pets||{})}};
+    aplicarEstadoRemotoComMerge(remoto);
     normalizarEmailsRecuperacao();
     garantirCriancaAtiva();
     localStorage.setItem(`ROTINAPET_SAVE_${codigoFamilia}`,JSON.stringify(estado));
@@ -1815,6 +1828,13 @@ async function carregarEstadoNuvem(){
     console.error('Falha ao carregar família:',e);
     return false;
   }
+}
+function aplicarEstadoRemotoComMerge(d){
+  if(!d||typeof d!=='object')return;
+  const tarefasRemotas=Array.isArray(d.tarefas)?d.tarefas:null;
+  const tarefasMescladas=tarefasRemotas?mergeTarefasPorVersao(estado.tarefas,tarefasRemotas):estado.tarefas;
+  estado={...estado,...d,pets:{...estado.pets,...(d.pets||{})},tarefas:tarefasMescladas};
+  garantirCriancaAtiva();
 }
 async function iniciarSincronizacaoNuvem(){
   if(!sincronizacaoNuvemAtiva||!dbFirebase)return;
@@ -1848,7 +1868,7 @@ async function iniciarSincronizacaoNuvem(){
         estado.criancasDados[d.criancaAtivaId]=dadosRecebidos;
         Object.keys(d).forEach(k=>{if(!CAMPOS_CRIANCA.includes(k)&&k!=='criancaAtivaId')estado[k]=d[k]});
       }else{
-        estado={...estado,...d,pets:{...estado.pets,...(d.pets||{})}};
+        aplicarEstadoRemotoComMerge(d);
       }
       garantirCriancaAtiva();
       try{localStorage.setItem(`ROTINAPET_SAVE_${codigoFamilia}`,JSON.stringify(estado))}catch(e){}
@@ -2789,31 +2809,101 @@ function dispararConfetes(qtd=75,cores=null){try{window.confetti?.({particleCoun
 let tarefaIdFoto=null;
 document.getElementById('camera-input').addEventListener('change',processarFotoCapturada);
 function dispararCamera(id){tarefaIdFoto=id;document.getElementById('camera-input').click()}
-function processarFotoCapturada(e){
+async function enviarFotoParaStorage(blob,t){
+  if(!storageFirebase||!sincronizacaoNuvemAtiva||!navigator.onLine)return null;
+  const dia=hojeLocal();
+  const path=`familias/${codigoFamilia}/criancas/${idTarefaSeguro(estado.criancaAtivaId)}/tarefas/${idTarefaSeguro(t.id)}/${dia}.jpg`;
+  const ref=storageFirebase.ref(path);
+  await ref.put(blob,{contentType:'image/jpeg',cacheControl:'private,max-age=3600'});
+  const url=await ref.getDownloadURL();
+  return {url,path};
+}
+async function processarFotoCapturada(e){
   const f=e.target.files[0];
   if(!f||!tarefaIdFoto)return;
+  const idAtual=tarefaIdFoto;
   const img=new Image();
-  img.onload=()=>{
-    const canvas=document.createElement('canvas');
-    const maxDim=320;
-    let w=img.width,h=img.height;
-    if(w>h){if(w>maxDim){h*=maxDim/w;w=maxDim}}
-    else{if(h>maxDim){w*=maxDim/h;h=maxDim}}
-    canvas.width=w;canvas.height=h;
-    const ctx=canvas.getContext('2d');
-    ctx.drawImage(img,0,0,w,h);
-    const miniDataUrl=canvas.toDataURL('image/jpeg',0.55);
-    const t=estado.tarefas.find(item=>item.id===tarefaIdFoto);
-    if(t){
-      t.foto=miniDataUrl;
-      t.status='pendente';
+  img.onload=async()=>{
+    try{
+      const canvas=document.createElement('canvas');
+      const maxDim=320;
+      let w=img.width,h=img.height;
+      if(w>h){if(w>maxDim){h*=maxDim/w;w=maxDim}}
+      else{if(h>maxDim){w*=maxDim/h;h=maxDim}}
+      canvas.width=Math.max(1,Math.round(w));canvas.height=Math.max(1,Math.round(h));
+      const ctx=canvas.getContext('2d');ctx.drawImage(img,0,0,canvas.width,canvas.height);
+      const miniDataUrl=canvas.toDataURL('image/jpeg',0.55);
+      const blob=await new Promise(resolve=>canvas.toBlob(resolve,'image/jpeg',0.55));
+      const t=estado.tarefas.find(item=>String(item.id)===String(idAtual));
+      if(!t)return;
+      // Fallback imediato: a foto continua disponível mesmo se Storage falhar.
+      t.foto=miniDataUrl;t.fotoUrl=null;t.fotoPath=null;t.status='pendente';
+      if(blob){
+        try{
+          const remoto=await enviarFotoParaStorage(blob,t);
+          if(remoto){t.foto=null;t.fotoUrl=remoto.url;t.fotoPath=remoto.path;}
+        }catch(storageError){
+          console.warn('Upload da foto no Storage falhou; usando fallback local:',storageError);
+          mostrarToast('📸 Foto salva localmente; Storage indisponível.');
+        }
+      }
+      t.atualizadoEm=Date.now();
       salvar();
-      renderizarTarefas();
-      mostrarToast('📸 Foto otimizada com sucesso!');
+      persistirTarefaIndividualV2(t).catch(err=>console.warn('Foto/tarefa:',err));
+      renderizarTarefas();renderizarPainelPais();
+      if(t.fotoUrl)mostrarToast('☁️ Foto enviada com segurança.');
+      else mostrarToast('📸 Foto otimizada com sucesso!');
+    }catch(error){
+      console.error('Falha ao processar foto:',error);
+      mostrarToast('⚠️ Não foi possível processar a foto.');
+    }finally{
+      URL.revokeObjectURL(img.src);
     }
   };
+  img.onerror=()=>mostrarToast('⚠️ Imagem inválida ou não suportada.');
   img.src=URL.createObjectURL(f);
   e.target.value='';
+}
+async function dataUrlParaBlob(dataUrl){
+  const resposta=await fetch(dataUrl);
+  if(!resposta.ok)throw new Error('não foi possível ler a foto local');
+  return await resposta.blob();
+}
+async function migrarFotoAntigaParaStorage(t){
+  if(!t?.foto||!storageFirebase)throw new Error('foto ou Storage indisponível');
+  const blob=await dataUrlParaBlob(t.foto);
+  const path=`familias/${codigoFamilia}/criancas/${idTarefaSeguro(estado.criancaAtivaId)}/tarefas/${idTarefaSeguro(t.id)}/legado-${Date.now()}.jpg`;
+  const ref=storageFirebase.ref(path);
+  await ref.put(blob,{contentType:'image/jpeg',cacheControl:'private,max-age=3600'});
+  const url=await ref.getDownloadURL();
+  // A foto original só é removida depois do put + getDownloadURL concluírem.
+  t.foto=null;t.fotoUrl=url;t.fotoPath=path;t.atualizadoEm=Date.now();
+  await persistirTarefaIndividualV2(t);
+  salvarLocalmente();
+  return url;
+}
+async function iniciarMigracaoFotosStorage(){
+  const botao=document.getElementById('btn-migrar-fotos');
+  const status=document.getElementById('txt-status-migracao-fotos');
+  const atualizar=(txt,cor)=>{if(status){status.textContent=txt;if(cor)status.style.color=cor}};
+  const fotos=(estado.tarefas||[]).filter(t=>t.foto&&!t.fotoUrl);
+  if(!fotos.length){atualizar('✅ Não há fotos antigas em Base64 para migrar.','#15803d');mostrarToast('✅ Todas as fotos já estão no Storage ou não existem.');return;}
+  if(!storageFirebase||!sincronizacaoNuvemAtiva){atualizar('⚠️ Storage ainda não está disponível.','#dc2626');mostrarToast('⚠️ Configure o Firebase Storage antes de migrar.');return;}
+  if(!navigator.onLine){atualizar('⚠️ Conecte-se à internet antes de migrar.','#dc2626');return;}
+  const ok=window.confirm(`Será feito upload de ${fotos.length} foto(s). Baixe um backup antes. Continuar?`);
+  if(!ok)return;
+  if(botao){botao.disabled=true;botao.textContent='⏳ Migrando fotos...';}
+  let sucesso=0,falhas=0;
+  for(let i=0;i<fotos.length;i++){
+    const t=fotos[i];
+    atualizar(`⏳ Foto ${i+1}/${fotos.length}: ${t.texto||'tarefa'}...`,'#2563eb');
+    try{await migrarFotoAntigaParaStorage(t);sucesso++;}
+    catch(error){falhas++;console.warn('Falha na migração da foto:',t.id,error);}
+  }
+  salvar();renderizarPainelPais();atualizarTela();
+  if(botao){botao.disabled=false;botao.textContent='☁️ Migrar fotos antigas para o Storage';}
+  if(falhas){atualizar(`⚠️ ${sucesso} migrada(s), ${falhas} falhou/falharam. Tente novamente.`,'#b45309');mostrarAviso('⚠️','Migração parcial',`${sucesso} foto(s) foram enviadas. As que falharam continuam preservadas no aparelho.`);}
+  else{atualizar(`✅ ${sucesso} foto(s) migrada(s) com confirmação.`,'#15803d');mostrarAviso('☁️','Migração concluída',`${sucesso} foto(s) agora estão no Firebase Storage. A cópia Base64 foi removida com segurança.`);}
 }
 function enfileirarPushFamilia(title,body,opts={}){
   if(!dbFirebase||!sincronizacaoNuvemAtiva)return;
@@ -2847,9 +2937,24 @@ function statusTarefaAtual(t){
   return t.registros?.[hojeLocal()]?.status||t.status||'pendente';
 }
 async function persistirTarefaIndividualV2(t){
+  if(!t)return;
+  const agora=Date.now();
+  // O timestamp também fica no estado local para o merge entre aparelhos.
+  t.atualizadoEm=Math.max(Number(t.atualizadoEm)||0,agora);
   if(!dbFirebase||!sincronizacaoNuvemAtiva||!navigator.onLine||cargaNuvemPendente)return;
   const id=idTarefaSeguro(t.id);
-  await dbFirebase.ref(`${caminhoTarefasV2()}/${id}`).set({...t,id,atualizadoEm:Date.now()});
+  await dbFirebase.ref(`${caminhoTarefasV2()}/${id}`).set({...t,id,atualizadoEm:t.atualizadoEm});
+}
+function mergeTarefasPorVersao(locais,remotas){
+  const mapa=new Map();
+  (Array.isArray(locais)?locais:[]).forEach(t=>{if(t&&t.id!=null)mapa.set(String(t.id),t)});
+  (Array.isArray(remotas)?remotas:[]).forEach(r=>{
+    if(!r||r.id==null)return;
+    const chave=String(r.id),l=mapa.get(chave);
+    const tl=Number(l?.atualizadoEm)||0,tr=Number(r.atualizadoEm)||0;
+    if(!l||tr>=tl)mapa.set(chave,r);
+  });
+  return Array.from(mapa.values()).map(prepararTarefaParaHoje);
 }
 function prepararTarefaParaHoje(t){
   const r=t.registros?.[hojeLocal()];
@@ -2926,7 +3031,7 @@ async function carregarTarefasIndividuaisComFallback(){
   const snap=await dbFirebase.ref(caminhoTarefasV2()).once('value');
   const dados=snap.val();
   if(!dados||typeof dados!=='object')return false;
-  estado.tarefas=Object.values(dados).map(prepararTarefaParaHoje);
+  estado.tarefas=mergeTarefasPorVersao(estado.tarefas,Object.values(dados));
   salvarLocalmente();
   renderizarTarefas();
   return true;
@@ -2991,6 +3096,45 @@ function registrarConclusaoDoDia(){
   return true;
 }
 let idTarefaRecemAprovada=null;
+function obterProgressoMeta(meta){
+  const hoje=new Date(),ano=hoje.getFullYear(),mes=hoje.getMonth();
+  const inicio=new Date(ano,mes,1);
+  const chave=(d)=>`${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`;
+  const registro=(d)=>estado.registroDiario?.[chave(d)]||{tarefas:0,moedas:0};
+  let valor=0;
+  if(meta.tipo==='streak')valor=Number(estado.streak)||0;
+  else if(meta.tipo==='tarefas'||meta.tipo==='moedas'||meta.tipo==='dias'){
+    const fim=new Date(ano,mes+1,0);
+    for(let i=1;i<=fim.getDate();i++){const r=registro(new Date(ano,mes,i));if(meta.tipo==='tarefas')valor+=Number(r.tarefas)||0;if(meta.tipo==='moedas')valor+=Number(r.moedas)||0;if(meta.tipo==='dias'&&(Number(r.tarefas)||0)>0)valor++;}
+  }
+  const alvo=Math.max(1,Number(meta.alvo)||1);
+  return {valor,alvo,perc:Math.min(100,Math.round((valor/alvo)*100))};
+}
+function renderizarMetas(){
+  const metas=Array.isArray(estado.metasPersonalizadas)?estado.metasPersonalizadas:[];
+  const nomes={tarefas:'tarefas no mês',moedas:'moedas no mês',streak:'dias de ofensiva',dias:'dias ativos no mês'};
+  const pais=document.getElementById('lista-metas-pais');
+  const cri=document.getElementById('lista-metas-crianca');
+  const montar=(modo)=>metas.length?metas.map(m=>{const p=obterProgressoMeta(m),ok=p.perc>=100;return modo==='pais'?`<div class="meta-pais-row"><button class="primary-btn red-btn" onclick="removerMetaPersonalizada('${m.id}')">Excluir</button><b>${esc(m.emoji||'🎯')} ${esc(m.titulo)}</b><br><span>${p.valor}/${p.alvo} ${nomes[m.tipo]||''} · ${p.perc}%</span></div>`:`<div class="meta-item"><div class="meta-top ${ok?'meta-concluida':''}"><span>${esc(m.emoji||'🎯')} ${esc(m.titulo)}</span><span>${ok?'✅ Concluída':`${p.valor}/${p.alvo}`}</span></div><div class="meta-bar"><div style="width:${p.perc}%"></div></div><div class="meta-sub">${ok?'Parabéns! Meta alcançada!':`Meta: ${p.alvo} ${nomes[m.tipo]||''}`}</div></div>`;}).join(''):'<span style="font-size:9px;color:#94a3b8">Nenhuma meta criada ainda.</span>';
+  if(pais)pais.innerHTML=montar('pais');
+  if(cri)cri.innerHTML=montar('crianca');
+}
+function adicionarMetaPersonalizada(){
+  const titulo=window.prompt('Nome da meta:','Meta do mês');
+  if(!titulo||!titulo.trim())return;
+  const tipo=window.prompt('Tipo: tarefas, moedas, streak ou dias','tarefas');
+  if(!['tarefas','moedas','streak','dias'].includes(tipo))return mostrarToast('⚠️ Tipo inválido. Use tarefas, moedas, streak ou dias.');
+  const alvo=Number(window.prompt('Qual é o objetivo?','20'));
+  if(!Number.isFinite(alvo)||alvo<1)return mostrarToast('⚠️ Objetivo inválido.');
+  const emoji=window.prompt('Emoji da meta:','🎯')||'🎯';
+  estado.metasPersonalizadas=Array.isArray(estado.metasPersonalizadas)?estado.metasPersonalizadas:[];
+  estado.metasPersonalizadas.push({id:'m_'+Date.now().toString(36),titulo:titulo.trim().slice(0,45),tipo,alvo:Math.round(alvo),emoji:emoji.slice(0,2)});
+  salvar();renderizarPainelPais();atualizarTela();mostrarToast('🎯 Meta criada!');
+}
+function removerMetaPersonalizada(id){
+  estado.metasPersonalizadas=(estado.metasPersonalizadas||[]).filter(m=>m.id!==id);
+  salvar();renderizarPainelPais();atualizarTela();mostrarToast('🗑️ Meta removida.');
+}
 function renderizarResumoCrianca(){
   const lista=tarefasDeHoje();
   const aprovadas=lista.filter(t=>statusTarefaAtual(t)==='aprovada').length;
@@ -3015,6 +3159,7 @@ function renderizarResumoCrianca(){
   }
 }
 function renderizarTarefas(){
+  renderizarMetas();
   renderizarResumoCrianca();
   const c=document.getElementById('lista-tarefas');
   c.innerHTML='';
@@ -3619,6 +3764,7 @@ function renderizarPainelPais(){
   document.getElementById('input-taxa-cambio').value=estado.taxaCambio;
   document.getElementById('input-idade-crianca').value=estado.idadeCrianca||7;
   renderizarResumoPainelPais();
+  renderizarMetas();
   renderizarListaCriancasPais();
   const stPin=document.getElementById('txt-status-pin');
   if(stPin)stPin.textContent=estado.pinPersonalizado?'✅ PIN personalizado ativo.':'⚠️ Defina um PIN personalizado o quanto antes.';
@@ -3639,8 +3785,9 @@ function renderizarPainelPais(){
   const ps=estado.tarefas.filter(t=>statusTarefaAtual(t)==='aguardando_aprovacao');
   if(!ps.length)ap.innerHTML='<span style="font-size:9px;color:#94a3b8">Nenhuma pendente.</span>';
   ps.forEach(t=>{
-    const fotoHtml=t.foto?`<img class="approval-foto" src="${t.foto}" onclick="abrirVisualizadorFoto('${t.foto}')">`:'';
-    ap.innerHTML+=`<div class="approval-row"><div class="approval-top"><span>${t.tipo==='obrigatoria'?'🔥':'⭐'} <b>${esc(t.texto)}</b> ${t.foto?'📸':''}</span><div style="display:flex;gap:4px"><button class="primary-btn red-btn" onclick="reprovarTarefaPais(${t.id})">Recusar</button><button class="primary-btn green-btn" onclick="aprovarTarefaPais(${t.id})">Aprovar</button></div></div>${fotoHtml}</div>`;
+    const fotoSrc=t.fotoUrl||t.foto||'';
+    const fotoHtml=fotoSrc?`<img class="approval-foto" src="${fotoSrc}" onclick="abrirVisualizadorFoto('${fotoSrc}')">`:'';
+    ap.innerHTML+=`<div class="approval-row"><div class="approval-top"><span>${t.tipo==='obrigatoria'?'🔥':'⭐'} <b>${esc(t.texto)}</b> ${(t.fotoUrl||t.foto)?'📸':''}</span><div style="display:flex;gap:4px"><button class="primary-btn red-btn" onclick="reprovarTarefaPais(${t.id})">Recusar</button><button class="primary-btn green-btn" onclick="aprovarTarefaPais(${t.id})">Aprovar</button></div></div>${fotoHtml}</div>`;
   });
   
   const ed=document.getElementById('lista-edicao-tarefas');
@@ -3679,15 +3826,17 @@ function renderizarVolumeSomPainel(){
   if(txt)txt.textContent=pct+'%';
 }
 function limparTodasFotosTarefas(){
-  const qtd=(estado.tarefas||[]).filter(t=>t.foto).length;
+  const fotos=(estado.tarefas||[]).filter(t=>t.foto||t.fotoUrl||t.fotoPath);
+  const qtd=fotos.length;
   if(!qtd)return mostrarToast('Nenhuma foto para apagar.');
-  mostrarConfirmacao(`Apagar ${qtd} foto(s) de tarefas?`,()=>{
-    estado.tarefas.forEach(t=>{t.foto=null});
+  mostrarConfirmacao(`Apagar ${qtd} foto(s) de tarefas?`,async()=>{
+    for(const t of fotos){
+      if(t.fotoPath&&storageFirebase){try{await storageFirebase.ref(t.fotoPath).delete()}catch(e){console.warn('Falha ao apagar foto do Storage:',e)}}
+      t.foto=null;t.fotoUrl=null;t.fotoPath=null;t.atualizadoEm=Date.now();
+      persistirTarefaIndividualV2(t).catch(e=>console.warn('Limpeza de foto:',e));
+    }
     registrarLogAtividade(`Fotos de tarefas apagadas (${qtd})`);
-    salvar();
-    renderizarPainelPais();
-    atualizarTela();
-    mostrarToast('🗑️ Fotos removidas.');
+    salvar();renderizarPainelPais();atualizarTela();mostrarToast('🗑️ Fotos removidas.');
   });
 }
 function renderizarHistoricoTarefas(){
@@ -3815,22 +3964,51 @@ function registrarNoRelatorioDiario(tarefasSomar,moedasSomar){
   const chaves=Object.keys(estado.registroDiario).sort();
   if(chaves.length>60)delete estado.registroDiario[chaves[0]];
 }
-function aprovarTarefaPais(id){
-  const t=estado.tarefas.find(x=>x.id===id);
-  if(!t)return;
-  t.status='aprovada';
-  const registroAprovacao=t.registros?.[hojeLocal()];
-  if(registroAprovacao){
-    registroAprovacao.status='aprovada';
-    registroAprovacao.aprovadaEm=Date.now();
-    registroAprovacao.historico=registroAprovacao.historico||[];registroAprovacao.historico.push({status:'aprovada',t:Date.now()});registroAprovacao.historico=registroAprovacao.historico.slice(-20);
+async function apagarFotoDepoisDaAprovacao(t,registro){
+  const caminho=t?.fotoPath||registro?.fotoPath;
+  if(caminho&&storageFirebase){
+    try{await storageFirebase.ref(caminho).delete()}
+    catch(error){console.warn('Foto aprovada não pôde ser apagada do Storage:',error);registrarLogAtividade(`Aviso: falha ao apagar foto da tarefa ${t.texto}`)}
   }
-  t.historicoAprovacoes=t.historicoAprovacoes||[];t.historicoAprovacoes.push({status:'aprovada',t:Date.now()});t.historicoAprovacoes=t.historicoAprovacoes.slice(-20);
+  // Remove referências locais e do registro diário, mesmo no plano Spark.
+  t.foto=null;t.fotoUrl=null;t.fotoPath=null;
+  if(registro){registro.foto=null;registro.fotoUrl=null;registro.fotoPath=null;registro.fotoApagadaEm=Date.now()}
+}
+async function aprovarTarefaPais(id){
+  const t=estado.tarefas.find(x=>String(x.id)===String(id));
+  if(!t)return;
+  const hoje=hojeLocal();
+  const registroAprovacao=registroTarefaHoje(t);
+  // Idempotência: a mesma tarefa só pode pagar uma vez por dia.
+  // O marcador fica no registro diário e continua após recarregar ou sincronizar.
+  if(t.status==='aprovada'||registroAprovacao.status==='aprovada'||registroAprovacao.recompensaPagaEm){
+    mostrarToast('ℹ️ Esta tarefa já foi processada hoje.');
+    return;
+  }
+  const agora=Date.now();
+  const recompensa=Math.max(0,Number(t.recompensa)||0);
+  const xp=Math.max(0,Number(t.xp)||20);
+  t.status='aprovada';
+  registroAprovacao.status='aprovada';
+  registroAprovacao.aprovadaEm=agora;
+  registroAprovacao.recompensaPagaEm=agora;
+  registroAprovacao.pagamentoId=`tarefa:${String(t.id)}:${hoje}`;
+  registroAprovacao.historico=registroAprovacao.historico||[];
+  registroAprovacao.historico.push({status:'aprovada',t:agora,pagamentoId:registroAprovacao.pagamentoId});
+  registroAprovacao.historico=registroAprovacao.historico.slice(-20);
+  t.historicoAprovacoes=t.historicoAprovacoes||[];
+  t.historicoAprovacoes.push({status:'aprovada',t:agora,pagamentoId:registroAprovacao.pagamentoId});
+  t.historicoAprovacoes=t.historicoAprovacoes.slice(-20);
+  // Comprovante só é necessário até a decisão dos pais.
+  await apagarFotoDepoisDaAprovacao(t,registroAprovacao);
+  // O marcador é salvo antes das atualizações visuais. Se o usuário tocar novamente,
+  // a função retorna sem conceder moedas ou XP em duplicidade.
+  estado.moedas=(Number(estado.moedas)||0)+recompensa;
+  estado.dinheiroAcumulado=(Number(estado.dinheiroAcumulado)||0)+(recompensa*(Number(estado.taxaCambio)||.01));
+  estado.tarefasHojeCount=(Number(estado.tarefasHojeCount)||0)+1;
+  registrarNoRelatorioDiario(1,recompensa);
   persistirTarefaIndividualV2(t).catch(e=>console.warn('Tarefa individual:',e));
-  estado.moedas+=Number(t.recompensa)||0;
-  estado.dinheiroAcumulado=(estado.dinheiroAcumulado||0)+(Number(t.recompensa)||0)*(Number(estado.taxaCambio)||.01);
-  estado.tarefasHojeCount=(estado.tarefasHojeCount||0)+1;
-  registrarNoRelatorioDiario(1,Number(t.recompensa)||0);
+  salvar();
   idTarefaRecemAprovada=id;
   const liberouOfensiva=registrarConclusaoDoDia();
   if(liberouOfensiva){
@@ -3839,10 +4017,10 @@ function aprovarTarefaPais(id){
       setTimeout(()=>abrirBauSemanal(s),600);
     }
   }
-  ganharXP(Number(t.xp)||20);
+  ganharXP(xp);
   dispararConfetes();
   marcarConquistas();
-  registrarLogAtividade(`Tarefa aprovada: ${t.texto} (+${Number(t.recompensa)||0}🪙)`);
+  registrarLogAtividade(`Tarefa aprovada: ${t.texto} (+${recompensa}🪙)`);
   mostrarAviso('🎉','Tarefa aprovada!',liberouOfensiva?'Obrigatórias concluídas! Ofensiva liberada 🔥':'Moedas e XP adicionados.');
   mostrarBalaoFala(escolherFalaContextual('aposTarefa'));
   renderizarPainelPais();
