@@ -95,9 +95,9 @@ button{touch-action:manipulation}
 .opcao-pet.bloqueado{filter:grayscale(1);opacity:.55}
 .lock-mini{position:absolute;right:-2px;bottom:-2px;font-size:10px}
 .cat-section{flex:1;min-height:0;display:flex;flex-direction:column;align-items:center;justify-content:center;position:relative}
-.pet-stage{width:min(270px,72vw);height:min(270px,42vh);min-height:180px;border-radius:35px;background:rgba(255,255,255,.16);border:1px solid rgba(255,255,255,.25);display:flex;align-items:center;justify-content:center;position:relative;box-shadow:inset 0 0 40px rgba(255,255,255,.12)}
+.pet-stage{width:min(230px,64vw);height:min(230px,36vh);min-height:150px;border-radius:35px;background:rgba(255,255,255,.16);border:1px solid rgba(255,255,255,.25);display:flex;align-items:center;justify-content:center;position:relative;box-shadow:inset 0 0 40px rgba(255,255,255,.12)}
 .pet-stage:after{content:"";position:absolute;width:120px;height:18px;border-radius:50%;bottom:17px;background:#0002;filter:blur(7px)}
-#pet-svg-container{width:172px;height:172px;position:relative;z-index:2}
+#pet-svg-container{width:148px;height:148px;position:relative;z-index:2}
 #pet-svg-container svg{width:100%;height:100%;filter:drop-shadow(0 9px 12px rgba(0,0,0,.18))}
 .camada-pet,.camada-acessorio{position:absolute;inset:0}
 @keyframes acessorioPulo{0%{transform:translateY(0) scale(1)}30%{transform:translateY(-14px) scale(1.08)}55%{transform:translateY(2px) scale(.97)}75%{transform:translateY(-6px) scale(1.03)}100%{transform:translateY(0) scale(1)}}
@@ -215,7 +215,7 @@ button{touch-action:manipulation}
 @keyframes pulseSurpresa{0%,100%{transform:scale(1)}50%{transform:scale(1.14)}}
 .tab-btn{border:0;background:#f1f5f9;color:#64748b;border-radius:10px;padding:8px;font-size:10px;font-weight:900;cursor:pointer}
 .tab-btn.ativa{background:#7c3aed;color:#fff}
-@media(max-height:650px){.pet-stage{height:185px;min-height:160px}.tasks-section{max-height:105px}.bottom-btn{min-height:50px}.btn-icon{font-size:17px}#pet-svg-container{width:132px;height:132px}}
+@media(max-height:650px){.pet-stage{height:155px;min-height:135px}.tasks-section{max-height:105px}.bottom-btn{min-height:50px}.btn-icon{font-size:17px}#pet-svg-container{width:116px;height:116px}}
 
 /* ===== Refino visual & animações ===== */
 .top-pill{
@@ -654,6 +654,17 @@ button:focus-visible,input:focus-visible,.top-pill:focus-visible{
   background:#e2e8f0;color:#1e293b;margin-top:10px;
 }
 .botao-secundario:active{background:#cbd5e1;}
+
+#objetos-pet-layer{position:absolute;inset:0;pointer-events:none;z-index:4}
+.objeto-pet{position:absolute;display:flex;align-items:center;justify-content:center;filter:drop-shadow(0 5px 5px #0003);user-select:none}
+.objeto-bola{left:7%;bottom:17%;font-size:30px;animation:bolaQuique 1.25s ease-in-out infinite}
+.objeto-caixas{right:5%;bottom:16%;font-size:32px;animation:caixasPulso 1.5s ease-in-out infinite}
+.objeto-planta{left:5%;bottom:12%;font-size:34px;animation:plantaBalan 3s ease-in-out infinite}
+.objeto-livro{right:5%;bottom:12%;font-size:34px;animation:livroFlutua 2.4s ease-in-out infinite}
+@keyframes bolaQuique{0%,100%{transform:translateY(0) rotate(0)}45%{transform:translateY(-28px) rotate(180deg)}70%{transform:translateY(0) rotate(300deg)}}
+@keyframes caixasPulso{0%,100%{transform:scale(1)}50%{transform:scale(1.1)}}
+@keyframes plantaBalan{0%,100%{transform:rotate(-4deg)}50%{transform:rotate(5deg)}}
+@keyframes livroFlutua{0%,100%{transform:translateY(0) rotate(-3deg)}50%{transform:translateY(-8px) rotate(3deg)}}
 </style>
 </head>
 <body class="cenario-ceu">
@@ -737,6 +748,7 @@ button:focus-visible,input:focus-visible,.top-pill:focus-visible{
   <div class="cat-section" id="pet-section-area">
     <div class="pet-stage">
       <button class="surpresa-dia-btn hidden" id="btn-surpresa-dia" onclick="abrirSurpresaDia()" aria-label="Abrir surpresa do dia">🎁</button>
+      <div id="objetos-pet-layer" aria-hidden="true"></div>
       <div class="balao-fala" id="balao-fala" role="status" aria-live="polite"></div>
       <div class="cat-wrapper" id="pet-principal" onclick="interagirComPet(event)" role="button" tabindex="0" aria-label="Dar carinho no pet"><div id="pet-svg-container"></div></div>
     </div>
@@ -1279,7 +1291,14 @@ const ACESSORIOS=[
 {id:'grinalda',nome:'Grinalda de Flores',emoji:'🌸',preco:22,svg:'<svg viewBox="0 0 270 285" xmlns="http://www.w3.org/2000/svg"><g>'+[ [98,60,'#f472b6'],[118,48,'#fbbf24'],[138,44,'#f472b6'],[158,50,'#a78bfa'],[174,62,'#fbbf24'] ].map(([x,y,cor])=>`<g fill="${cor}"><circle cx="${x-6}" cy="${y}" r="6"/><circle cx="${x+6}" cy="${y}" r="6"/><circle cx="${x}" cy="${y-6}" r="6"/><circle cx="${x}" cy="${y+6}" r="6"/><circle cx="${x}" cy="${y}" r="4" fill="#fff7ed"/></g>`).join('')+'</g></svg>'},
 {id:'gravata',nome:'Gravata Borboleta',emoji:'🎀',preco:16,svg:'<svg viewBox="0 0 270 285" xmlns="http://www.w3.org/2000/svg"><g transform="translate(135,196)"><path d="M-22 0 Q-22 -15 0 -5 Q22 -15 22 0 Q22 15 0 5 Q-22 15 -22 0Z" fill="#1e293b" stroke="#fff" stroke-width="2"/><circle cx="0" cy="0" r="6" fill="#ef4444"/></g></svg>'},
 {id:'fone',nome:'Fone de Ouvido',emoji:'🎧',preco:25,svg:'<svg viewBox="0 0 270 285" xmlns="http://www.w3.org/2000/svg"><defs><linearGradient id="gAcFone" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#f472b6"/><stop offset="100%" stop-color="#db2777"/></linearGradient></defs><path d="M78 118Q80 55 135 52Q190 55 192 118" fill="none" stroke="url(#gAcFone)" stroke-width="9" stroke-linecap="round"/><ellipse cx="78" cy="128" rx="15" ry="20" fill="url(#gAcFone)" stroke="#831843" stroke-width="2"/><ellipse cx="192" cy="128" rx="15" ry="20" fill="url(#gAcFone)" stroke="#831843" stroke-width="2"/><ellipse cx="78" cy="128" rx="7" ry="11" fill="#fce7f3"/><ellipse cx="192" cy="128" rx="7" ry="11" fill="#fce7f3"/></svg>'}
+	];
+const OBJETOS_PET=[
+  {id:'obj_bola',nome:'Bola Saltitante',emoji:'⚽',preco:24,tipo:'objeto',classe:'objeto-bola'},
+  {id:'obj_caixas',nome:'Caixas de Som',emoji:'🔊',preco:32,tipo:'objeto',classe:'objeto-caixas'},
+  {id:'obj_planta',nome:'Plantinha Companheira',emoji:'🪴',preco:20,tipo:'objeto',classe:'objeto-planta'},
+  {id:'obj_livro',nome:'Livrinho Mágico',emoji:'📖',preco:28,tipo:'objeto',classe:'objeto-livro'}
 ];
+ACESSORIOS.push(...OBJETOS_PET);
 const BANCO_FUNDOS=[
 {id:'ceu',nome:'Céu de Verão',emoji:'☀️',preco:0,bg:'linear-gradient(180deg,#38bdf8,#e0f2fe,#fef9c3)'},{id:'chuva',nome:'Chuva Suave',emoji:'🌧️',preco:12,bg:'linear-gradient(180deg,#334155,#94a3b8)'},{id:'noite',nome:'Noite Estrelada',emoji:'🌙',preco:20,bg:'radial-gradient(ellipse at 70% 20%,#1e3a8a,#020617)'},{id:'arcoiris',nome:'Arco-Íris',emoji:'🌈',preco:30,bg:'linear-gradient(180deg,#f87171,#fbbf24,#4ade80,#38bdf8,#a78bfa)'},{id:'praia',nome:'Praia Tropical',emoji:'🏖️',preco:25,bg:'linear-gradient(180deg,#7dd3fc,#38bdf8,#fde68a,#fbbf24)'},{id:'floresta',nome:'Floresta Mágica',emoji:'🌲',preco:22,bg:'linear-gradient(180deg,#86efac,#166534)'},{id:'festa',nome:'Balada Neon',emoji:'🎉',preco:35,bg:'linear-gradient(160deg,#f472b6,#a78bfa,#22d3ee)'},{id:'halloween',nome:'Noite de Halloween',emoji:'🎃',preco:40,bg:'linear-gradient(180deg,#1a1033,#7c2d12)'},{id:'estadio',nome:'Campo de Futebol',emoji:'⚽',preco:45,bg:'linear-gradient(180deg,#0c4a6e,#16a34a,#14532d)'},{id:'quarto',nome:'Quarto Fofo',emoji:'🛏️',preco:35,bg:'linear-gradient(180deg,#faf5ff,#e9d5ff)'},{id:'mario',nome:'Mundo Aventura',emoji:'🍄',preco:50,bg:'linear-gradient(180deg,#67e8f9,#4ade80)'},{id:'dino',nome:'Era dos Dinos',emoji:'🦖',preco:45,bg:'linear-gradient(180deg,#fef3c7,#84cc16,#166534)'},{id:'princesa',nome:'Castelo Real',emoji:'👑',preco:40,bg:'linear-gradient(180deg,#fdf2f8,#f9a8d4)'},{id:'astronauta',nome:'Espaço Sideral',emoji:'🚀',preco:50,bg:'radial-gradient(ellipse at 50% 30%,#312e81,#020617)'},{id:'pirata',nome:'Mar dos Piratas',emoji:'🏴‍☠️',preco:45,bg:'linear-gradient(180deg,#0ea5e9,#78350f,#1c1917)'},{id:'fazenda',nome:'Fazenda Feliz',emoji:'🐄',preco:35,bg:'linear-gradient(180deg,#7dd3fc,#fde68a,#4ade80)'},{id:'neve',nome:'Natal Nevado',emoji:'🎄',preco:40,bg:'linear-gradient(180deg,#e0f2fe,#fff)'},{id:'aniversario',nome:'Festa de Aniversário',emoji:'🎂',preco:0,bg:'linear-gradient(180deg,#c4b5fd,#f9a8d4,#fde68a)'}];
 // TEMAS = fundo + acessório combinando, vendidos juntos como um combo.
@@ -4231,13 +4250,17 @@ function renderizarColecao(){
   }
 }
 const CONQUISTAS=[
-  ['primeira','🥇','Primeiro Passo','Aprove sua primeira tarefa.'],
-  ['diaCheio','⚡','Super Produtivo','Conclua 5 tarefas no mesmo dia.'],
-  ['mestreMath','🧠','Gênio da Matemática','Acerte 10 desafios de matemática.'],
-  ['cem','🪙','Cofrinho Cheio','Junte 100 moedas.'],
-  ['streak7','🔥','Semana de Fogo','Atinja 7 dias seguidos de ofensiva.'],
-  ['nivel10','⭐','Veterano','Chegue ao nível 10 com um pet.'],
-  ['pet5','🐾','Colecionador','Desbloqueie todos os pets.']
+  ['primeira','🥇','Primeiro Passo','Aprove sua primeira tarefa.',10],
+  ['diaCheio','⚡','Super Produtivo','Conclua 5 tarefas no mesmo dia.',25],
+  ['mestreMath','🧠','Gênio da Matemática','Acerte 10 desafios de matemática.',30],
+  ['cem','🪙','Cofrinho Cheio','Junte 100 moedas.',30],
+  ['streak7','🔥','Semana de Fogo','Atinja 7 dias seguidos de ofensiva.',50],
+  ['nivel10','⭐','Veterano','Chegue ao nível 10 com um pet.',60],
+  ['pet5','🐾','Colecionador','Desbloqueie todos os pets.',80],
+  ['tarefas10','📋','Mão na Massa','Aprove 10 tarefas ao todo.',45],
+  ['acessorio','🎀','Pet Fashion','Compre seu primeiro acessório.',20],
+  ['objeto','🎪','Cantinho do Pet','Equipe um objeto animado ao lado do pet.',35],
+  ['streak30','🏆','Lenda da Ofensiva','Atinja 30 dias seguidos de ofensiva.',100]
 ];
 function contarFeitas(){return estado.tarefas.filter(t=>statusTarefaAtual(t)==='aprovada').length}
 function marcarConquistas(){
@@ -4248,7 +4271,10 @@ function marcarConquistas(){
       estado.conquistas[id]=true;
       nova=true;
       const c=CONQUISTAS.find(x=>x[0]===id);
-      mostrarAviso(c[1],'🏆 Nova Conquista!',c[2]);
+      const premio=Number(c[4])||0;
+      estado.moedas=(estado.moedas||0)+premio;
+      estado.dinheiroAcumulado=(estado.dinheiroAcumulado||0)+premio*(Number(estado.taxaCambio)||.01);
+      mostrarAviso(c[1],'🏆 Nova Conquista!',`${c[2]} +${premio} moedas`);
       ganharXP(30);
     }
   };
@@ -4259,6 +4285,10 @@ function marcarConquistas(){
   checar('streak7',(estado.streak||0)>=7);
   checar('nivel10',nivelJogador()>=10);
   checar('pet5',nivelJogador()>=15);
+  checar('tarefas10',contarFeitas()>=10);
+  checar('acessorio',(estado.acessorios?.comprados||[]).length>=1);
+  checar('objeto',(estado.acessorios?.comprados||[]).some(id=>OBJETOS_PET.some(o=>o.id===id)));
+  checar('streak30',(estado.streak||0)>=30);
   salvar();
   renderizarConquistas();
   if(nova){
@@ -4638,10 +4668,17 @@ function selecionarOuComprarAcessorio(a){
 }
 function renderizarAcessorioNoContainer(){
   const c=document.getElementById('camada-acessorio');
+  const objetos=document.getElementById('objetos-pet-layer');
   if(!c)return;
   const ativo=estado.acessorios?.ativo;
   const item=buscarAcessorioPorId(ativo);
-  if(!item){c.innerHTML='';return;}
+  if(!item){c.innerHTML='';if(objetos)objetos.innerHTML='';return;}
+  if(objetos)objetos.innerHTML='';
+  if(item.tipo==='objeto'){
+    c.innerHTML='';
+    if(objetos)objetos.innerHTML=`<span class="objeto-pet ${item.classe}" title="${esc(item.nome)}">${item.emoji}</span>`;
+    return;
+  }
   c.innerHTML=item.svgPorEspecie?(item.svgPorEspecie[estado.petAtual]||item.svgPorEspecie.gato):item.svg;
 }
 function abrirLojaRecompensas(){
