@@ -665,6 +665,18 @@ button:focus-visible,input:focus-visible,.top-pill:focus-visible{
 @keyframes caixasPulso{0%,100%{transform:scale(1)}50%{transform:scale(1.1)}}
 @keyframes plantaBalan{0%,100%{transform:rotate(-4deg)}50%{transform:rotate(5deg)}}
 @keyframes livroFlutua{0%,100%{transform:translateY(0) rotate(-3deg)}50%{transform:translateY(-8px) rotate(3deg)}}
+
+.painel-resumo-pais{background:linear-gradient(135deg,#eef2ff,#faf5ff);border:1px solid #c4b5fd;border-radius:16px;padding:10px;margin-bottom:9px;box-shadow:0 5px 15px rgba(76,29,149,.08)}
+.painel-resumo-head{display:flex;justify-content:space-between;align-items:center;gap:8px}.painel-resumo-head b{font-size:11px;color:#312e81}.painel-resumo-head small{display:block;font-size:8px;color:#64748b;margin-top:2px}.painel-resumo-head>span{background:#fff;border:1px solid #ddd6fe;color:#7c3aed;border-radius:99px;padding:5px 8px;font-size:10px;font-weight:900}.pais-resumo-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:6px;margin-top:9px}.pais-resumo-grid>div{background:#fff;border-radius:12px;padding:7px 4px;text-align:center;border:1px solid #e5e7eb}.pais-resumo-grid span{display:block;font-size:15px}.pais-resumo-grid b{display:block;font-size:11px;color:#1e293b;margin-top:2px}.pais-resumo-grid small{display:block;font-size:7px;color:#64748b;margin-top:2px}.pais-proxima{margin-top:8px;background:#fff;border:1px solid #e5e7eb;border-radius:11px;padding:8px;font-size:9px;font-weight:800;color:#475569;line-height:1.35}
+
+.crianca-progresso-card{background:linear-gradient(135deg,#fff7ed,#fef3c7);border:1px solid #fbbf24;border-radius:16px;padding:9px 10px;margin-top:5px;box-shadow:0 5px 15px rgba(180,83,9,.1)}
+.crianca-progresso-head{display:flex;justify-content:space-between;align-items:center;gap:8px}.crianca-progresso-head b{font-size:11px;color:#92400e}.crianca-progresso-head small{display:block;font-size:8px;color:#a16207;margin-top:2px}.crianca-progresso-head>span{background:#fff;border:1px solid #fcd34d;color:#b45309;border-radius:99px;padding:4px 8px;font-size:10px;font-weight:900}.crianca-track{height:8px;background:#fde68a;border-radius:99px;overflow:hidden;margin-top:8px}.crianca-track>div{height:100%;width:0;background:linear-gradient(90deg,#f59e0b,#22c55e);border-radius:99px;transition:width .5s}.crianca-progresso-bottom{display:flex;justify-content:space-between;margin-top:5px;font-size:8px;font-weight:900;color:#92400e}.crianca-proxima{margin-top:7px;background:#fff;border-radius:10px;padding:7px 8px;font-size:9px;font-weight:900;color:#78350f;line-height:1.3}
+
+.motivo-recusa{margin-top:4px;padding:5px 7px;background:#fef2f2;border:1px solid #fecaca;border-radius:8px;color:#b91c1c;font-size:8px;font-weight:800;line-height:1.25}
+
+.historico-tarefa{padding:7px 0;border-bottom:1px solid #f1f5f9;font-size:8px;line-height:1.3}.historico-tarefa:last-child{border-bottom:0}.historico-tarefa .hist-data{font-size:7px;color:#94a3b8;font-weight:800}.historico-tarefa .hist-ok{color:#15803d;font-weight:900}.historico-tarefa .hist-no{color:#b91c1c;font-weight:900}.historico-tarefa .hist-motivo{margin-top:3px;background:#fef2f2;border-radius:6px;padding:4px;color:#991b1b;font-weight:700}
+
+.mes-comparacao{display:grid;grid-template-columns:repeat(3,1fr);gap:5px;margin-top:7px}.mes-comp-item{background:#fff7ed;border:1px solid #fed7aa;border-radius:9px;padding:6px 3px;text-align:center;font-size:8px}.mes-comp-item b{display:block;font-size:10px;color:#9a3412}.mes-comp-item small{display:block;color:#64748b;font-size:7px;margin-top:2px}.mes-calendario{display:grid;grid-template-columns:repeat(7,1fr);gap:3px;margin-top:8px}.mes-dia{aspect-ratio:1;border-radius:5px;background:#f1f5f9;display:flex;align-items:center;justify-content:center;font-size:7px;color:#94a3b8;font-weight:800}.mes-dia.ativo{background:#86efac;color:#166534}.mes-dia.hoje{outline:2px solid #7c3aed;outline-offset:1px}
 </style>
 </head>
 <body class="cenario-ceu">
@@ -755,6 +767,12 @@ button:focus-visible,input:focus-visible,.top-pill:focus-visible{
     <div class="level-badge">⭐ <span class="level-number">Nível <span id="numero-nivel">1</span></span></div>
     <div class="xp-bar-bg"><div class="xp-bar-fill" id="barra-xp"></div><span class="xp-text">XP <span id="texto-xp">0/100</span></span></div>
     <div class="evo-name" id="pet-evol-nome">Pipoca • Gatinho Sombra</div>
+  </div>
+  <div class="crianca-progresso-card" id="crianca-progresso-card">
+    <div class="crianca-progresso-head"><div><b id="crianca-progresso-titulo">🌟 Seu dia</b><small id="crianca-progresso-sub">Vamos começar!</small></div><span id="crianca-progresso-percent">0%</span></div>
+    <div class="crianca-track"><div id="crianca-progresso-barra"></div></div>
+    <div class="crianca-progresso-bottom"><span id="crianca-progresso-contagem">0/0 missões</span><span id="crianca-progresso-recompensa">🪙 0 hoje</span></div>
+    <div class="crianca-proxima" id="crianca-proxima-missao">🎯 Sua próxima missão aparecerá aqui.</div>
   </div>
   <div class="tasks-section">
     <div class="task-header"><b style="font-size:10px">✨ Missões de hoje</b><span style="font-size:8px;font-weight:900;color:#0284c7" id="qtd-tarefas">2 missões</span></div>
@@ -892,6 +910,15 @@ button:focus-visible,input:focus-visible,.top-pill:focus-visible{
     </div>
     <small style="font-size:8px;color:#a16207;margin-top:4px;display:block" id="txt-meta-familiar-dica">Complete a meta para liberar o baú.</small>
   </div>
+  <div class="painel-resumo-pais" id="painel-resumo-pais">
+    <div class="painel-resumo-head"><div><b>📌 Resumo de hoje</b><small id="pais-resumo-sub">Acompanhe a rotina da criança.</small></div><span id="pais-resumo-badge">0%</span></div>
+    <div class="pais-resumo-grid">
+      <div><span>✅</span><b id="pais-feitas-hoje">0/0</b><small>feitas hoje</small></div>
+      <div><span>⏳</span><b id="pais-pendentes-hoje">0</b><small>para aprovar</small></div>
+      <div><span>🔥</span><b id="pais-streak-hoje">0</b><small>dias seguidos</small></div>
+    </div>
+    <div class="pais-proxima" id="pais-proxima-missao">🎯 Nenhuma missão pendente hoje.</div>
+  </div>
   <div class="section-card">
     <label class="field-label">👨‍👩‍👧‍👦 Filhos</label>
     <div class="stack" id="lista-criancas-pais" style="margin:4px 0"></div>
@@ -937,6 +964,11 @@ button:focus-visible,input:focus-visible,.top-pill:focus-visible{
     <label class="field-label">📸 Fotos das tarefas</label>
     <button type="button" class="primary-btn red-btn" style="width:100%" onclick="limparTodasFotosTarefas()">🗑️ Apagar todas as fotos</button>
     <small style="font-size:8px;color:#64748b;margin-top:3px;display:block">Remove as imagens de comprovante já enviadas (não desfaz moedas/XP já concedidos).</small>
+  </div>
+  <div class="section-card">
+    <label class="field-label">🧾 Histórico de tarefas</label>
+    <div id="lista-historico-tarefas" class="stack" style="max-height:180px;overflow:auto;margin-top:4px"></div>
+    <small style="font-size:8px;color:#64748b;margin-top:4px;display:block">Mostra aprovações, recusas e orientações recentes.</small>
   </div>
   <div class="section-card">
     <label class="field-label">📜 Log de atividades</label>
@@ -989,7 +1021,7 @@ button:focus-visible,input:focus-visible,.top-pill:focus-visible{
   <div class="section-card"><b style="font-size:10px">✏️ Gerenciar tarefas</b><div style="font-size:8px;color:#64748b;margin-top:4px">Obrigatórias 🔥 contam para a ofensiva. Extras ⭐ dão moedas sem travar o streak.</div><div class="stack" id="lista-edicao-tarefas" style="margin:6px 0"></div><div style="display:grid;grid-template-columns:1fr 48px 88px auto;gap:4px"><input class="field" id="nova-tarefa-texto" placeholder="Nova tarefa"><input class="field" id="nova-tarefa-moedas" type="number" value="5" min="1"><select class="field" id="nova-tarefa-tipo"><option value="obrigatoria">🔥 Obrigatória</option><option value="extra">⭐ Extra</option></select><button class="primary-btn blue-btn" onclick="adicionarTarefa()">+</button></div>
     <div style="margin-top:6px"><span class="field-label" style="margin-bottom:2px">📅 Repetir em (vazio = todo dia)</span><div class="dias-semana-picker" id="dias-nova-tarefa"></div></div>
   </div>
-  <div class="section-card"><div style="display:flex;justify-content:space-between;align-items:center"><b style="font-size:10px">📊 Resumo</b><button class="primary-btn blue-btn" onclick="abrirRelatorioSemanal()">Ver relatório semanal</button></div><div class="stat-grid" style="margin-top:6px"><div class="stat">📋 <b id="stat-feitas">0</b><span>tarefas feitas</span></div><div class="stat">🔥 <b id="stat-ofensiva-pais">0</b><span>dias de ofensiva</span></div><div class="stat">🏆 <b id="stat-conquistas">0</b><span>conquistas</span></div></div></div>
+  <div class="section-card"><div style="display:flex;justify-content:space-between;align-items:center;gap:5px"><b style="font-size:10px">📊 Resumo</b><div style="display:flex;gap:4px"><button class="primary-btn blue-btn" onclick="abrirRelatorioSemanal()">Semanal</button><button class="primary-btn pink-btn" onclick="abrirRelatorioMensal()">Mensal</button></div></div><div class="stat-grid" style="margin-top:6px"><div class="stat">📋 <b id="stat-feitas">0</b><span>tarefas feitas</span></div><div class="stat">🔥 <b id="stat-ofensiva-pais">0</b><span>dias de ofensiva</span></div><div class="stat">🏆 <b id="stat-conquistas">0</b><span>conquistas</span></div></div></div>
   <button class="primary-btn" style="width:100%;margin-top:5px;background:#e2e8f0;color:#475569" onclick="fecharModal('modal-pais');alternarPerfil()">🔄 Trocar Perfil de Usuário</button>
 </div></div>
 <div id="modal-relatorio" class="modal-overlay"><div class="modal"><div class="modal-title"><h3>📊 Relatório Semanal</h3><button class="close-btn" onclick="fecharModal('modal-relatorio')">×</button></div>
@@ -999,6 +1031,12 @@ button:focus-visible,input:focus-visible,.top-pill:focus-visible{
     <div class="stat">🔥 <b id="rel-streak-atual">0</b><span>dias de ofensiva</span></div>
     <div class="stat">⭐ <b id="rel-media-dia">0</b><span>média tarefas/dia</span></div>
   </div>
+  <div class="stat-grid" style="margin-bottom:9px">
+    <div class="stat">🏅 <b id="rel-melhor-dia">—</b><span>melhor dia</span></div>
+    <div class="stat">📅 <b id="rel-dias-ativos">0/7</b><span>dias ativos</span></div>
+    <div class="stat">⏳ <b id="rel-pendentes">0</b><span>aguardando aprovação</span></div>
+    <div class="stat">🎯 <b id="rel-meta-semana">0%</b><span>ritmo da semana</span></div>
+  </div>
   <div class="section-card" style="margin-bottom:9px">
     <b style="font-size:10px">📈 Atividade da semana</b>
     <div id="rel-barras-semana" style="display:flex;align-items:flex-end;gap:6px;height:72px;margin-top:10px;padding:0 2px"></div>
@@ -1006,6 +1044,18 @@ button:focus-visible,input:focus-visible,.top-pill:focus-visible{
   </div>
   <div class="section-card"><div class="stack" id="rel-lista-dias"></div></div>
   <p id="rel-insight" style="font-size:9px;font-weight:800;color:#475569;margin-top:8px;text-align:center;line-height:1.35"></p>
+</div></div>
+<div id="modal-relatorio-mensal" class="modal-overlay"><div class="modal"><div class="modal-title"><h3>📅 Relatório Mensal</h3><button class="close-btn" onclick="fecharModal('modal-relatorio-mensal')">×</button></div>
+  <p id="rel-mes-titulo" style="font-size:9px;color:#64748b;text-align:center;margin:-2px 0 9px"></p>
+  <div class="stat-grid" style="margin-bottom:9px">
+    <div class="stat">📋 <b id="mes-total-tarefas">0</b><span>tarefas concluídas</span></div>
+    <div class="stat">🪙 <b id="mes-total-moedas">0</b><span>moedas distribuídas</span></div>
+    <div class="stat">📅 <b id="mes-dias-ativos">0</b><span>dias ativos</span></div>
+    <div class="stat">🏆 <b id="mes-conquistas">0</b><span>conquistas</span></div>
+  </div>
+  <div class="section-card" style="margin-bottom:9px"><b style="font-size:10px">📈 Comparação com os 30 dias anteriores</b><div id="mes-comparacao" class="mes-comparacao"></div></div>
+  <div class="section-card"><b style="font-size:10px">🗓️ Atividade do mês</b><div id="mes-calendario" class="mes-calendario"></div></div>
+  <p id="mes-insight" style="font-size:9px;font-weight:800;color:#475569;margin-top:8px;text-align:center;line-height:1.35"></p>
 </div></div>
 <div id="modal-evolucoes" class="modal-overlay"><div class="modal"><div class="modal-title"><h3>⭐ Evoluções — <span id="modal-pet-evol-nome">Pipoca</span></h3><button class="close-btn" onclick="fecharModal('modal-evolucoes')">×</button></div><div class="stack" id="lista-evolucoes"></div></div></div>
 <div id="modal-colecao" class="modal-overlay">
@@ -2886,6 +2936,8 @@ function enviarParaAprovacao(id){
   const t=estado.tarefas.find(t=>String(t.id)===String(id));
   if(!t)return;
   const r=registroTarefaHoje(t);
+  t.motivoRecusa=null;
+  r.motivoRecusa=null;
   r.status='aguardando_aprovacao';
   r.enviadaEm=Date.now();
   t.status='aguardando_aprovacao';
@@ -2939,7 +2991,31 @@ function registrarConclusaoDoDia(){
   return true;
 }
 let idTarefaRecemAprovada=null;
+function renderizarResumoCrianca(){
+  const lista=tarefasDeHoje();
+  const aprovadas=lista.filter(t=>statusTarefaAtual(t)==='aprovada').length;
+  const pendentes=lista.filter(t=>statusTarefaAtual(t)==='aguardando_aprovacao').length;
+  const total=lista.length;
+  const perc=total?Math.round((aprovadas/total)*100):0;
+  const ganho=lista.filter(t=>statusTarefaAtual(t)==='aprovada').reduce((n,t)=>n+(Number(t.recompensa)||0),0);
+  const el=(id)=>document.getElementById(id);
+  if(el('crianca-progresso-percent'))el('crianca-progresso-percent').textContent=`${perc}%`;
+  if(el('crianca-progresso-barra'))el('crianca-progresso-barra').style.width=`${perc}%`;
+  if(el('crianca-progresso-contagem'))el('crianca-progresso-contagem').textContent=`${aprovadas}/${total} missão(ões)`;
+  if(el('crianca-progresso-recompensa'))el('crianca-progresso-recompensa').textContent=`🪙 ${ganho} hoje`;
+  if(el('crianca-progresso-titulo'))el('crianca-progresso-titulo').textContent=perc===100&&total?'🎉 Dia completo!':'🌟 Seu dia';
+  if(el('crianca-progresso-sub'))el('crianca-progresso-sub').textContent=total?`${Math.max(0,total-aprovadas)} missão(ões) para terminar`:'Nenhuma missão para hoje';
+  const prox=lista.find(t=>statusTarefaAtual(t)!=='aprovada'&&statusTarefaAtual(t)!=='aguardando_aprovacao');
+  const agu=lista.find(t=>statusTarefaAtual(t)==='aguardando_aprovacao');
+  if(el('crianca-proxima-missao')){
+    if(agu)el('crianca-proxima-missao').textContent=`⏳ ${agu.texto} está com os pais para aprovação.`;
+    else if(prox)el('crianca-proxima-missao').textContent=`🎯 Próxima: ${prox.texto} · +${Number(prox.recompensa)||0} 🪙`;
+    else if(total)el('crianca-proxima-missao').textContent='🏆 Você completou todas as missões de hoje!';
+    else el('crianca-proxima-missao').textContent='🎯 Seus pais ainda não criaram uma missão para hoje.';
+  }
+}
 function renderizarTarefas(){
+  renderizarResumoCrianca();
   const c=document.getElementById('lista-tarefas');
   c.innerHTML='';
   const hojeLista=tarefasDeHoje();
@@ -2977,6 +3053,7 @@ function renderizarTarefas(){
         <div>
           <div class="task-name" style="${apr?'text-decoration:line-through;color:#94a3b8':''}">${esc(t.texto)}<span style="font-size:7px;color:#7c3aed;font-weight:900">${esc(badgeDias)}</span></div>
           <span class="task-reward">+${Number(t.xp)||20} XP • +${Number(t.recompensa)||5} 🪙 ${t.foto?'• 📸':''}</span>
+          ${t.motivoRecusa?`<div class="motivo-recusa">↩️ ${esc(t.motivoRecusa)}</div>`:''}
         </div>
         <div class="task-actions">
           ${apr?'<span style="font-size:9px;color:#10b981;font-weight:900">✓ Feito</span>':pend?'<span style="font-size:8px;color:#f59e0b;font-weight:900">Avaliando</span>':`<button class="task-btn btn-photo" onclick="dispararCamera(${t.id})">📷</button><button class="task-btn btn-ok" onclick="enviarParaAprovacao(${t.id})">Enviar</button>`}
@@ -3512,9 +3589,36 @@ function excluirCrianca(id){
   }
   renderizarListaCriancasPais();
 }
+function renderizarResumoPainelPais(){
+  const lista=tarefasDeHoje();
+  const aprovadas=lista.filter(t=>statusTarefaAtual(t)==='aprovada').length;
+  const pendentes=lista.filter(t=>statusTarefaAtual(t)==='aguardando_aprovacao').length;
+  const total=lista.length;
+  const perc=total?Math.round((aprovadas/total)*100):0;
+  const elFeitas=document.getElementById('pais-feitas-hoje');
+  const elPend=document.getElementById('pais-pendentes-hoje');
+  const elStreak=document.getElementById('pais-streak-hoje');
+  const elBadge=document.getElementById('pais-resumo-badge');
+  const elSub=document.getElementById('pais-resumo-sub');
+  const elProx=document.getElementById('pais-proxima-missao');
+  if(elFeitas)elFeitas.textContent=`${aprovadas}/${total}`;
+  if(elPend)elPend.textContent=pendentes;
+  if(elStreak)elStreak.textContent=estado.streak||0;
+  if(elBadge)elBadge.textContent=`${perc}%`;
+  if(elSub)elSub.textContent=total?`${aprovadas} de ${total} missão(ões) concluída(s) hoje.`:'Nenhuma missão configurada para hoje.';
+  if(elProx){
+    const aguardando=lista.find(t=>statusTarefaAtual(t)==='aguardando_aprovacao');
+    const proxima=lista.find(t=>statusTarefaAtual(t)!=='aprovada'&&statusTarefaAtual(t)!=='aguardando_aprovacao');
+    if(aguardando)elProx.textContent=`⏳ Aguardando sua aprovação: ${aguardando.texto} · ${Number(aguardando.recompensa)||0} 🪙`;
+    else if(proxima)elProx.textContent=`🎯 Próxima missão: ${proxima.texto} · ${Number(proxima.recompensa)||0} 🪙`;
+    else if(total)elProx.textContent='🎉 Todas as missões de hoje foram concluídas!';
+    else elProx.textContent='🎯 Nenhuma missão pendente hoje.';
+  }
+}
 function renderizarPainelPais(){
   document.getElementById('input-taxa-cambio').value=estado.taxaCambio;
   document.getElementById('input-idade-crianca').value=estado.idadeCrianca||7;
+  renderizarResumoPainelPais();
   renderizarListaCriancasPais();
   const stPin=document.getElementById('txt-status-pin');
   if(stPin)stPin.textContent=estado.pinPersonalizado?'✅ PIN personalizado ativo.':'⚠️ Defina um PIN personalizado o quanto antes.';
@@ -3556,6 +3660,7 @@ function renderizarPainelPais(){
   `;});
   atualizarEstatisticas();
   renderizarVolumeSomPainel();
+  renderizarHistoricoTarefas();
   renderizarLogAtividades();
   renderizarMetaFamiliar();
 }
@@ -3584,6 +3689,20 @@ function limparTodasFotosTarefas(){
     atualizarTela();
     mostrarToast('🗑️ Fotos removidas.');
   });
+}
+function renderizarHistoricoTarefas(){
+  const c=document.getElementById('lista-historico-tarefas');
+  if(!c)return;
+  const eventos=[];
+  (estado.tarefas||[]).forEach(t=>(t.historicoAprovacoes||[]).forEach(h=>eventos.push({...h,texto:t.texto})));
+  eventos.sort((a,b)=>(b.t||0)-(a.t||0));
+  if(!eventos.length){c.innerHTML='<span style="font-size:9px;color:#94a3b8">Nenhuma aprovação ou recusa registrada ainda.</span>';return;}
+  c.innerHTML=eventos.slice(0,20).map(h=>{
+    const d=new Date(h.t||Date.now());
+    const data=`${String(d.getDate()).padStart(2,'0')}/${String(d.getMonth()+1).padStart(2,'0')} ${String(d.getHours()).padStart(2,'0')}:${String(d.getMinutes()).padStart(2,'0')}`;
+    const ok=h.status==='aprovada';
+    return `<div class="historico-tarefa"><div class="hist-data">${data}</div><div class="${ok?'hist-ok':'hist-no'}">${ok?'✅ Aprovada':'↩️ Recusada'}: ${esc(h.texto)}</div>${!ok&&h.motivo?`<div class="hist-motivo">Motivo: ${esc(h.motivo)}</div>`:''}</div>`;
+  }).join('');
 }
 function renderizarLogAtividades(){
   const c=document.getElementById('lista-log-atividades');
@@ -3615,16 +3734,22 @@ function fecharVisualizadorFoto(){
 function reprovarTarefaPais(id){
   const t=estado.tarefas.find(x=>x.id===id);
   if(!t)return;
-  mostrarConfirmacao(`Recusar a tarefa "${t.texto}"?`,()=>{
+  const motivo=window.prompt(`Por que a tarefa "${t.texto}" precisa ser refeita?`,t.motivoRecusa||'')
+  if(motivo===null)return;
+  const texto=motivo.trim().slice(0,180);
+  mostrarConfirmacao(`Devolver a tarefa para a criança${texto?` com o motivo: "${texto}"`:''}?`,()=>{
     t.status='pendente';
+    t.motivoRecusa=texto||'Confira a tarefa e tente novamente.';
     t.foto=null;
     const r=t.registros?.[hojeLocal()];
-    if(r){r.status='pendente';r.foto=null;r.atualizadoEm=Date.now();}
+    if(r){r.status='pendente';r.foto=null;r.motivoRecusa=t.motivoRecusa;r.recusadaEm=Date.now();r.historico=r.historico||[];r.historico.push({status:'recusada',t:Date.now(),motivo:t.motivoRecusa});r.historico=r.historico.slice(-20);r.atualizadoEm=Date.now();}
+    t.historicoAprovacoes=t.historicoAprovacoes||[];t.historicoAprovacoes.push({status:'recusada',t:Date.now(),motivo:t.motivoRecusa});t.historicoAprovacoes=t.historicoAprovacoes.slice(-20);
+    registrarLogAtividade(`Tarefa recusada: ${t.texto} — ${t.motivoRecusa}`);
     persistirTarefaIndividualV2(t).catch(e=>console.warn('Tarefa individual:',e));
     salvar();
     renderizarPainelPais();
     atualizarTela();
-    mostrarToast('↩️ Devolvida para a criança.');
+    mostrarToast('↩️ Devolvida com orientação para a criança.');
   });
 }
 async function trocarFamiliaManualmente(){
@@ -3698,7 +3823,9 @@ function aprovarTarefaPais(id){
   if(registroAprovacao){
     registroAprovacao.status='aprovada';
     registroAprovacao.aprovadaEm=Date.now();
+    registroAprovacao.historico=registroAprovacao.historico||[];registroAprovacao.historico.push({status:'aprovada',t:Date.now()});registroAprovacao.historico=registroAprovacao.historico.slice(-20);
   }
+  t.historicoAprovacoes=t.historicoAprovacoes||[];t.historicoAprovacoes.push({status:'aprovada',t:Date.now()});t.historicoAprovacoes=t.historicoAprovacoes.slice(-20);
   persistirTarefaIndividualV2(t).catch(e=>console.warn('Tarefa individual:',e));
   estado.moedas+=Number(t.recompensa)||0;
   estado.dinheiroAcumulado=(estado.dinheiroAcumulado||0)+(Number(t.recompensa)||0)*(Number(estado.taxaCambio)||.01);
@@ -3749,6 +3876,45 @@ function atualizarBannerPausaPainel(){
     el.innerHTML='';
   }
 }
+function abrirRelatorioMensal(){
+  const agora=new Date();
+  const ano=agora.getFullYear(),mes=agora.getMonth();
+  const inicio=new Date(ano,mes,1);
+  const fim=new Date(ano,mes+1,0);
+  const diasMes=fim.getDate();
+  const chave=(d)=>`${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`;
+  const registro=(d)=>estado.registroDiario?.[chave(d)]||{tarefas:0,moedas:0};
+  let tarefas=0,moedas=0,ativos=0;
+  for(let i=1;i<=diasMes;i++){const d=new Date(ano,mes,i),r=registro(d);tarefas+=Number(r.tarefas)||0;moedas+=Number(r.moedas)||0;if((Number(r.tarefas)||0)>0)ativos++;}
+  const anterior=[];
+  for(let i=30;i>=1;i--){const d=new Date(agora);d.setDate(d.getDate()-i);anterior.push(registro(d));}
+  const antT=anterior.reduce((n,r)=>n+(Number(r.tarefas)||0),0);
+  const antM=anterior.reduce((n,r)=>n+(Number(r.moedas)||0),0);
+  const antA=anterior.filter(r=>(Number(r.tarefas)||0)>0).length;
+  const conquistas=CONQUISTAS.filter(x=>estado.conquistas?.[x[0]]).length;
+  const el=(id)=>document.getElementById(id);
+  if(el('rel-mes-titulo'))el('rel-mes-titulo').textContent=agora.toLocaleDateString('pt-BR',{month:'long',year:'numeric'});
+  if(el('mes-total-tarefas'))el('mes-total-tarefas').textContent=tarefas;
+  if(el('mes-total-moedas'))el('mes-total-moedas').textContent=moedas;
+  if(el('mes-dias-ativos'))el('mes-dias-ativos').textContent=`${ativos}/${diasMes}`;
+  if(el('mes-conquistas'))el('mes-conquistas').textContent=conquistas;
+  const delta=(a,b)=>b===0?(a?`+${a}`:'—'):`${a>=b?'+':''}${a-b}`;
+  if(el('mes-comparacao'))el('mes-comparacao').innerHTML=`<div class="mes-comp-item"><b>${delta(tarefas,antT)}</b><small>tarefas vs. 30 dias</small></div><div class="mes-comp-item"><b>${delta(moedas,antM)}</b><small>moedas vs. 30 dias</small></div><div class="mes-comp-item"><b>${delta(ativos,antA)}</b><small>dias ativos vs. 30 dias</small></div>`;
+  if(el('mes-calendario')){
+    const primeiro=fim.getDay()===6?0:new Date(ano,mes,1).getDay();
+    let html='';
+    for(let i=0;i<primeiro;i++)html+='<span class="mes-dia"></span>';
+    for(let i=1;i<=diasMes;i++){const d=new Date(ano,mes,i),r=registro(d),ativo=(Number(r.tarefas)||0)>0;html+=`<span class="mes-dia${ativo?' ativo':''}${chave(d)===hojeLocal()?' hoje':''}" title="${Number(r.tarefas)||0} tarefa(s)">${i}</span>`;}
+    el('mes-calendario').innerHTML=html;
+  }
+  if(el('mes-insight')){
+    if(!tarefas)el('mes-insight').textContent='Ainda não há tarefas concluídas neste mês.';
+    else if(ativos>=20)el('mes-insight').textContent='🔥 Excelente consistência! A rotina está presente na maior parte do mês.';
+    else if(ativos>=10)el('mes-insight').textContent='👍 Bom ritmo. Continue mantendo dias ativos para fortalecer a rotina.';
+    else el('mes-insight').textContent='🌱 Cada dia conta. Tente criar uma sequência de pequenos avanços.';
+  }
+  abrirModal('modal-relatorio-mensal');
+}
 function abrirRelatorioSemanal(){
   const hoje=new Date();
   const dias=[];
@@ -3766,11 +3932,15 @@ function abrirRelatorioSemanal(){
   let totalTarefas=0,totalMoedas=0,diasAtivos=0;
   const valores=dias.map(d=>{
     const r=estado.registroDiario?.[d.data]||{tarefas:0,moedas:0};
-    totalTarefas+=r.tarefas;
-    totalMoedas+=r.moedas;
-    if(r.tarefas>0)diasAtivos++;
-    return {...d,...r};
+    totalTarefas+=Number(r.tarefas)||0;
+    totalMoedas+=Number(r.moedas)||0;
+    if(Number(r.tarefas)>0)diasAtivos++;
+    return {...d,tarefas:Number(r.tarefas)||0,moedas:Number(r.moedas)||0};
   });
+  const melhor=valores.reduce((a,v)=>v.tarefas>a.tarefas?v:a,{tarefas:0,label:'—'});
+  const pendentes=(estado.tarefas||[]).filter(t=>statusTarefaAtual(t)==='aguardando_aprovacao').length;
+  const tarefasAtuais=(estado.tarefas||[]).filter(t=>t.ativo!==false).length;
+  const ritmo=Math.min(100,Math.round((totalTarefas/Math.max(1,tarefasAtuais*7))*100));
   const maxT=Math.max(1,...valores.map(v=>v.tarefas));
   const barras=document.getElementById('rel-barras-semana');
   const labels=document.getElementById('rel-labels-semana');
@@ -3778,12 +3948,10 @@ function abrirRelatorioSemanal(){
     barras.innerHTML=valores.map(v=>{
       const h=Math.max(6,Math.round((v.tarefas/maxT)*64));
       const cor=v.tarefas===0?'#e2e8f0':v.tarefas>=3?'#22c55e':'#a78bfa';
-      return `<div title="${v.tarefas} tarefas" style="flex:1;height:${h}px;background:${cor};border-radius:6px 6px 2px 2px;min-width:0"></div>`;
+      return `<div title="${v.tarefas} tarefa(s) · ${v.moedas} moedas" style="flex:1;height:${h}px;background:${cor};border-radius:6px 6px 2px 2px;min-width:0"></div>`;
     }).join('');
   }
-  if(labels){
-    labels.innerHTML=valores.map(v=>`<span style="flex:1;text-align:center">${v.label}</span>`).join('');
-  }
+  if(labels)labels.innerHTML=valores.map(v=>`<span style="flex:1;text-align:center">${v.label}</span>`).join('');
   const c=document.getElementById('rel-lista-dias');
   if(c){
     c.innerHTML='';
@@ -3798,9 +3966,18 @@ function abrirRelatorioSemanal(){
   if(elSt)elSt.textContent=estado.streak||0;
   const elMed=document.getElementById('rel-media-dia');
   if(elMed)elMed.textContent=(totalTarefas/7).toFixed(1).replace('.',',');
+  const elMelhor=document.getElementById('rel-melhor-dia');
+  if(elMelhor)elMelhor.textContent=melhor.tarefas?`${melhor.label} (${melhor.tarefas})`:'—';
+  const elAtivos=document.getElementById('rel-dias-ativos');
+  if(elAtivos)elAtivos.textContent=`${diasAtivos}/7`;
+  const elPend=document.getElementById('rel-pendentes');
+  if(elPend)elPend.textContent=pendentes;
+  const elMeta=document.getElementById('rel-meta-semana');
+  if(elMeta)elMeta.textContent=`${ritmo}%`;
   const insight=document.getElementById('rel-insight');
   if(insight){
-    if(totalTarefas===0)insight.textContent='Semana ainda sem registros — complete missões para ver o gráfico crescer!';
+    if(pendentes>0)insight.textContent=`⏳ Há ${pendentes} tarefa(s) aguardando sua aprovação.`;
+    else if(totalTarefas===0)insight.textContent='Semana ainda sem registros — complete missões para ver o gráfico crescer!';
     else if(diasAtivos>=6)insight.textContent='🔥 Semana excelente! Quase todos os dias com atividade.';
     else if(diasAtivos>=3)insight.textContent='👍 Bom ritmo. Tente manter a ofensiva nos próximos dias.';
     else insight.textContent='Dá para melhorar: foque nas obrigatórias para subir a ofensiva.';
