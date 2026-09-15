@@ -1092,10 +1092,15 @@ button:focus-visible,input:focus-visible,.top-pill:focus-visible{
 <div id="modal-colecao" class="modal-overlay">
   <div class="modal" style="max-width:380px">
     <div class="modal-title">
-      <h3>📚 Coleção</h3>
+      <h3>📚 Minha coleção</h3>
       <button class="close-btn" onclick="fecharModal('modal-colecao')">×</button>
     </div>
     <div class="colecao-resumo" id="colecao-resumo"></div>
+    <div id="colecao-progresso" style="background:#f8fafc;border:1px solid #e2e8f0;border-radius:13px;padding:8px 10px;margin:8px 0 10px">
+      <div style="display:flex;justify-content:space-between;gap:8px;font-size:8px;color:#475569;font-weight:900"><span>✨ Progresso da coleção</span><b id="colecao-progresso-txt" style="color:#7c3aed">0%</b></div>
+      <div style="height:7px;background:#e2e8f0;border-radius:99px;overflow:hidden;margin-top:5px"><div id="colecao-progresso-barra" style="height:100%;width:0;background:linear-gradient(90deg,#f97316,#facc15,#22c55e);border-radius:99px;transition:width .5s"></div></div>
+      <small id="colecao-progresso-sub" style="display:block;font-size:7px;color:#64748b;margin-top:4px">Desbloqueie pets, itens e fundos para completar.</small>
+    </div>
     <div class="grid-tabs" style="grid-template-columns:repeat(4,1fr);margin-bottom:10px">
       <button type="button" class="tab-btn ativa" id="tab-col-pets" onclick="alternarAbaColecao('pets')">🐾 Pets</button>
       <button type="button" class="tab-btn" id="tab-col-evos" onclick="alternarAbaColecao('evos')">⭐ Evos</button>
@@ -4505,12 +4510,22 @@ function renderizarColecao(){
   const fundosPossuidos=(estado.fundosComprados||[]).length;
   const totalFundos=BANCO_FUNDOS.length;
   const conquistasFeitas=CONQUISTAS.filter(x=>estado.conquistas?.[x[0]]).length;
+  const obtidosColecao=petsLiberados+(estado.acessorios?.comprados||[]).filter((id,i,a)=>a.indexOf(id)===i).length+fundosPossuidos;
+  const totalColecao=totalPets+ACESSORIOS.length+TEMAS.length+totalFundos;
+  const percColecao=totalColecao?Math.min(100,Math.round((obtidosColecao/totalColecao)*100)):0;
+  const progTxt=document.getElementById('colecao-progresso-txt');
+  const progBar=document.getElementById('colecao-progresso-barra');
+  const progSub=document.getElementById('colecao-progresso-sub');
+  if(progTxt)progTxt.textContent=percColecao+'%';
+  if(progBar)progBar.style.width=percColecao+'%';
+  if(progSub)progSub.textContent=`${obtidosColecao} de ${totalColecao} itens desbloqueados · continue suas aventuras!`;
   const resumo=document.getElementById('colecao-resumo');
   if(resumo){
     resumo.innerHTML=`
       <div class="stat"><b>${petsLiberados}/${totalPets}</b><span>pets</span></div>
       <div class="stat"><b>${fundosPossuidos}/${totalFundos}</b><span>fundos</span></div>
-      <div class="stat"><b>${conquistasFeitas}/${CONQUISTAS.length}</b><span>conquistas</span></div>`;
+      <div class="stat"><b>${conquistasFeitas}/${CONQUISTAS.length}</b><span>conquistas</span></div>
+      <div class="stat"><b>${obtidosColecao}/${totalColecao}</b><span>coleção</span></div>`;
   }
   // Pets
   const pPets=document.getElementById('painel-col-pets');
@@ -4534,7 +4549,7 @@ function renderizarColecao(){
       `;
       if(liberado){
         card.style.cursor='pointer';
-        card.onclick=()=>{escolherPet(pet.id);fecharModal('modal-colecao');mostrarToast(`${pet.emoji} ${pet.nome} selecionado!`)};
+        card.onclick=()=>{escolherPet(pet.id);fecharModal('modal-colecao');mostrarToast(`${pet.emoji} ${pet.nome} está pronto para a aventura!`)};
       }
       grid.appendChild(card);
     });
@@ -4567,7 +4582,7 @@ function renderizarColecao(){
   // Acessórios + temas
   const pItens=document.getElementById('painel-col-itens');
   if(pItens){
-    pItens.innerHTML=`<div style="font-size:9px;color:#64748b;margin-bottom:8px">Itens e combos de tema que você já comprou.</div><div class="colecao-grid"></div>`;
+    pItens.innerHTML=`<div style="font-size:9px;color:#64748b;margin-bottom:8px">🎀 Acessórios e objetos que você já desbloqueou.</div><div style="font-size:9px;font-weight:900;color:#475569;margin:5px 0">👒 Acessórios e objetos</div><div class="colecao-grid"></div>`;
     const grid=pItens.querySelector('.colecao-grid');
     const comprados=estado.acessorios?.comprados||[];
     ACESSORIOS.forEach(a=>{
