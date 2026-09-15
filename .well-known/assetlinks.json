@@ -1,15 +1,16 @@
-[{
-  "relation": [
-    "delegate_permission/common.handle_all_urls",
-    "delegate_permission/common.get_login_creds"
-  ],
-  "target": {
-    "namespace": "android_app",
-    "package_name": "io.github.rodrigomdl76_sys.twa",
-    "sha256_cert_fingerprints": [
-      "17:78:E3:F4:F7:9F:97:D7:0E:A5:F1:F2:C2:4A:63:F5:5D:EC:8E:B1:16:53:70:57:83:F5:CF:8A:40:D6:31:DC",
-      "C6:5F:B3:11:AC:90:0B:E5:B0:40:8C:0A:46:AB:EC:3A:9E:42:1A:E8:24:26:F5:F0:63:44:1E:5A:BB:B0:DC:C7",
-      "6E:94:D9:CC:00:59:85:F4:E2:56:FA:AF:AC:68:14:F5:05:F9:3D:E9:DC:CC:D4:91:0C:83:52:A5:D5:47:B0:F3"
-    ]
+[
+  {
+    "relation": [
+      "delegate_permission/common.handle_all_urls"
+    ],
+    "target": {
+      "namespace": "android_app",
+      "package_name": "io.github.rodrigomdl76_sys.twa",
+      "sha256_cert_fingerprints": [
+        "17:78:E3:F4:F7:9F:97:D7:0E:A5:F1:F2:C2:4A:63:F5:5D:EC:8E:B1:16:53:70:57:83:F5:CF:8A:40:D6:31:DC",
+        "C6:5F:B3:11:AC:90:0B:E5:B0:40:8C:0A:46:AB:EC:3A:9E:42:1A:E8:24:26:F5:F0:63:44:1E:5A:BB:B0:DC:C7",
+        "60:94:D9:CC:DD:59:B3:F4:E2:56:FA:AF:AC:68:14:F5:05:F9:3D:E9:DC:CC:D4:91:0C:83:52:A5:D5:47:B0:F3"
+      ]
+    }
   }
-}]
+]
