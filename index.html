@@ -666,6 +666,26 @@ button:focus-visible,input:focus-visible,.top-pill:focus-visible{
 @keyframes caixasPulso{0%,100%{transform:scale(1)}50%{transform:scale(1.1)}}
 @keyframes plantaBalan{0%,100%{transform:rotate(-4deg)}50%{transform:rotate(5deg)}}
 @keyframes livroFlutua{0%,100%{transform:translateY(0) rotate(-3deg)}50%{transform:translateY(-8px) rotate(3deg)}}
+.objeto-varinha{left:4%;bottom:35%;font-size:31px;animation:varinhaBrilha 1.8s ease-in-out infinite}
+.objeto-balao{right:7%;bottom:42%;font-size:34px;animation:balaoSobe 3.4s ease-in-out infinite}
+.objeto-cama{left:3%;bottom:8%;font-size:35px;animation:camaRespira 2.8s ease-in-out infinite}
+.objeto-bebedouro{right:4%;bottom:8%;font-size:34px;animation:aguaBrilha 2s ease-in-out infinite}
+.objeto-osso{left:8%;bottom:23%;font-size:30px;animation:ossoGira 2.6s ease-in-out infinite}
+.objeto-peixe{right:8%;bottom:28%;font-size:31px;animation:peixeNada 3s ease-in-out infinite}
+.objeto-pipa{right:12%;bottom:53%;font-size:31px;animation:pipaVoa 3.8s ease-in-out infinite}
+.objeto-brinquedos{left:3%;bottom:10%;font-size:34px;animation:brinquedosPula 2.2s ease-in-out infinite}
+.objeto-microfone{right:4%;bottom:18%;font-size:33px;animation:microfoneDanca 1.4s ease-in-out infinite}
+.objeto-medalha{right:8%;bottom:37%;font-size:32px;animation:medalhaBrilha 2s ease-in-out infinite}
+@keyframes varinhaBrilha{0%,100%{transform:rotate(-12deg) scale(1)}50%{transform:rotate(12deg) scale(1.12);filter:drop-shadow(0 0 7px #facc15)}}
+@keyframes balaoSobe{0%,100%{transform:translateY(4px)}50%{transform:translateY(-18px)}}
+@keyframes camaRespira{0%,100%{transform:scale(1)}50%{transform:scale(1.06)}}
+@keyframes aguaBrilha{0%,100%{filter:brightness(1)}50%{filter:brightness(1.35);transform:translateY(-3px)}}
+@keyframes ossoGira{0%,100%{transform:rotate(-12deg)}50%{transform:rotate(12deg) translateY(-5px)}}
+@keyframes peixeNada{0%,100%{transform:translateX(0) scaleX(1)}50%{transform:translateX(-14px) scaleX(-1)}}
+@keyframes pipaVoa{0%,100%{transform:translate(0,4px) rotate(-6deg)}50%{transform:translate(-12px,-14px) rotate(8deg)}}
+@keyframes brinquedosPula{0%,100%{transform:translateY(0)}45%{transform:translateY(-10px) rotate(8deg)}70%{transform:translateY(0) rotate(-5deg)}}
+@keyframes microfoneDanca{0%,100%{transform:rotate(-8deg)}50%{transform:rotate(8deg) translateY(-4px)}}
+@keyframes medalhaBrilha{0%,100%{transform:scale(1);filter:brightness(1)}50%{transform:scale(1.12);filter:brightness(1.35) drop-shadow(0 0 5px #facc15)}}
 
 .painel-resumo-pais{background:linear-gradient(135deg,#eef2ff,#faf5ff);border:1px solid #c4b5fd;border-radius:16px;padding:10px;margin-bottom:9px;box-shadow:0 5px 15px rgba(76,29,149,.08)}
 .painel-resumo-head{display:flex;justify-content:space-between;align-items:center;gap:8px}.painel-resumo-head b{font-size:11px;color:#312e81}.painel-resumo-head small{display:block;font-size:8px;color:#64748b;margin-top:2px}.painel-resumo-head>span{background:#fff;border:1px solid #ddd6fe;color:#7c3aed;border-radius:99px;padding:5px 8px;font-size:10px;font-weight:900}.pais-resumo-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:6px;margin-top:9px}.pais-resumo-grid>div{background:#fff;border-radius:12px;padding:7px 4px;text-align:center;border:1px solid #e5e7eb}.pais-resumo-grid span{display:block;font-size:15px}.pais-resumo-grid b{display:block;font-size:11px;color:#1e293b;margin-top:2px}.pais-resumo-grid small{display:block;font-size:7px;color:#64748b;margin-top:2px}.pais-proxima{margin-top:8px;background:#fff;border:1px solid #e5e7eb;border-radius:11px;padding:8px;font-size:9px;font-weight:800;color:#475569;line-height:1.35}
@@ -1357,7 +1377,17 @@ const OBJETOS_PET=[
   {id:'obj_bola',nome:'Bola Saltitante',emoji:'⚽',preco:24,tipo:'objeto',classe:'objeto-bola'},
   {id:'obj_caixas',nome:'Caixas de Som',emoji:'🔊',preco:32,tipo:'objeto',classe:'objeto-caixas'},
   {id:'obj_planta',nome:'Plantinha Companheira',emoji:'🪴',preco:20,tipo:'objeto',classe:'objeto-planta'},
-  {id:'obj_livro',nome:'Livrinho Mágico',emoji:'📖',preco:28,tipo:'objeto',classe:'objeto-livro'}
+  {id:'obj_livro',nome:'Livrinho Mágico',emoji:'📖',preco:28,tipo:'objeto',classe:'objeto-livro'},
+  {id:'obj_varinha',nome:'Varinha Mágica',emoji:'🪄',preco:30,tipo:'objeto',classe:'objeto-varinha'},
+  {id:'obj_balao',nome:'Balão Colorido',emoji:'🎈',preco:22,tipo:'objeto',classe:'objeto-balao'},
+  {id:'obj_cama',nome:'Caminha Confortável',emoji:'🛏️',preco:34,tipo:'objeto',classe:'objeto-cama'},
+  {id:'obj_bebedouro',nome:'Bebedouro Mágico',emoji:'🚰',preco:26,tipo:'objeto',classe:'objeto-bebedouro'},
+  {id:'obj_osso',nome:'Osso Brilhante',emoji:'🦴',preco:24,tipo:'objeto',classe:'objeto-osso'},
+  {id:'obj_peixe',nome:'Aquário com Peixinho',emoji:'🐠',preco:36,tipo:'objeto',classe:'objeto-peixe'},
+  {id:'obj_pipa',nome:'Pipa Colorida',emoji:'🪁',preco:29,tipo:'objeto',classe:'objeto-pipa'},
+  {id:'obj_brinquedos',nome:'Caixa de Brinquedos',emoji:'🧸',preco:32,tipo:'objeto',classe:'objeto-brinquedos'},
+  {id:'obj_microfone',nome:'Microfone Musical',emoji:'🎤',preco:38,tipo:'objeto',classe:'objeto-microfone'},
+  {id:'obj_medalha',nome:'Medalha de Campeão',emoji:'🏅',preco:42,tipo:'objeto',classe:'objeto-medalha'}
 ];
 ACESSORIOS.push(...OBJETOS_PET);
 const BANCO_FUNDOS=[
@@ -2242,16 +2272,16 @@ function criarTextoFlutuanteZzz(){
   setTimeout(()=>s.remove(),2700);
 }
 const FALAS_PET={
-  geral:['Você é o melhor! 💜','Hoje tá um dia ótimo!','Estou ficando forte! 💪','Amo essa cor de fundo! 🎨','Que tal um desafio? ⚡','Vamos completar as missões?'],
-  carinho:['Adorei o carinho! 🥰','Mais um pouquinho? 💕','Fiquei todo feliz!','Purr... que gostoso!'],
-  alimentar:['Comi minha ração! 🍖','Que delícia! 😋','Obrigado pela comida!','Estou cheio e feliz!'],
-  brincar:['Vamos brincar? 🎾','Essa foi divertida!','De novo, de novo!','Sou o mais rápido!'],
-  dormir:['Zzz... quase dormindo 😴','Boa noite! 🌙','Hora de descansar...','Sonhando com você!'],
-  manha:['Bom dia! Vamos às tarefas? ☀️','Acordei com energia!','Hora de começar o dia!'],
-  noite:['Já está tarde... 🌙','Hora de dormir em breve','Boa noite, campeão!'],
-  triste:['Estou um pouco triste...','Preciso de carinho 💙','Vamos brincar um pouco?'],
-  doente:['Não estou bem... 🤢','Um remédio ajudaria','Cuide de mim, por favor'],
-  aposTarefa:['Mandou bem na missão! 🏆','Que orgulho!','Continue assim!']
+  geral:['Você consegue! 💜','Vamos fazer essa missão juntos?','Estou torcendo por você! ⭐','Que tal uma nova aventura? ⚡','Você está cuidando muito bem da sua rotina!','Vamos completar o desafio de hoje?'],
+  carinho:['Adorei o carinho! 🥰','Meu coração ficou quentinho! 💕','Fiquei muito feliz!','Purr... que gostoso!'],
+  alimentar:['Que delícia! 😋','Obrigado pelo lanchinho!','Estou cheio e feliz!','Energia recarregada! 🍖'],
+  brincar:['Vamos brincar? 🎾','Essa aventura foi divertida!','De novo, de novo!','Sou o mais rápido!'],
+  dormir:['Zzz... hora de descansar 😴','Boa noite! 🌙','Até amanhã, campeão!','Sonhando com novas aventuras!'],
+  manha:['Bom dia! Vamos começar? ☀️','Acordei cheio de energia!','Hoje vai ser um dia incrível!'],
+  noite:['Já está ficando tarde... 🌙','Vamos terminar e descansar?','Boa noite, campeão!'],
+  triste:['Vamos tentar juntos?','Todo desafio fica mais fácil com carinho 💙','Estou aqui com você!'],
+  doente:['Preciso de um cuidadinho... 🤢','Um remédio ajudaria','Cuide de mim, por favor'],
+  aposTarefa:['Mandou bem na missão! 🏆','Que orgulho de você!','Missão concluída! Continue assim!','Uau, você caprichou! ⭐']
 };
 function escolherFalaContextual(tipo){
   const h=new Date().getHours();
@@ -2848,6 +2878,7 @@ async function processarFotoCapturada(e){
         }
       }
       t.atualizadoEm=Date.now();
+      copiarFotoParaRegistro(t);
       salvar();
       persistirTarefaIndividualV2(t).catch(err=>console.warn('Foto/tarefa:',err));
       renderizarTarefas();renderizarPainelPais();
@@ -2930,8 +2961,11 @@ function idTarefaSeguro(id){
 function registroTarefaHoje(t){
   t.registros=t.registros||{};
   const dia=hojeLocal();
-  t.registros[dia]=t.registros[dia]||{status:'pendente',foto:null};
-  return t.registros[dia];
+  t.registros[dia]=t.registros[dia]||{status:'pendente',foto:null,fotoUrl:null,fotoPath:null};
+  const r=t.registros[dia];
+  if(r.fotoUrl===undefined)r.fotoUrl=null;
+  if(r.fotoPath===undefined)r.fotoPath=null;
+  return r;
 }
 function statusTarefaAtual(t){
   return t.registros?.[hojeLocal()]?.status||t.status||'pendente';
@@ -2959,13 +2993,26 @@ function mergeTarefasPorVersao(locais,remotas){
 function prepararTarefaParaHoje(t){
   const r=t.registros?.[hojeLocal()];
   if(r){
-    t.status=r.status||'pendente';
-    t.foto=r.foto||null;
+    t.status=r.status||t.status||'pendente';
+    // Só substitui quando o registro realmente contém o campo.
+    // Assim uma sincronização antiga não apaga a foto recém-capturada.
+    if(r.foto!==undefined&&r.foto!==null)t.foto=r.foto;
+    if(r.fotoUrl!==undefined&&r.fotoUrl!==null)t.fotoUrl=r.fotoUrl;
+    if(r.fotoPath!==undefined&&r.fotoPath!==null)t.fotoPath=r.fotoPath;
+    if(r.foto===null&&r.fotoUrl===null&&r.fotoPath===null){t.foto=null;t.fotoUrl=null;t.fotoPath=null;}
   }else if(t.status==='aguardando_aprovacao'){
     t.registros=t.registros||{};
-    t.registros[hojeLocal()]={status:t.status,foto:t.foto||null,atualizadoEm:Date.now()};
+    t.registros[hojeLocal()]={status:t.status,foto:t.foto||null,fotoUrl:t.fotoUrl||null,fotoPath:t.fotoPath||null,atualizadoEm:Date.now()};
   }
   return t;
+}
+function copiarFotoParaRegistro(t){
+  const r=registroTarefaHoje(t);
+  r.foto=t.foto||null;
+  r.fotoUrl=t.fotoUrl||null;
+  r.fotoPath=t.fotoPath||null;
+  r.fotoAtualizadaEm=Date.now();
+  return r;
 }
 function prepararTarefasV2NoEstado(){
   if(!Array.isArray(estado.tarefas))estado.tarefas=[];
@@ -3041,6 +3088,7 @@ function enviarParaAprovacao(id){
   const t=estado.tarefas.find(t=>String(t.id)===String(id));
   if(!t)return;
   const r=registroTarefaHoje(t);
+  copiarFotoParaRegistro(t);
   t.motivoRecusa=null;
   r.motivoRecusa=null;
   r.status='aguardando_aprovacao';
@@ -3049,7 +3097,7 @@ function enviarParaAprovacao(id){
   persistirTarefaIndividualV2(t).catch(e=>console.warn('Tarefa individual:',e));
   salvar();
   renderizarTarefas();
-  mostrarToast('⏳ Enviado aos pais!');
+  mostrarToast('⏳ Missão enviada! Os pais vão conferir.');
   registrarLogAtividade(`Pedido de aprovação: ${t.texto}`);
   enviarNotificacaoLocal('📋 Tarefa para aprovar',`${t.texto} — abra o painel dos pais.`,'rotinapet-aprovacao');
   enfileirarPushFamilia('📋 Tarefa para aprovar',t.texto,{tag:'rotinapet-aprovacao',onlyPerfil:'pais'});
@@ -3147,14 +3195,14 @@ function renderizarResumoCrianca(){
   if(el('crianca-progresso-barra'))el('crianca-progresso-barra').style.width=`${perc}%`;
   if(el('crianca-progresso-contagem'))el('crianca-progresso-contagem').textContent=`${aprovadas}/${total} missão(ões)`;
   if(el('crianca-progresso-recompensa'))el('crianca-progresso-recompensa').textContent=`🪙 ${ganho} hoje`;
-  if(el('crianca-progresso-titulo'))el('crianca-progresso-titulo').textContent=perc===100&&total?'🎉 Dia completo!':'🌟 Seu dia';
-  if(el('crianca-progresso-sub'))el('crianca-progresso-sub').textContent=total?`${Math.max(0,total-aprovadas)} missão(ões) para terminar`:'Nenhuma missão para hoje';
+  if(el('crianca-progresso-titulo'))el('crianca-progresso-titulo').textContent=perc===100&&total?'🏆 Você venceu o desafio de hoje!':'🌟 Sua aventura de hoje';
+  if(el('crianca-progresso-sub'))el('crianca-progresso-sub').textContent=total?`${Math.max(0,total-aprovadas)} aventura(s) para completar`:'O quadro está vazio por enquanto';
   const prox=lista.find(t=>statusTarefaAtual(t)!=='aprovada'&&statusTarefaAtual(t)!=='aguardando_aprovacao');
   const agu=lista.find(t=>statusTarefaAtual(t)==='aguardando_aprovacao');
   if(el('crianca-proxima-missao')){
     if(agu)el('crianca-proxima-missao').textContent=`⏳ ${agu.texto} está com os pais para aprovação.`;
-    else if(prox)el('crianca-proxima-missao').textContent=`🎯 Próxima: ${prox.texto} · +${Number(prox.recompensa)||0} 🪙`;
-    else if(total)el('crianca-proxima-missao').textContent='🏆 Você completou todas as missões de hoje!';
+    else if(prox)el('crianca-proxima-missao').textContent=`🎯 Sua próxima aventura: ${prox.texto} · +${Number(prox.recompensa)||0} 🪙`;
+    else if(total)el('crianca-proxima-missao').textContent='🏆 Você venceu todas as aventuras de hoje!';
     else el('crianca-proxima-missao').textContent='🎯 Seus pais ainda não criaram uma missão para hoje.';
   }
 }
@@ -3197,11 +3245,11 @@ function renderizarTarefas(){
       row.innerHTML=`
         <div>
           <div class="task-name" style="${apr?'text-decoration:line-through;color:#94a3b8':''}">${esc(t.texto)}<span style="font-size:7px;color:#7c3aed;font-weight:900">${esc(badgeDias)}</span></div>
-          <span class="task-reward">+${Number(t.xp)||20} XP • +${Number(t.recompensa)||5} 🪙 ${t.foto?'• 📸':''}</span>
+          <span class="task-reward">+${Number(t.xp)||20} XP • +${Number(t.recompensa)||5} 🪙 ${(t.fotoUrl||t.foto)?'• 📸':''}</span>
           ${t.motivoRecusa?`<div class="motivo-recusa">↩️ ${esc(t.motivoRecusa)}</div>`:''}
         </div>
         <div class="task-actions">
-          ${apr?'<span style="font-size:9px;color:#10b981;font-weight:900">✓ Feito</span>':pend?'<span style="font-size:8px;color:#f59e0b;font-weight:900">Avaliando</span>':`<button class="task-btn btn-photo" onclick="dispararCamera(${t.id})">📷</button><button class="task-btn btn-ok" onclick="enviarParaAprovacao(${t.id})">Enviar</button>`}
+          ${apr?'<span style="font-size:9px;color:#10b981;font-weight:900">✓ Missão concluída!</span>':pend?'<span style="font-size:8px;color:#f59e0b;font-weight:900">Os pais estão conferindo</span>':`<button class="task-btn btn-photo" onclick="dispararCamera(${t.id})">📷</button><button class="task-btn btn-ok" onclick="enviarParaAprovacao(${t.id})">Concluí!</button>`}
         </div>
       `;
       c.appendChild(row);
