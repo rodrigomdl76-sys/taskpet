@@ -1883,9 +1883,19 @@ async function carregarEstadoNuvem(){
 function aplicarEstadoRemotoComMerge(d){
   if(!d||typeof d!=='object')return;
   const tarefasRemotas=Array.isArray(d.tarefas)?d.tarefas:null;
-  const tarefasMescladas=tarefasRemotas?mergeTarefasPorVersao(estado.tarefas,tarefasRemotas):estado.tarefas;
+  const idAtiva=d.criancaAtivaId||estado.criancaAtivaId;
+  const dadosCriancaRemotos=d.criancasDados&&d.criancasDados[idAtiva];
+  const tarefasDaCrianca=dadosCriancaRemotos&&Array.isArray(dadosCriancaRemotos.tarefas)?dadosCriancaRemotos.tarefas:null;
+  const fonteTarefas=tarefasRemotas||tarefasDaCrianca;
+  const tarefasMescladas=fonteTarefas?mergeTarefasPorVersao(estado.tarefas,fonteTarefas):estado.tarefas;
   estado={...estado,...d,pets:{...estado.pets,...(d.pets||{})},tarefas:tarefasMescladas};
   garantirCriancaAtiva();
+  if(dadosCriancaRemotos){
+    const dadosAtuais=capturarDadosCrianca();
+    aplicarDadosCrianca({...dadosAtuais,...dadosCriancaRemotos});
+  }
+  if(!Array.isArray(estado.tarefas))estado.tarefas=[];
+  estado.tarefas.forEach(prepararTarefaParaHoje);
 }
 async function iniciarSincronizacaoNuvem(){
   if(!sincronizacaoNuvemAtiva||!dbFirebase)return;
@@ -1895,6 +1905,7 @@ async function iniciarSincronizacaoNuvem(){
   const ref=dbFirebase.ref(getCaminhoFirebase());
   ref.off();
   await carregarEstadoNuvem();
+  try{await carregarTarefasIndividuaisComFallback();}catch(e){console.warn('Tarefas individuais:',e)}
   cargaNuvemPendente=false;
   ultimaSyncOkEm=Date.now();
   statusSyncAtual='online';
@@ -3095,7 +3106,10 @@ async function carregarTarefasIndividuaisComFallback(){
   const snap=await dbFirebase.ref(caminhoTarefasV2()).once('value');
   const dados=snap.val();
   if(!dados||typeof dados!=='object')return false;
-  estado.tarefas=mergeTarefasPorVersao(estado.tarefas,Object.values(dados));
+  const individuais=Object.values(dados);
+  const dadosAtuais=estado.criancasDados?.[estado.criancaAtivaId];
+  const tarefasFilhas=Array.isArray(dadosAtuais?.tarefas)?dadosAtuais.tarefas:[];
+  estado.tarefas=mergeTarefasPorVersao(estado.tarefas,individuais.length?individuais:tarefasFilhas);
   salvarLocalmente();
   renderizarTarefas();
   return true;
