@@ -797,14 +797,18 @@ button:focus-visible,input:focus-visible,.top-pill:focus-visible{
     <div class="crianca-progresso-bottom"><span id="crianca-progresso-contagem">0/0 missões</span><span id="crianca-progresso-recompensa">🪙 0 hoje</span></div>
     <div class="crianca-proxima" id="crianca-proxima-missao">🎯 Sua próxima missão aparecerá aqui.</div>
   </div>
-  <div class="metas-crianca-card" id="metas-crianca-card"><div class="metas-crianca-titulo">🎯 Minhas metas</div><div id="lista-metas-crianca"></div></div>
-  <div id="engajamento-card" style="background:linear-gradient(135deg,#fff7ed,#fefce8);border:1px solid #fed7aa;border-radius:16px;padding:9px 10px;margin-top:7px">
-    <div style="display:flex;justify-content:space-between;align-items:center;gap:6px"><b style="font-size:10px;color:#9a3412">🌟 Aventuras extras</b><span id="engajamento-streak" style="font-size:8px;font-weight:900;color:#ea580c"></span></div>
-    <div id="engajamento-desafio" style="font-size:8px;color:#7c2d12;margin-top:5px"></div>
-    <div style="display:flex;gap:5px;margin-top:7px"><button class="primary-btn pink-btn" style="flex:1;font-size:8px" onclick="abrirCentralAventuras()">Ver aventuras</button><button class="primary-btn" id="btn-bau-diario" style="flex:1;font-size:8px" onclick="abrirBauDiario()">🎁 Baú do dia</button></div>
+  <div class="atalhos-aventuras" aria-label="Atalhos de progresso">
+    <button class="atalho-aventura" onclick="abrirResumoMeta()" aria-label="Abrir minha meta"><span>🎯</span><small>Meta</small></button>
+    <button class="atalho-aventura" onclick="abrirCentralAventuras()" aria-label="Abrir aventuras extras"><span>🌟</span><small>Extras</small></button>
+    <button class="atalho-aventura" onclick="abrirResumoHoje()" aria-label="Abrir aventura de hoje"><span>🗓️</span><small>Hoje</small></button>
+    <button class="atalho-aventura" onclick="abrirBauDiario()" aria-label="Abrir baú diário"><span id="atalho-bau-emoji">🎁</span><small>Baú</small></button>
   </div>
-  <div class="tasks-section">
-    <div class="task-header"><b style="font-size:10px">✨ Missões de hoje</b><span style="font-size:8px;font-weight:900;color:#0284c7" id="qtd-tarefas">2 missões</span></div>
+  <div class="metas-crianca-card" id="metas-crianca-card" style="display:none"><div class="metas-crianca-titulo">🎯 Minhas metas</div><div id="lista-metas-crianca"></div></div>
+  <div id="engajamento-card" style="display:none">
+    <span id="engajamento-streak"></span><div id="engajamento-desafio"></div><button id="btn-bau-diario">🎁 Baú do dia</button>
+  </div>
+  <div class="tasks-section" id="secao-missoes">
+    <button type="button" class="task-header task-header-expansivel" onclick="alternarMissoes()" aria-expanded="true"><b style="font-size:10px">✨ Missões de hoje</b><span style="display:flex;align-items:center;gap:6px"><span style="font-size:8px;font-weight:900;color:#0284c7" id="qtd-tarefas">2 missões</span><span id="seta-missoes">⌃</span></span></button>
     <div id="banner-aprovacoes-pendentes" class="hidden" style="margin-bottom:6px;padding:7px 9px;border-radius:12px;background:#fffbeb;border:1px solid #fcd34d;font-size:9px;font-weight:900;color:#92400e;display:none;align-items:center;gap:6px">⏳ <span id="txt-aprovacoes-pendentes">Há tarefas aguardando os pais</span></div>
     <div id="lista-tarefas"></div>
     <div id="status-ofensiva" style="margin-top:7px;padding:7px 9px;border-radius:12px;background:#fff7ed;border:1px solid #fed7aa;font-size:9px;font-weight:900;color:#9a3412">🔥 Complete as missões fixas para manter a sequência</div>
@@ -5871,5 +5875,17 @@ function atualizarMissaoFamilia(){garantirEngajamento();estado.missaoFamilia.pro
 const atualizarTelaOriginal=atualizarTela;
 atualizarTela=function(){atualizarTelaOriginal();renderizarEngajamento();};
 setTimeout(()=>{try{garantirEngajamento();renderizarEngajamento();}catch(e){console.warn('Engajamento:',e)}},300);
-</script></body>
+</script><style>
+.atalhos-aventuras{display:grid;grid-template-columns:repeat(4,1fr);gap:7px;margin:8px 0 5px}
+.atalho-aventura{border:1px solid #dbeafe;background:#fff;border-radius:14px;padding:7px 3px 5px;display:flex;flex-direction:column;align-items:center;gap:2px;box-shadow:0 2px 8px rgba(15,23,42,.05);cursor:pointer;transition:transform .15s,box-shadow .15s}
+.atalho-aventura:active{transform:scale(.94)}.atalho-aventura span{font-size:20px;line-height:22px}.atalho-aventura small{font-size:8px;font-weight:900;color:#475569}.task-header-expansivel{width:100%;border:0;background:transparent;text-align:left;cursor:pointer;padding:0}.task-header-expansivel:focus-visible{outline:2px solid #38bdf8;border-radius:8px}.tasks-section.recolhida #lista-tarefas,.tasks-section.recolhida #banner-aprovacoes-pendentes,.tasks-section.recolhida #status-ofensiva{display:none}.tasks-section.recolhida #seta-missoes{transform:rotate(180deg)}
+</style>
+<div id="modal-resumo-meta" class="modal-overlay"><div class="modal" style="max-width:340px"><div class="modal-title"><h3>🎯 Minha meta</h3><button class="close-btn" onclick="fecharModal('modal-resumo-meta')">×</button></div><div id="resumo-meta-conteudo"></div></div></div>
+<div id="modal-resumo-hoje" class="modal-overlay"><div class="modal" style="max-width:340px"><div class="modal-title"><h3>🗓️ Aventura de hoje</h3><button class="close-btn" onclick="fecharModal('modal-resumo-hoje')">×</button></div><div id="resumo-hoje-conteudo"></div></div></div>
+<script>
+function alternarMissoes(){const s=document.getElementById('secao-missoes'),h=s?.querySelector('.task-header-expansivel');if(!s)return;const fechada=s.classList.toggle('recolhida');if(h)h.setAttribute('aria-expanded',String(!fechada));}
+function abrirResumoMeta(){const c=document.getElementById('resumo-meta-conteudo'),metas=Array.isArray(estado.metasPersonalizadas)?estado.metasPersonalizadas:[];if(!c)return;c.innerHTML=metas.length?metas.map(m=>{const x=obterProgressoMeta(m);return `<div class="section-card" style="margin-bottom:7px"><b style="font-size:10px">${esc(m.emoji||'🎯')} ${esc(m.titulo)}</b><p style="font-size:9px;color:#64748b;margin:6px 0">${x.valor}/${x.alvo} · ${x.perc}%</p><div style="height:7px;background:#e2e8f0;border-radius:99px;overflow:hidden"><div style="height:100%;width:${x.perc}%;background:#8b5cf6"></div></div><small style="font-size:8px;color:#64748b">${x.perc>=100?'✅ Meta alcançada!':'Continue avançando!'}</small></div>`}).join(''):'<p style="font-size:10px;color:#64748b">Seus responsáveis ainda não criaram uma meta.</p>';abrirModal('modal-resumo-meta');}
+function abrirResumoHoje(){const c=document.getElementById('resumo-hoje-conteudo'),lista=tarefasDeHoje(),a=lista.filter(t=>statusTarefaAtual(t)==='aprovada').length;if(!c)return;c.innerHTML=`<div class="section-card"><b style="font-size:10px">${a}/${lista.length} missões concluídas</b><p style="font-size:10px;color:#64748b;margin:7px 0">${a===lista.length&&lista.length?'🏆 Você venceu o desafio de hoje!':'Complete as missões abaixo para ajudar seu pet a crescer.'}</p><button class="primary-btn green-btn" style="width:100%" onclick="fecharModal('modal-resumo-hoje');document.getElementById('secao-missoes')?.scrollIntoView({behavior:'smooth',block:'center'})">Ver minhas missões</button></div>`;abrirModal('modal-resumo-hoje');}
+</script>
+</body>
 </html>
