@@ -3121,8 +3121,22 @@ function enviarParaAprovacao(id){
 }
 const DIAS_LABEL=['Dom','Seg','Ter','Qua','Qui','Sex','Sáb'];
 function diaSemanaHoje(){return new Date().getDay()}
-function tarefaEhHoje(t){return !t.dias||t.dias.length===0||t.dias.includes(diaSemanaHoje())}
-function tarefasDeHoje(){return estado.tarefas.filter(tarefaEhHoje)}
+function diasNormalizados(t){
+  if(!t||t.dias==null||t.dias==='')return [];
+  const bruto=Array.isArray(t.dias)?t.dias:[t.dias];
+  const nomes={dom:0,domingo:0,seg:1,segunda:1,'segunda-feira':1,ter:2,terça:2,'terça-feira':2,qua:3,quarta:3,'quarta-feira':3,qui:4,quinta:4,'quinta-feira':4,sex:5,sexta:5,'sexta-feira':5,sab:6,sáb:6,sabado:6,'sábado':6};
+  return bruto.map(v=>{
+    if(typeof v==='number')return v;
+    const texto=String(v).trim().toLowerCase();
+    if(texto in nomes)return nomes[texto];
+    const n=Number(texto);return Number.isFinite(n)?n:null;
+  }).filter(n=>Number.isInteger(n)&&n>=0&&n<=6);
+}
+function tarefaEhHoje(t){
+  const dias=diasNormalizados(t);
+  return dias.length===0||dias.includes(diaSemanaHoje());
+}
+function tarefasDeHoje(){return (Array.isArray(estado.tarefas)?estado.tarefas:[]).filter(t=>t&&t.ativo!==false&&tarefaEhHoje(t))}
 function emPausaHoje(){return !!(estado.pausaAte&&hojeLocal()<=estado.pausaAte)}
 function todasObrigatoriasConcluidas(){const o=tarefasDeHoje().filter(t=>t.tipo==='obrigatoria');return o.length>0&&o.every(t=>statusTarefaAtual(t)==='aprovada')}
 function atualizarOfensiva(){
@@ -3252,6 +3266,12 @@ function renderizarTarefas(){
   };
   bloco('Obrigatórias — liberam a ofensiva',o,'🔥');
   bloco('Extras — não afetam a ofensiva',x,'⭐');
+  if(!hojeLista.length){
+    const aviso=document.createElement('div');
+    aviso.style.cssText='padding:12px 10px;margin-top:8px;border-radius:12px;background:#eff6ff;border:1px solid #bfdbfe;color:#1e40af;font-size:9px;font-weight:800;text-align:center;line-height:1.4';
+    aviso.innerHTML='📅 Nenhuma missão está programada para hoje.<br><small>Peça aos responsáveis para conferir os dias da missão.</small>';
+    c.appendChild(aviso);
+  }
   idTarefaRecemAprovada=null;
   atualizarOfensiva();
 }
