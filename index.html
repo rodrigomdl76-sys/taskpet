@@ -1116,11 +1116,13 @@ button:focus-visible,input:focus-visible,.top-pill:focus-visible{
       <button type="button" class="tab-btn" id="tab-col-evos" onclick="alternarAbaColecao('evos')">⭐ Evos</button>
       <button type="button" class="tab-btn" id="tab-col-itens" onclick="alternarAbaColecao('itens')">🎀 Itens</button>
       <button type="button" class="tab-btn" id="tab-col-fundos" onclick="alternarAbaColecao('fundos')">🖼️ Fundos</button>
+      <button type="button" class="tab-btn" id="tab-col-adesivos" onclick="alternarAbaColecao('adesivos')">📒 Adesivos</button>
     </div>
     <div id="painel-col-pets"></div>
     <div id="painel-col-evos" class="hidden"></div>
     <div id="painel-col-itens" class="hidden"></div>
     <div id="painel-col-fundos" class="hidden"></div>
+    <div id="painel-col-adesivos" class="hidden"></div>
     <button class="primary-btn" style="width:100%;margin-top:10px;background:#e2e8f0;color:#475569" onclick="fecharModal('modal-colecao');abrirModal('modal-evolucoes')">Ver evoluções do pet atual</button>
   </div>
 </div>
@@ -1181,6 +1183,7 @@ button:focus-visible,input:focus-visible,.top-pill:focus-visible{
   <div id="area-jogo-matematica"><div id="conta-math" class="math-question">?</div><div id="opcoes-math" class="math-options"></div></div>
   <div id="area-jogo-memoria" class="hidden"><div id="memoria-status" style="font-size:11px;font-weight:900;margin-bottom:10px;color:#475569">Observe a sequência...</div><div id="memoria-grid" style="display:grid;grid-template-columns:repeat(2,1fr);gap:10px"></div></div>
   <div id="area-jogo-reacao" class="hidden"><div style="font-size:11px;font-weight:900;margin-bottom:10px;color:#475569">Toque no <span id="reacao-alvo-nome" style="font-size:20px"></span> antes do tempo acabar!</div><div id="reacao-grid" style="display:grid;grid-template-columns:repeat(3,1fr);gap:8px"></div></div>
+  <div id="area-jogo-estrelas" class="hidden"><div id="estrelas-status" style="font-size:11px;font-weight:900;margin-bottom:8px;color:#475569">Pegue 5 estrelas!</div><div id="estrelas-area" style="position:relative;height:190px;border-radius:16px;background:linear-gradient(135deg,#172554,#4c1d95);overflow:hidden;border:2px solid #a78bfa"></div></div>
 </div></div>
 <div id="modal-recompensas" class="modal-overlay"><div class="modal"><div class="modal-title"><h3>🎁 Resgatar Prêmios</h3><button class="close-btn" onclick="fecharModal('modal-recompensas')">×</button></div><div class="section-card"><div style="display:flex;justify-content:space-between;font-size:9px;font-weight:900"><span>🎯 Meta: Passeio Especial</span><span id="texto-meta-progresso">0 / 50 🪙</span></div><div class="progress" style="margin-top:5px"><div id="barra-meta-progresso" style="width:0"></div></div></div><div class="stack" id="lista-itens-loja"></div></div></div>
 <div id="modal-aviso" class="modal-overlay"><div class="modal" style="text-align:center;max-width:320px"><div id="aviso-emoji" style="font-size:35px">🎉</div><h3 id="aviso-titulo" style="font-size:16px;margin:5px 0">Tudo certo!</h3><p id="aviso-texto" style="font-size:10px;color:#64748b"></p><button class="primary-btn" style="margin-top:10px" onclick="fecharModal('modal-aviso')">OK</button></div></div>
@@ -1468,6 +1471,15 @@ const TEMAS=[
       frango:SVG_ABRE+'<path d="M85 178Q135 200 185 178v18Q135 218 85 196Z" fill="#f472b6" stroke="#fff" stroke-width="2"/><circle cx="102" cy="188" r="4" fill="#fde047"/><circle cx="135" cy="192" r="4" fill="#38bdf8"/><circle cx="168" cy="188" r="4" fill="#4ade80"/>'+SVG_FECHA
     }}}
 ];
+const SVG_HALLOWEEN_ESQUELETO=SVG_ABRE+'<path d="M92 75Q135 42 178 75v72Q135 165 92 147Z" fill="#f8fafc" stroke="#475569" stroke-width="3"/><path d="M110 92h15M145 92h15M116 115h38M120 135h30" stroke="#475569" stroke-width="5" stroke-linecap="round"/><path d="M100 65Q135 42 170 65" stroke="#22d3ee" stroke-width="5" fill="none"/>'+SVG_FECHA;
+const SVG_HALLOWEEN_VAMPIRO=SVG_ABRE+'<path d="M88 75Q135 45 182 75v75Q135 170 88 150Z" fill="#7f1d1d" stroke="#450a0a" stroke-width="3"/><path d="M95 82L78 58L110 68M175 82L192 58L160 68" fill="#1f2937" stroke="#111827" stroke-width="3"/><circle cx="112" cy="105" r="5" fill="#ef4444"/><circle cx="158" cy="105" r="5" fill="#ef4444"/><path d="M120 130Q135 142 150 130" stroke="#fff" stroke-width="4" fill="none"/>'+SVG_FECHA;
+const SVG_HALLOWEEN_ABOBORA=SVG_ABRE+'<path d="M84 105Q95 70 135 78Q175 70 186 105v48Q135 178 84 153Z" fill="#f97316" stroke="#9a3412" stroke-width="3"/><path d="M125 77Q135 55 145 77" stroke="#166534" stroke-width="8" fill="none"/><path d="M105 110h15M150 110h15M115 138Q135 150 155 138" stroke="#431407" stroke-width="5" stroke-linecap="round"/>'+SVG_FECHA;
+const SKINS_HALLOWEEN=[
+{id:'halloween_esqueleto',nome:'Fantasia Esqueleto',emoji:'💀',preco:45,fundoId:'halloween',acessorio:{id:'tema_halloween_esqueleto',nome:'Pet Esqueleto',emoji:'💀',svgPorEspecie:{gato:SVG_HALLOWEEN_ESQUELETO,cachorra:SVG_HALLOWEEN_ESQUELETO,cabra:SVG_HALLOWEEN_ESQUELETO,frango:SVG_HALLOWEEN_ESQUELETO}}},
+{id:'halloween_vampiro',nome:'Fantasia Vampirinho',emoji:'🧛',preco:50,fundoId:'halloween',acessorio:{id:'tema_halloween_vampiro',nome:'Pet Vampirinho',emoji:'🧛',svgPorEspecie:{gato:SVG_HALLOWEEN_VAMPIRO,cachorra:SVG_HALLOWEEN_VAMPIRO,cabra:SVG_HALLOWEEN_VAMPIRO,frango:SVG_HALLOWEEN_VAMPIRO}}},
+{id:'halloween_abobora',nome:'Fantasia Abóbora',emoji:'🎃',preco:40,fundoId:'halloween',acessorio:{id:'tema_halloween_abobora',nome:'Pet Abóbora',emoji:'🎃',svgPorEspecie:{gato:SVG_HALLOWEEN_ABOBORA,cachorra:SVG_HALLOWEEN_ABOBORA,cabra:SVG_HALLOWEEN_ABOBORA,frango:SVG_HALLOWEEN_ABOBORA}}}
+];
+TEMAS.push(...SKINS_HALLOWEEN);
 function buscarAcessorioPorId(id){
   const normal=ACESSORIOS.find(a=>a.id===id);
   if(normal)return normal;
@@ -2548,7 +2560,7 @@ const EVENTOS_SAZONAIS=[
   {id:'carnaval',nome:'Carnaval',emoji:'🎊',mesInicio:2,diaInicio:10,mesFim:3,diaFim:5,fundoId:'festa',desc:'É tempo de festa! Complete missões e ganhe bônus coloridos.',bonusMoedas:3,bonusXp:5},
   {id:'pascoa',nome:'Páscoa',emoji:'🐰',mesInicio:3,diaInicio:20,mesFim:4,diaFim:25,fundoId:'fazenda',desc:'Caça aos ovos virtual! Cuide do pet e ganhe recompensas especiais.',bonusMoedas:4,bonusXp:6},
   {id:'ferias_julho',nome:'Férias de Julho',emoji:'☀️',mesInicio:7,diaInicio:1,mesFim:7,diaFim:31,fundoId:'praia',desc:'Férias! Mantenha a rotina leve e resgate o bônus diário de verão.',bonusMoedas:3,bonusXp:4},
-  {id:'halloween',nome:'Halloween',emoji:'🎃',mesInicio:10,diaInicio:20,mesFim:11,diaFim:2,fundoId:'halloween',desc:'Noite de travessuras! Missões e pet com clima assombrosamente divertido.',bonusMoedas:5,bonusXp:8},
+  {id:'halloween',nome:'Halloween',emoji:'🎃',mesInicio:10,diaInicio:20,mesFim:11,diaFim:2,fundoId:'halloween',desc:'Noite de travessuras! Desbloqueie fantasias de Esqueleto, Vampirinho e Abóbora, adesivos e missões divertidas.',bonusMoedas:5,bonusXp:8},
   {id:'natal',nome:'Natal',emoji:'🎄',mesInicio:12,diaInicio:1,mesFim:12,diaFim:26,fundoId:'neve',desc:'Clima de Natal! Complete a ofensiva e ganhe neve de recompensas.',bonusMoedas:5,bonusXp:10},
   {id:'ano_novo',nome:'Ano Novo',emoji:'🎆',mesInicio:12,diaInicio:27,mesFim:1,diaFim:5,fundoId:'festa',desc:'Virada do ano! Comece a sequência com energia e bônus extra.',bonusMoedas:4,bonusXp:8}
 ];
@@ -4539,7 +4551,7 @@ function abrirColecao(){
   abrirModal('modal-colecao');
 }
 function alternarAbaColecao(aba){
-  ['pets','evos','itens','fundos'].forEach(id=>{
+  ['pets','evos','itens','fundos','adesivos'].forEach(id=>{
     document.getElementById('painel-col-'+id)?.classList.toggle('hidden',id!==aba);
     document.getElementById('tab-col-'+id)?.classList.toggle('ativa',id===aba);
   });
@@ -4711,6 +4723,13 @@ function renderizarColecao(){
       grid.appendChild(card);
     });
   }
+  const pAdesivos=document.getElementById('painel-col-adesivos');
+  if(pAdesivos){
+    const encontrados=new Set(Array.isArray(estado.adesivos)?estado.adesivos:[]);
+    const grupos=[['🌈 Gentileza',['desafio','elogio'],'Complete desafios e receba adesivos de gentileza.'],['🎁 Surpresas',['bau'],'Abra baús para encontrar adesivos surpresa.'],['⚡ Aventuras',['jogo','estrelas'],'Jogue minijogos para completar esta coleção.'],['🏆 Conquistas',['conquista','streak'],'Mantenha sua sequência para encontrar adesivos raros.']];
+    pAdesivos.innerHTML='<p style="font-size:9px;color:#64748b;margin-bottom:8px">Cada missão concluída deixa uma lembrança especial. Complete uma coleção para liberar um prêmio!</p>';
+    grupos.forEach((g,gi)=>{const bloco=document.createElement('div');bloco.className='section-card';bloco.style.marginBottom='8px';const itens=Array.from({length:6},(_,i)=>{const ach=Array.from(encontrados).find(x=>String(x).startsWith(g[1][i%g[1].length]+'_'));return `<span class="adesivo-slot ${ach?'encontrado':''}" title="${ach||'Ainda não encontrado'}">${ach?'⭐':'?'}</span>`}).join('');bloco.innerHTML=`<div style="display:flex;justify-content:space-between;align-items:center"><b style="font-size:10px">${g[0]}</b><small style="font-size:8px;color:#64748b">${g[2]}</small></div><div class="adesivos-grade">${itens}</div>`;pAdesivos.appendChild(bloco);});
+  }
 }
 const CONQUISTAS=[
   ['primeira','🥇','Primeiro Passo','Aprove sua primeira tarefa.',10],
@@ -4854,11 +4873,13 @@ function recompensarMiniJogo(moedas,xp,msg){
   mostrarToast(`🎉 ${msg} +${moedas} 🪙 +${xp} XP`);
   marcarConquistas();
 }
-const TIPOS_JOGO_DESAFIO=['matematica','memoria','reacao'];
+const TIPOS_JOGO_DESAFIO=['matematica','memoria','reacao','estrelas'];
 function abrirDesafio(){
   document.getElementById('area-jogo-matematica').classList.add('hidden');
   document.getElementById('area-jogo-memoria').classList.add('hidden');
   document.getElementById('area-jogo-reacao').classList.add('hidden');
+  document.getElementById('area-jogo-estrelas').classList.add('hidden');
+  if(!tarefasDeHoje().some(t=>statusTarefaAtual(t)==='aprovada') && Number(estado.tarefasHojeCount||0)<=0){mostrarToast('🔒 Complete uma missão para liberar o jogo!');return;}
   const tipo=TIPOS_JOGO_DESAFIO[Math.floor(Math.random()*TIPOS_JOGO_DESAFIO.length)];
   if(tipo==='matematica'){
     document.getElementById('titulo-desafio').textContent='🧮 Desafio Matemático';
@@ -4870,11 +4891,16 @@ function abrirDesafio(){
     document.getElementById('desc-desafio').textContent='Acertou tudo? +2 🪙 e +2 XP';
     document.getElementById('area-jogo-memoria').classList.remove('hidden');
     iniciarJogoMemoria();
-  }else{
+  }else if(tipo==='reacao'){
     document.getElementById('titulo-desafio').textContent='⚡ Reação Rápida';
     document.getElementById('desc-desafio').textContent='Acertou rápido? +1 🪙 e +1 XP';
     document.getElementById('area-jogo-reacao').classList.remove('hidden');
     iniciarJogoReacao();
+  }else{
+    document.getElementById('titulo-desafio').textContent='⭐ Caça às Estrelas';
+    document.getElementById('desc-desafio').textContent='Pegue as estrelas! +3 🪙 e +3 XP';
+    document.getElementById('area-jogo-estrelas').classList.remove('hidden');
+    iniciarJogoEstrelas();
   }
   abrirModal('modal-desafio');
 }
@@ -4999,6 +5025,11 @@ function testarReacao(acertou){
   fecharModal('modal-desafio');
   if(acertou)recompensarMiniJogo(1,1,'Reflexo rápido!');
   else mostrarToast('❌ Não era esse! Tente de novo.');
+}
+let estrelasPegas=0,estrelaTimer=null;
+function iniciarJogoEstrelas(){
+  clearTimeout(estrelaTimer);estrelasPegas=0;const area=document.getElementById('estrelas-area'),status=document.getElementById('estrelas-status');if(!area)return;area.innerHTML='';status.textContent='Pegue 5 estrelas em 12 segundos!';
+  const colocar=()=>{if(!document.getElementById('modal-desafio')?.classList.contains('mostrar'))return;const b=document.createElement('button');b.textContent='⭐';b.style.cssText=`position:absolute;left:${8+Math.random()*82}%;top:${8+Math.random()*76}%;font-size:28px;background:none;border:0;cursor:pointer;animation:pulseSurpresa .8s infinite`;b.onclick=()=>{b.remove();estrelasPegas++;status.textContent=`⭐ ${estrelasPegas}/5 estrelas`;if(estrelasPegas>=5){clearTimeout(estrelaTimer);estado.adesivos=Array.isArray(estado.adesivos)?estado.adesivos:[];estado.adesivos.push('estrelas_'+hojeLocal()+'_'+Date.now());fecharModal('modal-desafio');recompensarMiniJogo(3,3,'Caça às estrelas!');renderizarColecao();}else colocar();};area.appendChild(b);};colocar();estrelaTimer=setTimeout(()=>{if(estrelasPegas<5){fecharModal('modal-desafio');mostrarToast('⏰ As estrelas escaparam. Tente novamente!')}},12000);
 }
 function abrirLojaFundos(){
   renderizarGridTemas();
@@ -5906,5 +5937,5 @@ function abrirResumoHoje(){const c=document.getElementById('resumo-hoje-conteudo
 .atalhos-aventuras{display:grid!important;visibility:visible!important;opacity:1!important;grid-template-columns:repeat(4,minmax(0,1fr));gap:7px;margin:8px 0 5px;position:relative;z-index:4}
 .atalho-aventura{display:flex!important;visibility:visible!important;opacity:1!important;min-height:49px;align-items:center;justify-content:center;background:#fff;border:1px solid #bfdbfe;border-radius:14px;padding:6px 2px;cursor:pointer}
 .atalho-aventura span{display:block!important;font-size:20px;line-height:23px}.atalho-aventura small{display:block!important;font-size:8px;font-weight:900;color:#334155}
-</style></body>
-	</html>
+</style><style id="album-jogo-v61">.grid-tabs{grid-template-columns:repeat(5,minmax(0,1fr))}.adesivos-grade{display:grid;grid-template-columns:repeat(6,1fr);gap:5px;margin-top:8px}.adesivo-slot{height:31px;border-radius:10px;background:#f1f5f9;color:#94a3b8;display:flex;align-items:center;justify-content:center;font-size:16px;border:1px dashed #cbd5e1}.adesivo-slot.encontrado{background:linear-gradient(135deg,#fef3c7,#fde68a);border:1px solid #f59e0b;color:#b45309;animation:pulseSurpresa 1.8s infinite}</style></body>
+</html>
