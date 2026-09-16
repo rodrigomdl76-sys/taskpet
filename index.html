@@ -789,6 +789,11 @@ button:focus-visible,input:focus-visible,.top-pill:focus-visible{
     <div class="xp-bar-bg"><div class="xp-bar-fill" id="barra-xp"></div><span class="xp-text">XP <span id="texto-xp">0/100</span></span></div>
     <div class="evo-name" id="pet-evol-nome">Pipoca • Gatinho Sombra</div>
   </div>
+  <div class="rp-v4-progress" id="rp-v4-progress">
+    <div class="rp-v4-progress-head"><div><b id="rp-v4-marco">🔥 Próximo marco</b><small id="rp-v4-marco-sub">Comece sua sequência hoje</small></div><span id="rp-v4-marco-badge">7</span></div>
+    <div class="rp-v4-track"><div id="rp-v4-track-fill"></div></div>
+    <div class="rp-v4-progress-foot"><span id="rp-v4-streak-copy">Complete as obrigatórias para manter a ofensiva.</span><button onclick="abrirConquistasV4()">Ver progresso ›</button></div>
+  </div>
   <div class="atalhos-aventuras" aria-label="Atalhos de progresso">
     <button class="atalho-aventura" onclick="abrirResumoMeta()" aria-label="Abrir minha meta"><span>🎯</span><small>Meta</small></button>
     <button class="atalho-aventura" onclick="abrirCentralAventuras()" aria-label="Abrir aventuras extras"><span>🌟</span><small>Extras</small></button>
@@ -1059,7 +1064,7 @@ button:focus-visible,input:focus-visible,.top-pill:focus-visible{
     <div style="font-size:8px;color:#64748b;margin-top:4px">As moedas só são descontadas depois da aprovação. A criança pode acompanhar o histórico.</div>
     <div class="stack" id="lista-solicitacoes-premios" style="margin-top:7px"></div>
   </div>
-  <div class="section-card"><b style="font-size:10px">✏️ Gerenciar tarefas</b><div style="font-size:8px;color:#64748b;margin-top:4px">Obrigatórias 🔥 contam para a ofensiva. Extras ⭐ dão moedas sem travar o streak.</div><div class="stack" id="lista-edicao-tarefas" style="margin:6px 0"></div><div style="display:grid;grid-template-columns:1fr 48px 88px auto;gap:4px"><input class="field" id="nova-tarefa-texto" placeholder="Nova tarefa"><input class="field" id="nova-tarefa-moedas" type="number" value="5" min="1"><select class="field" id="nova-tarefa-tipo"><option value="obrigatoria">🔥 Obrigatória</option><option value="extra">⭐ Extra</option></select><button class="primary-btn blue-btn" onclick="adicionarTarefa()">+</button></div>
+  <div class="section-card"><div style="display:flex;justify-content:space-between;align-items:center;gap:6px"><b style="font-size:10px">✏️ Gerenciar tarefas</b><button class="primary-btn blue-btn" onclick="abrirModelosRotina()">⚡ Modelos de rotina</button></div><div style="font-size:8px;color:#64748b;margin-top:4px">Obrigatórias 🔥 contam para a ofensiva. Extras ⭐ dão moedas sem travar o streak.</div><div class="stack" id="lista-edicao-tarefas" style="margin:6px 0"></div><div style="display:grid;grid-template-columns:1fr 48px 88px auto;gap:4px"><input class="field" id="nova-tarefa-texto" placeholder="Nova tarefa"><input class="field" id="nova-tarefa-moedas" type="number" value="5" min="1"><select class="field" id="nova-tarefa-tipo"><option value="obrigatoria">🔥 Obrigatória</option><option value="extra">⭐ Extra</option></select><button class="primary-btn blue-btn" onclick="adicionarTarefa()">+</button></div>
     <div style="margin-top:6px"><span class="field-label" style="margin-bottom:2px">📅 Repetir em (vazio = todo dia)</span><div class="dias-semana-picker" id="dias-nova-tarefa"></div></div>
   </div>
   <div class="section-card"><div style="display:flex;justify-content:space-between;align-items:center;gap:5px"><b style="font-size:10px">📊 Resumo</b><div style="display:flex;gap:4px"><button class="primary-btn blue-btn" onclick="abrirRelatorioSemanal()">Semanal</button><button class="primary-btn pink-btn" onclick="abrirRelatorioMensal()">Mensal</button></div></div><div class="stat-grid" style="margin-top:6px"><div class="stat">📋 <b id="stat-feitas">0</b><span>tarefas feitas</span></div><div class="stat">🔥 <b id="stat-ofensiva-pais">0</b><span>dias de ofensiva</span></div><div class="stat">🏆 <b id="stat-conquistas">0</b><span>conquistas</span></div></div></div>
@@ -5926,6 +5931,8 @@ setTimeout(()=>{try{garantirEngajamento();renderizarEngajamento();}catch(e){cons
 .atalho-aventura{border:1px solid #dbeafe;background:#fff;border-radius:14px;padding:7px 3px 5px;display:flex;flex-direction:column;align-items:center;gap:2px;box-shadow:0 2px 8px rgba(15,23,42,.05);cursor:pointer;transition:transform .15s,box-shadow .15s}
 .atalho-aventura:active{transform:scale(.94)}.atalho-aventura span{font-size:20px;line-height:22px}.atalho-aventura small{font-size:8px;font-weight:900;color:#475569}.task-header-expansivel{width:100%;border:0;background:transparent;text-align:left;cursor:pointer;padding:0}.task-header-expansivel:focus-visible{outline:2px solid #38bdf8;border-radius:8px}.tasks-section.recolhida #lista-tarefas,.tasks-section.recolhida #banner-aprovacoes-pendentes,.tasks-section.recolhida #status-ofensiva{display:none}.tasks-section.recolhida #seta-missoes{transform:rotate(180deg)}
 </style>
+<div id="modal-modelos-rotina" class="modal-overlay"><div class="modal" style="max-width:370px"><div class="modal-title"><h3>⚡ Modelos de rotina</h3><button class="close-btn" onclick="fecharModal('modal-modelos-rotina')">×</button></div><p style="font-size:9px;color:#64748b;margin-bottom:8px">Adicione um conjunto de tarefas de uma vez. Você poderá editar cada tarefa depois.</p><div id="lista-modelos-rotina" class="stack"></div></div></div>
+<div id="modal-conquistas-v4" class="modal-overlay"><div class="modal" style="max-width:370px"><div class="modal-title"><h3>🔥 Jornada do Pet</h3><button class="close-btn" onclick="fecharModal('modal-conquistas-v4')">×</button></div><div id="conteudo-conquistas-v4"></div></div></div>
 <div id="modal-resumo-meta" class="modal-overlay"><div class="modal" style="max-width:340px"><div class="modal-title"><h3>🎯 Minha meta</h3><button class="close-btn" onclick="fecharModal('modal-resumo-meta')">×</button></div><div id="resumo-meta-conteudo"></div></div></div>
 <div id="modal-resumo-hoje" class="modal-overlay"><div class="modal" style="max-width:340px"><div class="modal-title"><h3>🗓️ Aventura de hoje</h3><button class="close-btn" onclick="fecharModal('modal-resumo-hoje')">×</button></div><div id="resumo-hoje-conteudo"></div></div></div>
 <script>
@@ -5937,5 +5944,185 @@ function abrirResumoHoje(){const c=document.getElementById('resumo-hoje-conteudo
 .atalhos-aventuras{display:grid!important;visibility:visible!important;opacity:1!important;grid-template-columns:repeat(4,minmax(0,1fr));gap:7px;margin:8px 0 5px;position:relative;z-index:4}
 .atalho-aventura{display:flex!important;visibility:visible!important;opacity:1!important;min-height:49px;align-items:center;justify-content:center;background:#fff;border:1px solid #bfdbfe;border-radius:14px;padding:6px 2px;cursor:pointer}
 .atalho-aventura span{display:block!important;font-size:20px;line-height:23px}.atalho-aventura small{display:block!important;font-size:8px;font-weight:900;color:#334155}
-</style><style id="album-jogo-v61">.grid-tabs{grid-template-columns:repeat(5,minmax(0,1fr))}.adesivos-grade{display:grid;grid-template-columns:repeat(6,1fr);gap:5px;margin-top:8px}.adesivo-slot{height:31px;border-radius:10px;background:#f1f5f9;color:#94a3b8;display:flex;align-items:center;justify-content:center;font-size:16px;border:1px dashed #cbd5e1}.adesivo-slot.encontrado{background:linear-gradient(135deg,#fef3c7,#fde68a);border:1px solid #f59e0b;color:#b45309;animation:pulseSurpresa 1.8s infinite}</style></body>
+</style><style id="album-jogo-v61">.grid-tabs{grid-template-columns:repeat(5,minmax(0,1fr))}.adesivos-grade{display:grid;grid-template-columns:repeat(6,1fr);gap:5px;margin-top:8px}.adesivo-slot{height:31px;border-radius:10px;background:#f1f5f9;color:#94a3b8;display:flex;align-items:center;justify-content:center;font-size:16px;border:1px dashed #cbd5e1}.adesivo-slot.encontrado{background:linear-gradient(135deg,#fef3c7,#fde68a);border:1px solid #f59e0b;color:#b45309;animation:pulseSurpresa 1.8s infinite}</style>
+<script id="rotinapet-v4-enhancements">
+(function(){
+  const MARCOS_V4=[
+    {dias:3,nome:'Primeira chama',emoji:'🔥',premio:'+5 🪙'},
+    {dias:7,nome:'Semana de fogo',emoji:'🔥',premio:'Baú semanal'},
+    {dias:14,nome:'Duas semanas',emoji:'⚡',premio:'+20 🪙 + adesivo'},
+    {dias:30,nome:'Mestre da rotina',emoji:'🏆',premio:'+40 🪙'},
+    {dias:60,nome:'Guardião da sequência',emoji:'🛡️',premio:'Escudo + tema'},
+    {dias:100,nome:'Lenda da rotina',emoji:'👑',premio:'Recompensa lendária'}
+  ];
+  const MODELOS_ROTINA_V4=[
+    {id:'manha',nome:'🌅 Rotina da manhã',desc:'Começar o dia organizado',tarefas:[['Escovar os dentes',5,'obrigatoria'],['Arrumar a cama',5,'obrigatoria'],['Vestir-se para o dia',5,'obrigatoria'],['Guardar o pijama',3,'extra']]},
+    {id:'escola',nome:'🎒 Depois da escola',desc:'Desacelerar e organizar',tarefas:[['Guardar mochila e materiais',5,'obrigatoria'],['Fazer a tarefa escolar',8,'obrigatoria'],['Guardar os brinquedos',4,'extra'],['Preparar a mochila do dia seguinte',5,'extra']]},
+    {id:'noite',nome:'🌙 Rotina da noite',desc:'Fechar o dia com calma',tarefas:[['Tomar banho',5,'obrigatoria'],['Escovar os dentes antes de dormir',5,'obrigatoria'],['Guardar as coisas do quarto',5,'extra'],['Deixar a roupa do dia seguinte separada',4,'extra']]},
+    {id:'fimsemana',nome:'🏡 Fim de semana',desc:'Pequenas responsabilidades',tarefas:[['Organizar o quarto',8,'obrigatoria'],['Ajudar a guardar a mesa',5,'obrigatoria'],['Cuidar de uma tarefa da casa',6,'extra'],['Organizar brinquedos ou materiais',5,'extra']]}
+  ];
+  function garantirV4(){
+    if(!window.estado)return;
+    estado.v4=estado.v4||{};
+    estado.v4.marcosPremiados=estado.v4.marcosPremiados||{};
+    estado.v4.temasEfeitos=estado.v4.temasEfeitos||{};
+    estado.v4.cristais=Math.max(0,Number(estado.v4.cristais)||0);
+    estado.v4.rotinasAplicadas=estado.v4.rotinasAplicadas||[];
+    if(!Array.isArray(estado.adesivos))estado.adesivos=[];
+  }
+  function proximoMarco(streak){return MARCOS_V4.find(m=>m.dias>streak)||{dias:Math.ceil((streak+1)/50)*50,nome:'Novo horizonte',emoji:'🚀',premio:'Recompensa especial'};}
+  function marcoAnterior(streak){return [...MARCOS_V4].reverse().find(m=>m.dias<=streak)?.dias||0;}
+  function renderProgressV4(){
+    garantirV4();
+    const streak=Number(estado.streak)||0, next=proximoMarco(streak), prev=marcoAnterior(streak);
+    const span=Math.max(1,next.dias-prev), perc=Math.min(100,Math.max(0,Math.round(((streak-prev)/span)*100)));
+    const fill=document.getElementById('rp-v4-track-fill'); if(fill)fill.style.width=perc+'%';
+    const badge=document.getElementById('rp-v4-marco-badge'); if(badge)badge.textContent=next.dias;
+    const title=document.getElementById('rp-v4-marco'); if(title)title.textContent=`${next.emoji} ${next.nome}`;
+    const sub=document.getElementById('rp-v4-marco-sub'); if(sub)sub.textContent=`Marco de ${next.dias} dias · ${next.premio}`;
+    const copy=document.getElementById('rp-v4-streak-copy'); if(copy)copy.textContent=streak?`Você está em ${streak} dia(s). Faltam ${Math.max(0,next.dias-streak)} para o próximo marco.`:'Complete as obrigatórias para acender sua primeira chama.';
+  }
+  window.abrirConquistasV4=function(){
+    garantirV4(); const c=document.getElementById('conteudo-conquistas-v4'); if(!c)return;
+    const streak=Number(estado.streak)||0;
+    c.innerHTML=`<div class="v4-hero-streak"><span>🔥</span><div><b>${streak} dias</b><small>de ofensiva atual</small></div></div>`+
+      MARCOS_V4.map(m=>{const ok=streak>=m.dias;return `<div class="v4-milestone ${ok?'ok':'locked'}"><span>${ok?'✅':'🔒'}</span><div><b>${m.emoji} ${m.dias} dias — ${m.nome}</b><small>${m.premio}</small></div></div>`}).join('');
+    abrirModal('modal-conquistas-v4');
+  };
+  window.abrirModelosRotina=function(){
+    garantirV4(); const c=document.getElementById('lista-modelos-rotina'); if(!c)return;
+    c.innerHTML=MODELOS_ROTINA_V4.map(m=>`<button class="v4-template" onclick="aplicarModeloRotina('${m.id}')"><span>${m.nome}</span><small>${m.desc} · ${m.tarefas.length} tarefas</small></button>`).join('');
+    abrirModal('modal-modelos-rotina');
+  };
+  window.aplicarModeloRotina=function(id){
+    garantirV4(); const m=MODELOS_ROTINA_V4.find(x=>x.id===id); if(!m)return;
+    const atuais=new Set((estado.tarefas||[]).map(t=>String(t.texto||'').trim().toLowerCase())); let adicionadas=0;
+    m.tarefas.forEach(([texto,recompensa,tipo])=>{
+      if(atuais.has(texto.toLowerCase()))return;
+      const nid=Date.now().toString(36)+'_'+Math.random().toString(36).slice(2,7);
+      estado.tarefas.push({id:nid,texto,recompensa,xp:tipo==='obrigatoria'?20:12,tipo,status:'pendente',foto:null,dias:[]}); adicionadas++;
+    });
+    estado.v4.rotinasAplicadas.push({id,data:hojeLocal(),adicionadas});
+    salvar(); renderizarTarefas?.(); renderizarPainelPais?.(); fecharModal('modal-modelos-rotina');
+    mostrarToast(adicionadas?`⚡ ${adicionadas} tarefas adicionadas!`:'ℹ️ Essas tarefas já existem.');
+  };
+  // Upgrade visual dos cards de tema: preview + características do combo.
+  const oldThemes=window.renderizarGridTemas;
+  if(typeof oldThemes==='function'){
+    window.renderizarGridTemas=function(){
+      const c=document.getElementById('grid-temas'); if(!c)return oldThemes(); c.innerHTML='';
+      (window.TEMAS||[]).forEach(t=>{
+        const fundo=(window.BANCO_FUNDOS||[]).find(f=>f.id===t.fundoId), possui=typeof possuiTema==='function'&&possuiTema(t), ativo=estado.fundoAtual===t.fundoId&&estado.acessorios?.ativo===t.acessorio.id;
+        const d=document.createElement('div'); d.className='fundo-card v4-theme-card '+(ativo?'ativo':''); d.style.background=fundo?.bg||'linear-gradient(160deg,#ede9fe,#ddd6fe)';
+        d.innerHTML=`<div class="v4-theme-top"><span>${t.emoji}</span><b>${esc(t.nome)}</b></div><div class="v4-theme-preview"><div class="v4-theme-orb">${t.emoji}</div></div><div class="v4-theme-info"><span>🖼️ ${esc(fundo?.nome||'Cenário')}</span><span>🎀 ${esc(t.acessorio?.nome||'Acessório')}</span></div><span class="shop-tag">${ativo?'✓ Em uso':possui?'Usar':t.preco+' 🪙'}</span>`;
+        d.onclick=()=>selecionarOuComprarTema(t); c.appendChild(d);
+      });
+    };
+  }
+  // Marcos são verificados sem retirar as recompensas antigas do app.
+  const oldRegistrar=window.registrarConclusaoDoDia;
+  if(typeof oldRegistrar==='function'){
+    window.registrarConclusaoDoDia=function(){
+      const antes=Number(estado.streak)||0; const r=oldRegistrar.apply(this,arguments); garantirV4(); const depois=Number(estado.streak)||0;
+      if(r&&depois>antes){
+        MARCOS_V4.filter(m=>depois>=m.dias&&!estado.v4.marcosPremiados[m.dias]).forEach(m=>{
+          estado.v4.marcosPremiados[m.dias]=hojeLocal();
+          if(m.dias===3)estado.moedas=(Number(estado.moedas)||0)+5;
+          if(m.dias===14)estado.moedas=(Number(estado.moedas)||0)+20;
+          if(m.dias===30)estado.moedas=(Number(estado.moedas)||0)+40;
+          if(m.dias===60)estado.escudosOfensiva=Math.min(3,(Number(estado.escudosOfensiva)||0)+1);
+          if(m.dias!==7)estado.adesivos.push('marco_'+m.dias);
+          mostrarAviso(m.emoji,`${m.dias} dias!`,`${m.nome} desbloqueado · ${m.premio}`);
+        });
+        salvar();
+      }
+      renderProgressV4(); return r;
+    };
+  }
+  const oldAtualizar=window.atualizarTela;
+  if(typeof oldAtualizar==='function')window.atualizarTela=function(){oldAtualizar.apply(this,arguments);renderProgressV4();};
+  document.addEventListener('DOMContentLoaded',()=>{garantirV4();renderProgressV4();});
+  setTimeout(()=>{garantirV4();renderProgressV4();},500);
+})();
+</script>
+<style id="rotinapet-v4-style">
+.rp-v4-progress{margin:7px 0 8px;padding:9px 10px;border-radius:16px;background:linear-gradient(135deg,#ffffffee,#f5f3ffef);border:1px solid #ddd6fe;box-shadow:0 7px 18px rgba(76,29,149,.10)}
+.rp-v4-progress-head{display:flex;align-items:center;justify-content:space-between;gap:8px}.rp-v4-progress-head b{display:block;font-size:10px;color:#4c1d95}.rp-v4-progress-head small{display:block;font-size:8px;color:#64748b;margin-top:2px}.rp-v4-progress-head>span{min-width:32px;height:28px;border-radius:10px;background:#7c3aed;color:white;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:900;box-shadow:0 5px 12px #7c3aed44}
+.rp-v4-track{height:8px;background:#ede9fe;border-radius:99px;overflow:hidden;margin:8px 0 6px}.rp-v4-track>div{height:100%;width:0;border-radius:99px;background:linear-gradient(90deg,#8b5cf6,#ec4899,#f59e0b);transition:width .5s cubic-bezier(.22,1,.36,1)}.rp-v4-progress-foot{display:flex;align-items:center;justify-content:space-between;gap:7px}.rp-v4-progress-foot span{font-size:7.5px;color:#64748b;line-height:1.3}.rp-v4-progress-foot button{border:0;background:none;color:#7c3aed;font-size:8px;font-weight:900;cursor:pointer;white-space:nowrap}
+.v4-theme-card{min-height:178px!important;display:flex;flex-direction:column;justify-content:space-between;overflow:hidden;position:relative}.v4-theme-top{display:flex;align-items:center;gap:5px;font-size:10px}.v4-theme-top span{font-size:23px}.v4-theme-preview{height:70px;border-radius:12px;background:radial-gradient(circle at 50% 45%,#ffffff99,transparent 62%);display:flex;align-items:center;justify-content:center}.v4-theme-orb{width:54px;height:54px;border-radius:50%;display:flex;align-items:center;justify-content:center;background:#ffffffb8;box-shadow:0 7px 16px #0f172a22;font-size:27px}.v4-theme-info{display:grid;gap:2px;font-size:7px;font-weight:800;color:#334155}.v4-theme-info span{white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.v4-hero-streak{display:flex;align-items:center;gap:10px;padding:12px;border-radius:15px;background:linear-gradient(135deg,#fff7ed,#fef3c7);border:1px solid #fed7aa;margin-bottom:8px}.v4-hero-streak>span{font-size:32px}.v4-hero-streak b{display:block;font-size:20px;color:#9a3412}.v4-hero-streak small{font-size:8px;color:#92400e}.v4-milestone{display:flex;gap:8px;align-items:center;padding:9px;border-radius:12px;border:1px solid #e2e8f0;background:#fff;margin-bottom:5px}.v4-milestone.ok{background:#f0fdf4;border-color:#bbf7d0}.v4-milestone.locked{opacity:.68}.v4-milestone>b{}.v4-milestone span{font-size:16px}.v4-milestone b{display:block;font-size:9px;color:#334155}.v4-milestone small{display:block;font-size:7px;color:#64748b;margin-top:2px}.v4-template{border:1px solid #dbeafe;background:linear-gradient(135deg,#fff,#eff6ff);border-radius:13px;padding:10px;text-align:left;cursor:pointer}.v4-template span{display:block;font-size:10px;font-weight:900;color:#1e3a8a}.v4-template small{display:block;font-size:7.5px;color:#64748b;margin-top:3px}.v4-template:active{transform:scale(.98)}
+</style>
+<style id="rotinapet-v41-style">
+/* ===== RotinaPet 4.1 — Home 2.0 / progressão / pet vivo ===== */
+.rp-v41-today{margin:7px 0 8px;padding:10px;border-radius:17px;background:linear-gradient(135deg,#eff6ff,#f5f3ff);border:1px solid #c7d2fe;box-shadow:0 7px 18px rgba(37,99,235,.09)}
+.rp-v41-head{display:flex;align-items:center;justify-content:space-between;gap:8px}.rp-v41-head b{font-size:11px;color:#1e3a8a}.rp-v41-head small{font-size:7.5px;color:#64748b}.rp-v41-ring{width:35px;height:35px;border-radius:50%;display:flex;align-items:center;justify-content:center;background:#fff;border:4px solid #bfdbfe;font-size:10px;font-weight:900;color:#1d4ed8;flex-shrink:0}
+.rp-v41-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:5px;margin-top:8px}.rp-v41-stat{background:#ffffffc9;border:1px solid #dbeafe;border-radius:11px;padding:7px 6px;text-align:center}.rp-v41-stat b{display:block;font-size:11px;color:#0f172a}.rp-v41-stat span{display:block;font-size:6.5px;color:#64748b;margin-top:2px;font-weight:800}
+.rp-v41-status{display:flex;align-items:center;gap:6px;margin-top:7px;padding:6px 8px;border-radius:10px;background:#fff;font-size:7.5px;font-weight:800;color:#475569}.rp-v41-status i{font-style:normal;font-size:13px}
+.rp-v41-evo{margin:7px 0 8px;padding:9px 10px;border-radius:14px;background:linear-gradient(135deg,#faf5ff,#fff);border:1px solid #e9d5ff}.rp-v41-evo-head{display:flex;justify-content:space-between;align-items:center;gap:8px}.rp-v41-evo-head b{font-size:9px;color:#6b21a8}.rp-v41-evo-head span{font-size:7px;font-weight:900;color:#7c3aed}.rp-v41-evo-track{height:7px;background:#ede9fe;border-radius:99px;overflow:hidden;margin-top:6px}.rp-v41-evo-track div{height:100%;border-radius:99px;background:linear-gradient(90deg,#8b5cf6,#ec4899);transition:width .5s}.rp-v41-evo-foot{display:flex;justify-content:space-between;margin-top:4px;font-size:6.5px;color:#64748b}.rp-v41-collection-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:6px;margin-top:8px}.rp-v41-collection-card{border:1px solid #e2e8f0;border-radius:13px;padding:9px;background:#fff;text-align:center}.rp-v41-collection-card b{display:block;font-size:15px;color:#334155}.rp-v41-collection-card span{display:block;font-size:7px;color:#64748b;margin-top:2px}.rp-v41-theme-hero{border-radius:15px;padding:11px;background:linear-gradient(135deg,#0f172a,#312e81);color:#fff;margin-bottom:8px;position:relative;overflow:hidden}.rp-v41-theme-hero:after{content:'✦  ✧  ✦  ✧  ✦';position:absolute;right:-5px;top:8px;opacity:.35;font-size:25px}.rp-v41-theme-hero b{font-size:13px;display:block}.rp-v41-theme-hero small{font-size:7.5px;opacity:.8;display:block;margin-top:3px}.rp-v41-pill{display:inline-flex;align-items:center;gap:4px;border-radius:99px;padding:4px 7px;background:#ffffff22;font-size:7px;font-weight:900;margin-top:7px}
+</style>
+<script id="rotinapet-v41-js">
+(function(){
+  'use strict';
+  const V41_KEY='v41';
+  function garantirV41(){
+    if(!estado.v41)estado.v41={primeiroUso:hojeLocal(),acoesPet:0};
+    if(!Number.isFinite(Number(estado.v41.acoesPet)))estado.v41.acoesPet=0;
+  }
+  function tarefasHoje(){
+    const hoje=new Date().getDay();
+    return (estado.tarefas||[]).filter(t=>Array.isArray(t.dias)&&t.dias.length?t.dias.includes(hoje):true);
+  }
+  function calcHoje(){
+    const ts=tarefasHoje();
+    const obrig=ts.filter(t=>t.tipo==='obrigatoria');
+    const extras=ts.filter(t=>t.tipo!=='obrigatoria');
+    const feitasObrig=obrig.filter(t=>t.status==='concluida'||t.status==='aprovada'||t.status==='paga').length;
+    const feitas=ts.filter(t=>t.status==='concluida'||t.status==='aprovada'||t.status==='paga').length;
+    const moedas=ts.filter(t=>t.status==='pendente'||t.status==='enviada'||t.status==='aguardando').reduce((a,t)=>a+Number(t.recompensa||0),0);
+    return {ts,obrig,extras,feitasObrig,feitas,moedas};
+  }
+  function renderTodayV41(){
+    const sec=document.getElementById('secao-missoes'); if(!sec)return;
+    let el=document.getElementById('rp-v41-today');
+    if(!el){el=document.createElement('div');el.id='rp-v41-today';el.className='rp-v41-today';sec.parentNode.insertBefore(el,sec);}
+    const d=calcHoje(), total=d.obrig.length, pct=total?Math.round(d.feitasObrig/total*100):100;
+    const humor=Number(estado.pets?.[estado.petAtual]?.felicidade??100), saude=Number(estado.pets?.[estado.petAtual]?.saude??100);
+    let msg=pct>=100?'🎉 Missões obrigatórias concluídas!':`🔥 Faltam ${Math.max(0,total-d.feitasObrig)} obrigatória(s) para a ofensiva`;
+    el.innerHTML=`<div class="rp-v41-head"><div><b>📋 Seu plano de hoje</b><small> Faça primeiro o que mantém sua sequência.</small></div><div class="rp-v41-ring">${pct}%</div></div><div class="rp-v41-grid"><div class="rp-v41-stat"><b>${d.feitas}/${d.ts.length}</b><span>missões feitas</span></div><div class="rp-v41-stat"><b>${d.extras.length}</b><span>extras disponíveis</span></div><div class="rp-v41-stat"><b>🪙 ${d.moedas}</b><span>moedas em jogo</span></div></div><div class="rp-v41-status"><i>${pct>=100?'🏆':'🎯'}</i><span>${msg}</span></div>`;
+  }
+  function renderEvoV41(){
+    const area=document.getElementById('pet-section-area');if(!area)return;
+    let el=document.getElementById('rp-v41-evo');if(!el){el=document.createElement('div');el.id='rp-v41-evo';el.className='rp-v41-evo';area.parentNode.insertBefore(el,area.nextSibling);}
+    const pet=PETS[estado.petAtual], d=obterDadosPetAtual(), evos=pet?.evolucoes||[];
+    const prox=evos.find(e=>Number(e.nivel)>Number(d.nivel));
+    if(!prox){el.innerHTML='<div class="rp-v41-evo-head"><b>👑 Evolução máxima alcançada!</b><span>COMPLETO</span></div><div class="rp-v41-evo-track"><div style="width:100%"></div></div><div class="rp-v41-evo-foot"><span>Seu pet chegou ao topo.</span><span>⭐</span></div>';return;}
+    const atualNivel=Number(d.nivel)||1, alvo=Number(prox.nivel)||atualNivel+1;
+    const pct=Math.max(0,Math.min(100,((atualNivel-1)/(alvo-1))*100));
+    el.innerHTML=`<div class="rp-v41-evo-head"><b>⭐ Próxima evolução: ${esc(prox.nome)}</b><span>NÍVEL ${alvo}</span></div><div class="rp-v41-evo-track"><div style="width:${pct}%"></div></div><div class="rp-v41-evo-foot"><span>Nível atual: ${atualNivel}</span><span>${prox.desc?esc(prox.desc):'Continue cuidando e cumprindo missões!'}</span></div>`;
+    el.onclick=()=>{if(typeof abrirModal==='function')abrirModal('modal-evolucoes')};
+    el.style.cursor='pointer';
+  }
+  function renderCollectionV41(){
+    const box=document.getElementById('colecao-resumo');if(!box)return;
+    const pets=Object.keys(PETS||{}), nivel=Number(nivelJogador?.()||1);
+    const petsOk=pets.filter(k=>nivel>=Number(PETS[k].desbloqueioNivel||1)).length;
+    const evos=pets.reduce((a,k)=>a+(PETS[k].evolucoes||[]).filter(e=>nivel>=Number(e.nivel||999)).length,0);
+    const evosTot=pets.reduce((a,k)=>a+(PETS[k].evolucoes||[]).length,0);
+    const temas=(TEMAS||[]).filter(t=>(estado.fundosComprados||[]).includes(t.fundoId)).length;
+    const itens=(estado.acessorios?.comprados||[]).length;
+    box.innerHTML=`<div class="rp-v41-collection-grid"><div class="rp-v41-collection-card"><b>🐾 ${petsOk}/${pets.length}</b><span>Pets liberados</span></div><div class="rp-v41-collection-card"><b>⭐ ${evos}/${evosTot}</b><span>Evoluções</span></div><div class="rp-v41-collection-card"><b>🎨 ${temas}</b><span>Temas adquiridos</span></div><div class="rp-v41-collection-card"><b>🎀 ${itens}</b><span>Acessórios</span></div></div>`;
+  }
+  function melhorarPetInteracao(){
+    const pet=document.getElementById('pet-principal');if(!pet||pet.dataset.v41)return;
+    pet.dataset.v41='1';
+    pet.addEventListener('click',()=>{garantirV41();estado.v41.acoesPet++;if(estado.v41.acoesPet%5===0){const p=obterDadosPetAtual();p.felicidade=Math.min(100,Number(p.felicidade||0)+2);mostrarToast('💖 Seu pet adorou o carinho!');salvar();atualizarTela();}});
+  }
+  const oldAtualizar=window.atualizarTela;
+  if(typeof oldAtualizar==='function')window.atualizarTela=function(){const r=oldAtualizar.apply(this,arguments);setTimeout(()=>{garantirV41();renderTodayV41();renderEvoV41();renderCollectionV41();melhorarPetInteracao();},0);return r;};
+  const oldAbrirColecao=window.abrirColecao;
+  if(typeof oldAbrirColecao==='function')window.abrirColecao=function(){const r=oldAbrirColecao.apply(this,arguments);setTimeout(renderCollectionV41,0);return r;};
+  document.addEventListener('DOMContentLoaded',()=>{garantirV41();renderTodayV41();renderEvoV41();renderCollectionV41();melhorarPetInteracao();});
+  setTimeout(()=>{garantirV41();renderTodayV41();renderEvoV41();renderCollectionV41();melhorarPetInteracao();},700);
+})();
+</script>
+</body>
 </html>
