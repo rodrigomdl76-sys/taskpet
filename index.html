@@ -1675,7 +1675,9 @@ function trocarCriancaAtiva(novoId){
   if(!estado.criancas[novoId]||novoId===estado.criancaAtivaId)return;
   estado.criancasDados=estado.criancasDados||{};
   estado.criancasDados[estado.criancaAtivaId]=capturarDadosCrianca();
+  const tarefasAntesDaTroca=estado.tarefas;
   aplicarDadosCrianca(estado.criancasDados[novoId]);
+  estado.tarefas=aplicarTarefasDaCriancaSemPerderCadastro(tarefasAntesDaTroca,estado.tarefas);
   estado.criancaAtivaId=novoId;
   salvar();
   atualizarTela();
@@ -1880,6 +1882,15 @@ async function carregarEstadoNuvem(){
     return false;
   }
 }
+function aplicarTarefasDaCriancaSemPerderCadastro(tarefasBase,tarefasFilha){
+  const base=Array.isArray(tarefasBase)?tarefasBase:[];
+  const filha=Array.isArray(tarefasFilha)?tarefasFilha:[];
+  // A lista mais completa vence: evita que os 2 exemplos padrão substituam
+  // as tarefas reais cadastradas no painel dos responsáveis.
+  if(filha.length>base.length)return filha;
+  if(base.length)return base;
+  return filha;
+}
 function aplicarEstadoRemotoComMerge(d){
   if(!d||typeof d!=='object')return;
   const tarefasRemotas=Array.isArray(d.tarefas)?d.tarefas:null;
@@ -1890,9 +1901,11 @@ function aplicarEstadoRemotoComMerge(d){
   const tarefasMescladas=fonteTarefas?mergeTarefasPorVersao(estado.tarefas,fonteTarefas):estado.tarefas;
   estado={...estado,...d,pets:{...estado.pets,...(d.pets||{})},tarefas:tarefasMescladas};
   garantirCriancaAtiva();
+  const tarefasAntesDosDados=estado.tarefas;
   if(dadosCriancaRemotos){
     const dadosAtuais=capturarDadosCrianca();
     aplicarDadosCrianca({...dadosAtuais,...dadosCriancaRemotos});
+    estado.tarefas=aplicarTarefasDaCriancaSemPerderCadastro(tarefasAntesDosDados,estado.tarefas);
   }
   if(!Array.isArray(estado.tarefas))estado.tarefas=[];
   estado.tarefas.forEach(prepararTarefaParaHoje);
@@ -3109,7 +3122,9 @@ async function carregarTarefasIndividuaisComFallback(){
   const individuais=Object.values(dados);
   const dadosAtuais=estado.criancasDados?.[estado.criancaAtivaId];
   const tarefasFilhas=Array.isArray(dadosAtuais?.tarefas)?dadosAtuais.tarefas:[];
-  estado.tarefas=mergeTarefasPorVersao(estado.tarefas,individuais.length?individuais:tarefasFilhas);
+  const remotas=individuais.length?individuais:tarefasFilhas;
+  const mescladas=mergeTarefasPorVersao(estado.tarefas,remotas);
+  estado.tarefas=aplicarTarefasDaCriancaSemPerderCadastro(estado.tarefas,mescladas);
   salvarLocalmente();
   renderizarTarefas();
   return true;
@@ -5892,4 +5907,4 @@ function abrirResumoHoje(){const c=document.getElementById('resumo-hoje-conteudo
 .atalho-aventura{display:flex!important;visibility:visible!important;opacity:1!important;min-height:49px;align-items:center;justify-content:center;background:#fff;border:1px solid #bfdbfe;border-radius:14px;padding:6px 2px;cursor:pointer}
 .atalho-aventura span{display:block!important;font-size:20px;line-height:23px}.atalho-aventura small{display:block!important;font-size:8px;font-weight:900;color:#334155}
 </style></body>
-</html>
+	</html>
