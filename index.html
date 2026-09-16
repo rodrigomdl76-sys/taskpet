@@ -798,6 +798,11 @@ button:focus-visible,input:focus-visible,.top-pill:focus-visible{
     <div class="crianca-proxima" id="crianca-proxima-missao">🎯 Sua próxima missão aparecerá aqui.</div>
   </div>
   <div class="metas-crianca-card" id="metas-crianca-card"><div class="metas-crianca-titulo">🎯 Minhas metas</div><div id="lista-metas-crianca"></div></div>
+  <div id="engajamento-card" style="background:linear-gradient(135deg,#fff7ed,#fefce8);border:1px solid #fed7aa;border-radius:16px;padding:9px 10px;margin-top:7px">
+    <div style="display:flex;justify-content:space-between;align-items:center;gap:6px"><b style="font-size:10px;color:#9a3412">🌟 Aventuras extras</b><span id="engajamento-streak" style="font-size:8px;font-weight:900;color:#ea580c"></span></div>
+    <div id="engajamento-desafio" style="font-size:8px;color:#7c2d12;margin-top:5px"></div>
+    <div style="display:flex;gap:5px;margin-top:7px"><button class="primary-btn pink-btn" style="flex:1;font-size:8px" onclick="abrirCentralAventuras()">Ver aventuras</button><button class="primary-btn" id="btn-bau-diario" style="flex:1;font-size:8px" onclick="abrirBauDiario()">🎁 Baú do dia</button></div>
+  </div>
   <div class="tasks-section">
     <div class="task-header"><b style="font-size:10px">✨ Missões de hoje</b><span style="font-size:8px;font-weight:900;color:#0284c7" id="qtd-tarefas">2 missões</span></div>
     <div id="banner-aprovacoes-pendentes" class="hidden" style="margin-bottom:6px;padding:7px 9px;border-radius:12px;background:#fffbeb;border:1px solid #fcd34d;font-size:9px;font-weight:900;color:#92400e;display:none;align-items:center;gap:6px">⏳ <span id="txt-aprovacoes-pendentes">Há tarefas aguardando os pais</span></div>
@@ -1041,12 +1046,21 @@ button:focus-visible,input:focus-visible,.top-pill:focus-visible{
       <b style="font-size:10px">🎁 Gerenciar Prêmios</b>
       <button class="primary-btn pink-btn" onclick="adicionarPremioPais()">＋ Novo prêmio</button>
     </div>
-    <div style="font-size:8px;color:#64748b;margin-top:4px">Cadastre recompensas combinadas com a criança.</div>
+    <div style="font-size:8px;color:#64748b;margin-top:4px">Cadastre recompensas reais ou tempo de tela combinado com a criança.</div>
     <div class="stack" id="lista-gerenciar-premios" style="margin-top:7px"></div>
+  </div>
+  <div class="section-card" id="card-mensagens-pais">
+    <b style="font-size:10px">💌 Incentivo rápido</b>
+    <small style="font-size:8px;color:#64748b;margin-top:4px;display:block">Envie uma mensagem positiva para a criança.</small>
+    <div style="display:flex;gap:4px;flex-wrap:wrap;margin-top:6px">
+      <button class="primary-btn blue-btn" onclick="enviarElogioCrianca('Tenho orgulho de você!')">💜 Orgulho</button>
+      <button class="primary-btn green-btn" onclick="enviarElogioCrianca('Você se esforçou bastante!')">👏 Esforço</button>
+      <button class="primary-btn pink-btn" onclick="enviarElogioCrianca('Continue assim!')">🌟 Incentivar</button>
+    </div>
   </div>
   <div class="section-card">
     <b style="font-size:10px">🎟️ Solicitações de prêmios</b>
-    <div style="font-size:8px;color:#64748b;margin-top:4px">O resgate só desconta moedas após a aprovação dos pais.</div>
+    <div style="font-size:8px;color:#64748b;margin-top:4px">As moedas só são descontadas depois da aprovação. A criança pode acompanhar o histórico.</div>
     <div class="stack" id="lista-solicitacoes-premios" style="margin-top:7px"></div>
   </div>
   <div class="section-card"><b style="font-size:10px">✏️ Gerenciar tarefas</b><div style="font-size:8px;color:#64748b;margin-top:4px">Obrigatórias 🔥 contam para a ofensiva. Extras ⭐ dão moedas sem travar o streak.</div><div class="stack" id="lista-edicao-tarefas" style="margin:6px 0"></div><div style="display:grid;grid-template-columns:1fr 48px 88px auto;gap:4px"><input class="field" id="nova-tarefa-texto" placeholder="Nova tarefa"><input class="field" id="nova-tarefa-moedas" type="number" value="5" min="1"><select class="field" id="nova-tarefa-tipo"><option value="obrigatoria">🔥 Obrigatória</option><option value="extra">⭐ Extra</option></select><button class="primary-btn blue-btn" onclick="adicionarTarefa()">+</button></div>
@@ -1634,7 +1648,7 @@ const hojeLocal=()=>{const d=new Date();return `${d.getFullYear()}-${String(d.ge
 const ontemLocal=()=>{const d=new Date();d.setDate(d.getDate()-1);return `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`};
 // Campos que pertencem a UM filho específico (progresso do pet, tarefas, moedas...).
 // Tudo que NÃO está nessa lista é compartilhado pela família inteira (PIN, e-mails, taxa de câmbio).
-const CAMPOS_CRIANCA=['acessorios','conquistas','desafiosMathAcertos','dinheiroAcumulado','fundoAtual','fundosComprados','historicoConclusoes','idadeCrianca','lembreteEnviadoData','metaMoedas','moedas','onboardingVistoCrianca','pausaAte','petAtual','pets','recompensas','registroDiario','solicitacoesPremios','streak','surpresaResgatadaData','tarefas','tarefasHojeCount','timerFim','totalSacado','ultimoDiaAcesso','ultimoDiaConcluido','ultimoStreakPremiado','vozSalva','ultimoAcaoPet','ultimoDecay'];
+const CAMPOS_CRIANCA=['acessorios','conquistas','desafiosMathAcertos','dinheiroAcumulado','fundoAtual','fundosComprados','historicoConclusoes','idadeCrianca','lembreteEnviadoData','metaMoedas','moedas','onboardingVistoCrianca','pausaAte','petAtual','pets','recompensas','registroDiario','solicitacoesPremios','streak','surpresaResgatadaData','tarefas','tarefasHojeCount','timerFim','totalSacado','ultimoDiaAcesso','ultimoDiaConcluido','ultimoStreakPremiado','vozSalva','ultimoAcaoPet','ultimoDecay','desafioDiarioData','desafioDiarioFeitoData','bauDiarioAbertoData','escudosOfensiva','adesivos','eventoSemanalData','missaoFamilia','mensagensPais','historicoEngajamento'];
 function valoresPadraoCrianca(){
   return {
     petAtual:'gato',moedas:15,dinheiroAcumulado:.15,idadeCrianca:7,
@@ -1649,7 +1663,7 @@ function valoresPadraoCrianca(){
     ],
     solicitacoesPremios:[],conquistas:{},acessorios:{comprados:[],ativo:null},pausaAte:null,
     historicoConclusoes:{},registroDiario:{},onboardingVistoCrianca:false,lembreteEnviadoData:null,
-    surpresaResgatadaData:null,metasPersonalizadas:[],ultimoAcaoPet:{},ultimoDecay:null
+    surpresaResgatadaData:null,metasPersonalizadas:[],ultimoAcaoPet:{},ultimoDecay:null,desafioDiarioData:null,desafioDiarioFeitoData:null,bauDiarioAbertoData:null,escudosOfensiva:0,adesivos:[],eventoSemanalData:null,missaoFamilia:{alvo:20,progresso:0,inicio:null},mensagensPais:[],historicoEngajamento:[]
   };
 }
 function capturarDadosCrianca(){
@@ -1764,8 +1778,14 @@ function verificarResetDiario(){
   if(estado.ultimoDiaAcesso===hojeStr)return false;
   const emPausa=estado.pausaAte&&hojeStr<=estado.pausaAte;
   if(!emPausa&&estado.ultimoDiaConcluido!==ontemLocal()&&estado.ultimoDiaConcluido!==hojeStr){
-    estado.streak=0;
-    estado.ultimoStreakPremiado=0;
+    if(Number(estado.escudosOfensiva)>0){
+      estado.escudosOfensiva=Math.max(0,Number(estado.escudosOfensiva)-1);
+      if(typeof registrarEngajamento==='function')registrarEngajamento('Escudo da ofensiva consumido');
+      if(typeof mostrarToast==='function')mostrarToast('🛡️ Seu escudo protegeu a sequência de hoje!');
+    }else{
+      estado.streak=0;
+      estado.ultimoStreakPremiado=0;
+    }
   }
   estado.tarefas.forEach(t=>{
     // Preserva comprovantes e tarefas que ainda aguardam os responsáveis.
@@ -4060,9 +4080,15 @@ async function aprovarTarefaPais(id){
   estado.dinheiroAcumulado=(Number(estado.dinheiroAcumulado)||0)+(recompensa*(Number(estado.taxaCambio)||.01));
   estado.tarefasHojeCount=(Number(estado.tarefasHojeCount)||0)+1;
   registrarNoRelatorioDiario(1,recompensa);
+  if(typeof garantirEngajamento==='function'){
+    garantirEngajamento();
+    estado.missaoFamilia.progresso=Math.min(Number(estado.missaoFamilia.alvo)||20,(Number(estado.missaoFamilia.progresso)||0)+1);
+    estado.eventoSemanalProgresso=(Number(estado.eventoSemanalProgresso)||0)+1;
+  }
   persistirTarefaIndividualV2(t).catch(e=>console.warn('Tarefa individual:',e));
   salvar();
   idTarefaRecemAprovada=id;
+  if(estado.tarefasHojeCount===1)setTimeout(()=>{try{abrirBauDiario();}catch(e){console.warn('Baú diário:',e)}},900);
   const liberouOfensiva=registrarConclusaoDoDia();
   if(liberouOfensiva){
     const s=estado.streak;
@@ -5120,7 +5146,7 @@ function renderizarLojaRecompensas(){
     <div class="rp-shop-head">
       <div>
         <div class="rp-shop-title">🎁 Loja de Prêmios</div>
-        <div class="rp-shop-sub">Troque moedas por recompensas combinadas com os pais.</div>
+        <div class="rp-shop-sub">Junte moedas e peça recompensas combinadas com os pais.</div>
       </div>
       <div class="rp-wallet">🪙 <b>${estado.moedas}</b></div>
     </div>
@@ -5129,7 +5155,7 @@ function renderizarLojaRecompensas(){
       <div class="rp-progress-track"><div style="width:${percMeta}%"></div></div>
       <small>${percMeta>=100?'🎉 Meta alcançada!':`Faça mais tarefas para juntar moedas.`}</small>
     </div>
-    <div class="rp-shop-section-title">✨ Prêmios disponíveis</div>
+    <div class="rp-shop-section-title">✨ Recompensas disponíveis</div>
   `;
   if(!premiosAtivos.length){
     c.innerHTML+=`<div class="rp-empty">🎁<br><b>Nenhum prêmio disponível.</b><small>Os pais podem cadastrar no painel.</small></div>`;
@@ -5148,6 +5174,7 @@ function renderizarLojaRecompensas(){
       <div class="rp-prize-icon">${esc(r.icone||'🎁')}</div>
       <div class="rp-prize-name">${esc(r.texto)}</div>
       <div class="rp-prize-desc">${esc(r.descricao||'Recompensa especial.')}</div>
+      <div style="font-size:7px;color:#7c3aed;font-weight:900;margin-bottom:4px">${r.tipo==='timer'?`⏱️ ${Number(r.minutos)||0} minutos de tela`:'🎁 Recompensa combinada com os pais'}</div>
       <div class="rp-prize-cost">🪙 ${Number(r.custo)||0}</div>
       ${pode ? `
         <div class="rp-can-get">✨ Pode pedir!</div>
@@ -5163,16 +5190,23 @@ function renderizarLojaRecompensas(){
   c.appendChild(grid);
   const meusPedidos=(estado.solicitacoesPremios||[]).slice().reverse().slice(0,5);
   if(meusPedidos.length){
+    const ultimo=meusPedidos[0];
+    if(ultimo&&ultimo.status!=='pendente'){
+      const aviso=document.createElement('div');
+      aviso.style.cssText='margin-top:9px;padding:8px 9px;border-radius:12px;background:'+(ultimo.status==='aprovado'?'#ecfdf5':'#fff7ed')+';border:1px solid '+(ultimo.status==='aprovado'?'#bbf7d0':'#fed7aa')+';font-size:8px;font-weight:900;color:'+(ultimo.status==='aprovado'?'#047857':'#9a3412');
+      aviso.textContent=ultimo.status==='aprovado'?`🎉 ${ultimo.texto} foi aprovado pelos pais!`:`💬 ${ultimo.texto} não foi aprovado desta vez. Converse com os pais.`;
+      c.appendChild(aviso);
+    }
     const history=document.createElement('div');
     history.className='rp-my-orders';
-    history.innerHTML=`<div class="rp-shop-section-title">🎟️ Meus pedidos</div>`;
+    history.innerHTML=`<div class="rp-shop-section-title">🎟️ Meus pedidos recentes</div>`;
     meusPedidos.forEach(s=>{
       const cls=s.status==='aprovado'?'ok':s.status==='recusado'?'no':'wait';
       const label=s.status==='aprovado'?'Aprovado':s.status==='recusado'?'Recusado':'Aguardando';
       history.innerHTML+=`
         <div class="rp-order ${cls}">
           <span>${esc(s.texto)}</span>
-          <span><b>${Number(s.custo)||0} 🪙</b> · ${label}</span>
+          <span><b>${Number(s.custo)||0} 🪙</b> · ${s.tipo==='timer'?'⏱️ Tempo de tela':'🎁 Prêmio'} · ${label}</span>
         </div>`;
     });
     c.appendChild(history);
@@ -5189,14 +5223,15 @@ function resgatarRecompensa(id){
     tipo:r.tipo||'premio',
     minutos:Number(r.minutos)||0,
     status:'pendente',
-    data:hojeLocal()
+    data:hojeLocal(),
+    dataHora:Date.now()
   };
   estado.solicitacoesPremios=estado.solicitacoesPremios||[];
   estado.solicitacoesPremios.push(solicitacao);
   salvar();
   atualizarTela();
   renderizarLojaRecompensas();
-  mostrarToast('🎟️ Pedido enviado aos pais!');
+  mostrarToast('🎟️ Pedido enviado! Os pais vão conferir.');
   registrarLogAtividade(`Pedido de prêmio: ${r.texto}`);
   enviarNotificacaoLocal('🎟️ Pedido de prêmio',`${r.texto} — ${r.custo}🪙`,'rotinapet-premio');
   enfileirarPushFamilia('🎟️ Pedido de prêmio',`${r.texto} (${r.custo}🪙)`,{tag:'rotinapet-premio',onlyPerfil:'pais'});
@@ -5211,6 +5246,7 @@ function aprovarSolicitacaoPremio(id){
   estado.moedas-=s.custo;
   s.status='aprovado';
   s.aprovadoEm=Date.now();
+  s.mensagem='Prêmio aprovado pelos pais.';
   registrarLogAtividade(`Prêmio aprovado: ${s.texto} (−${Number(s.custo)||0}🪙)`);
   salvar();
   atualizarTela();
@@ -5230,11 +5266,12 @@ function recusarSolicitacaoPremio(id){
   if(!s||s.status!=='pendente')return;
   s.status='recusado';
   s.recusadoEm=Date.now();
+  s.mensagem='Converse com os pais para combinar outra recompensa.';
   registrarLogAtividade(`Prêmio recusado: ${s.texto}`);
   salvar();
   renderizarPainelPais();
   renderizarLojaRecompensas();
-  mostrarToast('❌ Solicitação recusada.');
+  mostrarToast('💬 Solicitação recusada. Converse com a criança.');
 }
 function adicionarPremioPais(){
   const texto=window.prompt('Nome do prêmio:');
@@ -5327,23 +5364,32 @@ function renderizarSolicitacoesPremiosPais(){
   const c=document.getElementById('lista-solicitacoes-premios');
   if(!c)return;
   c.innerHTML='';
-  const pendentes=(estado.solicitacoesPremios||[]).filter(s=>s.status==='pendente');
+  const todos=(estado.solicitacoesPremios||[]).slice().sort((a,b)=>(Number(b.dataHora)||Number(b.id)||0)-(Number(a.dataHora)||Number(a.id)||0));
+  const pendentes=todos.filter(s=>s.status==='pendente');
   if(!pendentes.length){
     c.innerHTML='<span style="font-size:9px;color:#94a3b8">Nenhuma solicitação pendente.</span>';
-    return;
   }
   pendentes.forEach(s=>{
     c.innerHTML+=`
       <div class="approval-row">
         <div class="approval-top">
-          <span>🎁 <b>${esc(s.texto)}</b> • ${Number(s.custo)||0}🪙</span>
+          <span>${s.tipo==='timer'?'⏱️':'🎁'} <b>${esc(s.texto)}</b> • ${Number(s.custo)||0}🪙</span>
           <div style="display:flex;gap:4px">
             <button class="primary-btn red-btn" onclick="recusarSolicitacaoPremio(${s.id})">Recusar</button>
             <button class="primary-btn green-btn" onclick="aprovarSolicitacaoPremio(${s.id})">Aprovar</button>
           </div>
         </div>
+        <small style="display:block;color:#64748b;margin-top:4px">${s.tipo==='timer'?`Libera ${Number(s.minutos)||0} minutos de tela`:'Recompensa combinada com a criança'} · pedido em ${esc(s.data||hojeLocal())}</small>
       </div>`;
   });
+  const historico=todos.filter(s=>s.status!=='pendente').slice(0,5);
+  if(historico.length){
+    c.innerHTML+=`<div style="font-size:9px;font-weight:900;color:#475569;margin:10px 0 5px">🗂️ Histórico recente</div>`;
+    historico.forEach(s=>{
+      const ok=s.status==='aprovado';
+      c.innerHTML+=`<div style="font-size:8px;padding:6px 8px;margin-bottom:4px;border-radius:9px;background:${ok?'#f0fdf4':'#fef2f2'};color:${ok?'#166534':'#991b1b'}">${ok?'✅':'❌'} ${esc(s.texto)} · ${ok?'aprovado':'recusado'} · ${esc(s.data||'')}</div>`;
+    });
+  }
 }
 let intervaloTimer=null;
 function iniciarTimerTela(minutos){
@@ -5756,5 +5802,74 @@ if ('serviceWorker' in navigator) {
   });
 }
 </script>
-</body>
+<div id="modal-central-aventuras" class="modal-overlay"><div class="modal" style="max-width:360px"><div class="modal-title"><h3>🌟 Central de Aventuras</h3><button class="close-btn" onclick="fecharModal('modal-central-aventuras')">×</button></div><div id="central-aventuras-conteudo"></div></div></div>
+<div id="modal-bau-diario" class="modal-overlay"><div class="modal" style="max-width:320px;text-align:center"><div class="modal-title"><h3>🎁 Baú do Dia</h3><button class="close-btn" onclick="fecharModal('modal-bau-diario')">×</button></div><div id="bau-diario-conteudo"></div></div></div>
+<script>
+/* RotinaPet 49–59: camada de engajamento opcional e compatível. */
+const DESAFIOS_DIARIOS=[
+ ['Organizar 5 brinquedos','Ajude a deixar seu espaço mais bonito.'],['Ler por 10 minutos','Escolha uma história e viaje na imaginação.'],['Beber água','Cuide do seu corpo com um copo de água.'],['Ajudar a colocar a mesa','Uma pequena ajuda faz diferença.'],['Fazer um desenho','Crie algo especial para o seu pet.'],['Organizar a mochila','Deixe tudo pronto para amanhã.'],['Ajudar sem ninguém pedir','Uma atitude gentil vale muito!'],['Cuidar do pet','Alimente, brinque ou dê carinho ao seu companheiro.'],['Separar as roupas','Ajude a deixar as roupas organizadas.'],['Guardar os sapatos','Cada coisa no seu lugar!']
+];
+const EVENTOS_SEMANAIS=[
+ ['Semana do Pequeno Ajudante','Complete 5 missões de ajuda em casa.','🏆 Medalha do Ajudante'],['Semana do Pet Saudável','Cuide do pet em 5 momentos diferentes.','💚 Medalha do Cuidado'],['Semana da Gentileza','Faça 3 atitudes gentis.','💜 Medalha da Gentileza'],['Semana da Criatividade','Complete 3 missões criativas.','🎨 Medalha da Criatividade']
+];
+function garantirEngajamento(){
+  if(!Array.isArray(estado.adesivos))estado.adesivos=[];
+  if(!Array.isArray(estado.mensagensPais))estado.mensagensPais=[];
+  if(!Array.isArray(estado.historicoEngajamento))estado.historicoEngajamento=[];
+  if(!Number.isFinite(Number(estado.escudosOfensiva)))estado.escudosOfensiva=0;
+  if(!estado.missaoFamilia||typeof estado.missaoFamilia!=='object')estado.missaoFamilia={alvo:20,progresso:0,inicio:hojeLocal()};
+  const hoje=hojeLocal();
+  if(estado.desafioDiarioData!==hoje){
+    const base=new Date(hoje+'T12:00:00'),indice=(base.getFullYear()*31+base.getMonth()*17+base.getDate())%DESAFIOS_DIARIOS.length;
+    estado.desafioDiarioData=hoje;estado.desafioDiarioFeitoData=null;
+    estado.desafioDiario=DESAFIOS_DIARIOS[indice];
+  }
+  if(!Array.isArray(estado.desafioDiario))estado.desafioDiario=DESAFIOS_DIARIOS[0];
+  const semana=Math.floor(Date.now()/604800000);
+  if(estado.eventoSemanalData!==semana){estado.eventoSemanalData=semana;estado.eventoSemanal=EVENTOS_SEMANAIS[semana%EVENTOS_SEMANAIS.length];}
+  if(!Array.isArray(estado.eventoSemanal))estado.eventoSemanal=EVENTOS_SEMANAIS[0];
+}
+function registrarEngajamento(texto){
+  garantirEngajamento();estado.historicoEngajamento.push({texto,data:hojeLocal(),hora:Date.now()});estado.historicoEngajamento=estado.historicoEngajamento.slice(-60);salvar();
+}
+function renderizarEngajamento(){
+  garantirEngajamento();
+  const hoje=hojeLocal(),feito=estado.desafioDiarioFeitoData===hoje;
+  const d=document.getElementById('engajamento-desafio'),st=document.getElementById('engajamento-streak'),b=document.getElementById('btn-bau-diario');
+  if(d)d.innerHTML=feito?`✅ Desafio concluído: <b>${esc(estado.desafioDiario[0])}</b>`:`🌟 <b>Desafio especial:</b> ${esc(estado.desafioDiario[0])}<br><small>${esc(estado.desafioDiario[1])} · +10 🪙 e +20 XP</small>`;
+  if(st)st.textContent=`🔥 ${Number(estado.streak)||0} dias`;
+  const pode=Number(estado.tarefasHojeCount||0)>0||feito,aberto=estado.bauDiarioAbertoData===hoje;
+  if(b){b.disabled=!pode||aberto;b.textContent=aberto?'✅ Baú aberto':pode?'🎁 Baú do dia':'🔒 Faça uma missão';}
+  const msg=estado.mensagensPais?.[estado.mensagensPais.length-1];
+  if(msg&&msg.lida!==true&&document.getElementById('balao-fala')){mostrarBalaoFala('💌 '+msg.texto,3600);msg.lida=true;salvar();}
+}
+function concluirDesafioDiario(){
+  garantirEngajamento();if(estado.desafioDiarioFeitoData===hojeLocal())return;
+  estado.desafioDiarioFeitoData=hojeLocal();estado.moedas=(Number(estado.moedas)||0)+10;estado.dinheiroAcumulado=(Number(estado.dinheiroAcumulado)||0)+(10*(Number(estado.taxaCambio)||.01));ganharXP(20);estado.adesivos.push('desafio_'+hojeLocal());registrarEngajamento('Desafio diário concluído');dispararConfetes();mostrarAviso('🌟','Desafio concluído!','+10 moedas, +20 XP e um adesivo foram adicionados.');atualizarTela();
+}
+function abrirBauDiario(){
+  garantirEngajamento();const hoje=hojeLocal();if(estado.bauDiarioAbertoData===hoje)return mostrarToast('✅ O baú de hoje já foi aberto.');
+  if(Number(estado.tarefasHojeCount||0)<=0&&estado.desafioDiarioFeitoData!==hoje)return mostrarToast('🔒 Complete uma missão ou o desafio diário primeiro.');
+  const c=document.getElementById('bau-diario-conteudo');if(c)c.innerHTML='<div style="font-size:48px;margin:8px">🎁</div><p style="font-size:10px;color:#64748b">Uma surpresa por dia para celebrar seu esforço!</p><button class="primary-btn pink-btn" style="width:100%;margin-top:8px" onclick="abrirPremioBauDiario()">✨ Abrir agora</button>';
+  abrirModal('modal-bau-diario');
+}
+function abrirPremioBauDiario(){
+  const hoje=hojeLocal();if(estado.bauDiarioAbertoData===hoje)return;estado.bauDiarioAbertoData=hoje;
+  const n=Math.random();let texto,valor;if(n<.55){valor=8+Math.floor(Math.random()*8);estado.moedas+=valor;estado.dinheiroAcumulado=(estado.dinheiroAcumulado||0)+valor*(Number(estado.taxaCambio)||.01);texto=`+${valor} moedas`;}else if(n<.9){valor=20;ganharXP(valor);texto=`+${valor} XP`;}else{estado.escudosOfensiva=Math.min(2,(Number(estado.escudosOfensiva)||0)+1);texto='🛡️ Escudo da ofensiva';}
+  estado.adesivos.push('bau_'+hoje);registrarEngajamento('Baú diário aberto');salvar();fecharModal('modal-bau-diario');dispararConfetes();mostrarAviso('🎁','Baú aberto!',`${texto} e um adesivo de coleção!`);atualizarTela();
+}
+function abrirCentralAventuras(){
+  garantirEngajamento();const c=document.getElementById('central-aventuras-conteudo');if(!c)return;
+  const d=estado.desafioDiario,feito=estado.desafioDiarioFeitoData===hojeLocal(),ev=estado.eventoSemanal,m=estado.missaoFamilia;
+  c.innerHTML=`<div class="section-card" style="margin-bottom:7px"><b style="font-size:10px">🌟 Desafio diário</b><p style="font-size:9px;color:#475569;line-height:1.35;margin:6px 0">${esc(d[0])}<br><small>${esc(d[1])}</small></p>${feito?'<span style="font-size:8px;color:#15803d;font-weight:900">✅ Concluído hoje</span>':'<button class="primary-btn pink-btn" style="width:100%" onclick="concluirDesafioDiario();abrirCentralAventuras()">Concluí o desafio</button>'}</div><div class="section-card" style="margin-bottom:7px"><b style="font-size:10px">🏆 Evento da semana</b><p style="font-size:9px;color:#475569;margin:6px 0">${esc(ev[0])}<br><small>${esc(ev[1])}</small></p><b style="font-size:8px;color:#7c3aed">Prêmio: ${esc(ev[2])}</b></div><div class="section-card" style="margin-bottom:7px"><b style="font-size:10px">👨‍👩‍👧 Missão da família</b><p style="font-size:9px;color:#475569;margin:6px 0">Todos juntos: ${Number(m.progresso)||0}/${Number(m.alvo)||20} missões nesta semana.</p><div style="height:6px;background:#e2e8f0;border-radius:99px;overflow:hidden"><div style="height:100%;width:${Math.min(100,Math.round(((Number(m.progresso)||0)/(Number(m.alvo)||20))*100))}%;background:#22c55e"></div></div></div><div class="section-card"><b style="font-size:10px">📒 Minha coleção de adesivos</b><p style="font-size:9px;color:#475569;margin:6px 0">${new Set(estado.adesivos||[]).size} adesivo(s) encontrados. Complete desafios e abra baús para encontrar mais.</p><b style="font-size:8px;color:#7c3aed">🛡️ Escudos disponíveis: ${Number(estado.escudosOfensiva)||0}</b></div>`;
+  abrirModal('modal-central-aventuras');
+}
+function enviarElogioCrianca(texto){
+  garantirEngajamento();estado.mensagensPais.push({texto,data:hojeLocal(),hora:Date.now(),lida:false});estado.mensagensPais=estado.mensagensPais.slice(-20);registrarEngajamento('Mensagem dos pais enviada');salvar();mostrarToast('💌 Mensagem enviada!');
+}
+function atualizarMissaoFamilia(){garantirEngajamento();estado.missaoFamilia.progresso=(Number(estado.missaoFamilia.progresso)||0)+1;salvar();}
+const atualizarTelaOriginal=atualizarTela;
+atualizarTela=function(){atualizarTelaOriginal();renderizarEngajamento();};
+setTimeout(()=>{try{garantirEngajamento();renderizarEngajamento();}catch(e){console.warn('Engajamento:',e)}},300);
+</script></body>
 </html>
