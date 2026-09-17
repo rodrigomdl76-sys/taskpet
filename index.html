@@ -783,6 +783,72 @@ function abrirMenuMais(){
 @keyframes evoUnlock{0%{opacity:0;transform:translate(-50%,-20px) scale(.85)}12%,75%{opacity:1;transform:translate(-50%,0) scale(1)}100%{opacity:0;transform:translate(-50%,-10px) scale(.96)}}
 @media (prefers-reduced-motion:reduce){.pet-evolucao-pulse,.evolucao-aura.ativa,.evo-unlock.show{animation:none}.evo-unlock.show{opacity:1}.evo-progresso-fill{transition:none}}
 </style>
+
+<style id="poderes-evolucao-css">
+#pet-principal.poder-carinho{animation:petCarinho .65s ease both}#pet-principal.poder-lua{filter:drop-shadow(0 0 12px rgba(125,211,252,.65))}#pet-principal.poder-estelar{animation:petEstelar .9s ease both}#pet-principal.poder-nobre{filter:drop-shadow(0 0 15px rgba(250,204,21,.72))}#pet-principal.poder-lenda{animation:petLenda 1.15s ease both;filter:drop-shadow(0 0 20px rgba(167,139,250,.9))}
+@keyframes petCarinho{50%{transform:scale(1.07) rotate(-2deg)}100%{transform:scale(1)}}
+@keyframes petEstelar{20%,70%{transform:translateY(-7px) scale(1.04)}45%{transform:rotate(3deg) scale(1.06)}100%{transform:none}}
+@keyframes petLenda{0%{transform:scale(.96)}35%{transform:scale(1.11) rotate(-3deg)}65%{transform:scale(1.05) rotate(3deg)}100%{transform:scale(1)}}
+.poder-burst{position:absolute;inset:0;pointer-events:none;z-index:8;overflow:visible}.poder-burst i{position:absolute;font-style:normal;animation:poderBurst .95s ease-out forwards;left:50%;top:42%;font-size:18px}.poder-burst i:nth-child(1){--x:-62px;--y:-38px}.poder-burst i:nth-child(2){--x:58px;--y:-45px}.poder-burst i:nth-child(3){--x:-70px;--y:22px}.poder-burst i:nth-child(4){--x:70px;--y:18px}.poder-burst i:nth-child(5){--x:0px;--y:-72px}
+@keyframes poderBurst{from{transform:translate(-50%,-50%) scale(.4);opacity:0}20%{opacity:1}to{transform:translate(calc(-50% + var(--x)),calc(-50% + var(--y))) scale(1);opacity:0}}
+.evo-poder-chip{display:inline-flex;align-items:center;gap:4px;margin:5px 4px 0 0;padding:4px 7px;border-radius:999px;background:rgba(139,92,246,.1);color:#6d28d9;font-size:8px;font-weight:900;border:1px solid rgba(139,92,246,.16)}
+@media(prefers-reduced-motion:reduce){#pet-principal.poder-carinho,#pet-principal.poder-estelar,#pet-principal.poder-lenda{animation:none!important}.poder-burst{display:none}}
+</style>
+
+<style id="casinha-evolutiva-css">
+.casa-card{margin:14px 0;padding:16px;border-radius:24px;background:linear-gradient(145deg,#fff,#f8fbff);box-shadow:0 10px 30px rgba(31,65,114,.10);border:1px solid rgba(72,117,170,.12)}
+.casa-hero{position:relative;min-height:245px;border-radius:22px;overflow:hidden;padding:18px;background:linear-gradient(180deg,#dff5ff 0%,#f7f0d8 68%,#dceccf 100%)}
+.casa-hero:before{content:"☀️";position:absolute;right:22px;top:16px;font-size:32px;opacity:.85}
+.casa-ground{position:absolute;left:-10%;right:-10%;bottom:-30px;height:100px;border-radius:50% 50% 0 0;background:#c9e5bd}
+.casa-house{position:absolute;left:50%;bottom:32px;transform:translateX(-50%);width:175px;height:112px;background:#fff9ef;border:4px solid #b96f4b;border-radius:12px;box-shadow:0 12px 18px rgba(70,50,40,.12)}
+.casa-roof{position:absolute;left:50%;top:-57px;transform:translateX(-50%);width:0;height:0;border-left:108px solid transparent;border-right:108px solid transparent;border-bottom:67px solid #d97858;filter:drop-shadow(0 3px 0 #b65d45)}
+.casa-door{position:absolute;bottom:0;left:70px;width:38px;height:57px;background:#9b684b;border-radius:14px 14px 0 0;border:3px solid #744a37}
+.casa-window{position:absolute;bottom:45px;right:22px;width:35px;height:30px;background:#bfeaff;border:3px solid #744a37;border-radius:6px}
+.casa-sign{position:absolute;left:50%;bottom:100px;transform:translateX(-50%);padding:5px 9px;border-radius:10px;background:#fff;border:2px solid #d6ad73;font-size:11px;font-weight:900;white-space:nowrap}
+.casa-deco{position:absolute;z-index:4;font-size:30px;filter:drop-shadow(0 4px 4px rgba(0,0,0,.12));animation:casaFloat 2.8s ease-in-out infinite}
+.casa-deco.d1{left:14%;bottom:35px}.casa-deco.d2{right:12%;bottom:35px}.casa-deco.d3{left:7%;bottom:115px}.casa-deco.d4{right:5%;bottom:112px}.casa-deco.d5{left:25%;bottom:22px}
+@keyframes casaFloat{50%{transform:translateY(-5px) rotate(2deg)}}
+.casa-title{font-size:19px;font-weight:950;color:#26354d}.casa-sub{font-size:12px;color:#718096;margin-top:3px}
+.casa-level{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-top:12px}
+.casa-level-badge{padding:7px 10px;border-radius:999px;background:#fff0d6;color:#8a5a18;font-size:11px;font-weight:900}
+.casa-xp{height:9px;border-radius:999px;background:#e9edf3;overflow:hidden;margin-top:8px}.casa-xp>div{height:100%;border-radius:999px;background:linear-gradient(90deg,#e9a23b,#e86f52);transition:width .5s}
+.casa-items{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px;margin-top:12px}
+.casa-item{padding:12px;border-radius:18px;background:#fff;border:1px solid #e6ebf2;text-align:left}.casa-item.owned{border-color:#e8c96e;background:#fffdf4}.casa-item.locked{opacity:.58}
+.casa-item-icon{font-size:28px}.casa-item-name{font-weight:900;font-size:13px;color:#2e3b52;margin-top:5px}.casa-item-desc{font-size:10px;color:#7b8799;line-height:1.35;margin-top:3px}.casa-item-btn{margin-top:8px;border:0;border-radius:10px;padding:7px 10px;font-size:10px;font-weight:900;background:#eef4ff;color:#355f91;cursor:pointer}
+.casa-item-btn:disabled{opacity:.5;cursor:default}.casa-room{margin-top:12px;padding:12px;border-radius:18px;background:#f4f7fb;font-size:11px;color:#5d6c83}
+@media (max-width:520px){.casa-items{grid-template-columns:1fr 1fr}}
+@media (prefers-reduced-motion:reduce){.casa-deco{animation:none}.casa-xp>div{transition:none}}
+</style>
+
+
+<style id="personalidade-pet-css">
+.personal-card{margin:14px 0;padding:16px;border-radius:24px;background:linear-gradient(145deg,#fff,#f8fbff);box-shadow:0 10px 30px rgba(31,65,114,.10);border:1px solid rgba(72,117,170,.12)}
+.personal-head{display:flex;align-items:center;gap:12px}.personal-face{font-size:42px}.personal-name{font-size:19px;font-weight:950;color:#26354d}.personal-sub{font-size:12px;color:#718096;margin-top:3px}
+.traits-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px;margin-top:14px}
+.trait{padding:12px;border-radius:18px;background:#fff;border:1px solid #e6ebf2}.trait-top{display:flex;justify-content:space-between;gap:8px;font-size:12px;font-weight:900;color:#34435a}.trait-bar{height:8px;background:#e9edf3;border-radius:999px;overflow:hidden;margin-top:7px}.trait-fill{height:100%;border-radius:999px;transition:width .45s ease}
+.persona-quote{margin-top:13px;padding:12px 14px;border-radius:16px;background:#f2f7ff;color:#43536b;font-size:12px;font-weight:700;line-height:1.45}
+.mood-pill{display:inline-flex;align-items:center;gap:6px;padding:7px 10px;border-radius:999px;background:#fff1d9;color:#875d1c;font-size:11px;font-weight:900;margin-top:10px}
+.persona-history{margin-top:12px;font-size:11px;color:#758298}.persona-history b{color:#34435a}
+@media (max-width:520px){.traits-grid{grid-template-columns:1fr 1fr}}
+@media (prefers-reduced-motion:reduce){.trait-fill{transition:none}}
+</style>
+
+
+<style id="mundo-vivo-css">
+.mv-card{margin:14px 0;padding:16px;border-radius:24px;background:linear-gradient(145deg,#fff,#f7fbff);box-shadow:0 10px 30px rgba(31,65,114,.10);border:1px solid rgba(72,117,170,.12)}
+.mv-title{font-size:19px;font-weight:950;color:#26354d}.mv-sub{font-size:12px;color:#718096;margin-top:3px}
+.mv-event{margin-top:12px;padding:14px;border-radius:19px;background:linear-gradient(135deg,#eef8ff,#fff6e7);border:1px solid #dbe8f3}
+.mv-event-head{display:flex;gap:10px;align-items:center}.mv-event-icon{font-size:35px}.mv-event-name{font-weight:950;font-size:14px;color:#304057}.mv-event-text{font-size:11px;color:#68778e;line-height:1.45;margin-top:4px}
+.mv-progress{height:9px;background:#e9edf3;border-radius:999px;overflow:hidden;margin-top:10px}.mv-progress>div{height:100%;border-radius:999px;background:linear-gradient(90deg,#7ac6ff,#8e7cff);transition:width .5s}
+.mv-btn{margin-top:10px;border:0;border-radius:12px;padding:9px 13px;font-weight:900;font-size:11px;background:#edf4ff;color:#315f8e;cursor:pointer}.mv-btn:disabled{opacity:.5}
+.mv-regions{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px;margin-top:12px}.mv-region{padding:13px;border-radius:18px;border:1px solid #e6ebf2;background:#fff}.mv-region.unlocked{background:#f7fff6;border-color:#cfe5c9}.mv-region.locked{opacity:.55}.mv-region-icon{font-size:28px}.mv-region-name{font-weight:900;font-size:13px;color:#2e3b52;margin-top:4px}.mv-region-text{font-size:10px;color:#7b8799;line-height:1.35;margin-top:3px}
+.mv-badge{display:inline-block;margin-top:7px;padding:5px 8px;border-radius:999px;background:#f1f4f8;font-size:9px;font-weight:900;color:#66758c}
+.mv-log{margin-top:12px;font-size:10px;color:#7b8799}.mv-log div{padding:5px 0;border-bottom:1px dashed #e2e7ee}
+@media(max-width:520px){.mv-regions{grid-template-columns:1fr 1fr}}
+@media(prefers-reduced-motion:reduce){.mv-progress>div{transition:none}}
+</style>
+
+
 </head>
 <body class="cenario-ceu">
 <!-- Tela Login por E-mail -->
@@ -864,6 +930,7 @@ function abrirMenuMais(){
   </div>
   <div class="cat-section" id="pet-section-area">
     <div class="pet-stage">
+      <div id="evolucao-aura" class="evolucao-aura" aria-hidden="true"></div>
       <div id="objetos-pet-layer" aria-hidden="true"></div>
       <div class="balao-fala" id="balao-fala" role="status" aria-live="polite"></div>
       <div class="cat-wrapper" id="pet-principal" onclick="interagirComPet(event)" role="button" tabindex="0" aria-label="Dar carinho no pet"><div id="pet-svg-container"></div></div>
@@ -902,6 +969,7 @@ function abrirMenuMais(){
       <button class="menu-mais-item album" onclick="fecharModal('modal-menu-mais');abrirAlbumFigurinhas()"><span>📒</span><b>Álbum</b><small>Ver figurinhas</small></button>
       <button class="menu-mais-item mapa" onclick="abrirMapaAventura()"><span>🗺️</span><b>Mapa</b><small>Continuar aventura</small></button>
       <button class="menu-mais-item visual-pet" onclick="fecharModal('modal-menu-mais');abrirMeuPet()"><span>🐾</span><b>Meu Pet</b><small>Visual e acessórios</small></button>
+      <button class="menu-mais-item" onclick="fecharModal('modal-menu-mais');abrirJornadaPet()"><span>🏆</span><b>Jornada</b><small>Conquistas e sequência</small></button>
       <button class="menu-mais-item bau" onclick="fecharModal('modal-menu-mais');abrirBauDiario()"><span id="menu-mais-bau-emoji">🎁</span><b>Baú</b><small>Prêmio do dia</small></button>
     </div>
   </div>
@@ -1750,12 +1818,12 @@ const hojeLocal=()=>{const d=new Date();return `${d.getFullYear()}-${String(d.ge
 const ontemLocal=()=>{const d=new Date();d.setDate(d.getDate()-1);return `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`};
 // Campos que pertencem a UM filho específico (progresso do pet, tarefas, moedas...).
 // Tudo que NÃO está nessa lista é compartilhado pela família inteira (PIN, e-mails, taxa de câmbio).
-const CAMPOS_CRIANCA=['acessorios','conquistas','desafiosMathAcertos','dinheiroAcumulado','fundoAtual','fundosComprados','historicoConclusoes','idadeCrianca','lembreteEnviadoData','metaMoedas','moedas','onboardingVistoCrianca','pausaAte','petAtual','pets','recompensas','registroDiario','solicitacoesPremios','streak','surpresaResgatadaData','tarefas','tarefasHojeCount','timerFim','totalSacado','ultimoDiaAcesso','ultimoDiaConcluido','ultimoStreakPremiado','vozSalva','ultimoAcaoPet','ultimoDecay','desafioDiarioData','desafioDiarioFeitoData','bauDiarioAbertoData','escudosOfensiva','adesivos','eventoSemanalData','missaoFamilia','mensagensPais','historicoEngajamento'];
+const CAMPOS_CRIANCA=['acessorios','conquistas','desafiosMathAcertos','dinheiroAcumulado','fundoAtual','fundosComprados','historicoConclusoes','idadeCrianca','lembreteEnviadoData','metaMoedas','moedas','onboardingVistoCrianca','pausaAte','petAtual','pets','recompensas','registroDiario','solicitacoesPremios','streak','surpresaResgatadaData','tarefas','tarefasHojeCount','timerFim','totalSacado','ultimoDiaAcesso','ultimoDiaConcluido','ultimoStreakPremiado','vozSalva','ultimoAcaoPet','ultimoDecay','desafioDiarioData','desafioDiarioFeitoData','bauDiarioAbertoData','escudosOfensiva','adesivos','eventoSemanalData','missaoFamilia','mensagensPais','historicoEngajamento','conquistasJornada','streakRecompensas'];
 function valoresPadraoCrianca(){
   return {
     petAtual:'gato',moedas:15,dinheiroAcumulado:.15,idadeCrianca:7,
     fundoAtual:'ceu',fundosComprados:['ceu'],metaMoedas:50,totalSacado:0,
-    ultimoDiaAcesso:hojeLocal(),ultimoDiaConcluido:null,streak:0,ultimoStreakPremiado:0,
+    ultimoDiaAcesso:hojeLocal(),ultimoDiaConcluido:null,streak:0,ultimoStreakPremiado:0,conquistasJornada:{},streakRecompensas:{},
     tarefasHojeCount:0,desafiosMathAcertos:0,timerFim:null,vozSalva:null,
     pets:{gato:{nivel:1,xp:0,felicidade:100,saude:100},cachorra:{nivel:1,xp:0,felicidade:100,saude:100},cabra:{nivel:1,xp:0,felicidade:100,saude:100},frango:{nivel:1,xp:0,felicidade:100,saude:100}},
     tarefas:[{id:1,texto:'Escovar os dentes',recompensa:5,xp:20,tipo:'obrigatoria',status:'pendente',foto:null,dias:[]},{id:2,texto:'Arrumar a cama',recompensa:5,xp:20,tipo:'obrigatoria',status:'pendente',foto:null,dias:[]}],
@@ -1765,7 +1833,7 @@ function valoresPadraoCrianca(){
     ],
     solicitacoesPremios:[],conquistas:{},acessorios:{comprados:[],ativo:null},pausaAte:null,
     historicoConclusoes:{},registroDiario:{},onboardingVistoCrianca:false,lembreteEnviadoData:null,
-    surpresaResgatadaData:null,metasPersonalizadas:[],ultimoAcaoPet:{},ultimoDecay:null,desafioDiarioData:null,desafioDiarioFeitoData:null,bauDiarioAbertoData:null,escudosOfensiva:0,adesivos:[],eventoSemanalData:null,missaoFamilia:{alvo:20,progresso:0,inicio:null},mensagensPais:[],historicoEngajamento:[]
+    surpresaResgatadaData:null,metasPersonalizadas:[],ultimoAcaoPet:{},ultimoDecay:null,desafioDiarioData:null,desafioDiarioFeitoData:null,bauDiarioAbertoData:null,escudosOfensiva:0,adesivos:[],eventoSemanalData:null,missaoFamilia:{alvo:20,progresso:0,inicio:null},mensagensPais:[],historicoEngajamento:[],conquistasJornada:{},streakRecompensas:{}
   };
 }
 function capturarDadosCrianca(){
@@ -4250,6 +4318,7 @@ async function aprovarTarefaPais(id){
   idTarefaRecemAprovada=id;
   if(estado.tarefasHojeCount===1)setTimeout(()=>{try{abrirBauDiario();}catch(e){console.warn('Baú diário:',e)}},900);
   const liberouOfensiva=registrarConclusaoDoDia();
+  setTimeout(()=>{try{verificarConquistasJornada()}catch(e){}},120);
   if(liberouOfensiva){
     const s=estado.streak;
     if(s>0&&s%7===0&&(estado.ultimoStreakPremiado||0)<s){
@@ -6267,5 +6336,858 @@ const oldRender=window.renderizarMapaAventura;window.renderizarMapaAventura=()=>
 })();</script>
 
 <style id="meu-pet-v1">.menu-mais-item.visual-pet{background:linear-gradient(145deg,#fdf4ff,#f5f3ff);border-color:#e9d5ff;color:#6d28d9}.meupet-modal{max-width:430px!important;background:linear-gradient(160deg,#fff,#faf5ff)}.meupet-hero{position:relative;overflow:hidden;border-radius:22px;padding:14px;background:linear-gradient(135deg,#ede9fe,#fce7f3);border:1px solid #e9d5ff;margin-bottom:10px;text-align:center}.meupet-hero:after{content:'✦';position:absolute;right:16px;top:5px;font-size:38px;color:#fff8;animation:meuPetBrilho 2.8s ease-in-out infinite}@keyframes meuPetBrilho{50%{transform:rotate(18deg) scale(1.15);opacity:.55}}.meupet-avatar{font-size:64px;line-height:1;margin:2px 0 5px;filter:drop-shadow(0 8px 10px #7c3aed22);animation:meuPetFloat 2.8s ease-in-out infinite}@keyframes meuPetFloat{50%{transform:translateY(-5px)}}.meupet-title{font-size:15px;font-weight:1000;color:#312e81}.meupet-sub{font-size:9px;color:#64748b;margin-top:2px;font-weight:800}.meupet-section-title{font-size:10px;font-weight:1000;color:#334155;margin:9px 0 6px}.meupet-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:7px}.meupet-item{position:relative;border:1px solid #e5e7eb;border-radius:15px;padding:9px;background:#fff;cursor:pointer;transition:transform .15s,box-shadow .15s,border-color .15s;text-align:center}.meupet-item:active{transform:scale(.96)}.meupet-item.ativo{border-color:#8b5cf6;box-shadow:0 0 0 2px #8b5cf622}.meupet-item.bloqueado{cursor:default;background:#f8fafc;opacity:.62}.meupet-item .mi-emoji{font-size:28px;display:block;margin-bottom:3px}.meupet-item b{font-size:9px;color:#334155;display:block}.meupet-item small{font-size:7px;color:#64748b;font-weight:800;display:block;margin-top:2px}.meupet-check{position:absolute;right:6px;top:5px;font-size:10px}.meupet-chip{display:inline-flex;align-items:center;gap:4px;padding:4px 8px;border-radius:99px;background:#ffffffaa;font-size:8px;font-weight:1000;color:#6d28d9;margin-top:7px}.meupet-reward{margin-top:8px;padding:8px 10px;border-radius:13px;background:#fffbeb;border:1px solid #fde68a;font-size:8px;color:#92400e;font-weight:900}@media(prefers-reduced-motion:reduce){.meupet-avatar,.meupet-hero:after{animation:none}}</style>
-<script id="meu-pet-v1-script">(()=>{const RECOMPENSAS_MAPA=[{id:'mapa_bosque_visual',missao:3,acessorio:'grinalda',local:'Bosque',texto:'🌸 Grinalda de Flores'},{id:'mapa_vale_visual',missao:7,acessorio:'fone',local:'Vale',texto:'🎧 Fone de Ouvido'},{id:'mapa_castelo_visual',missao:12,acessorio:'coroa',local:'Castelo',texto:'👑 Coroa Real'},{id:'mapa_meta_visual',missao:18,acessorio:'bone',local:'Grande Meta',texto:'🧢 Boné Estiloso'}];window.verificarRecompensasMapa=function(silencioso){if(!estado)return;estado.recompensasMapa=estado.recompensasMapa||{};estado.acessorios=estado.acessorios||{comprados:[],ativo:null};estado.acessorios.comprados=Array.isArray(estado.acessorios.comprados)?estado.acessorios.comprados:[];const n=(estado.tarefas||[]).filter(t=>t.status==='aprovada').length;let mudou=false;RECOMPENSAS_MAPA.forEach(r=>{if(n>=r.missao&&!estado.recompensasMapa[r.id]){estado.recompensasMapa[r.id]=true;if(!estado.acessorios.comprados.includes(r.acessorio))estado.acessorios.comprados.push(r.acessorio);mudou=true;if(!silencioso)setTimeout(()=>{if(typeof dispararConfetes==='function')dispararConfetes();if(typeof mostrarToast==='function')mostrarToast(`🎁 Desbloqueou ${r.texto}!`);},250)}});if(mudou)salvar();return mudou};window.abrirMeuPet=function(){let m=document.getElementById('modal-meu-pet');if(!m){m=document.createElement('div');m.id='modal-meu-pet';m.className='modal-overlay';m.innerHTML='<div class="modal meupet-modal"><div class="modal-title"><div><h3 style="margin:0">🐾 Meu Pet</h3><small style="font-size:8px;color:#64748b;font-weight:800">Seu visual, suas conquistas</small></div><button class="close-btn" onclick="fecharModal(\'modal-meu-pet\')">×</button></div><div id="meupet-conteudo"></div></div></div>';document.body.appendChild(m)}verificarRecompensasMapa(true);renderizarMeuPet();abrirModal('modal-meu-pet')};window.renderizarMeuPet=function(){const c=document.getElementById('meupet-conteudo');if(!c)return;const ac=estado.acessorios||{comprados:[],ativo:null};const comprados=new Set(ac.comprados||[]);const atual=ACESSORIOS.find(a=>a.id===ac.ativo);const n=(estado.tarefas||[]).filter(t=>t.status==='aprovada').length;c.innerHTML='<div class="meupet-hero"><div class="meupet-avatar">'+(estado.petEmoji||'🐾')+'</div><div class="meupet-title">'+(atual?atual.emoji+' '+esc(atual.nome):'Visual natural')+'</div><div class="meupet-sub">Complete missões para desbloquear novos acessórios.</div><span class="meupet-chip">⭐ '+n+' missões aprovadas</span></div><div class="meupet-section-title">🎀 Acessórios desbloqueados</div><div class="meupet-grid" id="meupet-grid"></div><div class="meupet-reward">🗺️ Recompensas do mapa são desbloqueadas automaticamente quando você chega a uma nova região.</div>';const g=document.getElementById('meupet-grid');ACESSORIOS.forEach(a=>{const tem=comprados.has(a.id),ativo=ac.ativo===a.id;const d=document.createElement('button');d.type='button';d.className='meupet-item '+(tem?'':'bloqueado')+(ativo?' ativo':'');d.innerHTML='<span class="meupet-check">'+(ativo?'✓':tem?'🎀':'🔒')+'</span><span class="mi-emoji">'+a.emoji+'</span><b>'+esc(a.nome)+'</b><small>'+(tem?(ativo?'Equipado · toque para tirar':'Toque para equipar'):(a.preco+' 🪙 na Loja'))+'</small>';if(tem)d.onclick=()=>{const removendo=ativo;estado.acessorios.ativo=removendo?null:a.id;salvar();renderizarAcessorioNoContainer();atualizarTela();renderizarMeuPet();if(!removendo){celebrarNovoAcessorio();}if(typeof mostrarToast==='function')mostrarToast(removendo?'Acessório removido':`🎀 ${a.nome} equipado!`)};g.appendChild(d)})};})();</script></body>
+<script id="meu-pet-v1-script">(()=>{const RECOMPENSAS_MAPA=[{id:'mapa_bosque_visual',missao:3,acessorio:'grinalda',local:'Bosque',texto:'🌸 Grinalda de Flores'},{id:'mapa_vale_visual',missao:7,acessorio:'fone',local:'Vale',texto:'🎧 Fone de Ouvido'},{id:'mapa_castelo_visual',missao:12,acessorio:'coroa',local:'Castelo',texto:'👑 Coroa Real'},{id:'mapa_meta_visual',missao:18,acessorio:'bone',local:'Grande Meta',texto:'🧢 Boné Estiloso'}];window.verificarRecompensasMapa=function(silencioso){if(!estado)return;estado.recompensasMapa=estado.recompensasMapa||{};estado.acessorios=estado.acessorios||{comprados:[],ativo:null};estado.acessorios.comprados=Array.isArray(estado.acessorios.comprados)?estado.acessorios.comprados:[];const n=(estado.tarefas||[]).filter(t=>t.status==='aprovada').length;let mudou=false;RECOMPENSAS_MAPA.forEach(r=>{if(n>=r.missao&&!estado.recompensasMapa[r.id]){estado.recompensasMapa[r.id]=true;if(!estado.acessorios.comprados.includes(r.acessorio))estado.acessorios.comprados.push(r.acessorio);mudou=true;if(!silencioso)setTimeout(()=>{if(typeof dispararConfetes==='function')dispararConfetes();if(typeof mostrarToast==='function')mostrarToast(`🎁 Desbloqueou ${r.texto}!`);},250)}});if(mudou)salvar();return mudou};window.abrirMeuPet=function(){let m=document.getElementById('modal-meu-pet');if(!m){m=document.createElement('div');m.id='modal-meu-pet';m.className='modal-overlay';m.innerHTML='<div class="modal meupet-modal"><div class="modal-title"><div><h3 style="margin:0">🐾 Meu Pet</h3><small style="font-size:8px;color:#64748b;font-weight:800">Seu visual, suas conquistas</small></div><button class="close-btn" onclick="fecharModal(\'modal-meu-pet\')">×</button></div><div id="meupet-conteudo"></div></div></div>';document.body.appendChild(m)}verificarRecompensasMapa(true);renderizarMeuPet();abrirModal('modal-meu-pet')};window.renderizarMeuPet=function(){const c=document.getElementById('meupet-conteudo');if(!c)return;const ac=estado.acessorios||{comprados:[],ativo:null};const comprados=new Set(ac.comprados||[]);const atual=ACESSORIOS.find(a=>a.id===ac.ativo);const n=(estado.tarefas||[]).filter(t=>t.status==='aprovada').length;c.innerHTML='<div class="meupet-hero"><div class="meupet-avatar">'+(estado.petEmoji||'🐾')+'</div><div class="meupet-title">'+(atual?atual.emoji+' '+esc(atual.nome):'Visual natural')+'</div><div class="meupet-sub">Complete missões para desbloquear novos acessórios.</div><span class="meupet-chip">⭐ '+n+' missões aprovadas</span></div><div class="meupet-section-title">🎀 Acessórios desbloqueados</div><div class="meupet-grid" id="meupet-grid"></div><div class="meupet-reward">🗺️ Recompensas do mapa são desbloqueadas automaticamente quando você chega a uma nova região.</div>';const g=document.getElementById('meupet-grid');ACESSORIOS.forEach(a=>{const tem=comprados.has(a.id),ativo=ac.ativo===a.id;const d=document.createElement('button');d.type='button';d.className='meupet-item '+(tem?'':'bloqueado')+(ativo?' ativo':'');d.innerHTML='<span class="meupet-check">'+(ativo?'✓':tem?'🎀':'🔒')+'</span><span class="mi-emoji">'+a.emoji+'</span><b>'+esc(a.nome)+'</b><small>'+(tem?(ativo?'Equipado · toque para tirar':'Toque para equipar'):(a.preco+' 🪙 na Loja'))+'</small>';if(tem)d.onclick=()=>{const removendo=ativo;estado.acessorios.ativo=removendo?null:a.id;salvar();renderizarAcessorioNoContainer();atualizarTela();renderizarMeuPet();if(!removendo){celebrarNovoAcessorio();}if(typeof mostrarToast==='function')mostrarToast(removendo?'Acessório removido':`🎀 ${a.nome} equipado!`)};g.appendChild(d)})};})();</script><script id="poderes-evolucao-js">
+(function(){
+const PODERES_EVOLUCAO=[
+ {fase:1,nome:'Carinho Extra',icone:'💖',descricao:'Carinho faz o pet responder com mais energia.',eventos:['carinho']},
+ {fase:2,nome:'Brilho Lunar',icone:'🌙',descricao:'Carinho desperta estrelas e um brilho especial.',eventos:['carinho','xp']},
+ {fase:3,nome:'Chuva Estelar',icone:'🌟',descricao:'Ganhar XP faz estrelas surgirem ao redor do pet.',eventos:['xp','missao']},
+ {fase:4,nome:'Aura Real',icone:'👑',descricao:'Missões concluídas ativam uma aura de campeão.',eventos:['missao','carinho']},
+ {fase:5,nome:'Lenda Viva',icone:'🌈',descricao:'Grandes conquistas recebem uma celebração lendária.',eventos:['missao','xp','mapa']}
+];
+window.getPoderEvolucao=function(){const p=obterDadosPetAtual(),fase=calcularFase(p.nivel);return PODERES_EVOLUCAO[fase-1]||PODERES_EVOLUCAO[0]};
+function burstPoder(icone){const area=document.querySelector('.pet-stage');if(!area)return;const host=document.createElement('div');host.className='poder-burst';for(let i=0;i<5;i++){const x=document.createElement('i');x.textContent=icone;x.style.animationDelay=(i*.045)+'s';host.appendChild(x)}area.appendChild(host);setTimeout(()=>host.remove(),1200)}
+window.ativarPoderEvolucao=function(evento){try{const p=obterDadosPetAtual(),fase=calcularFase(p.nivel),poder=PODERES_EVOLUCAO[fase-1];if(!poder||!poder.eventos.includes(evento))return;const pet=document.getElementById('pet-principal');if(pet){['poder-carinho','poder-lua','poder-estelar','poder-nobre','poder-lenda'].forEach(c=>pet.classList.remove(c));pet.classList.add(['poder-carinho','poder-lua','poder-estelar','poder-nobre','poder-lenda'][fase-1]);setTimeout(()=>pet.classList.remove(['poder-carinho','poder-lua','poder-estelar','poder-nobre','poder-lenda'][fase-1]),1200)}burstPoder(poder.icone);if(fase>=3&&evento==='missao')mostrarBalaoFala(fase===5?'🌈 A lenda acordou!':'🌟 Minha evolução brilhou!');else if(evento==='carinho'&&Math.random()<.7)mostrarBalaoFala(fase===1?'💖 Mais carinho!':fase===2?'🌙 Que brilho gostoso!':fase===4?'👑 Um carinho real!':'✨ Você me faz brilhar!');}catch(e){console.warn('Poder evolução:',e)}};
+window.renderizarPoderEvolucao=function(){const el=document.getElementById('evo-progresso');if(!el)return;const d=PETS[estado.petAtual],p=obterDadosPetAtual(),fase=calcularFase(p.nivel),atual=d.evolucoes[fase-1],prox=d.evolucoes[fase],poder=PODERES_EVOLUCAO[fase-1];let prog='';if(!prox)prog='<div class="evo-progresso-top"><strong>👑 Evolução máxima</strong><span>Fase '+fase+'/5</span></div><div class="evo-progresso-bar"><div class="evo-progresso-fill" style="width:100%"></div></div><small>'+esc(atual.desc)+'</small>';else{const perc=Math.max(0,Math.min(100,Math.round(((p.nivel-atual.nivel)/(prox.nivel-atual.nivel))*100)));const falta=Math.max(0,prox.nivel-p.nivel);prog='<div class="evo-progresso-top"><strong>✨ Próxima: '+esc(prox.nome)+'</strong><span>Nv. '+p.nivel+'/'+prox.nivel+'</span></div><div class="evo-progresso-bar"><div class="evo-progresso-fill" style="width:'+perc+'%"></div></div><small>'+(falta?'Faltam '+falta+' níveis':'Evolução pronta!')+' · '+esc(prox.desc)+'</small>'}el.innerHTML=prog+'<div class="evo-poder-chip">'+poder.icone+' '+esc(poder.nome)+'</div><small style="display:inline;color:#64748b">'+esc(poder.descricao)+'</small>'};
+const oldInteragir=window.interagirComPet;if(oldInteragir&&!oldInteragir.__poder){window.interagirComPet=function(e){const r=oldInteragir.apply(this,arguments);setTimeout(()=>ativarPoderEvolucao('carinho'),80);return r};window.interagirComPet.__poder=true}
+const oldXP=window.ganharXP;if(oldXP&&!oldXP.__poder){window.ganharXP=function(q,e){const r=oldXP.apply(this,arguments);setTimeout(()=>ativarPoderEvolucao('xp'),120);return r};window.ganharXP.__poder=true}
+const oldAprovar=window.aprovarTarefaPais;if(oldAprovar&&!oldAprovar.__poder){window.aprovarTarefaPais=async function(id){const r=await oldAprovar.apply(this,arguments);setTimeout(()=>ativarPoderEvolucao('missao'),250);return r};window.aprovarTarefaPais.__poder=true}
+const oldAtual=window.atualizarTela;if(oldAtual&&!oldAtual.__poderEvo){window.atualizarTela=function(){const r=oldAtual.apply(this,arguments);try{renderizarPoderEvolucao()}catch(e){}return r};window.atualizarTela.__poderEvo=true}
+const oldMapa=window.abrirMapaAventura;if(oldMapa&&!oldMapa.__poder){window.abrirMapaAventura=function(){const r=oldMapa.apply(this,arguments);setTimeout(()=>ativarPoderEvolucao('mapa'),300);return r};window.abrirMapaAventura.__poder=true}
+})();
+</script>
+<style>
+/* RotinaPet — Baú, Loja, Casinha, Humor e Eventos */
+.rp-vivo-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:8px}.rp-vivo-card{border:1px solid #e2e8f0;border-radius:16px;padding:10px;background:linear-gradient(145deg,#fff,#f8fafc);box-shadow:0 3px 12px rgba(15,23,42,.06)}.rp-vivo-card:active{transform:scale(.98)}
+.rp-coin{font-weight:950;color:#b45309}.rp-mood{display:flex;align-items:center;gap:10px;padding:11px;border-radius:16px;background:linear-gradient(135deg,#fefce8,#f0fdf4);border:1px solid #fde68a;margin-bottom:9px}.rp-mood-icon{font-size:32px}.rp-mood-bar{height:7px;background:#e2e8f0;border-radius:99px;overflow:hidden;margin-top:5px}.rp-mood-bar i{display:block;height:100%;width:0;background:linear-gradient(90deg,#f59e0b,#22c55e);transition:width .35s}
+.rp-shop-tabs{display:flex;gap:5px;overflow:auto;margin:8px 0}.rp-shop-tabs button{border:1px solid #e2e8f0;background:#fff;border-radius:999px;padding:6px 9px;font-size:8px;font-weight:900;white-space:nowrap}.rp-shop-tabs button.active{background:#ede9fe;border-color:#c4b5fd;color:#6d28d9}.rp-shop-item{display:flex;align-items:center;gap:8px;padding:9px;border:1px solid #e2e8f0;border-radius:14px;margin-bottom:7px;background:#fff}.rp-shop-item .emoji{font-size:27px;width:36px;text-align:center}.rp-shop-item .info{flex:1}.rp-shop-item small{display:block;color:#64748b;font-size:8px;margin-top:2px}.rp-buy{border:0;border-radius:10px;padding:7px 9px;background:#8b5cf6;color:#fff;font-weight:950;font-size:8px}.rp-buy:disabled{background:#cbd5e1}.rp-house{position:relative;min-height:220px;border-radius:20px;overflow:hidden;background:linear-gradient(#bae6fd 0 42%,#fde68a 42% 100%);border:2px solid #e2e8f0}.rp-house:before{content:'☁️   ☁️';position:absolute;top:12px;left:18px;font-size:22px;opacity:.7}.rp-house-room{position:absolute;inset:72px 18px 14px;background:#fff7ed;border:3px solid #f59e0b;border-radius:18px 18px 12px 12px;box-shadow:inset 0 -25px 0 #d6b08a}.rp-house-pet{position:absolute;left:50%;top:112px;transform:translateX(-50%);font-size:58px;filter:drop-shadow(0 5px 4px rgba(0,0,0,.12));animation:housePetFloat 2.8s ease-in-out infinite}.rp-house-item{position:absolute;font-size:30px;animation:houseItemBob 3s ease-in-out infinite}.rp-event-complete{animation:rpEventPulse .8s ease both}
+@keyframes housePetFloat{50%{transform:translate(-50%,-7px)}}@keyframes houseItemBob{50%{transform:translateY(-4px)}}@keyframes rpEventPulse{50%{transform:scale(1.04);filter:brightness(1.15)}}
+#rp-humor-badge{position:absolute;right:8px;top:8px;z-index:12;padding:5px 8px;border-radius:999px;background:rgba(255,255,255,.9);box-shadow:0 3px 12px rgba(15,23,42,.12);font-size:8px;font-weight:950;backdrop-filter:blur(5px)}
+@media(max-width:360px){.rp-vivo-grid{grid-template-columns:1fr}.rp-shop-item{padding:7px}}
+</style>
+<div id="modal-vida-pet" class="modal-overlay"><div class="modal" style="max-width:370px"><div class="modal-title"><h3>🐾 Vida do Pet</h3><button class="close-btn" onclick="fecharModal('modal-vida-pet')">×</button></div><div id="vida-pet-conteudo"></div></div></div>
+<div id="modal-loja-pet" class="modal-overlay"><div class="modal" style="max-width:370px"><div class="modal-title"><h3>🏪 Loja do Pet</h3><button class="close-btn" onclick="fecharModal('modal-loja-pet')">×</button></div><div id="loja-pet-conteudo"></div></div></div>
+<div id="modal-casinha" class="modal-overlay"><div class="modal" style="max-width:370px"><div class="modal-title"><h3>🏡 Minha Casinha</h3><button class="close-btn" onclick="fecharModal('modal-casinha')">×</button></div><div id="casinha-conteudo"></div></div></div>
+<script>
+/* 60+: ciclo de vida do pet — usa as moedas existentes como PetCoins. */
+const RP_CASINHA_ITENS=[
+ {id:'cama_fofa',nome:'Caminha Fofa',emoji:'🛏️',preco:25,pos:'left:22px;bottom:20px'},
+ {id:'planta',nome:'Plantinha',emoji:'🪴',preco:18,pos:'right:25px;bottom:20px'},
+ {id:'brinquedo',nome:'Ursinho',emoji:'🧸',preco:22,pos:'left:58px;bottom:24px'},
+ {id:'livro',nome:'Estante Mágica',emoji:'📚',preco:30,pos:'right:58px;bottom:23px'},
+ {id:'trofeu',nome:'Trofeuzinho',emoji:'🏆',preco:38,pos:'left:50%;top:78px'},
+ {id:'balao',nome:'Balão de Festa',emoji:'🎈',preco:28,pos:'right:16px;top:82px'}
+];
+function garantirVidaPet(){
+ estado.acessorios=estado.acessorios||{comprados:[],ativo:null};
+ if(!Array.isArray(estado.acessorios.comprados))estado.acessorios.comprados=[];
+ estado.casinha=estado.casinha||{comprados:[],ativos:[]};
+ if(!Array.isArray(estado.casinha.comprados))estado.casinha.comprados=[];
+ if(!Array.isArray(estado.casinha.ativos))estado.casinha.ativos=[];
+ if(!Number.isFinite(Number(estado.moedas)))estado.moedas=0;
+ garantirEngajamento();
+}
+function dadosHumorPet(){
+ const d=obterDadosPetAtual(); const f=Number(d.felicidade)||0,sa=Number(d.saude)||0;
+ const media=(f+sa)/2;
+ if(f>=90&&sa>=85)return {icon:'🤩',nome:'Radiante',texto:'O pet está cheio de energia e carinho!',valor:100};
+ if(f>=75&&sa>=70)return {icon:'😊',nome:'Feliz',texto:'Tudo bem por aqui. Que dia gostoso!',valor:Math.round(media)};
+ if(f>=50&&sa>=50)return {icon:'🙂',nome:'Tranquilo',texto:'Uma brincadeira ou carinho pode melhorar o dia.',valor:Math.round(media)};
+ if(f<35&&sa<45)return {icon:'🥺',nome:'Precisa de cuidado',texto:'Que tal dar atenção, comida ou um descanso?',valor:Math.round(media)};
+ return {icon:'😴',nome:'Sonolento',texto:'Um pouco de descanso e carinho fariam bem.',valor:Math.round(media)};
+}
+function atualizarHumorPet(){
+ garantirVidaPet(); const h=dadosHumorPet(); let b=document.getElementById('rp-humor-badge');
+ const stage=document.querySelector('.pet-stage');
+ if(!stage)return;
+ if(!b){b=document.createElement('div');b.id='rp-humor-badge';stage.appendChild(b)}
+ b.textContent=`${h.icon} ${h.nome}`; b.title=h.texto;
+}
+function abrirVidaPet(){renderizarVidaPet();abrirModal('modal-vida-pet')}
+function renderizarVidaPet(){
+ garantirVidaPet(); const c=document.getElementById('vida-pet-conteudo');if(!c)return;const h=dadosHumorPet();const ev=estado.eventoSemanal||EVENTOS_SEMANAIS[0];const prog=Math.min(5,Number(estado.eventoSemanalProgresso)||0);const alvo=5;const completo=prog>=alvo;
+ c.innerHTML=`<div class="rp-mood"><div class="rp-mood-icon">${h.icon}</div><div style="flex:1"><b>${h.nome}</b><div style="font-size:9px;color:#64748b;margin-top:2px">${esc(h.texto)}</div><div class="rp-mood-bar"><i style="width:${h.valor}%"></i></div><small style="font-size:8px;color:#64748b">Humor ${h.valor}/100</small></div></div><div class="rp-vivo-grid"><button class="rp-vivo-card" onclick="fecharModal('modal-vida-pet');abrirLojaPet()"><div style="font-size:25px">🏪</div><b style="font-size:10px">Loja</b><div class="rp-coin" style="font-size:9px">${Number(estado.moedas)||0} 🪙 PetCoins</div></button><button class="rp-vivo-card" onclick="fecharModal('modal-vida-pet');abrirCasinha()"><div style="font-size:25px">🏡</div><b style="font-size:10px">Casinha</b><div style="font-size:9px;color:#64748b">${(estado.casinha.ativos||[]).length} decoração(ões)</div></button></div><div class="section-card" style="margin-top:8px"><b style="font-size:10px">🎪 ${esc(ev[0])}</b><p style="font-size:9px;color:#64748b;margin:5px 0">${esc(ev[1])}</p><div style="height:7px;background:#e2e8f0;border-radius:99px;overflow:hidden"><div style="height:100%;width:${Math.round((prog/alvo)*100)}%;background:#8b5cf6"></div></div><div style="display:flex;justify-content:space-between;margin-top:5px;font-size:8px;font-weight:900"><span>${prog}/${alvo} missões</span><span>${completo?'🏆 Prêmio disponível':'🎁 '+esc(ev[2])}</span></div>${completo?'<button class="primary-btn pink-btn" style="width:100%;margin-top:7px" onclick="resgatarEventoSemanal()">🎉 Resgatar prêmio</button>':''}</div>`;
+}
+function abrirLojaPet(){renderizarLojaPet();abrirModal('modal-loja-pet')}
+function comprarPetItem(tipo,id){
+ garantirVidaPet(); let item;
+ if(tipo==='acessorio')item=ACESSORIOS.find(x=>x.id===id);
+ if(tipo==='fundo')item=BANCO_FUNDOS.find(x=>x.id===id);
+ if(!item)return;
+ const key=tipo==='fundo'?'fundosComprados':'acessorios.comprados'; const arr=tipo==='fundo'?(estado.fundosComprados||[]):(estado.acessorios.comprados||[]);
+ if(arr.includes(id)){mostrarToast('✅ Você já tem este item.');return}
+ const preco=Math.max(0,Number(item.preco)||0);if(Number(estado.moedas)<preco)return mostrarToast('🪙 Ainda faltam PetCoins.');
+ estado.moedas-=preco;arr.push(id);if(tipo==='fundo')estado.fundosComprados=arr;else estado.acessorios.comprados=arr;
+ salvar();atualizarTela();renderizarLojaPet();mostrarToast(`✨ ${item.nome} comprado!`);dispararConfetes(55);
+}
+function renderizarLojaPet(){
+ garantirVidaPet();const c=document.getElementById('loja-pet-conteudo');if(!c)return;const owned=new Set(estado.acessorios.comprados||[]);const fundos=new Set(estado.fundosComprados||[]);
+ const acess=ACESSORIOS.filter(x=>x.preco>0&&!owned.has(x.id)).slice(0,10); const fundosDisp=BANCO_FUNDOS.filter(x=>x.preco>0&&!fundos.has(x.id)).slice(0,8);
+ c.innerHTML=`<div class="section-card" style="display:flex;justify-content:space-between;align-items:center"><span>Seu saldo</span><b class="rp-coin">🪙 ${Number(estado.moedas)||0} PetCoins</b></div><div class="rp-shop-tabs"><button class="active">🎀 Acessórios</button><button onclick="mostrarToast('🌈 Em breve: itens especiais!')">✨ Especiais</button></div>${acess.length?acess.map(a=>`<div class="rp-shop-item"><span class="emoji">${a.emoji||'✨'}</span><div class="info"><b style="font-size:9px">${esc(a.nome)}</b><small>Personalize seu pet</small></div><button class="rp-buy" onclick="comprarPetItem('acessorio','${a.id}')">${a.preco} 🪙</button></div>`).join(''):'<div class="section-card">🎉 Você já desbloqueou todos os acessórios desta seleção!</div>'}<div style="margin:12px 0 7px;font-size:10px;font-weight:950">🖼️ Fundos para os cenários</div>${fundosDisp.slice(0,4).map(a=>`<div class="rp-shop-item"><span class="emoji">${a.emoji}</span><div class="info"><b style="font-size:9px">${esc(a.nome)}</b><small>Troque o clima da aventura</small></div><button class="rp-buy" onclick="comprarPetItem('fundo','${a.id}')">${a.preco} 🪙</button></div>`).join('')}`;
+}
+function abrirCasinha(){renderizarCasinha();abrirModal('modal-casinha')}
+function comprarDecoracao(id){
+ garantirVidaPet();const item=RP_CASINHA_ITENS.find(x=>x.id===id);if(!item)return;if(estado.casinha.comprados.includes(id))return alternarDecoracao(id);if(Number(estado.moedas)<item.preco)return mostrarToast('🪙 Faltam PetCoins para essa decoração.');estado.moedas-=item.preco;estado.casinha.comprados.push(id);estado.casinha.ativos.push(id);salvar();renderizarCasinha();atualizarTela();mostrarToast(`🏡 ${item.nome} entrou na casinha!`);dispararConfetes(45)}
+function alternarDecoracao(id){garantirVidaPet();const a=estado.casinha.ativos;const i=a.indexOf(id);if(i>=0)a.splice(i,1);else a.push(id);salvar();renderizarCasinha();mostrarToast(i>=0?'🧹 Decoração guardada':'✨ Decoração colocada!')}
+function renderizarCasinha(){
+ garantirVidaPet();const c=document.getElementById('casinha-conteudo');if(!c)return;const ativos=new Set(estado.casinha.ativos);const pet=PETS[estado.petAtual]?.emoji||'🐾';
+ const itensCena=RP_CASINHA_ITENS.filter(x=>ativos.has(x.id)).map(x=>`<span class="rp-house-item" style="${x.pos}">${x.emoji}</span>`).join('');
+ c.innerHTML=`<div class="rp-house"><div class="rp-house-room"></div>${itensCena}<div class="rp-house-pet">${pet}</div></div><p style="font-size:8px;color:#64748b;margin:7px 2px">Compre e toque novamente para colocar ou guardar cada decoração.</p>${RP_CASINHA_ITENS.map(x=>{const tem=estado.casinha.comprados.includes(x.id),on=ativos.has(x.id);return `<div class="rp-shop-item"><span class="emoji">${x.emoji}</span><div class="info"><b style="font-size:9px">${esc(x.nome)}</b><small>${tem?(on?'Está na casinha':'Guardada'):'Nova decoração'}</small></div><button class="rp-buy" ${tem?'':'onclick="comprarDecoracao(\''+x.id+'\')"'}>${tem?`<span onclick="alternarDecoracao('${x.id}')">${on?'Guardar':'Colocar'}</span>`:`<span onclick="comprarDecoracao('${x.id}')">${x.preco} 🪙</span>`}</button></div>`}).join('')}`;
+}
+function resgatarEventoSemanal(){
+ garantirEngajamento();const alvo=5,prog=Number(estado.eventoSemanalProgresso)||0;if(prog<alvo)return mostrarToast('🎪 Complete mais missões para resgatar.');if(estado.eventoSemanalResgatadoData===estado.eventoSemanalData)return mostrarToast('✅ Prêmio desta semana já foi resgatado.');estado.eventoSemanalResgatadoData=estado.eventoSemanalData;estado.moedas=(Number(estado.moedas)||0)+25;ganharXP(40);estado.adesivos.push('evento_'+estado.eventoSemanalData);salvar();dispararConfetes(150);if(typeof somConquista==='function')somConquista();mostrarAviso('🏆','Evento concluído!',`+25 🪙, +40 XP e uma lembrança da ${estado.eventoSemanal[0]}!`);renderizarVidaPet();atualizarTela();
+}
+function reforcarEventoNaSemana(){garantirEngajamento();if(!Number.isFinite(Number(estado.eventoSemanalProgresso)))estado.eventoSemanalProgresso=0}
+const rpGarantirOriginal=garantirEngajamento;
+garantirEngajamento=function(){rpGarantirOriginal();if(estado.eventoSemanalResgatadoData===undefined)estado.eventoSemanalResgatadoData=null;if(!Number.isFinite(Number(estado.eventoSemanalProgresso)))estado.eventoSemanalProgresso=0;if(estado.eventoSemanalData!==estado._rpSemanaAnterior){if(estado._rpSemanaAnterior!==undefined)estado.eventoSemanalProgresso=0;estado._rpSemanaAnterior=estado.eventoSemanalData;estado.eventoSemanalResgatadoData=null}garantirVidaPetBase();};
+function garantirVidaPetBase(){estado.acessorios=estado.acessorios||{comprados:[],ativo:null};if(!Array.isArray(estado.acessorios.comprados))estado.acessorios.comprados=[];estado.casinha=estado.casinha||{comprados:[],ativos:[]};if(!Array.isArray(estado.casinha.comprados))estado.casinha.comprados=[];if(!Array.isArray(estado.casinha.ativos))estado.casinha.ativos=[]}
+const aprovarTarefaPaisVida=aprovarTarefaPais;
+aprovarTarefaPais=async function(id){await aprovarTarefaPaisVida(id);renderizarVidaPet?.();};
+const interagirComPetVida=interagirComPet;
+interagirComPet=function(e){interagirComPetVida(e);setTimeout(atualizarHumorPet,50)};
+const acaoPetVida=acaoPet;
+acaoPet=function(tipo){acaoPetVida(tipo);setTimeout(atualizarHumorPet,80)};
+const atualizarTelaVida=atualizarTela;
+atualizarTela=function(){atualizarTelaVida();setTimeout(atualizarHumorPet,40)};
+setTimeout(()=>{try{garantirVidaPet();atualizarHumorPet()}catch(e){console.warn('VidaPet:',e)}},500);
+/* Expõe um acesso rápido dentro da Central de Aventuras existente. */
+const abrirCentralAventurasVida=abrirCentralAventuras;
+abrirCentralAventuras=function(){abrirCentralAventurasVida();setTimeout(()=>{const c=document.getElementById('central-aventuras-conteudo');if(!c||c.querySelector('.rp-vivo-grid'))return;c.insertAdjacentHTML('beforeend',`<div class="rp-vivo-grid" style="margin-top:8px"><button class="rp-vivo-card" onclick="fecharModal('modal-central-aventuras');abrirVidaPet()"><div style="font-size:24px">🐾</div><b style="font-size:10px">Vida do Pet</b><div style="font-size:8px;color:#64748b">Humor, loja e casinha</div></button><button class="rp-vivo-card" onclick="fecharModal('modal-central-aventuras');abrirBauDiario()"><div style="font-size:24px">🎁</div><b style="font-size:10px">Baú do Dia</b><div style="font-size:8px;color:#64748b">Sua surpresa diária</div></button></div>`)},30)};
+</script>
+<style id="jornada-conquistas-streak">
+.jornada-card{background:linear-gradient(145deg,#ffffff,#f8fbff);border:1px solid #e4eaf3;border-radius:20px;padding:13px;margin:8px 0;box-shadow:0 8px 22px rgba(30,60,100,.07)}
+.jornada-head{display:flex;align-items:center;justify-content:space-between;gap:8px}.jornada-title{font-weight:950;font-size:13px;color:#25344f}.jornada-sub{font-size:9px;color:#718096;margin-top:2px}
+.jornada-fire{font-size:34px;animation:jf 1.7s ease-in-out infinite}@keyframes jf{50%{transform:scale(1.08) rotate(-3deg)}}
+.jornada-track{height:8px;background:#e9eef5;border-radius:99px;overflow:hidden;margin:10px 0 6px}.jornada-fill{height:100%;border-radius:99px;background:linear-gradient(90deg,#fb923c,#f43f5e);transition:width .5s ease}
+.jornada-marks{display:flex;justify-content:space-between;font-size:8px;color:#64748b}.jornada-marks b{color:#c2410c}.jornada-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:7px;margin-top:8px}.jornada-ach{padding:9px;border-radius:14px;background:#fff;border:1px solid #e5e7eb;min-height:86px}.jornada-ach.ok{background:linear-gradient(145deg,#fffdf2,#fff);border-color:#f5c451}.jornada-ach .ico{font-size:23px}.jornada-ach b{display:block;font-size:9px;color:#334155;margin-top:3px}.jornada-ach small{display:block;font-size:8px;color:#718096;line-height:1.25;margin-top:2px}.jornada-ach em{display:block;font-size:8px;font-style:normal;font-weight:900;color:#a16207;margin-top:5px}.jornada-badge{display:inline-block;margin-top:7px;padding:5px 8px;border-radius:999px;background:#fff7ed;color:#c2410c;font-size:8px;font-weight:900}
+.jornada-toast{position:fixed;left:50%;bottom:85px;z-index:9999;transform:translate(-50%,15px) scale(.96);opacity:0;pointer-events:none;background:#25344f;color:#fff;border-radius:16px;padding:10px 15px;text-align:center;box-shadow:0 12px 30px rgba(0,0,0,.22);transition:.25s}.jornada-toast.show{opacity:1;transform:translate(-50%,0) scale(1)}.jornada-toast b{display:block;font-size:11px}.jornada-toast span{font-size:8px;opacity:.9}
+@media(prefers-reduced-motion:reduce){.jornada-fire{animation:none}.jornada-fill{transition:none}}
+</style>
+<script id="jornada-conquistas-streak-js">
+(function(){
+ const A=[
+  ['primeira','🌱','Primeiro Passo','Conclua sua primeira missão.','+15 XP'],
+  ['tresdias','🔥','Chama Acesa','Chegue a 3 dias de sequência.','+15 🪙'],
+  ['setedias','🌟','Semana Completa','Chegue a 7 dias de sequência.','+30 🪙'],
+  ['dezmissoes','⚡','Ritmo Forte','Conclua 10 missões aprovadas.','+25 XP'],
+  ['quinzedias','💚','Duas Semanas','Chegue a 14 dias de sequência.','+50 🪙'],
+  ['trintadias','👑','Lenda da Rotina','Chegue a 30 dias de sequência.','+100 🪙'],
+  ['cinquenta','🏆','Grande Jornada','Conclua 50 missões aprovadas.','🎁 surpresa']
+ ];
+ const M=[3,7,14,30];
+ function ensure(){estado.conquistasJornada=estado.conquistasJornada||{};estado.streakRecompensas=estado.streakRecompensas||{};}
+ function nmis(){return (estado.tarefas||[]).filter(t=>t.status==='aprovada').length}
+ function toast(t,sub){let x=document.getElementById('jornada-toast');if(!x){x=document.createElement('div');x.id='jornada-toast';x.className='jornada-toast';document.body.appendChild(x)}x.innerHTML='<b>'+t+'</b><span>'+sub+'</span>';x.classList.add('show');clearTimeout(x._t);x._t=setTimeout(()=>x.classList.remove('show'),2600)}
+ function reward(id){if(estado.conquistasJornada[id])return false;estado.conquistasJornada[id]=Date.now();return true}
+ function giveCoins(v){estado.moedas=(Number(estado.moedas)||0)+v;estado.dinheiroAcumulado=(Number(estado.dinheiroAcumulado)||0)+v*(Number(estado.taxaCambio)||.01)}
+ function giveXP(v){if(typeof ganharXP==='function')ganharXP(v);else{let d=estado.pets?.[estado.petAtual];if(d)d.xp=(Number(d.xp)||0)+v}}
+ function check(){ensure();const n=nmis(),s=Number(estado.streak)||0;let changed=false;
+  if(n>=1&&reward('primeira')){giveXP(15);toast('🏆 Primeiro Passo!','+15 XP para seu pet.');changed=true}
+  if(s>=3&&reward('tresdias')){giveCoins(15);toast('🔥 Chama Acesa!','3 dias seguidos • +15 🪙');changed=true}
+  if(s>=7&&reward('setedias')){giveCoins(30);toast('🌟 Semana Completa!','7 dias seguidos • +30 🪙');changed=true}
+  if(n>=10&&reward('dezmissoes')){giveXP(25);toast('⚡ Ritmo Forte!','10 missões • +25 XP');changed=true}
+  if(s>=14&&reward('quinzedias')){giveCoins(50);toast('💚 Duas Semanas!','14 dias seguidos • +50 🪙');changed=true}
+  if(s>=30&&reward('trintadias')){giveCoins(100);toast('👑 Lenda da Rotina!','30 dias • +100 🪙');changed=true}
+  if(n>=50&&reward('cinquenta')){giveCoins(75);toast('🏆 Grande Jornada!','50 missões • +75 🪙');changed=true}
+  if(changed){salvar();atualizarTela()}
+ }
+ function render(c){if(!c)return;ensure();const s=Number(estado.streak)||0,next=M.find(x=>x>s)||30,prev=M.filter(x=>x<=s).pop()||0,pct=next===prev?100:Math.min(100,Math.max(0,((s-prev)/(next-prev))*100));
+  c.innerHTML='<div class="jornada-card"><div class="jornada-head"><div><div class="jornada-title">🔥 Sequência de cuidado</div><div class="jornada-sub">'+s+' dia(s) consecutivo(s)</div></div><div class="jornada-fire">🔥</div></div><div class="jornada-track"><div class="jornada-fill" style="width:'+pct+'%"></div></div><div class="jornada-marks"><span>Marco '+prev+'</span><b>Próximo: '+next+' dias</b><span>🏆</span></div><span class="jornada-badge">💪 Complete as missões obrigatórias para manter a chama acesa</span></div>'+
+  '<div class="jornada-card"><div class="jornada-title">🏆 Conquistas</div><div class="jornada-sub">'+Object.keys(estado.conquistasJornada).length+'/'+A.length+' desbloqueadas</div><div class="jornada-grid">'+A.map(a=>{let ok=!!estado.conquistasJornada[a[0]];return '<div class="jornada-ach '+(ok?'ok':'')+'"><div class="ico">'+a[1]+'</div><b>'+a[2]+'</b><small>'+a[3]+'</small><em>'+a[4]+' '+(ok?'✅':'🔒')+'</em></div>'}).join('')+'</div></div>';
+ }
+ function open(){ensure();let o=document.getElementById('modal-jornada-pet');if(!o){o=document.createElement('div');o.id='modal-jornada-pet';o.className='modal-overlay';o.innerHTML='<div class="modal" style="max-width:360px"><div class="modal-title"><div><h3 style="margin:0">🏆 Jornada do Pet</h3><small style="font-size:8px;color:#64748b">Conquistas e sequência</small></div><button class="close-btn" onclick="fecharModal(\'modal-jornada-pet\')">×</button></div><div id="jornada-conteudo"></div></div>';document.body.appendChild(o)}render(document.getElementById('jornada-conteudo'));abrirModal('modal-jornada-pet')}
+ window.abrirJornadaPet=open;window.verificarConquistasJornada=check;
+ const old=window.registrarConclusaoDoDia;
+ if(typeof old==='function')window.registrarConclusaoDoDia=function(){const r=old.apply(this,arguments);setTimeout(check,80);return r};
+ setTimeout(()=>{try{check()}catch(e){console.warn('Conquistas:',e)}},500);
+})();
+</script>
+
+
+<script id="casinha-evolutiva-js">
+(function(){
+  const CASAS=[
+    {nivel:1,nome:'Casinha Aconchegante',emoji:'🏡',req:0,desc:'Um cantinho simples para começar a aventura.'},
+    {nivel:2,nome:'Lar Aventureiro',emoji:'🏠',req:3,desc:'Mais espaço para as descobertas do pet.'},
+    {nivel:3,nome:'Casa Encantada',emoji:'🏡✨',req:7,desc:'A casa começa a refletir as conquistas.'},
+    {nivel:4,nome:'Mansão do Pet',emoji:'🏰',req:12,desc:'Um lar digno de um grande aventureiro.'},
+    {nivel:5,nome:'Casa Lendária',emoji:'👑🏰',req:18,desc:'O grande lar do mestre da rotina.'}
+  ];
+  const ITENS=[
+    {id:'cama',icon:'🛏️',nome:'Caminha Fofa',req:0,desc:'Um lugar para descansar.',cost:15},
+    {id:'planta',icon:'🪴',nome:'Plantinha',req:1,desc:'Deixa o cantinho mais vivo.',cost:20},
+    {id:'urso',icon:'🧸',nome:'Ursinho',req:3,desc:'Companheiro de aventuras.',cost:25},
+    {id:'livros',icon:'📚',nome:'Estante',req:5,desc:'Livros para o pet curioso.',cost:35},
+    {id:'trofeu',icon:'🏆',nome:'Troféu',req:7,desc:'Mostra uma grande conquista.',cost:45},
+    {id:'balao',icon:'🎈',nome:'Balão',req:10,desc:'Decoração de festa.',cost:30},
+    {id:'estrela',icon:'⭐',nome:'Estrela Luminosa',req:12,desc:'Um brilho especial à noite.',cost:55},
+    {id:'arco',icon:'🌈',nome:'Arco-íris',req:18,desc:'A decoração lendária.',cost:80}
+  ];
+  function state(){
+    if(!window.estado)return null;
+    estado.casinha=estado.casinha||{itens:[]};
+    return estado;
+  }
+  function missions(){return (estado.tarefas||[]).filter(t=>t.status==='aprovada').length}
+  function coins(){
+    if(typeof estado.moedas==='number')return estado.moedas;
+    if(typeof estado.petCoins==='number')return estado.petCoins;
+    return 0;
+  }
+  function setCoins(v){
+    if(typeof estado.moedas==='number'||typeof estado.petCoins!=='number')estado.moedas=v;
+    else estado.petCoins=v;
+  }
+  function save(){if(typeof window.salvar==='function')salvar()}
+  function casaAtual(){
+    const n=missions(); return [...CASAS].reverse().find(c=>n>=c.req)||CASAS[0];
+  }
+  function render(container){
+    if(!container||!state())return;
+    const n=missions(), c=casaAtual(), next=CASAS.find(x=>x.req>n);
+    const pct=next?Math.min(100,((n-c.req)/(next.req-c.req))*100):100;
+    const itens=new Set(estado.casinha.itens||[]);
+    const deco=(id,cls)=>itens.has(id)?'<span class="casa-deco '+cls+'">'+(ITENS.find(i=>i.id===id)?.icon||'')+'</span>':'';
+    container.innerHTML=
+      '<div class="casa-card"><div class="casa-title">🏡 '+c.nome+'</div><div class="casa-sub">'+c.desc+'</div>'+
+      '<div class="casa-hero">'+
+        '<div class="casa-ground"></div><div class="casa-house"><div class="casa-roof"></div><div class="casa-sign">'+c.emoji+' Casa do Pet</div><div class="casa-door"></div><div class="casa-window"></div></div>'+
+        deco('planta','d1')+deco('urso','d2')+deco('trofeu','d3')+deco('balao','d4')+deco('arco','d5')+
+      '</div>'+
+      '<div class="casa-level"><span class="casa-level-badge">Nível da casa '+c.nivel+'/5</span><span style="font-size:11px;color:#718096">'+n+' missões</span></div>'+
+      '<div class="casa-xp"><div style="width:'+pct+'%"></div></div>'+
+      '<div class="casa-sub" style="margin-top:6px">'+(next?'Próxima casa: '+next.emoji+' '+next.nome+' • '+(next.req-n)+' missões':'👑 Casa lendária desbloqueada!')+'</div>'+
+      '<div class="casa-room"><b>🪙 '+coins()+' PetCoins</b> • Decorações compradas: '+itens.size+'/'+ITENS.length+'</div>'+
+      '</div>'+
+      '<div class="casa-card"><div class="casa-title">🛋️ Decorar a casa</div><div class="casa-sub">Compre itens e veja-os aparecer no seu lar.</div><div class="casa-items">'+
+      ITENS.map(i=>{
+        const owned=itens.has(i.id), locked=n<i.req, affordable=coins()>=i.cost;
+        return '<div class="casa-item '+(owned?'owned':'')+' '+(locked?'locked':'')+'"><div class="casa-item-icon">'+i.icon+'</div><div class="casa-item-name">'+i.nome+'</div><div class="casa-item-desc">'+i.desc+'<br>Requisito: '+i.req+' missões</div>'+
+        (owned?'<button class="casa-item-btn" onclick="rotinaPetCasa.remover(\''+i.id+'\')">Guardar</button>': '<button class="casa-item-btn" '+(locked||!affordable?'disabled':'')+' onclick="rotinaPetCasa.comprar(\''+i.id+'\')">🪙 '+i.cost+'</button>')+
+        '</div>';
+      }).join('')+'</div></div>';
+  }
+  window.rotinaPetCasa={
+    render,
+    abrir:function(){
+      let root=document.getElementById('casinha-evolutiva-modal');
+      if(!root){
+        root=document.createElement('div');root.id='casinha-evolutiva-modal';
+        root.style.cssText='position:fixed;inset:0;z-index:9985;background:rgba(15,25,42,.55);padding:16px;overflow:auto';
+        const card=document.createElement('div');card.style.cssText='max-width:760px;margin:18px auto;background:#f7f9fc;border-radius:28px;padding:10px 14px 24px;box-shadow:0 20px 70px rgba(0,0,0,.28)';
+        card.innerHTML='<button onclick="document.getElementById(\'casinha-evolutiva-modal\').remove()" style="border:0;background:none;font-size:28px;float:right;cursor:pointer">×</button><div style="padding:14px 4px 4px;font-weight:950;font-size:20px">🏡 Minha Casinha</div><div id="casinha-evolutiva-inner"></div>';
+        root.appendChild(card);document.body.appendChild(root);
+      }
+      render(document.getElementById('casinha-evolutiva-inner'));
+    },
+    comprar:function(id){
+      if(!state())return; const i=ITENS.find(x=>x.id===id); if(!i)return;
+      if(missions()<i.req || coins()<i.cost)return;
+      estado.casinha.itens=estado.casinha.itens||[]; if(estado.casinha.itens.includes(id))return;
+      setCoins(coins()-i.cost); estado.casinha.itens.push(id); save();
+      if(typeof mostrarToast==='function')mostrarToast('🏡 '+i.nome+' chegou na casinha!');
+      this.abrir();
+    },
+    remover:function(id){
+      if(!state())return; estado.casinha.itens=(estado.casinha.itens||[]).filter(x=>x!==id);save();
+      this.abrir();
+    }
+  };
+})();
+</script>
+
+
+<script id="casinha-evolutiva-access">
+(function(){
+  function add(){
+    if(document.getElementById('btn-casinha-evolutiva'))return;
+    const b=document.createElement('button');b.id='btn-casinha-evolutiva';b.textContent='🏡 Casinha';
+    b.onclick=()=>window.rotinaPetCasa&&rotinaPetCasa.abrir();
+    b.style.cssText='position:fixed;right:14px;bottom:136px;z-index:9000;border:0;border-radius:999px;padding:10px 14px;font-weight:900;font-size:12px;background:#fff;box-shadow:0 8px 25px rgba(0,0,0,.14);cursor:pointer';
+    document.body.appendChild(b);
+  }
+  setTimeout(add,850);
+})();
+</script>
+
+
+<script id="personalidade-pet-js">
+(function(){
+  const PERSONALIDADES=[
+    {id:'carinhoso',nome:'Companheiro Carinhoso',emoji:'🥰',desc:'Adora receber carinho e estar pertinho.',fala:'“Seu carinho deixa meu dia melhor!”'},
+    {id:'determinado',nome:'Aventureiro Determinado',emoji:'💪',desc:'Fica empolgado quando você completa suas missões.',fala:'“Vamos! Mais uma missão e partiu aventura!”'},
+    {id:'curioso',nome:'Explorador Curioso',emoji:'🔎',desc:'Ama descobrir lugares e novidades.',fala:'“Opa! O que será que tem ali?”'},
+    {id:'equilibrado',nome:'Companheiro Equilibrado',emoji:'😊',desc:'Uma personalidade tranquila que combina cuidado e aventura.',fala:'“Juntos, a rotina fica mais gostosa.”'}
+  ];
+  function st(){
+    if(!window.estado)return null;
+    estado.personalidade=estado.personalidade||{carinho:0,missoes:0,exploracao:0,energia:50,ultimoEvento:null};
+    return estado;
+  }
+  function missions(){return (estado.tarefas||[]).filter(t=>t.status==='aprovada').length}
+  function exploracao(){
+    const m=estado.mapaDescobertas||estado.descobertasMapa||{};let n=0;
+    Object.values(m).forEach(v=>Array.isArray(v)?n+=v.length:(v&&typeof v==='object'&&(n+=Object.values(v).filter(Boolean).length)));
+    return n;
+  }
+  function carinho(){return Number(estado.interacoesPet||estado.carinhoPet||0)}
+  function calc(){
+    const c=carinho(),m=missions(),e=exploracao();
+    const scores={carinhoso:Math.min(100,c*5),determinado:Math.min(100,m*4),curioso:Math.min(100,e*10)};
+    scores.equilibrado=Math.max(25,100-Math.max(scores.carinhoso,scores.determinado,scores.curioso));
+    const id=Object.keys(scores).sort((a,b)=>scores[b]-scores[a])[0];
+    const p=PERSONALIDADES.find(x=>x.id===id)||PERSONALIDADES[3];
+    return {p,scores,c,m,e};
+  }
+  function mood(){
+    const x=Number(estado.personalidade.energia??50);
+    if(x>=85)return ['🤩','Radiante'];
+    if(x>=65)return ['😊','Feliz'];
+    if(x>=40)return ['🙂','Tranquilo'];
+    if(x>=20)return ['😴','Sonolento'];
+    return ['🥺','Precisando de atenção'];
+  }
+  function render(container){
+    if(!container||!st())return;
+    const r=calc(), p=r.p, mo=mood();
+    const vals=[['🥰','Carinho',r.carinhoso||r.scores.carinhoso],['💪','Missões',r.scores.determinado],['🔎','Curiosidade',r.scores.curioso],['⚖️','Equilíbrio',r.scores.equilibrado]];
+    container.innerHTML='<div class="personal-card">'+
+      '<div class="personal-head"><div class="personal-face">'+p.emoji+'</div><div><div class="personal-name">'+p.nome+'</div><div class="personal-sub">'+p.desc+'</div></div></div>'+
+      '<div class="mood-pill">'+mo[0]+' Humor atual: '+mo[1]+'</div>'+
+      '<div class="traits-grid">'+vals.map(v=>'<div class="trait"><div class="trait-top"><span>'+v[0]+' '+v[1]+'</span><span>'+Math.round(v[1])+'%</span></div><div class="trait-bar"><div class="trait-fill" style="width:'+Math.round(v[1])+'%;background:linear-gradient(90deg,#8cc8ff,#7a8cff)"></div></div></div>').join('')+'</div>'+
+      '<div class="persona-quote">'+p.fala+'</div>'+
+      '<div class="persona-history">Interações: <b>'+r.c+'</b> • Missões concluídas: <b>'+r.m+'</b> • Descobertas: <b>'+r.e+'</b></div>'+
+      '</div>';
+  }
+  function energia(delta){
+    st();estado.personalidade.energia=Math.max(0,Math.min(100,Number(estado.personalidade.energia??50)+delta));
+  }
+  window.rotinaPetPersonalidade={
+    render,
+    abrir:function(){
+      let root=document.getElementById('personalidade-pet-modal');
+      if(!root){
+        root=document.createElement('div');root.id='personalidade-pet-modal';
+        root.style.cssText='position:fixed;inset:0;z-index:9980;background:rgba(15,25,42,.55);padding:16px;overflow:auto';
+        const card=document.createElement('div');card.style.cssText='max-width:680px;margin:18px auto;background:#f7f9fc;border-radius:28px;padding:10px 14px 24px;box-shadow:0 20px 70px rgba(0,0,0,.28)';
+        card.innerHTML='<button onclick="document.getElementById(\'personalidade-pet-modal\').remove()" style="border:0;background:none;font-size:28px;float:right;cursor:pointer">×</button><div style="padding:14px 4px 4px;font-weight:950;font-size:20px">❤️ Personalidade do Pet</div><div id="personalidade-pet-inner"></div>';
+        root.appendChild(card);document.body.appendChild(root);
+      }
+      render(document.getElementById('personalidade-pet-inner'));
+    },
+    carinho:function(){
+      st();estado.interacoesPet=(Number(estado.interacoesPet)||0)+1;energia(4);
+      estado.personalidade.ultimoEvento='carinho';if(typeof salvar==='function')salvar();renderPet();
+    },
+    missao:function(){
+      st();estado.personalidade.missoes=(Number(estado.personalidade.missoes)||0)+1;energia(7);
+      estado.personalidade.ultimoEvento='missao';if(typeof salvar==='function')salvar();
+    },
+    explorar:function(){
+      st();energia(5);estado.personalidade.exploracao=(Number(estado.personalidade.exploracao)||0)+1;
+      estado.personalidade.ultimoEvento='exploracao';if(typeof salvar==='function')salvar();
+    }
+  };
+  function renderPet(){
+    try{
+      if(typeof window.renderizarAcessorioNoContainer==='function')renderizarAcessorioNoContainer();
+    }catch(e){}
+  }
+  function boot(){
+    st();
+    if(estado){
+      const last=estado.personalidade.ultimoEvento;
+      if(last==='carinho')energia(2);
+    }
+  }
+  if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',boot);else boot();
+})();
+</script>
+
+
+<script id="personalidade-pet-access">
+(function(){
+  function add(){
+    if(document.getElementById('btn-personalidade-pet'))return;
+    const b=document.createElement('button');b.id='btn-personalidade-pet';b.textContent='❤️ Personalidade';
+    b.onclick=()=>window.rotinaPetPersonalidade&&rotinaPetPersonalidade.abrir();
+    b.style.cssText='position:fixed;right:14px;bottom:186px;z-index:9000;border:0;border-radius:999px;padding:10px 14px;font-weight:900;font-size:12px;background:#fff;box-shadow:0 8px 25px rgba(0,0,0,.14);cursor:pointer';
+    document.body.appendChild(b);
+  }
+  setTimeout(add,1050);
+})();
+</script>
+
+
+<script id="mundo-vivo-js">
+(function(){
+  const REGIOES=[
+    {id:'inicio',icon:'🏡',nome:'Começo',req:0,desc:'Onde toda aventura começa.'},
+    {id:'bosque',icon:'🌳',nome:'Bosque',req:3,desc:'Um lugar cheio de pequenos mistérios.'},
+    {id:'vale',icon:'🏞️',nome:'Vale',req:7,desc:'Ventania, montanhas e novas descobertas.'},
+    {id:'castelo',icon:'🏰',nome:'Castelo',req:12,desc:'A região dos grandes desafios.'},
+    {id:'meta',icon:'⭐',nome:'Grande Meta',req:18,desc:'O ponto mais especial da jornada.'}
+  ];
+  const EVENTOS=[
+    {id:'passaro',icon:'🐦',nome:'Um visitante no Bosque',texto:'Um passarinho encontrou o pet e deixou uma pequena lembrança.',req:3,reward:'xp',value:15,region:'bosque'},
+    {id:'ponte',icon:'🌉',nome:'A ponte secreta',texto:'Uma nova passagem apareceu no Vale depois de uma sequência de missões.',req:7,reward:'coins',value:20,region:'vale'},
+    {id:'baile',icon:'🎉',nome:'Baile do Castelo',texto:'O castelo preparou uma comemoração para o pet aventureiro.',req:12,reward:'xp',value:30,region:'castelo'},
+    {id:'estrela',icon:'🌠',nome:'Chuva de estrelas',texto:'Uma chuva de estrelas iluminou a Grande Meta.',req:18,reward:'coins',value:50,region:'meta'}
+  ];
+  function st(){
+    if(!window.estado)return null;
+    estado.mundoVivo=estado.mundoVivo||{eventos:[],historico:[]};
+    return estado;
+  }
+  function missions(){return (estado.tarefas||[]).filter(t=>t.status==='aprovada').length}
+  function coins(){return typeof estado.moedas==='number'?estado.moedas:(typeof estado.petCoins==='number'?estado.petCoins:0)}
+  function addCoins(n){if(typeof estado.moedas==='number')estado.moedas+=n;else if(typeof estado.petCoins==='number')estado.petCoins+=n;else estado.moedas=n}
+  function addXp(n){if(typeof ganharXP==='function')ganharXP(n);else if(typeof estado.xp==='number')estado.xp+=n}
+  function save(){if(typeof salvar==='function')salvar()}
+  function hoje(){return new Date().toISOString().slice(0,10)}
+  function availableEvents(){return EVENTOS.filter(e=>missions()>=e.req&&!estado.mundoVivo.eventos.includes(e.id))}
+  function claim(id){
+    st();const e=EVENTOS.find(x=>x.id===id);if(!e||missions()<e.req||estado.mundoVivo.eventos.includes(id))return;
+    estado.mundoVivo.eventos.push(id);
+    if(e.reward==='xp')addXp(e.value);else addCoins(e.value);
+    estado.mundoVivo.historico.unshift({data:hoje(),evento:e.nome,recompensa:e.reward==='xp'?'+'+e.value+' XP':'+'+e.value+' 🪙'});
+    estado.mundoVivo.historico=estado.mundoVivo.historico.slice(0,8);
+    save();
+    if(typeof mostrarToast==='function')mostrarToast(e.icon+' '+e.nome+' • recompensa recebida!');
+    render(document.getElementById('mundo-vivo-inner'));
+  }
+  function render(c){
+    if(!c||!st())return;
+    const n=missions(), av=availableEvents(), done=estado.mundoVivo.eventos.length, next=EVENTOS.find(e=>n<e.req);
+    c.innerHTML='<div class="mv-card"><div class="mv-title">🌎 Mundo Vivo</div><div class="mv-sub">O mundo reage ao progresso da sua rotina.</div>'+
+      (av.length?'<div class="mv-event"><div class="mv-event-head"><div class="mv-event-icon">'+av[0].icon+'</div><div><div class="mv-event-name">'+av[0].nome+'</div><div class="mv-event-text">'+av[0].texto+'</div></div></div><button class="mv-btn" onclick="rotinaPetMundo.claim(&quot;"+av[0].id+"&quot;)">✨ Vivenciar evento</button></div>':'<div class="mv-event"><div class="mv-event-head"><div class="mv-event-icon">🌿</div><div><div class="mv-event-name">'+(next?'Algo novo está chegando…':'Todos os eventos descobertos!')+'</div><div class="mv-event-text">'+(next?'Complete '+(next.req-n)+' missão(ões) para ativar um novo acontecimento.':'Você explorou todos os acontecimentos atuais do mundo.')+'</div></div></div>')+
+      '<div class="mv-sub" style="margin-top:12px">Eventos descobertos: <b>'+done+'/'+EVENTOS.length+'</b></div></div>'+
+      '<div class="mv-card"><div class="mv-title">🗺️ Regiões conectadas</div><div class="mv-regions">'+REGIOES.map(r=>{const ok=n>=r.req;return '<div class="mv-region '+(ok?'unlocked':'locked')+'"><div class="mv-region-icon">'+r.icon+'</div><div class="mv-region-name">'+r.nome+'</div><div class="mv-region-text">'+r.desc+'</div><span class="mv-badge">'+(ok?'🔓 Desbloqueada':('🔒 '+r.req+' missões'))+'</span></div>'}).join('')+'</div></div>'+
+      '<div class="mv-card"><div class="mv-title">📜 Memórias da aventura</div><div class="mv-log">'+((estado.mundoVivo.historico||[]).map(x=>'<div>'+x.data+' • <b>'+x.evento+'</b> • '+x.recompensa+'</div>').join('')||'Ainda não há acontecimentos registrados.')+'</div></div>';
+  }
+  window.rotinaPetMundo={render,claim,abrir:function(){
+    let root=document.getElementById('mundo-vivo-modal');
+    if(!root){root=document.createElement('div');root.id='mundo-vivo-modal';root.style.cssText='position:fixed;inset:0;z-index:9975;background:rgba(15,25,42,.55);padding:16px;overflow:auto';
+      const card=document.createElement('div');card.style.cssText='max-width:760px;margin:18px auto;background:#f7f9fc;border-radius:28px;padding:10px 14px 24px;box-shadow:0 20px 70px rgba(0,0,0,.28)';
+      card.innerHTML='<button onclick="document.getElementById(\'mundo-vivo-modal\').remove()" style="border:0;background:none;font-size:28px;float:right;cursor:pointer">×</button><div style="padding:14px 4px 4px;font-weight:950;font-size:20px">🌎 Mundo Vivo</div><div id="mundo-vivo-inner"></div>';root.appendChild(card);document.body.appendChild(root)}
+    render(document.getElementById('mundo-vivo-inner'));
+  }};
+})();
+</script>
+
+
+<script id="mundo-vivo-access">
+(function(){
+  function add(){
+    if(document.getElementById('btn-mundo-vivo'))return;
+    const b=document.createElement('button');b.id='btn-mundo-vivo';b.textContent='🌎 Mundo Vivo';
+    b.onclick=()=>window.rotinaPetMundo&&rotinaPetMundo.abrir();
+    b.style.cssText='position:fixed;right:14px;bottom:236px;z-index:9000;border:0;border-radius:999px;padding:10px 14px;font-weight:900;font-size:12px;background:#fff;box-shadow:0 8px 25px rgba(0,0,0,.14);cursor:pointer';
+    document.body.appendChild(b);
+  }setTimeout(add,1200);
+})();
+</script>
+
+
+
+<style>
+#rp-diversao-menu,#rp-mais-menu-unificado{font-family:inherit}
+#rp-diversao-menu .btn,#rp-mais-menu-unificado .btn{min-width:120px;margin:0}
+</style>
+
+
+
+<style>
+#rp-diversao-menu{
+  position:fixed;z-index:99999;left:50%;bottom:88px;transform:translateX(-50%);
+  display:flex;gap:8px;flex-wrap:wrap;justify-content:center;padding:10px;
+  border-radius:18px;background:rgba(20,20,30,.97);
+  box-shadow:0 15px 40px rgba(0,0,0,.3);max-width:92vw
+}
+#rp-diversao-menu .btn{min-width:120px;margin:0}
+</style>
+
+<script>
+/* RotinaPet — menu estável: preserva as funções originais */
+(function(){
+  const qsa=s=>Array.from(document.querySelectorAll(s));
+  const t=e=>(e?.textContent||'').trim().toLowerCase();
+  const find=words=>qsa('button,a,[role="button"]').find(e=>words.some(w=>t(e).includes(w)));
+
+  function montarDiversao(){
+    const fun=find(['diversão','diversao']);
+    const jogos=find(['jogos','jogo','⚡ jogar']);
+    const grav=find(['gravador','gravar','🎤 voz','voz']);
+    if(!fun || (!jogos && !grav)) return;
+    fun.onclick=()=>{
+      let m=document.getElementById('rp-diversao-menu');
+      if(m){m.remove();return}
+      m=document.createElement('div');m.id='rp-diversao-menu';
+      [[jogos,'⚡ Jogos'],[grav,'🎤 Gravador']].forEach(([orig,label])=>{
+        if(!orig)return;
+        const b=document.createElement('button');b.type='button';b.className='btn';b.textContent=label;
+        b.onclick=()=>{m.remove();orig.click()};m.appendChild(b)
+      });
+      document.body.appendChild(m)
+    };
+    [jogos,grav].filter(Boolean).forEach(b=>{
+      if(b!==fun)b.style.display='none'
+    });
+  }
+
+  /* Não substituímos nem simulamos Casinha, Personalidade ou Mundo Vivo.
+     Os botões originais permanecem responsáveis por abrir seus próprios módulos. */
+  setTimeout(montarDiversao,500);
+  setTimeout(montarDiversao,1200);
+})();
+</script>
+
+<script>
+(function(){
+  function limpar(){
+    document.querySelectorAll('button,a,[role="button"]').forEach(function(b){
+      var t=(b.textContent||'').trim().toLowerCase();
+      if(t==='🏡 casinha'||t==='❤️ personalidade'||t==='🌎 mundo vivo'){
+        var parent=b.parentElement;
+        if(parent && parent.children.length<=2) parent.remove();
+        else b.remove();
+      }
+    });
+  }
+  setTimeout(limpar,300);
+  setTimeout(limpar,1000);
+  setTimeout(limpar,2000);
+})();
+</script>
+
+<style id="premium-polish-v3">
+/* ===== Premium UI v3: profundidade, contraste e microinterações ===== */
+:root{
+  --rp-ink:#172033;
+  --rp-muted:#64748b;
+  --rp-violet:#7c3aed;
+  --rp-violet-2:#a855f7;
+  --rp-glass:rgba(255,255,255,.78);
+  --rp-glass-strong:rgba(255,255,255,.94);
+  --rp-shadow:0 10px 30px rgba(15,23,42,.14);
+  --rp-shadow-deep:0 18px 50px rgba(15,23,42,.22);
+}
+body{isolation:isolate;-webkit-font-smoothing:antialiased;text-rendering:optimizeLegibility}
+.app{filter:drop-shadow(0 0 1px rgba(255,255,255,.15))}
+.top-pill,.mini-card,.happiness-box,.tasks-section,.level-badge{
+  background:linear-gradient(180deg,rgba(255,255,255,.96),rgba(248,250,252,.82));
+  box-shadow:0 1px 0 rgba(255,255,255,.95) inset,0 8px 22px rgba(15,23,42,.11),0 1px 2px rgba(15,23,42,.08);
+}
+.top-pill:hover,.mini-card:hover{transform:translateY(-2px);box-shadow:0 1px 0 #fff inset,0 12px 28px rgba(15,23,42,.15)}
+.pet-stage{
+  overflow:visible;
+  border-color:rgba(255,255,255,.58);
+  box-shadow:
+    inset 0 1px 0 rgba(255,255,255,.65),
+    inset 0 -30px 55px rgba(15,23,42,.10),
+    0 18px 42px rgba(15,23,42,.18);
+}
+.pet-stage::before{
+  content:"";
+  position:absolute;
+  inset:1px;
+  border-radius:inherit;
+  pointer-events:none;
+  background:
+    radial-gradient(circle at 30% 18%,rgba(255,255,255,.42),transparent 30%),
+    linear-gradient(120deg,rgba(255,255,255,.18),transparent 42%,rgba(124,58,237,.08));
+  mix-blend-mode:screen;
+  opacity:.9;
+}
+#pet-svg-container{
+  filter:drop-shadow(0 16px 16px rgba(15,23,42,.16));
+  transform-style:preserve-3d;
+  transition:transform .18s var(--smooth),filter .25s ease;
+}
+#pet-svg-container svg{
+  overflow:visible;
+  transform-origin:50% 70%;
+}
+#pet-principal{
+  transform-origin:50% 72%;
+  filter:drop-shadow(0 12px 13px rgba(15,23,42,.18));
+}
+#pet-principal.pet-hover{
+  filter:drop-shadow(0 14px 16px rgba(124,58,237,.24)) brightness(1.035);
+}
+#pet-principal.pet-bounce{filter:drop-shadow(0 14px 15px rgba(124,58,237,.24))}
+.pet-stage.pet-stage-celebracao{animation:premiumCelebration .9s var(--spring)}
+@keyframes premiumCelebration{
+  0%{transform:scale(1)}
+  25%{transform:scale(1.018)}
+  55%{transform:scale(.988)}
+  100%{transform:scale(1)}
+}
+.pet-interaction-ripple{
+  position:absolute;left:var(--rx,50%);top:var(--ry,50%);
+  width:18px;height:18px;border-radius:50%;
+  pointer-events:none;z-index:20;
+  border:2px solid rgba(255,255,255,.9);
+  box-shadow:0 0 0 2px rgba(124,58,237,.22),0 0 20px rgba(255,255,255,.7);
+  transform:translate(-50%,-50%) scale(.3);
+  opacity:.9;
+  animation:premiumRipple .65s var(--smooth) forwards;
+}
+@keyframes premiumRipple{
+  to{transform:translate(-50%,-50%) scale(5);opacity:0}
+}
+.pet-spark{
+  position:absolute;left:var(--sx);top:var(--sy);font-size:var(--ss,13px);
+  pointer-events:none;z-index:25;
+  animation:petSpark .75s var(--smooth) forwards;
+}
+@keyframes petSpark{
+  0%{opacity:0;transform:translate(-50%,-50%) scale(.4) rotate(0)}
+  18%{opacity:1}
+  100%{opacity:0;transform:translate(calc(-50% + var(--dx)),calc(-50% + var(--dy))) scale(1.2) rotate(var(--rot))}
+}
+.pet-mood-aura{
+  position:absolute;inset:18%;border-radius:50%;pointer-events:none;z-index:1;
+  background:radial-gradient(circle,rgba(168,85,247,.16),transparent 66%);
+  opacity:var(--happy-aura,.2);
+  filter:blur(10px);
+  animation:moodAura 3.8s ease-in-out infinite;
+}
+@keyframes moodAura{50%{transform:scale(1.08);opacity:calc(var(--happy-aura,.2) + .08)}}
+.xp-bar-bg{border-color:rgba(255,255,255,.72);box-shadow:inset 0 2px 5px rgba(15,23,42,.13),0 1px 0 rgba(255,255,255,.7)}
+.xp-bar-fill{box-shadow:0 0 14px rgba(168,85,247,.32),inset 0 1px 0 rgba(255,255,255,.35)}
+.bottom-btn{border:1px solid rgba(255,255,255,.16);backdrop-filter:blur(6px)}
+.bottom-btn:hover{transform:translateY(-2px);filter:saturate(1.08);box-shadow:0 1px 0 rgba(255,255,255,.45) inset,0 13px 28px rgba(15,23,42,.25)}
+.task-btn,.primary-btn,.rp-buy,.pink-btn{position:relative;overflow:hidden}
+.task-btn::after,.primary-btn::after,.rp-buy::after,.pink-btn::after{
+  content:"";position:absolute;inset:0;pointer-events:none;
+  background:linear-gradient(110deg,transparent 25%,rgba(255,255,255,.28) 50%,transparent 75%);
+  transform:translateX(-120%);
+}
+.task-btn:hover::after,.primary-btn:hover::after,.rp-buy:hover::after,.pink-btn:hover::after{animation:buttonShine .7s var(--smooth)}
+@keyframes buttonShine{to{transform:translateX(120%)}}
+.modal{
+  border:1px solid rgba(255,255,255,.72);
+  background:linear-gradient(180deg,rgba(255,255,255,.98),rgba(248,250,252,.96));
+}
+.modal-title h3{letter-spacing:-.01em}
+.close-btn:hover{background:#e9e2ff;color:#6d28d9;transform:rotate(4deg) scale(1.04)}
+.fundo-card:hover,.meupet-item:hover,.opcao-pet:hover{transform:translateY(-3px);box-shadow:0 10px 22px rgba(15,23,42,.12)}
+.fundo-card:focus-visible,.meupet-item:focus-visible,.opcao-pet:focus-visible,.pet-action-btn:focus-visible,.bottom-btn:focus-visible{
+  outline:3px solid rgba(168,85,247,.45);outline-offset:2px;
+}
+@media (max-width:650px){
+  .pet-stage{box-shadow:inset 0 1px 0 rgba(255,255,255,.6),inset 0 -26px 48px rgba(15,23,42,.09),0 14px 32px rgba(15,23,42,.17)}
+}
+@media (prefers-reduced-motion:reduce){
+  #pet-svg-container,.pet-stage,.bottom-btn,.top-pill,.mini-card,.fundo-card,.meupet-item{transition:none!important}
+  .pet-mood-aura{animation:none!important}
+}
+</style>
+
+<script id="premium-polish-v3-js">
+(()=>{"use strict";
+const reduced=()=>window.matchMedia?.("(prefers-reduced-motion: reduce)").matches;
+const $=s=>document.querySelector(s);
+
+function safePet(){
+  try{
+    if(typeof estado==="undefined"||typeof PETS==="undefined") return null;
+    if(!PETS[estado.petAtual]) estado.petAtual=Object.keys(PETS)[0];
+    return PETS[estado.petAtual]||null;
+  }catch(_){return null}
+}
+function stage(){
+  return $(".pet-stage");
+}
+function addRipple(x,y){
+  const st=stage(); if(!st||reduced()) return;
+  const r=st.getBoundingClientRect();
+  const el=document.createElement("span");
+  el.className="pet-interaction-ripple";
+  el.style.setProperty("--rx",((x??r.left+r.width/2)-r.left)+"px");
+  el.style.setProperty("--ry",((y??r.top+r.height/2)-r.top)+"px");
+  st.appendChild(el);
+  setTimeout(()=>el.remove(),720);
+}
+function sparkBurst(x,y){
+  const st=stage(); if(!st||reduced()) return;
+  const r=st.getBoundingClientRect();
+  const sx=((x??r.left+r.width/2)-r.left), sy=((y??r.top+r.height*.42)-r.top);
+  ["✨","💖","⭐","✦"].forEach((icon,i)=>{
+    const el=document.createElement("span");
+    el.className="pet-spark"; el.textContent=icon;
+    el.style.setProperty("--sx",sx+"px"); el.style.setProperty("--sy",sy+"px");
+    el.style.setProperty("--dx",(Math.cos(i*1.7)*35)+"px");
+    el.style.setProperty("--dy",(-25-Math.abs(Math.sin(i*1.7))*38)+"px");
+    el.style.setProperty("--rot",((i-1.5)*35)+"deg");
+    el.style.setProperty("--ss",(11+i*2)+"px");
+    st.appendChild(el); setTimeout(()=>el.remove(),820);
+  });
+}
+function refreshAura(){
+  const st=stage(); const p=safePet(); if(!st||!p)return;
+  const happy=Math.max(0,Math.min(100,Number(p.felicidade)||0));
+  st.style.setProperty("--happy-aura",(0.08+happy/100*.22).toFixed(2));
+  let aura=st.querySelector(".pet-mood-aura");
+  if(!aura){aura=document.createElement("div");aura.className="pet-mood-aura";st.prepend(aura)}
+}
+function improvePetInteraction(){
+  const pet=$("#pet-principal"), st=stage();
+  if(!pet||!st)return;
+  pet.setAttribute("role","button");
+  pet.setAttribute("aria-label","Interagir com o pet");
+  pet.tabIndex=0;
+  const down=(e)=>{
+    if(reduced())return;
+    const pt=e.touches?.[0]||e;
+    const r=st.getBoundingClientRect();
+    const dx=((pt.clientX-r.left)/r.width-.5);
+    const dy=((pt.clientY-r.top)/r.height-.5);
+    $("#pet-svg-container")?.style.setProperty("transform",`perspective(520px) rotateY(${dx*8}deg) rotateX(${-dy*6}deg) scale(1.025)`);
+    addRipple(pt.clientX,pt.clientY);
+  };
+  const up=()=>{
+    const box=$("#pet-svg-container"); if(box) box.style.transform="";
+  };
+  pet.addEventListener("pointerdown",down,{passive:true});
+  pet.addEventListener("pointerup",up,{passive:true});
+  pet.addEventListener("pointercancel",up,{passive:true});
+  pet.addEventListener("pointerleave",up,{passive:true});
+  pet.addEventListener("pointerenter",()=>pet.classList.add("pet-hover"),{passive:true});
+  pet.addEventListener("pointerleave",()=>pet.classList.remove("pet-hover"),{passive:true});
+  pet.addEventListener("keydown",e=>{
+    if(e.key==="Enter"||e.key===" "){e.preventDefault(); pet.click(); addRipple(); sparkBurst();}
+  });
+  let last=0;
+  pet.addEventListener("click",e=>{
+    const now=Date.now();
+    sparkBurst(e.clientX,e.clientY);
+    if(now-last<420){
+      try{
+        if(typeof mostrarBalaoFala==="function") mostrarBalaoFala("💖 Carinho em dobro! Você é incrível!");
+        if(typeof dispararConfetes==="function") dispararConfetes(18);
+      }catch(_){}
+    }
+    last=now;
+  });
+}
+function patchDefensiveState(){
+  try{
+    if(typeof estado!=="undefined" && typeof PETS!=="undefined" && !PETS[estado.petAtual]){
+      estado.petAtual=Object.keys(PETS)[0];
+      if(typeof salvar==="function") salvar();
+    }
+  }catch(_){}
+}
+function patchRefresh(){
+  if(typeof window.atualizarTela!=="function"||window.atualizarTela.__premiumV3)return;
+  const old=window.atualizarTela;
+  window.atualizarTela=function(){
+    const result=old.apply(this,arguments);
+    requestAnimationFrame(()=>{patchDefensiveState();refreshAura()});
+    return result;
+  };
+  window.atualizarTela.__premiumV3=true;
+}
+function init(){
+  patchDefensiveState();
+  improvePetInteraction();
+  refreshAura();
+  patchRefresh();
+  setTimeout(()=>{patchDefensiveState();refreshAura();patchRefresh()},600);
+}
+if(document.readyState==="loading")document.addEventListener("DOMContentLoaded",init,{once:true});else init();
+})();
+</script>
+
+</body>
 </html>
+<style id="mapa-cenarios-v3">
+.cenario-modal{max-width:620px!important;padding:0!important;overflow:hidden;background:#f8fafc}
+.cenario-head{padding:16px 18px 12px;color:#fff;position:relative;overflow:hidden}
+.cenario-head:before{content:"";position:absolute;inset:0;background:radial-gradient(circle at 85% 20%,#fff5,transparent 28%);pointer-events:none}
+.cenario-head h3{margin:0;font-size:21px;position:relative}.cenario-head p{margin:4px 0 0;font-size:11px;opacity:.82;position:relative}
+.cenario-cena{min-height:255px;position:relative;padding:18px;display:flex;align-items:center;justify-content:center;overflow:hidden}
+.cenario-cena:before{content:"";position:absolute;inset:0;background:radial-gradient(circle at 18% 20%,#ffffffaa,transparent 22%),radial-gradient(circle at 78% 70%,#ffffff55,transparent 24%)}
+.cenario-pet{font-size:72px;z-index:2;filter:drop-shadow(0 10px 8px #0002);animation:cenarioPetFloat 2s ease-in-out infinite}
+@keyframes cenarioPetFloat{50%{transform:translateY(-8px) rotate(2deg)}}
+.cenario-obj{position:absolute;z-index:3;border:0;background:#ffffffd9;backdrop-filter:blur(7px);width:76px;height:76px;border-radius:22px;box-shadow:0 8px 22px #0002;cursor:pointer;transition:.2s;font-size:31px}
+.cenario-obj:hover{transform:translateY(-4px) scale(1.04)}.cenario-obj:active{transform:scale(.94)}
+.cenario-obj small{display:block;font-size:8px;font-weight:1000;color:#334155;margin-top:3px}
+.cenario-obj.descoberto{opacity:.58;filter:saturate(.55)}.cenario-obj.descoberto:after{content:"✓";position:absolute;right:7px;top:5px;font-size:11px;font-weight:1000;color:#16a34a}
+.cenario-info{padding:12px 16px;background:#fff;border-top:1px solid #e5e7eb}.cenario-progresso{font-size:10px;font-weight:1000;color:#475569}.cenario-mini-bar{height:7px;background:#e2e8f0;border-radius:99px;overflow:hidden;margin-top:6px}.cenario-mini-bar i{display:block;height:100%;width:0;background:linear-gradient(90deg,#8b5cf6,#22c55e);transition:width .5s}
+.cenario-fala{margin-top:9px;padding:9px 11px;border-radius:13px;background:#f1f5f9;color:#334155;font-size:10px;font-weight:800;text-align:center}
+.cenario-reward{margin-top:8px;font-size:9px;color:#7c3aed;font-weight:1000;text-align:center}
+.cenario-n1{background:linear-gradient(145deg,#a7e8b4,#5dbb78)}.cenario-n2{background:linear-gradient(145deg,#76c893,#26734d)}.cenario-n3{background:linear-gradient(145deg,#8fd3ff,#4f7cac)}.cenario-n4{background:linear-gradient(145deg,#b89cff,#5b3f95)}.cenario-n5{background:linear-gradient(145deg,#ffe58a,#e9a227)}
+@media(max-width:600px){.cenario-modal{width:calc(100vw - 20px)!important}.cenario-cena{min-height:235px}.cenario-pet{font-size:60px}.cenario-obj{width:66px;height:66px;font-size:27px}}
+@media(prefers-reduced-motion:reduce){.cenario-pet{animation:none}.cenario-obj{transition:none}}
+</style>
+
+<script id="mapa-cenarios-v3-script">
+(()=>{
+const CENARIOS={
+ n1:{nome:'Começo',emoji:'🏡',classe:'cenario-n1',fala:'O começo de toda aventura! Há pequenas coisas para descobrir.',objetos:[['flor','🌼','Flor feliz'],['bola','🎾','Bola perdida'],['casinha','🏠','Casinha']],final:'🌱 Vocês deram o primeiro passo!'},
+ n2:{nome:'Bosque',emoji:'🌳',classe:'cenario-n2',fala:'Escute os sons do bosque e ajude o pet a encontrar os segredos.',objetos:[['passaro','🐦','Passarinho'],['cogumelo','🍄','Cogumelo'],['borboleta','🦋','Borboleta']],final:'🌿 O Bosque revelou seus segredos!'},
+ n3:{nome:'Vale',emoji:'🏞️',classe:'cenario-n3',fala:'O vento trouxe desafios novos. Explore cada cantinho do vale.',objetos:[['montanha','⛰️','Montanha'],['rio','💧','Rio cristalino'],['pipa','🪁','Pipa no céu']],final:'⚡ O Vale está cheio de energia!'},
+ n4:{nome:'Castelo',emoji:'🏰',classe:'cenario-n4',fala:'As portas do castelo se abriram. Descubra os símbolos da conquista.',objetos:[['chave','🗝️','Chave dourada'],['escudo','🛡️','Escudo'],['gema','💎','Gema brilhante']],final:'🏅 O Castelo reconheceu sua jornada!'},
+ n5:{nome:'Grande Meta',emoji:'⭐',classe:'cenario-n5',fala:'Você chegou ao ponto mais alto. Três estrelas guardam a celebração.',objetos:[['estrela','⭐','Estrela maior'],['trofeu','🏆','Troféu'],['arco','🌈','Arco-íris']],final:'👑 A Grande Meta foi conquistada!'}
+};
+const falas={
+ flor:'🌼 O pet cheirou a flor e ficou todo feliz!',
+ bola:'🎾 Que achado! O pet quer brincar!',
+ casinha:'🏠 Um cantinho seguro para descansar.',
+ passaro:'🐦 O passarinho cantou uma musiquinha!',
+ cogumelo:'🍄 Uma descoberta do bosque!',
+ borboleta:'🦋 O pet acompanhou a borboleta com os olhos.',
+ montanha:'⛰️ Uau! Que vista incrível!',
+ rio:'💧 O barulhinho da água deixou o pet tranquilo.',
+ pipa:'🪁 O vento está perfeito para brincar!',
+ chave:'🗝️ Uma chave misteriosa... será que abre um tesouro?',
+ escudo:'🛡️ O pet se sente corajoso!',
+ gema:'💎 Brilhou! Uma pequena vitória.',
+ estrela:'⭐ Uma estrela só para essa conquista!',
+ trofeu:'🏆 O pet fez pose de campeão!',
+ arco:'🌈 Depois da aventura, apareceu um arco-íris!'
+};
+function contagem(id){return (estado.descobertasMapa&&estado.descobertasMapa[id]||[]).length}
+function descobrir(id,key){
+ estado.descobertasMapa=estado.descobertasMapa||{};
+ estado.descobertasMapa[id]=Array.isArray(estado.descobertasMapa[id])?estado.descobertasMapa[id]:[];
+ if(estado.descobertasMapa[id].includes(key))return false;
+ estado.descobertasMapa[id].push(key);salvar();
+ if(typeof ganharXP==='function')ganharXP(1);
+ if(typeof dispararConfetes==='function')dispararConfetes(22);
+ return true;
+}
+window.abrirCenarioMapa=function(id){
+ const a=CENARIOS[id];if(!a)return;
+ const n=(estado.tarefas||[]).filter(t=>t.status==='aprovada').length;
+ const needs={n1:0,n2:3,n3:7,n4:12,n5:18};
+ if(n<needs[id]){if(typeof mostrarAviso==='function')mostrarAviso('🔒','Área bloqueada',`Complete ${needs[id]-n} missão(ões) para desbloquear ${a.nome}.`);return}
+ let m=document.getElementById('modal-cenario-mapa');
+ if(!m){m=document.createElement('div');m.id='modal-cenario-mapa';m.className='modal-overlay';m.innerHTML='<div class="modal cenario-modal" id="cenario-caixa"></div>';document.body.appendChild(m)}
+ const descobertos=estado.descobertasMapa?.[id]||[];
+ const pet=estado.petEmoji||'🐾';
+ document.getElementById('cenario-caixa').innerHTML=
+ `<div class="cenario-head ${a.classe}"><button class="close-btn" style="float:right;color:#fff;background:#0002" onclick="fecharModal('modal-cenario-mapa')">×</button><h3>${a.emoji} ${a.nome}</h3><p>${a.fala}</p></div>
+ <div class="cenario-cena ${a.classe}"><div class="cenario-pet">${pet}</div>${a.objetos.map((o,i)=>`<button type="button" class="cenario-obj ${descobertos.includes(o[0])?'descoberto':''}" data-obj="${o[0]}" style="${['left:8%;top:18%','right:8%;top:25%','left:50%;bottom:13%;transform:translateX(-50%)'][i]}">${o[1]}<small>${o[2]}</small></button>`).join('')}</div>
+ <div class="cenario-info"><div class="cenario-progresso">🔎 Descobertas: <span id="cenario-count">${descobertos.length}/3</span></div><div class="cenario-mini-bar"><i id="cenario-fill" style="width:${descobertos.length/3*100}%"></i></div><div class="cenario-fala" id="cenario-fala">${descobertos.length===3?a.final:'Toque em um objeto para explorar!'}</div><div class="cenario-reward">✨ Cada descoberta vale +1 XP</div></div>`;
+ abrirModal('modal-cenario-mapa');
+ document.querySelectorAll('#cenario-caixa .cenario-obj').forEach(btn=>btn.onclick=()=>{
+   const key=btn.dataset.obj;
+   const novo=descobrir(id,key);
+   const fala=document.getElementById('cenario-fala');
+   if(!novo){if(fala)fala.textContent=falas[key]||'Você já descobriu este item!';return}
+   btn.classList.add('descoberto');
+   const total=contagem(id);
+   const count=document.getElementById('cenario-count'),fill=document.getElementById('cenario-fill');
+   if(count)count.textContent=total+'/3';if(fill)fill.style.width=(total/3*100)+'%';
+   if(fala)fala.textContent=total===3?a.final:(falas[key]||'✨ Boa descoberta!');
+   if(typeof mostrarToast==='function')mostrarToast(total===3?'🎉 Cenário completo! +3 descobertas':`🔎 ${a.objetos.find(o=>o[0]===key)?.[2]||'Descoberta'} encontrada!`);
+ });
+};
+const base=window.abrirAreaMapa;
+window.abrirAreaMapa=function(id){window.abrirCenarioMapa(id)};
+})();
+</script>
