@@ -700,6 +700,89 @@ button:focus-visible,input:focus-visible,.top-pill:focus-visible{
 
 .metas-crianca-card{background:linear-gradient(135deg,#eff6ff,#eef2ff);border:1px solid #bfdbfe;border-radius:16px;padding:9px 10px;margin-top:7px}.metas-crianca-titulo{font-size:10px;font-weight:900;color:#1e40af;margin-bottom:6px}.meta-item{padding:6px 0;border-bottom:1px solid #e0e7ff}.meta-item:last-child{border-bottom:0}.meta-top{display:flex;justify-content:space-between;gap:5px;font-size:8px;font-weight:900;color:#334155}.meta-bar{height:6px;background:#dbeafe;border-radius:99px;overflow:hidden;margin-top:4px}.meta-bar>div{height:100%;background:linear-gradient(90deg,#60a5fa,#7c3aed);border-radius:99px;transition:width .4s}.meta-sub{font-size:7px;color:#64748b;margin-top:3px}.meta-concluida{color:#15803d}.meta-pais-row{padding:7px 0;border-bottom:1px solid #f1f5f9;font-size:8px}.meta-pais-row:last-child{border-bottom:0}.meta-pais-row button{float:right}
 </style>
+<script id="rotinapet-menu-mais-v1-script">
+function abrirMenuMais(){
+  const e=document.getElementById('menu-mais-bau-emoji'),a=document.getElementById('atalho-bau-emoji');
+  if(e&&a)e.textContent=a.textContent||'🎁';
+  abrirModal('modal-menu-mais');
+}
+</script>
+<style id="rotinapet-menu-mais-v1">
+.atalhos-aventuras{display:none!important}
+.bottom-buttons{grid-template-columns:repeat(5,1fr)!important;gap:6px!important;margin-top:10px}
+.bottom-btn{min-width:0!important;padding:9px 4px!important;border-radius:15px!important;transition:transform .2s,box-shadow .2s,filter .2s!important}
+.bottom-btn:hover{transform:translateY(-2px);filter:saturate(1.08)}
+.bottom-btn:active{transform:translateY(1px) scale(.97)}
+.btn-mais-aventuras{background:linear-gradient(135deg,#7c3aed,#a855f7)!important;color:#fff!important;box-shadow:0 8px 20px rgba(124,58,237,.22)}
+.btn-mais-aventuras .btn-icon{display:flex;align-items:center;justify-content:center;width:22px;height:22px;margin:0 auto 3px;border-radius:8px;background:rgba(255,255,255,.18);font-size:16px}
+.menu-mais-modal{padding:15px!important;background:linear-gradient(180deg,#fff 0%,#faf5ff 100%)!important}
+.menu-mais-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:9px;margin-top:12px}
+.menu-mais-item{border:1px solid #e5e7eb;background:#fff;border-radius:18px;padding:11px 9px;text-align:left;cursor:pointer;display:grid;grid-template-columns:34px 1fr;grid-template-rows:auto auto;column-gap:8px;box-shadow:0 7px 18px rgba(15,23,42,.06);transition:.22s cubic-bezier(.22,1,.36,1)}
+.menu-mais-item:hover{transform:translateY(-2px);box-shadow:0 12px 25px rgba(15,23,42,.1)}
+.menu-mais-item:active{transform:scale(.97)}
+.menu-mais-item>span{grid-row:1/3;width:34px;height:34px;border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:20px;background:#f1f5f9}
+.menu-mais-item b{font-size:10px;color:#172033;align-self:end}.menu-mais-item small{font-size:7px;color:#64748b;font-weight:800;margin-top:2px}
+.menu-mais-item.meta>span{background:#ede9fe}.menu-mais-item.extras>span{background:#fef3c7}.menu-mais-item.hoje>span{background:#e0f2fe}.menu-mais-item.album>span{background:#fce7f3}.menu-mais-item.mapa>span{background:#dcfce7}.menu-mais-item.bau>span{background:#ffedd5}
+@media(max-width:390px){.bottom-buttons{gap:4px!important}.bottom-btn{padding:8px 2px!important;font-size:7px!important}.bottom-btn .btn-icon{font-size:17px}.menu-mais-grid{gap:7px}}
+@media(prefers-reduced-motion:reduce){.bottom-btn,.menu-mais-item{transition:none}}
+</style>
+<style id="rotinapet-map-v1">.album-pages-wrap{margin-top:14px}.album-page-tabs{display:flex;gap:8px;overflow:auto;padding:4px 2px 10px;scrollbar-width:none}.album-page-tab{flex:0 0 auto;border:1px solid rgba(255,255,255,.16);background:rgba(255,255,255,.07);color:inherit;border-radius:14px;padding:9px 12px;font-weight:800;cursor:pointer;transition:.25s}.album-page-tab.active{background:rgba(255,255,255,.16);box-shadow:0 8px 24px rgba(0,0,0,.16)}.album-page-tab.complete{border-color:rgba(255,215,92,.65)}.album-page{animation:albumIn .35s ease both}@keyframes albumIn{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:none}}.album-page-head{display:flex;justify-content:space-between;gap:10px;align-items:center;margin:8px 0 12px}.album-page-title{font-weight:950;font-size:1.05rem}.album-page-reward{font-size:.78rem;opacity:.8;text-align:right}.album-page-complete{margin-top:12px;border:1px solid rgba(255,215,92,.45);background:rgba(255,215,92,.1);border-radius:18px;padding:12px;text-align:center;font-weight:900;animation:glow 2s ease-in-out infinite}@keyframes glow{50%{box-shadow:0 0 25px rgba(255,215,92,.16)}}.mapa-aventura{position:relative;min-height:520px;padding:12px 6px 18px;overflow:hidden;border-radius:24px;background:radial-gradient(circle at 18% 15%,rgba(255,255,255,.18),transparent 25%),linear-gradient(145deg,rgba(71,120,84,.96),rgba(31,73,59,.96))}.mapa-aventura:before{content:"";position:absolute;inset:0;background-image:radial-gradient(circle,rgba(255,255,255,.15) 1px,transparent 1.5px);background-size:24px 24px;opacity:.35}.mapa-topo,.mapa-trilha,.mapa-progresso,.mapa-dica{position:relative;z-index:2}.mapa-topo{display:flex;justify-content:space-between;align-items:center;padding:8px}.mapa-titulo{font-size:1.2rem;font-weight:950}.mapa-subtitulo{font-size:.8rem;opacity:.78}.mapa-trilha{height:405px;margin:0 8px}.mapa-caminho{position:absolute;left:12%;right:12%;top:50%;height:7px;border-radius:99px;background:rgba(255,244,190,.35);transform:rotate(-7deg);overflow:hidden}.mapa-caminho i{display:block;width:0;height:100%;background:linear-gradient(90deg,#fff7b1,#ffd34e);transition:width 1s ease}.mapa-node{position:absolute;transform:translate(-50%,-50%);width:68px;height:68px;border-radius:50%;border:3px solid rgba(255,255,255,.72);background:rgba(255,255,255,.13);display:grid;place-items:center;box-shadow:0 10px 26px rgba(0,0,0,.2);transition:.35s;cursor:pointer;color:inherit}.mapa-node .emoji{font-size:1.8rem}.mapa-node small{position:absolute;top:72px;white-space:nowrap;font-weight:900;font-size:.7rem;text-shadow:0 2px 8px rgba(0,0,0,.35)}.mapa-node.locked{opacity:.45;filter:saturate(.3)}.mapa-node.current{background:rgba(255,214,70,.25);transform:translate(-50%,-50%) scale(1.1);box-shadow:0 0 0 8px rgba(255,218,82,.12),0 16px 38px rgba(0,0,0,.25)}.mapa-node.done{background:rgba(110,220,150,.25);border-color:rgba(180,255,210,.8)}.mapa-pet{position:absolute;z-index:4;width:52px;height:52px;border-radius:50%;display:grid;place-items:center;background:rgba(255,255,255,.95);box-shadow:0 12px 30px rgba(0,0,0,.25);font-size:1.5rem;transform:translate(-50%,-50%);transition:1s ease;pointer-events:none}.mapa-node.current .emoji{animation:node 1.5s ease-in-out infinite}@keyframes node{50%{transform:translateY(-5px)}}.mapa-dica{margin:4px 8px;padding:11px 13px;border-radius:15px;background:rgba(0,0,0,.18);font-size:.8rem;text-align:center}.mapa-progresso{padding:0 8px;font-weight:900;font-size:.82rem}.mapa-barra{height:8px;background:rgba(255,255,255,.16);border-radius:99px;overflow:hidden;margin-top:6px}.mapa-barra i{display:block;height:100%;width:0;background:linear-gradient(90deg,#fff3a8,#ffd45c,#fff);transition:width .8s ease}@media(max-width:520px){.mapa-aventura{min-height:500px}.mapa-node{width:60px;height:60px}.mapa-node small{top:64px;font-size:.64rem}}@media(prefers-reduced-motion:reduce){.album-page,.album-page-complete,.mapa-node.current .emoji{animation:none!important}.mapa-barra i,.mapa-caminho i,.mapa-pet{transition:none!important}}</style>
+<style id="pet-animacoes-v2">
+/* 🐾 Animações especiais por acessório */
+#pet-principal.pet-acessorio-ativo{transition:filter .25s ease,transform .25s ease}
+#pet-principal.pet-acessorio-ativo::after{content:"";position:absolute;inset:8% 10%;pointer-events:none;border-radius:50%;opacity:.0}
+#pet-principal.acessorio-coroa{animation:petRoyal 2.8s ease-in-out infinite}
+#pet-principal.acessorio-fone{animation:petDance 1.9s ease-in-out infinite}
+#pet-principal.acessorio-grinalda{animation:petFlowers 2.6s ease-in-out infinite}
+#pet-principal.acessorio-bone{animation:petCool 3.1s ease-in-out infinite}
+#pet-principal.acessorio-chapeu{animation:petParty 2.4s ease-in-out infinite}
+#pet-principal.acessorio-oculos{animation:petCool 3.4s ease-in-out infinite}
+#pet-principal.acessorio-laco{animation:petCute 2.7s ease-in-out infinite}
+#pet-principal.acessorio-cachecol{animation:petWarm 3s ease-in-out infinite}
+#pet-principal.acessorio-gravata{animation:petElegant 3s ease-in-out infinite}
+
+.pet-stage.pet-stage-celebracao::before,
+.pet-stage.pet-stage-celebracao::after{
+  position:absolute;pointer-events:none;z-index:12;font-size:20px;
+  animation:petBurst .9s ease-out forwards;
+}
+.pet-stage.pet-stage-celebracao::before{content:"✨  ✨  ✨";top:18%;left:8%}
+.pet-stage.pet-stage-celebracao::after{content:"💖  ⭐  💖";top:25%;right:5%;animation-delay:.08s}
+
+@keyframes petRoyal{0%,100%{transform:translateY(0) rotate(0)}35%{transform:translateY(-5px) rotate(-2deg)}70%{transform:translateY(0) rotate(2deg)}}
+@keyframes petDance{0%,100%{transform:translateY(0) rotate(0) scale(1)}25%{transform:translateY(-4px) rotate(-4deg) scale(1.015)}50%{transform:translateY(0) rotate(4deg) scale(1.02)}75%{transform:translateY(-3px) rotate(-3deg)}}
+@keyframes petFlowers{0%,100%{transform:translateY(0) scale(1)}50%{transform:translateY(-5px) scale(1.018)}}
+@keyframes petCool{0%,100%{transform:translateY(0) rotate(0)}50%{transform:translateY(-3px) rotate(1.5deg)}}
+@keyframes petParty{0%,100%{transform:translateY(0) rotate(0)}20%{transform:rotate(-4deg)}40%{transform:rotate(4deg)}60%{transform:rotate(-3deg)}80%{transform:rotate(2deg)}}
+@keyframes petCute{0%,100%{transform:translateY(0) scale(1)}50%{transform:translateY(-4px) scale(1.025)}}
+@keyframes petWarm{0%,100%{transform:translateY(0)}50%{transform:translateY(-3px) rotate(-1deg)}}
+@keyframes petElegant{0%,100%{transform:translateY(0) rotate(0)}50%{transform:translateY(-3px) rotate(1deg)}}
+@keyframes petBurst{0%{transform:scale(.5);opacity:0}20%{opacity:1}100%{transform:scale(1.8) translateY(-22px);opacity:0}}
+
+@media(prefers-reduced-motion:reduce){
+ #pet-principal.pet-acessorio-ativo{animation:none!important}
+ .pet-stage.pet-stage-celebracao::before,.pet-stage.pet-stage-celebracao::after{animation:none}
+}
+</style>
+
+<style id="evolucao-pet-v2-css">
+.pet-evolucao-pulse{animation:petEvoPulse .9s cubic-bezier(.2,.9,.25,1)}
+@keyframes petEvoPulse{0%{transform:scale(1)}35%{transform:scale(1.09) rotate(-2deg)}65%{transform:scale(.98) rotate(2deg)}100%{transform:scale(1)}}
+.evolucao-aura{position:absolute;inset:8% 12%;pointer-events:none;border-radius:50%;opacity:0;filter:blur(1px);background:radial-gradient(circle,rgba(255,255,255,.72),rgba(167,139,250,.25) 38%,transparent 68%);z-index:0}
+.evolucao-aura.ativa{animation:evoAura 1.6s ease-out}
+@keyframes evoAura{0%{opacity:0;transform:scale(.65)}25%{opacity:.9}100%{opacity:0;transform:scale(1.35)}}
+.evo-progresso{margin:8px auto 0;max-width:310px;padding:9px 11px;border:1px solid rgba(255,255,255,.65);background:rgba(255,255,255,.72);backdrop-filter:blur(8px);border-radius:15px;box-shadow:0 7px 22px rgba(15,23,42,.09);font-size:9px}
+.evo-progresso-top{display:flex;justify-content:space-between;align-items:center;gap:8px;font-weight:900;color:#475569}
+.evo-progresso-top strong{color:#6b21a8;font-size:10px}
+.evo-progresso-bar{height:6px;border-radius:99px;background:#e9d5ff;overflow:hidden;margin-top:6px}
+.evo-progresso-fill{height:100%;width:0;border-radius:inherit;background:linear-gradient(90deg,#a78bfa,#f472b6);transition:width .7s ease}
+.evo-progresso small{display:block;margin-top:5px;color:#64748b;font-size:8px}
+.evo-unlock{position:fixed;left:50%;top:17%;transform:translate(-50%,-20px) scale(.9);z-index:10000;pointer-events:none;opacity:0;padding:13px 18px;border-radius:20px;background:rgba(255,255,255,.96);border:2px solid #f0abfc;box-shadow:0 16px 45px rgba(91,33,182,.22);text-align:center;min-width:230px}
+.evo-unlock.show{animation:evoUnlock 2.8s cubic-bezier(.2,.8,.2,1) both}
+.evo-unlock .evo-emoji{font-size:30px;display:block}.evo-unlock b{display:block;color:#6b21a8;font-size:15px;margin-top:3px}.evo-unlock span{font-size:9px;color:#64748b}
+@keyframes evoUnlock{0%{opacity:0;transform:translate(-50%,-20px) scale(.85)}12%,75%{opacity:1;transform:translate(-50%,0) scale(1)}100%{opacity:0;transform:translate(-50%,-10px) scale(.96)}}
+@media (prefers-reduced-motion:reduce){.pet-evolucao-pulse,.evolucao-aura.ativa,.evo-unlock.show{animation:none}.evo-unlock.show{opacity:1}.evo-progresso-fill{transition:none}}
+</style>
 </head>
 <body class="cenario-ceu">
 <!-- Tela Login por E-mail -->
@@ -788,13 +871,9 @@ button:focus-visible,input:focus-visible,.top-pill:focus-visible{
     <div class="level-badge">⭐ <span class="level-number">Nível <span id="numero-nivel">1</span></span></div>
     <div class="xp-bar-bg"><div class="xp-bar-fill" id="barra-xp"></div><span class="xp-text">XP <span id="texto-xp">0/100</span></span></div>
     <div class="evo-name" id="pet-evol-nome">Pipoca • Gatinho Sombra</div>
+  <div class="evo-progresso" id="evo-progresso" aria-live="polite"></div>
   </div>
-  <div class="atalhos-aventuras" aria-label="Atalhos de progresso">
-    <button class="atalho-aventura" onclick="abrirResumoMeta()" aria-label="Abrir minha meta"><span>🎯</span><small>Meta</small></button>
-    <button class="atalho-aventura" onclick="abrirCentralAventuras()" aria-label="Abrir aventuras extras"><span>🌟</span><small>Extras</small></button>
-    <button class="atalho-aventura" onclick="abrirResumoHoje()" aria-label="Abrir aventura de hoje"><span>🗓️</span><small>Hoje</small></button>
-    <button class="atalho-aventura" onclick="abrirBauDiario()" aria-label="Abrir baú diário"><span id="atalho-bau-emoji">🎁</span><small>Baú</small></button>
-  </div>
+  <!-- Os atalhos secundários agora ficam reunidos no botão Mais da barra inferior. -->
   <div class="metas-crianca-card" id="metas-crianca-card" style="display:none"><div class="metas-crianca-titulo">🎯 Minhas metas</div><div id="lista-metas-crianca"></div></div>
   <div id="engajamento-card" style="display:none">
     <span id="engajamento-streak"></span><div id="engajamento-desafio"></div><button id="btn-bau-diario">🎁 Baú do dia</button>
@@ -810,6 +889,21 @@ button:focus-visible,input:focus-visible,.top-pill:focus-visible{
     <button class="bottom-btn btn-game" onclick="abrirDesafio()"><span class="btn-icon">⚡</span>Jogar</button>
     <button class="bottom-btn btn-fundos" onclick="abrirLojaFundos()"><span class="btn-icon">🎨</span>Visual</button>
     <button class="bottom-btn btn-premios" onclick="abrirLojaRecompensas()"><span class="btn-icon">🏆</span>Loja</button>
+    <button class="bottom-btn btn-mais-aventuras" onclick="abrirMenuMais()" aria-label="Abrir mais opções"><span class="btn-icon">✦</span>Mais</button>
+  </div>
+</div>
+<div id="modal-menu-mais" class="modal-overlay">
+  <div class="modal menu-mais-modal" style="max-width:360px">
+    <div class="modal-title"><div><h3 style="margin:0">✦ Mais aventuras</h3><small style="font-size:8px;color:#64748b;font-weight:800">Seus atalhos em um só lugar</small></div><button class="close-btn" onclick="fecharModal('modal-menu-mais')">×</button></div>
+    <div class="menu-mais-grid">
+      <button class="menu-mais-item meta" onclick="fecharModal('modal-menu-mais');abrirResumoMeta()"><span>🎯</span><b>Meta</b><small>Acompanhar objetivos</small></button>
+      <button class="menu-mais-item extras" onclick="fecharModal('modal-menu-mais');abrirCentralAventuras()"><span>🌟</span><b>Extras</b><small>Desafios e eventos</small></button>
+      <button class="menu-mais-item hoje" onclick="fecharModal('modal-menu-mais');abrirResumoHoje()"><span>🗓️</span><b>Hoje</b><small>Progresso do dia</small></button>
+      <button class="menu-mais-item album" onclick="fecharModal('modal-menu-mais');abrirAlbumFigurinhas()"><span>📒</span><b>Álbum</b><small>Ver figurinhas</small></button>
+      <button class="menu-mais-item mapa" onclick="abrirMapaAventura()"><span>🗺️</span><b>Mapa</b><small>Continuar aventura</small></button>
+      <button class="menu-mais-item visual-pet" onclick="fecharModal('modal-menu-mais');abrirMeuPet()"><span>🐾</span><b>Meu Pet</b><small>Visual e acessórios</small></button>
+      <button class="menu-mais-item bau" onclick="fecharModal('modal-menu-mais');abrirBauDiario()"><span id="menu-mais-bau-emoji">🎁</span><b>Baú</b><small>Prêmio do dia</small></button>
+    </div>
   </div>
 </div>
 <button id="btn-instalar-pwa" class="primary-btn green-btn hidden" style="position:fixed;bottom:14px;left:50%;transform:translateX(-50%);z-index:90;box-shadow:0 8px 24px rgba(0,0,0,.3);padding:10px 18px;font-size:11px;border-radius:99px;display:flex;align-items:center;gap:6px"><span>📲</span> Instalar RotinaPet</button>
@@ -2250,6 +2344,37 @@ function aplicarFundoTela(id){
 function obterDadosPetAtual(){if(!estado.pets[estado.petAtual])estado.pets[estado.petAtual]={nivel:1,xp:0,felicidade:100,saude:100};return estado.pets[estado.petAtual]}
 function nivelJogador(){return Math.max(...Object.values(estado.pets).map(p=>p.nivel||1))}
 function calcularFase(n){return n>=81?5:n>=61?4:n>=41?3:n>=21?2:1}
+function renderizarProgressoEvolucao(){
+  const el=document.getElementById('evo-progresso');
+  if(!el)return;
+  const d=PETS[estado.petAtual],p=obterDadosPetAtual(),fase=calcularFase(p.nivel);
+  const atual=d.evolucoes[fase-1];
+  const prox=d.evolucoes[fase];
+  if(!prox){
+    el.innerHTML=`<div class="evo-progresso-top"><strong>👑 Evolução máxima</strong><span>Fase ${fase}/5</span></div><div class="evo-progresso-bar"><div class="evo-progresso-fill" style="width:100%"></div></div><small>${esc(atual.desc)} · continue cuidando para manter seu pet brilhando!</small>`;
+    return;
+  }
+  const base=atual.nivel,alvo=prox.nivel;
+  const perc=Math.max(0,Math.min(100,Math.round(((p.nivel-base)/(alvo-base))*100)));
+  const falta=Math.max(0,alvo-p.nivel);
+  el.innerHTML=`<div class="evo-progresso-top"><strong>✨ Próxima: ${esc(prox.nome)}</strong><span>Nv. ${p.nivel}/${alvo}</span></div><div class="evo-progresso-bar"><div class="evo-progresso-fill" style="width:${perc}%"></div></div><small>${falta?`Faltam ${falta} níveis`:'Evolução pronta!'} · ${esc(prox.desc)}</small>`;
+}
+function celebrarEvolucaoPet(fase){
+  const d=PETS[estado.petAtual],ev=d.evolucoes[fase-1];
+  if(!ev)return;
+  const pet=document.getElementById('pet-principal');
+  const aura=document.getElementById('evolucao-aura');
+  if(pet){pet.classList.remove('pet-evolucao-pulse');void pet.offsetWidth;pet.classList.add('pet-evolucao-pulse');setTimeout(()=>pet.classList.remove('pet-evolucao-pulse'),1000)}
+  if(aura){aura.classList.remove('ativa');void aura.offsetWidth;aura.classList.add('ativa');setTimeout(()=>aura.classList.remove('ativa'),1700)}
+  let box=document.getElementById('evo-unlock');
+  if(!box){box=document.createElement('div');box.id='evo-unlock';box.className='evo-unlock';document.body.appendChild(box)}
+  box.innerHTML=`<span class="evo-emoji">🌟</span><b>Nova evolução!</b><strong>${esc(ev.nome)}</strong><span>${esc(ev.desc)} · Nível ${ev.nivel}</span>`;
+  box.classList.remove('show');void box.offsetWidth;box.classList.add('show');
+  dispararConfetes(180,CORES_CONFETE_PET[estado.petAtual]);
+  navigator.vibrate?.([60,40,100,40,160]);
+  tocarTom?.(659.25,'triangle',.18,0,.22);tocarTom?.(783.99,'triangle',.18,.1,.22);tocarTom?.(1046.5,'sine',.35,.2,.24);
+  mostrarToast(`🌟 ${ev.nome} desbloqueado!`);
+}
 function atualizarTela(){
   const def=PETS[estado.petAtual],p=obterDadosPetAtual(),fase=calcularFase(p.nivel);
   document.getElementById('txt-moedas').textContent=estado.moedas;
@@ -2277,6 +2402,7 @@ function atualizarTela(){
   document.getElementById('pet-svg-container').innerHTML=`<div class="camada-pet">${petSVG(estado.petAtual,fase)}</div><div class="camada-acessorio" id="camada-acessorio"></div>`;
   
   document.getElementById('pet-evol-nome').textContent=`${def.nome} • ${def.evolucoes[fase-1].nome}`;
+  renderizarProgressoEvolucao();
   const modalNome=document.getElementById('modal-pet-evol-nome');
   if(modalNome)modalNome.textContent=def.nome;
   document.getElementById('input-idade-crianca').value=estado.idadeCrianca||7;
@@ -2865,6 +2991,7 @@ function criarTextoFlutuante(txt,e){const area=document.getElementById('pet-sect
 const CORES_CONFETE_PET={gato:['#a78bfa','#1e293b','#f8fafc'],cachorra:['#f4a261','#e76f51','#fff7ed'],cabra:['#f5e6d3','#a0522d','#fefce8'],frango:['#fff9c4','#ff6b6b','#ffcc00']};
 function ganharXP(qtd,e){
   const p=obterDadosPetAtual();
+  const faseAntes=calcularFase(p.nivel);
   p.xp+=qtd;
   criarTextoFlutuante(`+${qtd} XP`,e);
   let subiu=false;
@@ -2876,6 +3003,8 @@ function ganharXP(qtd,e){
     navigator.vibrate?.([70,40,70]);
   }
   if(subiu){
+    const faseDepois=calcularFase(p.nivel);
+    if(faseDepois>faseAntes)setTimeout(()=>celebrarEvolucaoPet(faseDepois),180);
     mostrarToast(`🎉 Nível ${p.nivel}!`);
     const badge=document.querySelector('.level-badge');
     if(badge){
@@ -4128,6 +4257,7 @@ async function aprovarTarefaPais(id){
     }
   }
   ganharXP(xp);
+  ganharFigurinhaPorMissao(t);
   dispararConfetes();
   marcarConquistas();
   registrarLogAtividade(`Tarefa aprovada: ${t.texto} (+${recompensa}🪙)`);
@@ -5163,10 +5293,23 @@ function selecionarOuComprarAcessorio(a){
 function renderizarAcessorioNoContainer(){
   const c=document.getElementById('camada-acessorio');
   const objetos=document.getElementById('objetos-pet-layer');
+  const pet=document.getElementById('pet-principal');
+  const stage=document.querySelector('.pet-stage');
   if(!c)return;
   const ativo=estado.acessorios?.ativo;
   const item=buscarAcessorioPorId(ativo);
-  if(!item){c.innerHTML='';if(objetos)objetos.innerHTML='';return;}
+
+  if(pet){
+    pet.classList.remove('pet-acessorio-ativo','acessorio-coroa','acessorio-fone','acessorio-grinalda','acessorio-bone','acessorio-chapeu','acessorio-oculos','acessorio-laco','acessorio-cachecol','acessorio-gravata');
+    if(item){
+      pet.classList.add('pet-acessorio-ativo','acessorio-'+item.id);
+    }
+  }
+  if(!item){
+    c.innerHTML='';
+    if(objetos)objetos.innerHTML='';
+    return;
+  }
   if(objetos)objetos.innerHTML='';
   if(item.tipo==='objeto'){
     c.innerHTML='';
@@ -5174,6 +5317,15 @@ function renderizarAcessorioNoContainer(){
     return;
   }
   c.innerHTML=item.svgPorEspecie?(item.svgPorEspecie[estado.petAtual]||item.svgPorEspecie.gato):item.svg;
+}
+
+function celebrarNovoAcessorio(){
+  const stage=document.querySelector('.pet-stage');
+  if(!stage)return;
+  stage.classList.remove('pet-stage-celebracao');
+  void stage.offsetWidth;
+  stage.classList.add('pet-stage-celebracao');
+  setTimeout(()=>stage.classList.remove('pet-stage-celebracao'),1000);
 }
 function abrirLojaRecompensas(){
   renderizarLojaRecompensas();
@@ -5937,5 +6089,183 @@ function abrirResumoHoje(){const c=document.getElementById('resumo-hoje-conteudo
 .atalhos-aventuras{display:grid!important;visibility:visible!important;opacity:1!important;grid-template-columns:repeat(4,minmax(0,1fr));gap:7px;margin:8px 0 5px;position:relative;z-index:4}
 .atalho-aventura{display:flex!important;visibility:visible!important;opacity:1!important;min-height:49px;align-items:center;justify-content:center;background:#fff;border:1px solid #bfdbfe;border-radius:14px;padding:6px 2px;cursor:pointer}
 .atalho-aventura span{display:block!important;font-size:20px;line-height:23px}.atalho-aventura small{display:block!important;font-size:8px;font-weight:900;color:#334155}
-</style><style id="album-jogo-v61">.grid-tabs{grid-template-columns:repeat(5,minmax(0,1fr))}.adesivos-grade{display:grid;grid-template-columns:repeat(6,1fr);gap:5px;margin-top:8px}.adesivo-slot{height:31px;border-radius:10px;background:#f1f5f9;color:#94a3b8;display:flex;align-items:center;justify-content:center;font-size:16px;border:1px dashed #cbd5e1}.adesivo-slot.encontrado{background:linear-gradient(135deg,#fef3c7,#fde68a);border:1px solid #f59e0b;color:#b45309;animation:pulseSurpresa 1.8s infinite}</style></body>
+</style><style id="album-jogo-v61">.grid-tabs{grid-template-columns:repeat(5,minmax(0,1fr))}.adesivos-grade{display:grid;grid-template-columns:repeat(6,1fr);gap:5px;margin-top:8px}.adesivo-slot{height:31px;border-radius:10px;background:#f1f5f9;color:#94a3b8;display:flex;align-items:center;justify-content:center;font-size:16px;border:1px dashed #cbd5e1}.adesivo-slot.encontrado{background:linear-gradient(135deg,#fef3c7,#fde68a);border:1px solid #f59e0b;color:#b45309;animation:pulseSurpresa 1.8s infinite}</style>
+<style id="rotinapet-premium-v62">
+:root{--bgx:0px;--bgy:0px;--glowx:50%;--glowy:40%}
+.bg-layer{transform:translate3d(var(--bgx),var(--bgy),0) scale(1.035);will-change:transform,opacity;transition:opacity 1s ease,transform 1.2s cubic-bezier(.22,1,.36,1)}
+.cenario-detalhes{transform:translate3d(calc(var(--bgx)*.45),calc(var(--bgy)*.45),0) scale(1.015);transition:transform .8s cubic-bezier(.22,1,.36,1)}
+.particulas-cenario{transform:translate3d(calc(var(--bgx)*.8),calc(var(--bgy)*.8),0);transition:transform .9s cubic-bezier(.22,1,.36,1)}
+body:before{content:"";position:fixed;inset:-15%;z-index:-1;pointer-events:none;background:radial-gradient(circle at var(--glowx) var(--glowy),rgba(255,255,255,.18),transparent 22%),radial-gradient(circle at 15% 90%,rgba(124,58,237,.12),transparent 28%);mix-blend-mode:screen;opacity:.8}
+.pet-stage:before{content:"";position:absolute;inset:-25%;border-radius:45%;pointer-events:none;background:radial-gradient(circle at var(--glowx) var(--glowy),rgba(255,255,255,.28),transparent 25%);filter:blur(10px);transform:translate3d(calc(var(--bgx)*.35),calc(var(--bgy)*.35),0);transition:transform .5s ease}
+.atalhos-aventuras{grid-template-columns:repeat(5,minmax(0,1fr))!important}
+.atalho-aventura{position:relative;overflow:hidden;box-shadow:0 1px 0 #fff inset,0 7px 18px rgba(15,23,42,.10);transition:transform .22s var(--spring),box-shadow .25s}
+.atalho-aventura:before{content:"";position:absolute;inset:0;background:linear-gradient(110deg,transparent 35%,rgba(255,255,255,.65) 50%,transparent 65%);background-size:220% 100%;transform:translateX(-120%);transition:transform .5s}.atalho-aventura:hover:before{transform:translateX(120%)}
+.atalho-aventura:active{transform:scale(.91) translateY(1px)}
+.album-hero{position:relative;overflow:hidden;background:linear-gradient(135deg,#f5f3ff,#fdf2f8 55%,#fff7ed);border:1px solid #ddd6fe;border-radius:18px;padding:13px;box-shadow:0 8px 22px rgba(124,58,237,.10)}
+.album-hero:after{content:"✨";position:absolute;right:12px;top:7px;font-size:28px;opacity:.35;animation:albumSpark 2.2s ease-in-out infinite}@keyframes albumSpark{50%{transform:translateY(-5px) rotate(12deg);opacity:.7}}
+.album-count{display:flex;align-items:center;justify-content:space-between}.album-count b{font-size:20px;color:#6d28d9}.album-count span{font-size:8px;color:#64748b;font-weight:900}
+.album-progress{height:8px;background:#e9d5ff;border-radius:99px;overflow:hidden;margin-top:7px}.album-progress>i{display:block;height:100%;background:linear-gradient(90deg,#7c3aed,#ec4899,#f59e0b);border-radius:99px;transition:width .7s var(--smooth)}
+.album-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-top:10px}.sticker-card{min-height:92px;position:relative;border:1px solid #e2e8f0;border-radius:16px;background:linear-gradient(145deg,#fff,#f8fafc);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px;overflow:hidden;box-shadow:0 4px 12px rgba(15,23,42,.06);transition:transform .22s var(--spring),box-shadow .25s}
+.sticker-card:hover{transform:translateY(-3px) rotate(-1deg);box-shadow:0 10px 20px rgba(15,23,42,.12)}.sticker-card.locked{filter:grayscale(.6);opacity:.7;background:#f1f5f9}.sticker-card.unlocked{background:linear-gradient(145deg,#fff,#fef3c7);border-color:#fbbf24}.sticker-card.new{animation:stickerNew .85s var(--spring)}
+.sticker-emoji{font-size:31px;filter:drop-shadow(0 4px 5px rgba(15,23,42,.14))}.sticker-name{font-size:8px;font-weight:900;color:#334155;text-align:center;padding:0 4px}.sticker-lock{font-size:9px;color:#94a3b8}
+@keyframes stickerNew{0%{transform:scale(.65) rotate(-8deg);opacity:.2}55%{transform:scale(1.12) rotate(3deg);box-shadow:0 0 0 7px rgba(245,158,11,.16),0 12px 25px rgba(245,158,11,.22)}100%{transform:scale(1);opacity:1}}
+.sticker-toast{position:fixed;left:50%;top:18%;transform:translate(-50%,-10px) scale(.88);z-index:10070;opacity:0;pointer-events:none;background:linear-gradient(135deg,#fff,#fef3c7);border:1px solid #fbbf24;border-radius:20px;padding:10px 15px;box-shadow:0 18px 45px rgba(15,23,42,.25);text-align:center;transition:.35s var(--spring)}.sticker-toast.mostrar{opacity:1;transform:translate(-50%,0) scale(1)}.sticker-toast b{display:block;font-size:11px;color:#92400e}.sticker-toast span{font-size:9px;color:#78350f}
+@media(max-width:390px){.sticker-card{min-height:84px}.atalho-aventura small{font-size:7px}}@media(prefers-reduced-motion:reduce){body:before,.pet-stage:before{display:none}.bg-layer,.cenario-detalhes,.particulas-cenario{transform:none!important}.sticker-card.new,.album-hero:after{animation:none!important}}
+</style>
+<div id="sticker-toast" class="sticker-toast" aria-live="polite"><b>🎉 Nova figurinha!</b><span id="sticker-toast-text">Você ganhou uma nova lembrança.</span></div>
+<script id="rotinapet-premium-v63-script">
+(function(){
+ const reduced=()=>matchMedia('(prefers-reduced-motion: reduce)').matches;let raf=0;
+ function move(x,y){if(reduced())return;const dx=(x/innerWidth-.5)*2,dy=(y/innerHeight-.5)*2;document.documentElement.style.setProperty('--bgx',Math.max(-12,Math.min(12,dx*9))+'px');document.documentElement.style.setProperty('--bgy',Math.max(-9,Math.min(9,dy*7))+'px');document.documentElement.style.setProperty('--glowx',(50+dx*20)+'%');document.documentElement.style.setProperty('--glowy',(40+dy*20)+'%')}
+ addEventListener('pointermove',e=>{cancelAnimationFrame(raf);raf=requestAnimationFrame(()=>move(e.clientX,e.clientY))},{passive:true});
+ addEventListener('touchmove',e=>{const t=e.touches[0];if(t)move(t.clientX,t.clientY)},{passive:true});
+ addEventListener('deviceorientation',e=>{if(!reduced())move(innerWidth*(.5+(e.gamma||0)/90),innerHeight*(.5+(e.beta||0)/180))},{passive:true});
+ document.addEventListener('click',e=>{const pet=e.target.closest?.('#pet-principal');if(!pet||reduced())return;const s=document.querySelector('.pet-stage');if(s){s.classList.remove('stage-react');void s.offsetWidth;s.classList.add('stage-react');setTimeout(()=>s.classList.remove('stage-react'),750)}});
+ // Ritmo visual do cenário ao longo do dia, sem alterar a lógica do app.
+ function cicloDia(){const h=new Date().getHours();document.body.classList.toggle('rp-manha',h>=6&&h<12);document.body.classList.toggle('rp-tarde',h>=12&&h<18);document.body.classList.toggle('rp-noite',h>=18||h<6)}
+ cicloDia();setInterval(cicloDia,60000);
+})();
+
+const ALBUM_FIGURINHAS=[
+{id:'missao_cuidado',emoji:'💚',nome:'Coração do Cuidado',raridade:'Comum',grupo:'Cuidado'},
+{id:'missao_energia',emoji:'⚡',nome:'Raio de Energia',raridade:'Comum',grupo:'Rotina'},
+{id:'missao_estudo',emoji:'📚',nome:'Mestre da Rotina',raridade:'Rara',grupo:'Aprendizado'},
+{id:'missao_ajuda',emoji:'🤝',nome:'Mão Amiga',raridade:'Rara',grupo:'Gentileza'},
+{id:'missao_criativa',emoji:'🎨',nome:'Artista Pet',raridade:'Rara',grupo:'Criatividade'},
+{id:'missao_saude',emoji:'🥕',nome:'Pet Saudável',raridade:'Épica',grupo:'Cuidado'},
+{id:'missao_ordem',emoji:'✨',nome:'Tudo no Lugar',raridade:'Comum',grupo:'Rotina'},
+{id:'missao_foco',emoji:'🎯',nome:'Foco Total',raridade:'Épica',grupo:'Concentração'},
+{id:'missao_alegria',emoji:'🌈',nome:'Arco-íris da Alegria',raridade:'Épica',grupo:'Alegria'},
+{id:'missao_coragem',emoji:'🦁',nome:'Coragem',raridade:'Lendária',grupo:'Conquistas'},
+{id:'missao_paz',emoji:'🌿',nome:'Momento Zen',raridade:'Rara',grupo:'Bem-estar'},
+{id:'missao_familia',emoji:'🏠',nome:'Time Família',raridade:'Lendária',grupo:'Família'}
+];
+let albumFiltroAtual='Todos';
+function ganharFigurinhaPorMissao(){
+ if(!Array.isArray(estado.adesivos))estado.adesivos=[];
+ const f=ALBUM_FIGURINHAS.find(x=>!estado.adesivos.includes(x.id));
+ if(!f)return null;
+ estado.adesivos.push(f.id);
+ setTimeout(()=>{
+  const t=document.getElementById('sticker-toast'),s=document.getElementById('sticker-toast-text');
+  if(t){s.innerHTML='<b>'+f.emoji+' '+f.nome+'</b><span>'+f.raridade+' · '+f.grupo+'</span>';t.classList.add('mostrar');setTimeout(()=>t.classList.remove('mostrar'),3400)}
+  abrirAlbumFigurinhas(true);
+ },500);
+ return f;
+}
+function renderizarAlbumFigurinhas(novo){
+ const c=document.getElementById('album-figurinhas-conteudo');if(!c)return;
+ const found=new Set(estado.adesivos||[]),n=ALBUM_FIGURINHAS.filter(f=>found.has(f.id)).length,p=Math.round(n/ALBUM_FIGURINHAS.length*100);
+ const grupos=['Todos','Comum','Rara','Épica','Lendária'];
+ const lista=albumFiltroAtual==='Todos'?ALBUM_FIGURINHAS:ALBUM_FIGURINHAS.filter(f=>f.raridade===albumFiltroAtual);
+ const ultima=ALBUM_FIGURINHAS.findIndex(f=>found.has(f.id)&&f.id===((ALBUM_FIGURINHAS.filter(f=>found.has(f.id)).at(-1)||{}).id));
+ c.innerHTML=`<div class="album-hero premium">
+   <div class="album-topline"><div><small>MINHA COLEÇÃO</small><b>${n}/${ALBUM_FIGURINHAS.length}</b><span>figurinhas</span></div><div class="album-badge">${n===ALBUM_FIGURINHAS.length?'🏆 COMPLETO':'📒 EM PROGRESSO'}</div></div>
+   <div class="album-progress"><i style="width:${p}%"></i></div><div class="album-progress-meta"><span>${p}% completo</span><span>${ALBUM_FIGURINHAS.length-n} restantes</span></div>
+   <p>Complete missões, descubra novas raridades e monte sua coleção. Cada figurinha registra uma conquista. ✨</p>
+ </div>
+ <div class="album-filters">${grupos.map(g=>`<button class="album-filter ${albumFiltroAtual===g?'ativo':''}" onclick="albumFiltroAtual='${g}';renderizarAlbumFigurinhas()">${g}</button>`).join('')}</div>
+ <div class="album-grid premium-grid">${lista.map((f)=>{const ok=found.has(f.id),fresh=novo&&ok&&f.id===ALBUM_FIGURINHAS[ultima]?.id;return `<button class="sticker-card ${ok?'unlocked':'locked'} rar-${f.raridade.toLowerCase()} ${fresh?'new':''}" onclick="mostrarDetalheFigurinha('${f.id}')" title="${ok?f.nome:'Figurinha secreta'}"><span class="sticker-emoji">${ok?f.emoji:'?'}</span><span class="sticker-name">${ok?esc(f.nome):'Figurinha secreta'}</span><span class="sticker-rarity">${ok?f.raridade:'???'}</span></button>`}).join('')}</div>
+ <div class="album-footer">${n===ALBUM_FIGURINHAS.length?'🌟 Você completou o álbum!':'💡 Dica: missões concluídas desbloqueiam novas figurinhas.'}</div>`;
+}
+function mostrarDetalheFigurinha(id){const f=ALBUM_FIGURINHAS.find(x=>x.id===id),ok=(estado.adesivos||[]).includes(id);if(!f)return;mostrarAviso(ok?f.emoji:'🔒',ok?f.nome:'Figurinha secreta',ok?`${f.raridade} · ${f.grupo}`:'Continue completando missões para descobrir esta figurinha.');}
+function abrirAlbumFigurinhas(novo){let m=document.getElementById('modal-album-figurinhas');if(!m){m=document.createElement('div');m.id='modal-album-figurinhas';m.className='modal-overlay';m.innerHTML=`<div class="modal album-modal"><div class="modal-title"><h3>📒 Álbum de figurinhas</h3><button class="close-btn" onclick="fecharModal('modal-album-figurinhas')">×</button></div><div id="album-figurinhas-conteudo"></div><button class="primary-btn album-close-btn" onclick="fecharModal('modal-album-figurinhas')">Continuar missão 🚀</button></div>`;document.body.appendChild(m)}renderizarAlbumFigurinhas(!!novo);abrirModal('modal-album-figurinhas')}
+</script>
+
+
+<style id="rotinapet-premium-v63">
+/* Polimento premium: cenário, feedback e álbum */
+body.rp-manha:before{opacity:.9}body.rp-tarde:before{opacity:.82}body.rp-noite:before{opacity:1}
+.pet-stage{isolation:isolate;overflow:hidden}
+.pet-stage:after{content:"";position:absolute;inset:auto 8% 5%;height:22%;border-radius:50%;background:radial-gradient(ellipse,rgba(15,23,42,.16),transparent 68%);filter:blur(7px);z-index:-1;pointer-events:none;transform:translate3d(calc(var(--bgx)*-.15),0,0);transition:transform .7s ease}
+.atalho-aventura{backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px)}
+.album-modal{max-width:390px!important;background:linear-gradient(180deg,#fff 0%,#fafafa 100%);border:1px solid rgba(124,58,237,.12);box-shadow:0 25px 70px rgba(15,23,42,.25)}
+.album-hero.premium{padding:14px;border-radius:20px}.album-topline{display:flex;justify-content:space-between;align-items:flex-start}.album-topline small{display:block;font-size:7px;letter-spacing:1.2px;font-weight:1000;color:#8b5cf6}.album-topline b{font-size:27px;color:#312e81;line-height:30px}.album-topline span{font-size:9px;font-weight:900;color:#64748b;margin-left:4px}.album-badge{font-size:8px;font-weight:1000;color:#6d28d9;background:#ede9fe;border:1px solid #ddd6fe;border-radius:999px;padding:6px 8px}.album-progress-meta{display:flex;justify-content:space-between;font-size:8px;font-weight:900;color:#64748b;margin-top:4px}.album-hero p{font-size:9px;color:#64748b;font-weight:700;line-height:1.45;margin:9px 0 0}.album-filters{display:flex;gap:5px;overflow:auto;padding:10px 1px 3px;scrollbar-width:none}.album-filters::-webkit-scrollbar{display:none}.album-filter{flex:0 0 auto;border:1px solid #e2e8f0;background:#fff;border-radius:999px;padding:6px 9px;font-size:8px;font-weight:1000;color:#64748b;cursor:pointer;transition:.2s}.album-filter.ativo{background:#ede9fe;border-color:#c4b5fd;color:#6d28d9;box-shadow:0 4px 10px rgba(124,58,237,.12)}.premium-grid{grid-template-columns:repeat(3,1fr);gap:9px}.sticker-card{min-height:104px;border:1px solid #e5e7eb;cursor:pointer}.sticker-card:focus-visible{outline:3px solid #c4b5fd;outline-offset:2px}.sticker-card.unlocked:after{content:"";position:absolute;width:70px;height:70px;right:-35px;top:-35px;background:radial-gradient(circle,rgba(255,255,255,.9),transparent 68%);transform:rotate(25deg)}.sticker-card.locked .sticker-emoji{font-weight:1000;color:#94a3b8;background:#e2e8f0;border-radius:50%;width:38px;height:38px;display:flex;align-items:center;justify-content:center}.sticker-rarity{font-size:7px;font-weight:1000;text-transform:uppercase;letter-spacing:.6px;color:#94a3b8}.rar-comum.unlocked .sticker-rarity{color:#64748b}.rar-rara.unlocked .sticker-rarity{color:#2563eb}.sticker-card[class*="rar-épica"].unlocked .sticker-rarity{color:#7c3aed}.rar-lendária.unlocked .sticker-rarity{color:#d97706}.album-footer{text-align:center;font-size:8px;font-weight:900;color:#64748b;padding:10px 2px 2px}.album-close-btn{width:100%;margin-top:9px}
+@media(max-width:390px){.album-modal{width:calc(100vw - 18px)!important}.premium-grid{gap:7px}.sticker-card{min-height:96px}}
+@media(prefers-reduced-motion:reduce){.pet-stage:after{display:none}.album-filter,.sticker-card{transition:none}}
+</style>
+
+<script id="rotinapet-map-v1-script">
+(()=>{
+const P=[
+{id:'p1',n:'Primeiros Passos',i:'🌱',s:['missao_cuidado','missao_energia','missao_estudo'],r:'🌟 Moldura do Aventureiro'},
+{id:'p2',n:'Pequeno Ajudante',i:'🤝',s:['missao_ajuda','missao_criativa','missao_saude'],r:'🏅 Medalha do Ajudante'},
+{id:'p3',n:'Dia Brilhante',i:'✨',s:['missao_ordem','missao_foco','missao_alegria'],r:'🎨 Tema Dia Brilhante'},
+{id:'p4',n:'Grande Aventura',i:'🗺️',s:['missao_coragem','missao_paz','missao_familia'],r:'👑 Mestre da Aventura'}
+];
+let pg='p1';
+window.definirPaginaAlbum=id=>{pg=id;window.renderizarAlbumFigurinhas()};
+const old=window.renderizarAlbumFigurinhas;
+window.renderizarAlbumFigurinhas=()=>{
+ const c=document.getElementById('album-figurinhas-conteudo');
+ if(!c){if(old)old();return;}
+ const a=Array.isArray(estado.adesivos)?estado.adesivos:[];
+ const cat=window.ALBUM_FIGURINHAS||[];
+ const own=id=>a.includes(id);
+ const p=P.find(x=>x.id===pg)||P[0];
+ const total=cat.length||12;
+ const n=a.filter(x=>cat.some(z=>z.id===x)).length;
+ const tabs=P.map(x=>`<button class="album-page-tab ${x.id===p.id?'active ':''}${x.s.every(own)?'complete':''}" onclick="definirPaginaAlbum('${x.id}')">${x.i} ${x.n}${x.s.every(own)?' ✓':''}</button>`).join('');
+ const cards=p.s.map(id=>{
+  const f=cat.find(x=>x.id===id); if(!f)return '';
+  const ok=own(id);
+  return `<button class="sticker-card ${ok?'unlocked':'locked'}" onclick="mostrarDetalheFigurinha('${id}')"><span class="sticker-art">${ok?f.emoji:'❔'}</span><strong>${ok?(f.nome||'Figurinha'):'Figurinha secreta'}</strong><small>${ok?(f.raridade||'Comum'):'Complete missões'}</small></button>`;
+ }).join('');
+ c.innerHTML=`<div class="album-pages-wrap"><div class="album-page-tabs">${tabs}</div><div class="album-page"><div class="album-page-head"><div><div class="album-page-title">${p.i} ${p.n}</div><small>${p.s.filter(own).length}/${p.s.length} figurinhas</small></div><div class="album-page-reward">Recompensa<br><b>${p.r}</b></div></div><div class="adesivos-grade">${cards}</div>${p.s.every(own)?`<div class="album-page-complete">🎉 Página completa!<br><small>${p.r}</small></div>`:''}</div><div style="margin-top:12px;font-size:.82rem;opacity:.8">Álbum: <b>${n}/${total}</b> • ${Math.round(n/total*100)}%</div></div>`;
+};
+window.mostrarDetalheFigurinha=id=>{const f=(window.ALBUM_FIGURINHAS||[]).find(x=>x.id===id);if(!f)return;if(!(estado.adesivos||[]).includes(id)){mostrarToast('🔒 Complete mais missões para revelar.');return;}if(typeof mostrarAviso==='function')mostrarAviso(f.emoji,f.nome,f.raridade||'Comum');};
+window.abrirMapaAventura=()=>{
+ const menu=document.getElementById('modal-menu-mais');
+ if(menu)menu.classList.remove('mostrar','modal-top');
+ let m=document.getElementById('modal-mapa-aventura');
+ if(!m){
+  m=document.createElement('div');m.id='modal-mapa-aventura';m.className='modal-overlay';
+  m.innerHTML=`<div class="modal" style="max-width:620px;padding:10px;background:transparent;box-shadow:none"><div class="mapa-aventura"><div class="mapa-topo"><div><div class="mapa-titulo">🗺️ Jornada do Pet</div><div class="mapa-subtitulo">Cada missão leva vocês mais longe.</div></div><button class="close-btn" onclick="fecharModal('modal-mapa-aventura')">×</button></div><div class="mapa-trilha" id="mapa-trilha"><div class="mapa-caminho"><i id="mapa-caminho-progresso"></i></div><div class="mapa-pet" id="mapa-pet">🐾</div>${[['n1','🏡','Começo',12,67],['n2','🌳','Bosque',32,54],['n3','🏞️','Vale',52,43],['n4','🏰','Castelo',72,31],['n5','⭐','Grande Meta',89,18]].map(x=>`<button class="mapa-node locked" data-node="${x[0]}" style="left:${x[3]}%;top:${x[4]}%"><span class="emoji">${x[1]}</span><small>${x[2]}</small></button>`).join('')}</div><div class="mapa-progresso">Progresso: <span id="mapa-pct">0%</span><div class="mapa-barra"><i id="mapa-barra-fill"></i></div></div><div class="mapa-dica" id="mapa-dica">Complete 3 missões para chegar ao Bosque. ✨</div></div></div>`;
+  document.body.appendChild(m);
+ }
+ abrirModal('modal-mapa-aventura');window.renderizarMapaAventura();
+};
+window.renderizarMapaAventura=()=>{
+ const n=(estado.tarefas||[]).filter(t=>t.status==='aprovada').length,ms=[0,3,7,12,18],pct=Math.min(100,Math.round(n/18*100)),pts=[[12,67],[32,54],[52,43],[72,31],[89,18]];
+ document.querySelectorAll('#mapa-trilha .mapa-node').forEach((e,i)=>{const u=n>=ms[i],d=i<4?n>=ms[i+1]:n>=18;e.classList.toggle('locked',!u);e.classList.toggle('current',u&&!d);e.classList.toggle('done',d)});
+ let i=0;for(let j=0;j<ms.length;j++)if(n>=ms[j])i=j;
+ const pet=document.getElementById('mapa-pet');if(pet){pet.style.left=pts[i][0]+'%';pet.style.top=pts[i][1]+'%'}
+ const b=document.getElementById('mapa-caminho-progresso'),f=document.getElementById('mapa-barra-fill'),q=document.getElementById('mapa-pct');if(b)b.style.width=pct+'%';if(f)f.style.width=pct+'%';if(q)q.textContent=pct+'%';
+ const d=document.getElementById('mapa-dica');if(d)d.textContent=n>=18?'👑 Grande meta alcançada!':n>=12?'🏰 O Castelo está perto!':n>=7?'🏞️ Você chegou ao Vale!':n>=3?'🌳 O Bosque foi descoberto!':'🏡 A aventura começou. Complete 3 missões para avançar.';
+};
+const au=window.atualizarTela;if(typeof au==='function'&&!au.__map){const w=function(){const r=au.apply(this,arguments);try{window.renderizarMapaAventura()}catch(e){}return r};w.__map=true;window.atualizarTela=w;}
+})();
+</script>
+<style id="mapa-vivo-v2">
+.mapa-aventura{position:relative;overflow:hidden;border-radius:28px;background:linear-gradient(145deg,rgba(18,25,45,.97),rgba(35,48,73,.96));border:1px solid rgba(255,255,255,.14);box-shadow:0 25px 80px rgba(0,0,0,.38);padding:16px;color:#fff}
+.mapa-aventura:before{content:"";position:absolute;inset:-30%;background:radial-gradient(circle at 20% 25%,rgba(110,220,180,.16),transparent 24%),radial-gradient(circle at 80% 15%,rgba(130,170,255,.16),transparent 25%),radial-gradient(circle at 55% 90%,rgba(255,210,100,.12),transparent 25%);animation:mapGlow 9s ease-in-out infinite alternate;pointer-events:none}
+@keyframes mapGlow{from{transform:translate3d(-2%,-1%,0) scale(1)}to{transform:translate3d(2%,1%,0) scale(1.06)}}
+.mapa-topo,.mapa-trilha,.mapa-progresso,.mapa-dica{position:relative;z-index:1}.mapa-trilha{height:390px;margin:8px 0 10px;border-radius:22px;overflow:hidden;background:linear-gradient(160deg,#9dd6a7 0%,#79bb88 38%,#557d69 100%);box-shadow:inset 0 0 0 1px rgba(255,255,255,.15)}
+.mapa-trilha:before{content:"☁️   ☁️       🐦          ☁️";position:absolute;top:16px;left:8%;font-size:22px;opacity:.72;white-space:nowrap;animation:clouds 18s linear infinite}.mapa-trilha:after{content:"🌲  🌿   🌲     🌼    🌿   🌲      🌿   🌲";position:absolute;left:0;right:0;bottom:8px;font-size:27px;letter-spacing:8px;opacity:.85;white-space:nowrap}
+@keyframes clouds{from{transform:translateX(-20%)}to{transform:translateX(25%)}}
+.mapa-caminho{position:absolute;left:11%;right:9%;top:0;bottom:0}.mapa-caminho:before{content:"";position:absolute;left:12%;top:67%;width:78%;height:4px;background:rgba(255,255,255,.48);transform:rotate(-20deg);transform-origin:left center;border-radius:99px;box-shadow:0 0 0 5px rgba(255,255,255,.08)}.mapa-caminho i{position:absolute;left:12%;top:67%;height:8px;width:0;background:#fff;border-radius:99px;transform:rotate(-20deg);transform-origin:left center;transition:width 1s cubic-bezier(.2,.8,.2,1);box-shadow:0 0 18px rgba(255,255,255,.75)}
+.mapa-node{position:absolute;z-index:3;transform:translate(-50%,-50%);width:82px;height:82px;border-radius:50%;border:2px solid rgba(255,255,255,.7);background:rgba(25,35,48,.76);color:#fff;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:1px;cursor:pointer;transition:.35s;box-shadow:0 10px 22px rgba(0,0,0,.2)}.mapa-node .emoji{font-size:31px}.mapa-node small{font-size:10px;font-weight:800;text-shadow:0 1px 2px #000}.mapa-node.locked{filter:grayscale(1);opacity:.45;cursor:not-allowed}.mapa-node.done{background:rgba(55,130,90,.86);border-color:rgba(210,255,220,.9)}.mapa-node.current{background:rgba(34,74,130,.9);animation:nodePulse 1.8s infinite}.mapa-node:not(.locked):hover{transform:translate(-50%,-50%) scale(1.1)}
+@keyframes nodePulse{0%,100%{box-shadow:0 0 0 0 rgba(255,255,255,.35),0 10px 22px rgba(0,0,0,.2)}50%{box-shadow:0 0 0 14px rgba(255,255,255,0),0 12px 26px rgba(0,0,0,.25)}}
+.mapa-pet{position:absolute;z-index:4;left:12%;top:67%;font-size:42px;transform:translate(-50%,-80%);transition:left 1.2s cubic-bezier(.2,.8,.2,1),top 1.2s cubic-bezier(.2,.8,.2,1);filter:drop-shadow(0 6px 5px rgba(0,0,0,.25));animation:petBob 1.2s ease-in-out infinite}.mapa-pet:after{content:"";position:absolute;left:50%;top:100%;width:28px;height:8px;border-radius:50%;background:rgba(0,0,0,.2);transform:translateX(-50%)}@keyframes petBob{50%{transform:translate(-50%,-90%) rotate(-3deg)}}
+.mapa-area-card{position:absolute;z-index:5;left:50%;bottom:14px;transform:translateX(-50%);width:min(88%,380px);padding:10px 14px;border-radius:16px;background:rgba(20,29,42,.8);backdrop-filter:blur(10px);border:1px solid rgba(255,255,255,.14);text-align:center;font-size:13px;animation:areaIn .4s ease}@keyframes areaIn{from{opacity:0;transform:translate(-50%,10px)}to{opacity:1;transform:translate(-50%,0)}}
+.mapa-dica{margin-top:10px;padding:12px 14px;border-radius:15px;background:rgba(255,255,255,.08);text-align:center}.mapa-barra{height:8px;margin-top:7px;background:rgba(255,255,255,.12);border-radius:99px;overflow:hidden}.mapa-barra i{display:block;height:100%;width:0;background:linear-gradient(90deg,#fff6a0,#8ff0bd);border-radius:99px;transition:width .8s}.mapa-progresso{font-size:12px;padding:2px 4px}.mapa-topo{display:flex;justify-content:space-between;align-items:center;padding:4px 4px 8px}.mapa-titulo{font-size:21px;font-weight:900}.mapa-subtitulo{font-size:12px;opacity:.72;margin-top:2px}
+@media(max-width:600px){.mapa-trilha{height:350px}.mapa-node{width:68px;height:68px}.mapa-node .emoji{font-size:25px}.mapa-pet{font-size:34px}.mapa-titulo{font-size:18px}}
+@media(prefers-reduced-motion:reduce){.mapa-aventura:before,.mapa-trilha:before,.mapa-pet,.mapa-node.current{animation:none!important;transition:none!important}}
+</style>
+<script id="mapa-vivo-v2-script">(()=>{
+const areas=[
+ {id:'n1',name:'Começo',emoji:'🏡',need:0,desc:'A casinha do pet. Aqui começa a sua aventura!',reward:'✨ Primeiro passo'},
+ {id:'n2',name:'Bosque',emoji:'🌳',need:3,desc:'Um bosque tranquilo cheio de pequenas descobertas.',reward:'🌿 Medalha do Explorador'},
+ {id:'n3',name:'Vale',emoji:'🏞️',need:7,desc:'Um vale aberto onde os desafios ficam maiores.',reward:'⚡ Energia Extra'},
+ {id:'n4',name:'Castelo',emoji:'🏰',need:12,desc:'O grande castelo das conquistas da família.',reward:'🏅 Brasão do Castelo'},
+ {id:'n5',name:'Grande Meta',emoji:'⭐',need:18,desc:'O ponto mais alto da jornada. Uma conquista especial!',reward:'👑 Mestre da Aventura'}
+];
+window.renderizarMapaAventuraVivo=()=>{const n=(estado.tarefas||[]).filter(t=>t.status==='aprovada').length,ms=areas.map(a=>a.need),pct=Math.min(100,Math.round(n/18*100)),pts=[[12,67],[32,54],[52,43],[72,31],[89,18]];document.querySelectorAll('#mapa-trilha .mapa-node').forEach((e,i)=>{const a=areas[i],u=n>=a.need,d=i<4&&n>=areas[i+1].need;e.classList.toggle('locked',!u);e.classList.toggle('current',u&&!d);e.classList.toggle('done',d)});let i=0;for(let j=0;j<ms.length;j++)if(n>=ms[j])i=j;const pet=document.getElementById('mapa-pet');if(pet){pet.style.left=pts[i][0]+'%';pet.style.top=pts[i][1]+'%'}const b=document.getElementById('mapa-caminho-progresso'),f=document.getElementById('mapa-barra-fill'),q=document.getElementById('mapa-pct');if(b)b.style.width=pct+'%';if(f)f.style.width=pct+'%';if(q)q.textContent=pct+'%';const d=document.getElementById('mapa-dica');if(d)d.textContent=n>=18?'👑 Grande meta alcançada! Explore novamente e complete novas missões.':`📍 ${areas[i].name}: ${areas[i].desc} ${i<4?'Próxima área em '+areas[i+1].need+' missões.':''}`;const tr=document.getElementById('mapa-trilha');if(tr){let c=tr.querySelector('.mapa-area-card');if(!c){c=document.createElement('div');c.className='mapa-area-card';tr.appendChild(c)}c.innerHTML='<b>'+areas[i].emoji+' '+areas[i].name+'</b> · '+areas[i].reward}};
+window.abrirAreaMapa=id=>{const a=areas.find(x=>x.id===id);const n=(estado.tarefas||[]).filter(t=>t.status==='aprovada').length;if(!a)return;if(n<a.need){mostrarAviso&&mostrarAviso('🔒','Área bloqueada',`Complete ${a.need-n} missão(ões) para desbloquear ${a.name}.`);return}mostrarAviso&&mostrarAviso(a.emoji,a.name,a.desc+' '+a.reward)};
+const oldOpen=window.abrirMapaAventura;window.abrirMapaAventura=()=>{if(oldOpen)oldOpen();setTimeout(()=>{document.querySelectorAll('#mapa-trilha .mapa-node').forEach((el,i)=>{el.onclick=()=>window.abrirAreaMapa(areas[i].id)});window.renderizarMapaAventuraVivo()},80)};
+const oldRender=window.renderizarMapaAventura;window.renderizarMapaAventura=()=>{if(oldRender)oldRender();window.renderizarMapaAventuraVivo()};
+})();</script>
+
+<style id="meu-pet-v1">.menu-mais-item.visual-pet{background:linear-gradient(145deg,#fdf4ff,#f5f3ff);border-color:#e9d5ff;color:#6d28d9}.meupet-modal{max-width:430px!important;background:linear-gradient(160deg,#fff,#faf5ff)}.meupet-hero{position:relative;overflow:hidden;border-radius:22px;padding:14px;background:linear-gradient(135deg,#ede9fe,#fce7f3);border:1px solid #e9d5ff;margin-bottom:10px;text-align:center}.meupet-hero:after{content:'✦';position:absolute;right:16px;top:5px;font-size:38px;color:#fff8;animation:meuPetBrilho 2.8s ease-in-out infinite}@keyframes meuPetBrilho{50%{transform:rotate(18deg) scale(1.15);opacity:.55}}.meupet-avatar{font-size:64px;line-height:1;margin:2px 0 5px;filter:drop-shadow(0 8px 10px #7c3aed22);animation:meuPetFloat 2.8s ease-in-out infinite}@keyframes meuPetFloat{50%{transform:translateY(-5px)}}.meupet-title{font-size:15px;font-weight:1000;color:#312e81}.meupet-sub{font-size:9px;color:#64748b;margin-top:2px;font-weight:800}.meupet-section-title{font-size:10px;font-weight:1000;color:#334155;margin:9px 0 6px}.meupet-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:7px}.meupet-item{position:relative;border:1px solid #e5e7eb;border-radius:15px;padding:9px;background:#fff;cursor:pointer;transition:transform .15s,box-shadow .15s,border-color .15s;text-align:center}.meupet-item:active{transform:scale(.96)}.meupet-item.ativo{border-color:#8b5cf6;box-shadow:0 0 0 2px #8b5cf622}.meupet-item.bloqueado{cursor:default;background:#f8fafc;opacity:.62}.meupet-item .mi-emoji{font-size:28px;display:block;margin-bottom:3px}.meupet-item b{font-size:9px;color:#334155;display:block}.meupet-item small{font-size:7px;color:#64748b;font-weight:800;display:block;margin-top:2px}.meupet-check{position:absolute;right:6px;top:5px;font-size:10px}.meupet-chip{display:inline-flex;align-items:center;gap:4px;padding:4px 8px;border-radius:99px;background:#ffffffaa;font-size:8px;font-weight:1000;color:#6d28d9;margin-top:7px}.meupet-reward{margin-top:8px;padding:8px 10px;border-radius:13px;background:#fffbeb;border:1px solid #fde68a;font-size:8px;color:#92400e;font-weight:900}@media(prefers-reduced-motion:reduce){.meupet-avatar,.meupet-hero:after{animation:none}}</style>
+<script id="meu-pet-v1-script">(()=>{const RECOMPENSAS_MAPA=[{id:'mapa_bosque_visual',missao:3,acessorio:'grinalda',local:'Bosque',texto:'🌸 Grinalda de Flores'},{id:'mapa_vale_visual',missao:7,acessorio:'fone',local:'Vale',texto:'🎧 Fone de Ouvido'},{id:'mapa_castelo_visual',missao:12,acessorio:'coroa',local:'Castelo',texto:'👑 Coroa Real'},{id:'mapa_meta_visual',missao:18,acessorio:'bone',local:'Grande Meta',texto:'🧢 Boné Estiloso'}];window.verificarRecompensasMapa=function(silencioso){if(!estado)return;estado.recompensasMapa=estado.recompensasMapa||{};estado.acessorios=estado.acessorios||{comprados:[],ativo:null};estado.acessorios.comprados=Array.isArray(estado.acessorios.comprados)?estado.acessorios.comprados:[];const n=(estado.tarefas||[]).filter(t=>t.status==='aprovada').length;let mudou=false;RECOMPENSAS_MAPA.forEach(r=>{if(n>=r.missao&&!estado.recompensasMapa[r.id]){estado.recompensasMapa[r.id]=true;if(!estado.acessorios.comprados.includes(r.acessorio))estado.acessorios.comprados.push(r.acessorio);mudou=true;if(!silencioso)setTimeout(()=>{if(typeof dispararConfetes==='function')dispararConfetes();if(typeof mostrarToast==='function')mostrarToast(`🎁 Desbloqueou ${r.texto}!`);},250)}});if(mudou)salvar();return mudou};window.abrirMeuPet=function(){let m=document.getElementById('modal-meu-pet');if(!m){m=document.createElement('div');m.id='modal-meu-pet';m.className='modal-overlay';m.innerHTML='<div class="modal meupet-modal"><div class="modal-title"><div><h3 style="margin:0">🐾 Meu Pet</h3><small style="font-size:8px;color:#64748b;font-weight:800">Seu visual, suas conquistas</small></div><button class="close-btn" onclick="fecharModal(\'modal-meu-pet\')">×</button></div><div id="meupet-conteudo"></div></div></div>';document.body.appendChild(m)}verificarRecompensasMapa(true);renderizarMeuPet();abrirModal('modal-meu-pet')};window.renderizarMeuPet=function(){const c=document.getElementById('meupet-conteudo');if(!c)return;const ac=estado.acessorios||{comprados:[],ativo:null};const comprados=new Set(ac.comprados||[]);const atual=ACESSORIOS.find(a=>a.id===ac.ativo);const n=(estado.tarefas||[]).filter(t=>t.status==='aprovada').length;c.innerHTML='<div class="meupet-hero"><div class="meupet-avatar">'+(estado.petEmoji||'🐾')+'</div><div class="meupet-title">'+(atual?atual.emoji+' '+esc(atual.nome):'Visual natural')+'</div><div class="meupet-sub">Complete missões para desbloquear novos acessórios.</div><span class="meupet-chip">⭐ '+n+' missões aprovadas</span></div><div class="meupet-section-title">🎀 Acessórios desbloqueados</div><div class="meupet-grid" id="meupet-grid"></div><div class="meupet-reward">🗺️ Recompensas do mapa são desbloqueadas automaticamente quando você chega a uma nova região.</div>';const g=document.getElementById('meupet-grid');ACESSORIOS.forEach(a=>{const tem=comprados.has(a.id),ativo=ac.ativo===a.id;const d=document.createElement('button');d.type='button';d.className='meupet-item '+(tem?'':'bloqueado')+(ativo?' ativo':'');d.innerHTML='<span class="meupet-check">'+(ativo?'✓':tem?'🎀':'🔒')+'</span><span class="mi-emoji">'+a.emoji+'</span><b>'+esc(a.nome)+'</b><small>'+(tem?(ativo?'Equipado · toque para tirar':'Toque para equipar'):(a.preco+' 🪙 na Loja'))+'</small>';if(tem)d.onclick=()=>{const removendo=ativo;estado.acessorios.ativo=removendo?null:a.id;salvar();renderizarAcessorioNoContainer();atualizarTela();renderizarMeuPet();if(!removendo){celebrarNovoAcessorio();}if(typeof mostrarToast==='function')mostrarToast(removendo?'Acessório removido':`🎀 ${a.nome} equipado!`)};g.appendChild(d)})};})();</script></body>
 </html>
