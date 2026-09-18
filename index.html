@@ -2572,7 +2572,7 @@ function celebrarEvolucaoPet(fase){
   tocarTom?.(659.25,'triangle',.18,0,.22);tocarTom?.(783.99,'triangle',.18,.1,.22);tocarTom?.(1046.5,'sine',.35,.2,.24);
   mostrarToast(`🌟 ${ev.nome} desbloqueado!`);
 }
-function atualizarTela(){
+function atualizarTelaInterna(){
   const def=PETS[estado.petAtual],p=obterDadosPetAtual(),fase=calcularFase(p.nivel);
   document.getElementById('txt-moedas').textContent=estado.moedas;
   const dinheiro=(estado.dinheiroAcumulado||0).toFixed(2).replace('.',',');
@@ -4487,7 +4487,7 @@ async function aprovarTarefaPais(id){
   // a função retorna sem conceder moedas ou XP em duplicidade.
   estado.moedas=(Number(estado.moedas)||0)+recompensa;
   estado.dinheiroAcumulado=(Number(estado.dinheiroAcumulado)||0)+(recompensa*(Number(estado.taxaCambio)||.01));
-  estado.tarefasHojeCount=(Number(estado.tarefasHojeCount)||0)+1;
+  estado.tarefasHojeCount=(Array.isArray(estado.tarefas)?estado.tarefas:[]).filter(t=>t&&t.ativo!==false&&tarefaEhHoje(t)&&statusTarefaAtual(t)==='aprovada').length;
   registrarNoRelatorioDiario(1,recompensa);
   if(typeof garantirEngajamento==='function'){
     garantirEngajamento();
@@ -6522,7 +6522,7 @@ window.abrirMapaAventura=()=>{
  abrirModal('modal-mapa-aventura');window.renderizarMapaAventura();
 };
 window.renderizarMapaAventura=()=>{
- const n=(estado.tarefas||[]).filter(t=>t.status==='aprovada').length,ms=[0,3,7,12,18],pct=Math.min(100,Math.round(n/18*100)),pts=[[12,67],[32,54],[52,43],[72,31],[89,18]];
+ const n=(estado.tarefas||[]).filter(t=>statusTarefaAtual(t)==='aprovada').length,ms=[0,3,7,12,18],pct=Math.min(100,Math.round(n/18*100)),pts=[[12,67],[32,54],[52,43],[72,31],[89,18]];
  document.querySelectorAll('#mapa-trilha .mapa-node').forEach((e,i)=>{const u=n>=ms[i],d=i<4?n>=ms[i+1]:n>=18;e.classList.toggle('locked',!u);e.classList.toggle('current',u&&!d);e.classList.toggle('done',d)});
  let i=0;for(let j=0;j<ms.length;j++)if(n>=ms[j])i=j;
  const pet=document.getElementById('mapa-pet');if(pet){pet.style.left=pts[i][0]+'%';pet.style.top=pts[i][1]+'%'}
@@ -6556,14 +6556,14 @@ const areas=[
  {id:'n4',name:'Castelo',emoji:'🏰',need:12,desc:'O grande castelo das conquistas da família.',reward:'🏅 Brasão do Castelo'},
  {id:'n5',name:'Grande Meta',emoji:'⭐',need:18,desc:'O ponto mais alto da jornada. Uma conquista especial!',reward:'👑 Mestre da Aventura'}
 ];
-window.renderizarMapaAventuraVivo=()=>{const n=(estado.tarefas||[]).filter(t=>t.status==='aprovada').length,ms=areas.map(a=>a.need),pct=Math.min(100,Math.round(n/18*100)),pts=[[12,67],[32,54],[52,43],[72,31],[89,18]];document.querySelectorAll('#mapa-trilha .mapa-node').forEach((e,i)=>{const a=areas[i],u=n>=a.need,d=i<4&&n>=areas[i+1].need;e.classList.toggle('locked',!u);e.classList.toggle('current',u&&!d);e.classList.toggle('done',d)});let i=0;for(let j=0;j<ms.length;j++)if(n>=ms[j])i=j;const pet=document.getElementById('mapa-pet');if(pet){pet.style.left=pts[i][0]+'%';pet.style.top=pts[i][1]+'%'}const b=document.getElementById('mapa-caminho-progresso'),f=document.getElementById('mapa-barra-fill'),q=document.getElementById('mapa-pct');if(b)b.style.width=pct+'%';if(f)f.style.width=pct+'%';if(q)q.textContent=pct+'%';const d=document.getElementById('mapa-dica');if(d)d.textContent=n>=18?'👑 Grande meta alcançada! Explore novamente e complete novas missões.':`📍 ${areas[i].name}: ${areas[i].desc} ${i<4?'Próxima área em '+areas[i+1].need+' missões.':''}`;const tr=document.getElementById('mapa-trilha');if(tr){let c=tr.querySelector('.mapa-area-card');if(!c){c=document.createElement('div');c.className='mapa-area-card';tr.appendChild(c)}c.innerHTML='<b>'+areas[i].emoji+' '+areas[i].name+'</b> · '+areas[i].reward}};
-window.abrirAreaMapa=id=>{const a=areas.find(x=>x.id===id);const n=(estado.tarefas||[]).filter(t=>t.status==='aprovada').length;if(!a)return;if(n<a.need){mostrarAviso&&mostrarAviso('🔒','Área bloqueada',`Complete ${a.need-n} missão(ões) para desbloquear ${a.name}.`);return}mostrarAviso&&mostrarAviso(a.emoji,a.name,a.desc+' '+a.reward)};
+window.renderizarMapaAventuraVivo=()=>{const n=(estado.tarefas||[]).filter(t=>statusTarefaAtual(t)==='aprovada').length,ms=areas.map(a=>a.need),pct=Math.min(100,Math.round(n/18*100)),pts=[[12,67],[32,54],[52,43],[72,31],[89,18]];document.querySelectorAll('#mapa-trilha .mapa-node').forEach((e,i)=>{const a=areas[i],u=n>=a.need,d=i<4&&n>=areas[i+1].need;e.classList.toggle('locked',!u);e.classList.toggle('current',u&&!d);e.classList.toggle('done',d)});let i=0;for(let j=0;j<ms.length;j++)if(n>=ms[j])i=j;const pet=document.getElementById('mapa-pet');if(pet){pet.style.left=pts[i][0]+'%';pet.style.top=pts[i][1]+'%'}const b=document.getElementById('mapa-caminho-progresso'),f=document.getElementById('mapa-barra-fill'),q=document.getElementById('mapa-pct');if(b)b.style.width=pct+'%';if(f)f.style.width=pct+'%';if(q)q.textContent=pct+'%';const d=document.getElementById('mapa-dica');if(d)d.textContent=n>=18?'👑 Grande meta alcançada! Explore novamente e complete novas missões.':`📍 ${areas[i].name}: ${areas[i].desc} ${i<4?'Próxima área em '+areas[i+1].need+' missões.':''}`;const tr=document.getElementById('mapa-trilha');if(tr){let c=tr.querySelector('.mapa-area-card');if(!c){c=document.createElement('div');c.className='mapa-area-card';tr.appendChild(c)}c.innerHTML='<b>'+areas[i].emoji+' '+areas[i].name+'</b> · '+areas[i].reward}};
+window.abrirAreaMapa=id=>{const a=areas.find(x=>x.id===id);const n=(estado.tarefas||[]).filter(t=>statusTarefaAtual(t)==='aprovada').length;if(!a)return;if(n<a.need){mostrarAviso&&mostrarAviso('🔒','Área bloqueada',`Complete ${a.need-n} missão(ões) para desbloquear ${a.name}.`);return}mostrarAviso&&mostrarAviso(a.emoji,a.name,a.desc+' '+a.reward)};
 const oldOpen=window.abrirMapaAventura;window.abrirMapaAventura=()=>{if(oldOpen)oldOpen();setTimeout(()=>{document.querySelectorAll('#mapa-trilha .mapa-node').forEach((el,i)=>{el.onclick=()=>window.abrirAreaMapa(areas[i].id)});window.renderizarMapaAventuraVivo()},80)};
 const oldRender=window.renderizarMapaAventura;window.renderizarMapaAventura=()=>{if(oldRender)oldRender();window.renderizarMapaAventuraVivo()};
 })();</script>
 
 <style id="meu-pet-v1">.menu-mais-item.visual-pet{background:linear-gradient(145deg,#fdf4ff,#f5f3ff);border-color:#e9d5ff;color:#6d28d9}.meupet-modal{max-width:430px!important;background:linear-gradient(160deg,#fff,#faf5ff)}.meupet-hero{position:relative;overflow:hidden;border-radius:22px;padding:14px;background:linear-gradient(135deg,#ede9fe,#fce7f3);border:1px solid #e9d5ff;margin-bottom:10px;text-align:center}.meupet-hero:after{content:'✦';position:absolute;right:16px;top:5px;font-size:38px;color:#fff8;animation:meuPetBrilho 2.8s ease-in-out infinite}@keyframes meuPetBrilho{50%{transform:rotate(18deg) scale(1.15);opacity:.55}}.meupet-avatar{font-size:64px;line-height:1;margin:2px 0 5px;filter:drop-shadow(0 8px 10px #7c3aed22);animation:meuPetFloat 2.8s ease-in-out infinite}@keyframes meuPetFloat{50%{transform:translateY(-5px)}}.meupet-title{font-size:15px;font-weight:1000;color:#312e81}.meupet-sub{font-size:9px;color:#64748b;margin-top:2px;font-weight:800}.meupet-section-title{font-size:10px;font-weight:1000;color:#334155;margin:9px 0 6px}.meupet-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:7px}.meupet-item{position:relative;border:1px solid #e5e7eb;border-radius:15px;padding:9px;background:#fff;cursor:pointer;transition:transform .15s,box-shadow .15s,border-color .15s;text-align:center}.meupet-item:active{transform:scale(.96)}.meupet-item.ativo{border-color:#8b5cf6;box-shadow:0 0 0 2px #8b5cf622}.meupet-item.bloqueado{cursor:default;background:#f8fafc;opacity:.62}.meupet-item .mi-emoji{font-size:28px;display:block;margin-bottom:3px}.meupet-item b{font-size:9px;color:#334155;display:block}.meupet-item small{font-size:7px;color:#64748b;font-weight:800;display:block;margin-top:2px}.meupet-check{position:absolute;right:6px;top:5px;font-size:10px}.meupet-chip{display:inline-flex;align-items:center;gap:4px;padding:4px 8px;border-radius:99px;background:#ffffffaa;font-size:8px;font-weight:1000;color:#6d28d9;margin-top:7px}.meupet-reward{margin-top:8px;padding:8px 10px;border-radius:13px;background:#fffbeb;border:1px solid #fde68a;font-size:8px;color:#92400e;font-weight:900}@media(prefers-reduced-motion:reduce){.meupet-avatar,.meupet-hero:after{animation:none}}</style>
-<script id="meu-pet-v1-script">(()=>{const RECOMPENSAS_MAPA=[{id:'mapa_bosque_visual',missao:3,acessorio:'grinalda',local:'Bosque',texto:'🌸 Grinalda de Flores'},{id:'mapa_vale_visual',missao:7,acessorio:'fone',local:'Vale',texto:'🎧 Fone de Ouvido'},{id:'mapa_castelo_visual',missao:12,acessorio:'coroa',local:'Castelo',texto:'👑 Coroa Real'},{id:'mapa_meta_visual',missao:18,acessorio:'bone',local:'Grande Meta',texto:'🧢 Boné Estiloso'}];window.verificarRecompensasMapa=function(silencioso){if(!estado)return;estado.recompensasMapa=estado.recompensasMapa||{};estado.acessorios=estado.acessorios||{comprados:[],ativo:null};estado.acessorios.comprados=Array.isArray(estado.acessorios.comprados)?estado.acessorios.comprados:[];const n=(estado.tarefas||[]).filter(t=>t.status==='aprovada').length;let mudou=false;RECOMPENSAS_MAPA.forEach(r=>{if(n>=r.missao&&!estado.recompensasMapa[r.id]){estado.recompensasMapa[r.id]=true;if(!estado.acessorios.comprados.includes(r.acessorio))estado.acessorios.comprados.push(r.acessorio);mudou=true;if(!silencioso)setTimeout(()=>{if(typeof dispararConfetes==='function')dispararConfetes();if(typeof mostrarToast==='function')mostrarToast(`🎁 Desbloqueou ${r.texto}!`);},250)}});if(mudou)salvar();return mudou};window.abrirMeuPet=function(){let m=document.getElementById('modal-meu-pet');if(!m){m=document.createElement('div');m.id='modal-meu-pet';m.className='modal-overlay';m.innerHTML='<div class="modal meupet-modal"><div class="modal-title"><div><h3 style="margin:0">🐾 Meu Pet</h3><small style="font-size:8px;color:#64748b;font-weight:800">Seu visual, suas conquistas</small></div><button class="close-btn" onclick="fecharModal(\'modal-meu-pet\')">×</button></div><div id="meupet-conteudo"></div></div></div>';document.body.appendChild(m)}verificarRecompensasMapa(true);renderizarMeuPet();abrirModal('modal-meu-pet')};window.renderizarMeuPet=function(){const c=document.getElementById('meupet-conteudo');if(!c)return;const ac=estado.acessorios||{comprados:[],ativo:null};const comprados=new Set(ac.comprados||[]);const atual=ACESSORIOS.find(a=>a.id===ac.ativo);const n=(estado.tarefas||[]).filter(t=>t.status==='aprovada').length;c.innerHTML='<div class="meupet-hero"><div class="meupet-avatar">'+(estado.petEmoji||'🐾')+'</div><div class="meupet-title">'+(atual?atual.emoji+' '+esc(atual.nome):'Visual natural')+'</div><div class="meupet-sub">Complete missões para desbloquear novos acessórios.</div><span class="meupet-chip">⭐ '+n+' missões aprovadas</span></div><div class="meupet-section-title">🎀 Acessórios desbloqueados</div><div class="meupet-grid" id="meupet-grid-legacy"></div><div class="meupet-reward">🗺️ Recompensas do mapa são desbloqueadas automaticamente quando você chega a uma nova região.</div>';const g=document.getElementById('meupet-grid-legacy');ACESSORIOS.forEach(a=>{const tem=comprados.has(a.id),ativo=ac.ativo===a.id;const d=document.createElement('button');d.type='button';d.className='meupet-item '+(tem?'':'bloqueado')+(ativo?' ativo':'');d.innerHTML='<span class="meupet-check">'+(ativo?'✓':tem?'🎀':'🔒')+'</span><span class="mi-emoji">'+a.emoji+'</span><b>'+esc(a.nome)+'</b><small>'+(tem?(ativo?'Equipado · toque para tirar':'Toque para equipar'):(a.preco+' 🪙 na Loja'))+'</small>';if(tem)d.onclick=()=>{const removendo=ativo;estado.acessorios.ativo=removendo?null:a.id;salvar();renderizarAcessorioNoContainer();atualizarTela();renderizarMeuPet();if(!removendo){celebrarNovoAcessorio();}if(typeof mostrarToast==='function')mostrarToast(removendo?'Acessório removido':`🎀 ${a.nome} equipado!`)};g.appendChild(d)})};})();</script><script id="poderes-evolucao-js">
+<script id="meu-pet-v1-script">(()=>{const RECOMPENSAS_MAPA=[{id:'mapa_bosque_visual',missao:3,acessorio:'grinalda',local:'Bosque',texto:'🌸 Grinalda de Flores'},{id:'mapa_vale_visual',missao:7,acessorio:'fone',local:'Vale',texto:'🎧 Fone de Ouvido'},{id:'mapa_castelo_visual',missao:12,acessorio:'coroa',local:'Castelo',texto:'👑 Coroa Real'},{id:'mapa_meta_visual',missao:18,acessorio:'bone',local:'Grande Meta',texto:'🧢 Boné Estiloso'}];window.verificarRecompensasMapa=function(silencioso){if(!estado)return;estado.recompensasMapa=estado.recompensasMapa||{};estado.acessorios=estado.acessorios||{comprados:[],ativo:null};estado.acessorios.comprados=Array.isArray(estado.acessorios.comprados)?estado.acessorios.comprados:[];const n=(estado.tarefas||[]).filter(t=>statusTarefaAtual(t)==='aprovada').length;let mudou=false;RECOMPENSAS_MAPA.forEach(r=>{if(n>=r.missao&&!estado.recompensasMapa[r.id]){estado.recompensasMapa[r.id]=true;if(!estado.acessorios.comprados.includes(r.acessorio))estado.acessorios.comprados.push(r.acessorio);mudou=true;if(!silencioso)setTimeout(()=>{if(typeof dispararConfetes==='function')dispararConfetes();if(typeof mostrarToast==='function')mostrarToast(`🎁 Desbloqueou ${r.texto}!`);},250)}});if(mudou)salvar();return mudou};window.abrirMeuPet=function(){let m=document.getElementById('modal-meu-pet');if(!m){m=document.createElement('div');m.id='modal-meu-pet';m.className='modal-overlay';m.innerHTML='<div class="modal meupet-modal"><div class="modal-title"><div><h3 style="margin:0">🐾 Meu Pet</h3><small style="font-size:8px;color:#64748b;font-weight:800">Seu visual, suas conquistas</small></div><button class="close-btn" onclick="fecharModal(\'modal-meu-pet\')">×</button></div><div id="meupet-conteudo"></div></div></div>';document.body.appendChild(m)}verificarRecompensasMapa(true);renderizarMeuPet();abrirModal('modal-meu-pet')};window.renderizarMeuPet=function(){const c=document.getElementById('meupet-conteudo');if(!c)return;const ac=estado.acessorios||{comprados:[],ativo:null};const comprados=new Set(ac.comprados||[]);const atual=ACESSORIOS.find(a=>a.id===ac.ativo);const n=(estado.tarefas||[]).filter(t=>statusTarefaAtual(t)==='aprovada').length;c.innerHTML='<div class="meupet-hero"><div class="meupet-avatar">'+(estado.petEmoji||'🐾')+'</div><div class="meupet-title">'+(atual?atual.emoji+' '+esc(atual.nome):'Visual natural')+'</div><div class="meupet-sub">Complete missões para desbloquear novos acessórios.</div><span class="meupet-chip">⭐ '+n+' missões aprovadas</span></div><div class="meupet-section-title">🎀 Acessórios desbloqueados</div><div class="meupet-grid" id="meupet-grid-legacy"></div><div class="meupet-reward">🗺️ Recompensas do mapa são desbloqueadas automaticamente quando você chega a uma nova região.</div>';const g=document.getElementById('meupet-grid-legacy');ACESSORIOS.forEach(a=>{const tem=comprados.has(a.id),ativo=ac.ativo===a.id;const d=document.createElement('button');d.type='button';d.className='meupet-item '+(tem?'':'bloqueado')+(ativo?' ativo':'');d.innerHTML='<span class="meupet-check">'+(ativo?'✓':tem?'🎀':'🔒')+'</span><span class="mi-emoji">'+a.emoji+'</span><b>'+esc(a.nome)+'</b><small>'+(tem?(ativo?'Equipado · toque para tirar':'Toque para equipar'):(a.preco+' 🪙 na Loja'))+'</small>';if(tem)d.onclick=()=>{const removendo=ativo;estado.acessorios.ativo=removendo?null:a.id;salvar();renderizarAcessorioNoContainer();atualizarTela();renderizarMeuPet();if(!removendo){celebrarNovoAcessorio();}if(typeof mostrarToast==='function')mostrarToast(removendo?'Acessório removido':`🎀 ${a.nome} equipado!`)};g.appendChild(d)})};})();</script><script id="poderes-evolucao-js">
 (function(){
 const PODERES_EVOLUCAO=[
  {fase:1,nome:'Carinho Extra',icone:'💖',descricao:'Carinho faz o pet responder com mais energia.',eventos:['carinho']},
@@ -6707,7 +6707,7 @@ abrirCentralAventuras=function(){abrirCentralAventurasVida();setTimeout(()=>{con
  ];
  const M=[3,7,14,30];
  function ensure(){estado.conquistasJornada=estado.conquistasJornada||{};estado.streakRecompensas=estado.streakRecompensas||{};}
- function nmis(){return (estado.tarefas||[]).filter(t=>t.status==='aprovada').length}
+ function nmis(){return (estado.tarefas||[]).filter(t=>statusTarefaAtual(t)==='aprovada').length}
  function toast(t,sub){let x=document.getElementById('jornada-toast');if(!x){x=document.createElement('div');x.id='jornada-toast';x.className='jornada-toast';document.body.appendChild(x)}x.innerHTML='<b>'+t+'</b><span>'+sub+'</span>';x.classList.add('show');clearTimeout(x._t);x._t=setTimeout(()=>x.classList.remove('show'),2600)}
  function reward(id){if(estado.conquistasJornada[id])return false;estado.conquistasJornada[id]=Date.now();return true}
  function giveCoins(v){estado.moedas=(Number(estado.moedas)||0)+v;estado.dinheiroAcumulado=(Number(estado.dinheiroAcumulado)||0)+v*(Number(estado.taxaCambio)||.01)}
@@ -6759,7 +6759,7 @@ abrirCentralAventuras=function(){abrirCentralAventurasVida();setTimeout(()=>{con
     estado.casinha=estado.casinha||{itens:[]};
     return estado;
   }
-  function missions(){return (estado.tarefas||[]).filter(t=>t.status==='aprovada').length}
+  function missions(){return (estado.tarefas||[]).filter(t=>statusTarefaAtual(t)==='aprovada').length}
   function coins(){
     if(typeof estado.moedas==='number')return estado.moedas;
     if(typeof estado.petCoins==='number')return estado.petCoins;
@@ -6841,7 +6841,7 @@ abrirCentralAventuras=function(){abrirCentralAventurasVida();setTimeout(()=>{con
     estado.personalidade=estado.personalidade||{carinho:0,missoes:0,exploracao:0,energia:50,ultimoEvento:null};
     return estado;
   }
-  function missions(){return (estado.tarefas||[]).filter(t=>t.status==='aprovada').length}
+  function missions(){return (estado.tarefas||[]).filter(t=>statusTarefaAtual(t)==='aprovada').length}
   function exploracao(){
     const m=estado.mapaDescobertas||estado.descobertasMapa||{};let n=0;
     Object.values(m).forEach(v=>Array.isArray(v)?n+=v.length:(v&&typeof v==='object'&&(n+=Object.values(v).filter(Boolean).length)));
@@ -6942,7 +6942,7 @@ abrirCentralAventuras=function(){abrirCentralAventurasVida();setTimeout(()=>{con
     estado.mundoVivo=estado.mundoVivo||{eventos:[],historico:[]};
     return estado;
   }
-  function missions(){return (estado.tarefas||[]).filter(t=>t.status==='aprovada').length}
+  function missions(){return (estado.tarefas||[]).filter(t=>statusTarefaAtual(t)==='aprovada').length}
   function coins(){return typeof estado.moedas==='number'?estado.moedas:(typeof estado.petCoins==='number'?estado.petCoins:0)}
   function addCoins(n){if(typeof estado.moedas==='number')estado.moedas+=n;else if(typeof estado.petCoins==='number')estado.petCoins+=n;else estado.moedas=n}
   function addXp(n){if(typeof ganharXP==='function')ganharXP(n);else if(typeof estado.xp==='number')estado.xp+=n}
@@ -7518,7 +7518,7 @@ function descobrir(id,key){
 }
 window.abrirCenarioMapa=function(id){
  const a=CENARIOS[id];if(!a)return;
- const n=(estado.tarefas||[]).filter(t=>t.status==='aprovada').length;
+ const n=(estado.tarefas||[]).filter(t=>statusTarefaAtual(t)==='aprovada').length;
  const needs={n1:0,n2:3,n3:7,n4:12,n5:18};
  if(n<needs[id]){if(typeof mostrarAviso==='function')mostrarAviso('🔒','Área bloqueada',`Complete ${needs[id]-n} missão(ões) para desbloquear ${a.nome}.`);return}
  let m=document.getElementById('modal-cenario-mapa');
@@ -7873,7 +7873,7 @@ window.renderizarMeuPet=function(){
   const ac=estado.acessorios;
   const comprados=new Set(ac.comprados||[]);
   const ativos=new Set((ac.ativos||[]).map(String));
-  const n=(estado.tarefas||[]).filter(t=>t.status==='aprovada').length;
+  const n=(estado.tarefas||[]).filter(t=>statusTarefaAtual(t)==='aprovada').length;
   const nomes=listaAtivos().map(id=>{const a=ACESSORIOS.find(x=>String(x.id)===String(id));return a?a.emoji+' '+a.nome:null}).filter(Boolean);
   c.innerHTML=`<div class="meupet-hero"><div class="meupet-avatar">${estado.petEmoji||'🐾'}</div><div class="meupet-title">${nomes.length?nomes.join(' + '):'Visual natural'}</div><div class="meupet-sub">Equipe vários acessórios juntos · até ${MAX_ATIVOS}</div><span class="meupet-chip">⭐ ${n} missões · ${ativos.size} equipado(s)</span></div><div class="meupet-section-title">🎀 Acessórios</div><div class="meupet-grid" id="meupet-grid"></div>`;
   const g=document.getElementById('meupet-grid');
@@ -8034,6 +8034,39 @@ body:before{
   .particula,.cenario-detalhes *{animation:none!important}
 }
 </style>
+
+
+<script id="rotinapet-render-guard-v1">
+/* Estabilização V1: coalescer renders repetidos no mesmo ciclo. */
+let rpRenderAgendado=false;
+function atualizarTela(){
+  if(rpRenderAgendado)return;
+  rpRenderAgendado=true;
+  requestAnimationFrame(()=>{
+    rpRenderAgendado=false;
+    atualizarTelaInterna();
+  });
+}
+</script>
+
+
+<script id="rotinapet-diagnostics-v1">
+window.RotinaPetDiagnostico=function(){
+  const tarefas=Array.isArray(estado?.tarefas)?estado.tarefas:[];
+  const hoje=typeof hojeLocal==='function'?hojeLocal():null;
+  const hojeTarefas=tarefas.filter(t=>t&&t.ativo!==false&&typeof tarefaEhHoje==='function'&&tarefaEhHoje(t));
+  const aprovadas=hojeTarefas.filter(t=>typeof statusTarefaAtual==='function'&&statusTarefaAtual(t)==='aprovada').length;
+  return {
+    hoje,
+    tarefasHoje:hojeTarefas.length,
+    aprovadasHoje:aprovadas,
+    tarefasHojeCount:Number(estado?.tarefasHojeCount)||0,
+    fundo:estado?.fundoAtual||null,
+    ultimoDiaAcesso:estado?.ultimoDiaAcesso||null,
+    ultimoDiaConcluido:estado?.ultimoDiaConcluido||null
+  };
+};
+</script>
 
 </body>
 </html>
