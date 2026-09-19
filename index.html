@@ -885,7 +885,7 @@ function abrirMenuMais(){
 .cenario-detalhes .hotspot-cenario,
 .cenario-detalhes [data-interativo],
 .cenario-detalhes .lingua-sogra{pointer-events:auto!important;cursor:pointer}
-#hotspots-cenario{position:fixed;inset:0;z-index:2;pointer-events:none;overflow:hidden}
+#hotspots-cenario{display:none!important;position:fixed;inset:0;z-index:-5;pointer-events:none;overflow:hidden}
 #hotspots-cenario .hs{position:absolute;pointer-events:auto;border:0;background:rgba(255,255,255,.22);backdrop-filter:blur(6px);-webkit-backdrop-filter:blur(6px);border-radius:18px;width:58px;height:58px;display:grid;place-items:center;font-size:26px;box-shadow:0 8px 20px rgba(15,23,42,.18),inset 0 1px 0 rgba(255,255,255,.55);cursor:pointer;transition:transform .2s cubic-bezier(.34,1.56,.64,1),box-shadow .2s;animation:hsFloat 3s ease-in-out infinite}
 #hotspots-cenario .hs:active{transform:scale(.9)}
 #hotspots-cenario .hs small{position:absolute;bottom:-16px;left:50%;transform:translateX(-50%);white-space:nowrap;font-size:8px;font-weight:900;color:#fff;text-shadow:0 1px 3px #0008;background:rgba(15,23,42,.45);padding:2px 6px;border-radius:99px}
@@ -2574,6 +2574,9 @@ function celebrarEvolucaoPet(fase){
   tocarTom?.(659.25,'triangle',.18,0,.22);tocarTom?.(783.99,'triangle',.18,.1,.22);tocarTom?.(1046.5,'sine',.35,.2,.24);
   mostrarToast(`🌟 ${ev.nome} desbloqueado!`);
 }
+let rpUltimoPetVisualKey='';
+let rpUltimoAcessorioVisualKey='';
+
 function atualizarTelaInterna(){
   const def=PETS[estado.petAtual],p=obterDadosPetAtual(),fase=calcularFase(p.nivel);
   document.getElementById('txt-moedas').textContent=estado.moedas;
@@ -2616,7 +2619,14 @@ function atualizarTelaInterna(){
   });
   aplicarFundoTela(estado.fundoAtual);
   atualizarHumorPet(p);
-  renderizarAcessorioNoContainer();
+
+  // Acessórios também só são redesenhados quando mudam.
+  const acessorioKey=`${estado.petAtual}|${estado.acessorios?.ativo||''}`;
+  if(rpUltimoAcessorioVisualKey!==acessorioKey){
+    renderizarAcessorioNoContainer();
+    rpUltimoAcessorioVisualKey=acessorioKey;
+  }
+
   atualizarBotaoSurpresaDia();
   renderizarTarefas();
   renderizarEvolucoes();
@@ -2702,19 +2712,46 @@ function obterVolumeSom(){
 let _audioPetAtual=null;
 function tocarAudioPet(url){
   const vol=obterVolumeSom();
-  if(vol<=0.01)return;
+  if(vol<=0.01)return false;
   try{
     if(_audioPetAtual){
       try{_audioPetAtual.pause();_audioPetAtual.currentTime=0}catch(_){}
       _audioPetAtual=null;
     }
+    // Se existir uma gravação salva, ela sempre tem prioridade sobre o som padrão do pet.
     const fonte=estado.vozSalva||url;
-    if(!fonte)return;
-    const a=new Audio(fonte);
+    if(!fonte)return false;
+
+    const a=new Audio();
+    a.src=fonte;
+    a.preload='auto';
+    a.playsInline=true;
     a.volume=vol;
     _audioPetAtual=a;
-    a.play().catch(()=>{});
-  }catch(e){}
+
+    // play() é disparado diretamente a partir do toque no pet, permitindo reprodução
+    // em navegadores móveis que bloqueiam autoplay fora de uma ação do usuário.
+    a.load();
+    const promessa=a.play();
+    if(promessa&&typeof promessa.catch==='function'){
+      promessa.catch(err=>{
+        console.warn('Falha ao reproduzir voz do pet:',err);
+        // Tenta novamente usando o elemento de áudio já presente na gravação.
+        try{
+          const preview=document.getElementById('audio-original');
+          if(preview&&preview.src&&estado.vozSalva){
+            preview.currentTime=0;
+            preview.volume=vol;
+            preview.play().catch(()=>{});
+          }
+        }catch(_){}
+      });
+    }
+    return true;
+  }catch(e){
+    console.warn('tocarAudioPet:',e);
+    return false;
+  }
 }
 function registrarLogAtividade(texto){
   estado.logAtividades=Array.isArray(estado.logAtividades)?estado.logAtividades:[];
@@ -7968,8 +8005,11 @@ const HOTSPOTS={
 };
 
 function renderizarHotspotsCenario(fundoId){
+  // Os ícones flutuantes do cenário foram removidos para deixar o fundo limpo.
   const host=document.getElementById('hotspots-cenario');
-  if(!host)return;
+  if(host)host.innerHTML='';
+  return;
+  /* legado: hotspots interativos do cenário */
   const id=fundoId||estado?.fundoAtual||'ceu';
   const lista=HOTSPOTS[id]||HOTSPOTS.ceu;
   garantirAcessoriosMulti();
