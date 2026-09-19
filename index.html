@@ -1394,6 +1394,8 @@ function abrirMenuMais(){
   </div>
   <div id="efeito-processando" class="hidden" style="font-size:9px;font-weight:900;color:#7c3aed;margin-top:7px">⏳ Aplicando efeito...</div>
   <button class="primary-btn" style="margin-top:9px" onclick="salvarVoz()">💾 Usar no Pet</button>
+  <button class="primary-btn" style="margin-top:6px;background:#64748b" onclick="limparVozPet()">🎤 Voz padrão</button>
+  <p style="font-size:8px;color:#64748b;margin-top:8px;font-weight:800">Depois de salvar, toque no pet para ele repetir a gravação.</p>
 </div></div></div>
 <div id="modal-desafio" class="modal-overlay"><div class="modal" style="text-align:center"><div class="modal-title"><h3 id="titulo-desafio">🎮 Desafio</h3><button class="close-btn" onclick="fecharModal('modal-desafio')">×</button></div><p style="font-size:9px;color:#64748b;margin-bottom:8px" id="desc-desafio">Acertou? +1 🪙 e +1 XP</p>
   <div id="area-jogo-matematica"><div id="conta-math" class="math-question">?</div><div id="opcoes-math" class="math-options"></div></div>
@@ -2697,16 +2699,22 @@ function obterVolumeSom(){
   const v=Number(estado.volumeSom);
   return Number.isFinite(v)?Math.max(0,Math.min(1,v)):0.55;
 }
+let _audioPetAtual=null;
 function tocarAudioPet(url){
   const vol=obterVolumeSom();
   if(vol<=0.01)return;
-  if(estado.vozSalva){
-    const a=new Audio(estado.vozSalva);
+  try{
+    if(_audioPetAtual){
+      try{_audioPetAtual.pause();_audioPetAtual.currentTime=0}catch(_){}
+      _audioPetAtual=null;
+    }
+    const fonte=estado.vozSalva||url;
+    if(!fonte)return;
+    const a=new Audio(fonte);
     a.volume=vol;
+    _audioPetAtual=a;
     a.play().catch(()=>{});
-    return;
-  }
-  try{const a=new Audio(url);a.volume=vol;a.play().catch(()=>{})}catch(e){}
+  }catch(e){}
 }
 function registrarLogAtividade(texto){
   estado.logAtividades=Array.isArray(estado.logAtividades)?estado.logAtividades:[];
@@ -2723,8 +2731,15 @@ function interagirComPet(e){
   navigator.vibrate?.(25);
   criarTextoFlutuante('❤️ +5',e);
   animarPetToque(e);
-  if(Math.random()<.55)mostrarBalaoFala(escolherFalaContextual('carinho'));
-  else mostrarToast(`❤️ ${PETS[estado.petAtual].nome} adorou!`);
+  if(estado.vozSalva){
+    if(Math.random()<.4)mostrarBalaoFala('🗣️ Ouvindo a sua voz!');
+    else if(Math.random()<.5)mostrarBalaoFala(escolherFalaContextual('carinho'));
+    else mostrarToast(`🗣️ ${PETS[estado.petAtual].nome} repetiu a sua voz!`);
+  }else if(Math.random()<.55){
+    mostrarBalaoFala(escolherFalaContextual('carinho'));
+  }else{
+    mostrarToast(`❤️ ${PETS[estado.petAtual].nome} adorou!`);
+  }
   salvar();
   atualizarTela();
   animarAcessorioTema();
@@ -5875,7 +5890,7 @@ function pausarFecharTimer(){
   salvar();
   fecharModal('modal-timer');
 }
-let mediaRecorder=null,pedacosAudio=[],bufferGravado=null,audioBlobFinal=null;
+let mediaRecorder=null,pedacosAudio=[],bufferGravado=null,audioBlobFinal=null,audioBlobOriginal=null;
 function alternarGravador(){
   abrirModal('modal-gravador');
 }
@@ -5886,13 +5901,20 @@ async function iniciarGravacao(){
     mediaRecorder=new MediaRecorder(stream);
     mediaRecorder.ondataavailable=e=>{if(e.data.size>0)pedacosAudio.push(e.data)};
     mediaRecorder.onstop=async ()=>{
-      const blob=new Blob(pedacosAudio,{type:'audio/webm'});
-      const arrayBuf=await blob.arrayBuffer();
-      const ctx=obterAudioContext();
-      bufferGravado=await ctx.decodeAudioData(arrayBuf);
+      const blob=new Blob(pedacosAudio,{type:pedacosAudio[0]?.type||'audio/webm'});
+      audioBlobOriginal=blob;
       audioBlobFinal=blob;
       document.getElementById('audio-original').src=URL.createObjectURL(blob);
       document.getElementById('grav-result').classList.remove('hidden');
+      try{
+        const arrayBuf=await blob.arrayBuffer();
+        const ctx=obterAudioContext();
+        bufferGravado=await ctx.decodeAudioData(arrayBuf.slice(0));
+      }catch(err){
+        console.warn('decodeAudioData:',err);
+        bufferGravado=null;
+        mostrarToast('⚠️ Áudio gravado, mas efeitos podem não funcionar neste navegador.');
+      }
     };
     mediaRecorder.start();
     document.getElementById('btn-iniciar-grav').style.display='none';
@@ -5910,36 +5932,48 @@ function pararGravacao(){
   document.getElementById('btn-parar-grav').style.display='none';
 }
 async function aplicarEfeitoVoz(tipo,btnEl){
-  if(!bufferGravado)return;
+  if(!bufferGravado && tipo!=='normal'){
+    mostrarToast('⚠️ Efeito indisponível neste navegador. Use a voz normal.');
+    return;
+  }
   document.querySelectorAll('#modal-gravador .task-btn').forEach(b=>b.style.background='');
-  btnEl.style.background='#c7d2fe';
+  if(btnEl)btnEl.style.background='#c7d2fe';
   
   if(tipo==='normal'){
-    document.getElementById('audio-original').src=URL.createObjectURL(audioBlobFinal);
+    const base=audioBlobOriginal||audioBlobFinal;
+    if(!base)return;
+    audioBlobFinal=base;
+    document.getElementById('audio-original').src=URL.createObjectURL(base);
     return;
   }
   
   const aviso=document.getElementById('efeito-processando');
   aviso.classList.remove('hidden');
   
-  const taxa=tipo==='fininha'?1.5:0.75;
-  const ctxOff=new OfflineAudioContext(
-    bufferGravado.numberOfChannels,
-    Math.ceil(bufferGravado.length/taxa),
-    bufferGravado.sampleRate
-  );
-  
-  const src=ctxOff.createBufferSource();
-  src.buffer=bufferGravado;
-  src.playbackRate.value=taxa;
-  src.connect(ctxOff.destination);
-  src.start(0);
-  
-  const renderizado=await ctxOff.startRendering();
-  const wavBlob=audioBufferParaWavBlob(renderizado);
-  audioBlobFinal=wavBlob;
-  document.getElementById('audio-original').src=URL.createObjectURL(wavBlob);
-  aviso.classList.add('hidden');
+  try{
+    const taxa=tipo==='fininha'?1.5:0.75;
+    const ctxOff=new OfflineAudioContext(
+      bufferGravado.numberOfChannels,
+      Math.ceil(bufferGravado.length/taxa),
+      bufferGravado.sampleRate
+    );
+    
+    const src=ctxOff.createBufferSource();
+    src.buffer=bufferGravado;
+    src.playbackRate.value=taxa;
+    src.connect(ctxOff.destination);
+    src.start(0);
+    
+    const renderizado=await ctxOff.startRendering();
+    const wavBlob=audioBufferParaWavBlob(renderizado);
+    audioBlobFinal=wavBlob;
+    document.getElementById('audio-original').src=URL.createObjectURL(wavBlob);
+  }catch(err){
+    console.warn('efeito voz:',err);
+    mostrarToast('❌ Não foi possível aplicar o efeito.');
+  }finally{
+    aviso.classList.add('hidden');
+  }
 }
 function audioBufferParaWavBlob(buffer){
   const numCanais=buffer.numberOfChannels,taxaAmostragem=buffer.sampleRate,formato=1,profundidadeBits=16;
@@ -5976,15 +6010,33 @@ function audioBufferParaWavBlob(buffer){
   return new Blob([arrayBuf],{type:'audio/wav'});
 }
 function salvarVoz(){
-  if(!audioBlobFinal)return;
+  if(!audioBlobFinal){
+    mostrarToast('🎙️ Grave um áudio antes de usar no pet.');
+    return;
+  }
   const leitor=new FileReader();
   leitor.onloadend=()=>{
+    if(!leitor.result){
+      mostrarToast('❌ Falha ao salvar a voz. Tente gravar de novo.');
+      return;
+    }
     estado.vozSalva=leitor.result;
-    salvar();
+    try{salvar()}catch(e){console.warn('salvar voz:',e)}
     fecharModal('modal-gravador');
-    mostrarToast('💾 Som do pet atualizado!');
+    mostrarToast('🐾 Voz salva! Toque no pet para ouvir.');
+    try{
+      if(_audioPetAtual){try{_audioPetAtual.pause()}catch(_){}}
+      _audioPetAtual=new Audio(estado.vozSalva);
+      _audioPetAtual.volume=obterVolumeSom();
+    }catch(_){}
   };
+  leitor.onerror=()=>mostrarToast('❌ Falha ao ler o áudio gravado.');
   leitor.readAsDataURL(audioBlobFinal);
+}
+function limparVozPet(){
+  estado.vozSalva=null;
+  try{salvar()}catch(_){}
+  mostrarToast('🎤 Voz do pet voltou ao padrão');
 }
 function comViewTransition(fn){
   if(typeof document.startViewTransition==='function'&&!window.matchMedia('(prefers-reduced-motion: reduce)').matches){
