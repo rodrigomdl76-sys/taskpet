@@ -872,7 +872,8 @@ function abrirMenuMais(){
 </style>
 
 <style id="multi-acessorios-interativos-css">
-#objetos-pet-layer{pointer-events:auto!important}
+#objetos-pet-layer{pointer-events:none!important}
+#objetos-pet-layer .objeto-pet{pointer-events:auto!important}
 .objeto-pet{cursor:pointer;transition:transform .2s cubic-bezier(.34,1.56,.64,1)}
 .objeto-pet:active{transform:scale(1.15)}
 .objeto-estrela{left:12%;top:18%;font-size:28px;animation:varinhaBrilha 2s ease-in-out infinite}
@@ -1000,7 +1001,10 @@ function abrirMenuMais(){
     <span id="engajamento-streak"></span><div id="engajamento-desafio"></div><button id="btn-bau-diario">🎁 Baú do dia</button>
   </div>
   <div class="tasks-section" id="secao-missoes">
-    <button type="button" class="task-header task-header-expansivel" onclick="alternarMissoes()" aria-expanded="true"><b style="font-size:10px">✨ Missões de hoje</b><span style="display:flex;align-items:center;gap:6px"><span style="font-size:8px;font-weight:900;color:#0284c7" id="qtd-tarefas">2 missões</span><span id="seta-missoes">⌃</span></span></button>
+    <button type="button" class="task-header task-header-expansivel" onclick="alternarMissoes()" aria-expanded="true">
+      <span class="task-header-left"><b>✨ Missões de hoje</b></span>
+      <span class="task-header-right"><span id="qtd-tarefas">2 missões</span><span id="seta-missoes" aria-hidden="true">⌃</span></span>
+    </button>
     <div id="banner-aprovacoes-pendentes" class="hidden" style="margin-bottom:6px;padding:7px 9px;border-radius:12px;background:#fffbeb;border:1px solid #fcd34d;font-size:9px;font-weight:900;color:#92400e;display:none;align-items:center;gap:6px">⏳ <span id="txt-aprovacoes-pendentes">Há tarefas aguardando os pais</span></div>
     <div id="lista-tarefas"></div>
     <div id="status-ofensiva" style="margin-top:7px;padding:7px 9px;border-radius:12px;background:#fff7ed;border:1px solid #fed7aa;font-size:9px;font-weight:900;color:#9a3412">🔥 Complete as missões fixas para manter a sequência</div>
@@ -2252,7 +2256,11 @@ async function iniciarSincronizacaoNuvem(){
       }catch(e){console.warn('sync aprovacao:',e)}
       atualizarTela();
       atualizarStatusSyncUI();
-      mostrarToast('☁️ Sincronizado');
+      const agora=Date.now();
+      if(!window.__rpUltimoToastSync || agora-window.__rpUltimoToastSync>8000){
+        window.__rpUltimoToastSync=agora;
+        mostrarToast('☁️ Sincronizado');
+      }
     }
   });
 }
@@ -2564,14 +2572,16 @@ function aplicarFundoTela(id){
   renderizarParticulasCenario(fundoId);
 }
 function obterDadosPetAtual(){if(!estado.pets[estado.petAtual])estado.pets[estado.petAtual]={nivel:1,xp:0,felicidade:100,saude:100};return estado.pets[estado.petAtual]}
-function nivelJogador(){return Math.max(...Object.values(estado.pets).map(p=>p.nivel||1))}
-function calcularFase(n){return n>=81?5:n>=61?4:n>=41?3:n>=21?2:1}
+function nivelJogador(){const niveis=Object.values(estado.pets||{}).map(p=>p.nivel||1);return niveis.length?Math.max(...niveis):1}
+function calcularFase(n){n=Number(n)||1;return n>=81?5:n>=61?4:n>=41?3:n>=21?2:1}
 function renderizarProgressoEvolucao(){
   const el=document.getElementById('evo-progresso');
   if(!el)return;
   const d=PETS[estado.petAtual],p=obterDadosPetAtual(),fase=calcularFase(p.nivel);
+  if(!d||!d.evolucoes){el.innerHTML='';return}
   const atual=d.evolucoes[fase-1];
   const prox=d.evolucoes[fase];
+  if(!atual){el.innerHTML='';return}
   if(!prox){
     el.innerHTML=`<div class="evo-progresso-top"><strong>👑 Evolução máxima</strong><span>Fase ${fase}/5</span></div><div class="evo-progresso-bar"><div class="evo-progresso-fill" style="width:100%"></div></div><small>${esc(atual.desc)} · continue cuidando para manter seu pet brilhando!</small>`;
     return;
@@ -2582,7 +2592,8 @@ function renderizarProgressoEvolucao(){
   el.innerHTML=`<div class="evo-progresso-top"><strong>✨ Próxima: ${esc(prox.nome)}</strong><span>Nv. ${p.nivel}/${alvo}</span></div><div class="evo-progresso-bar"><div class="evo-progresso-fill" style="width:${perc}%"></div></div><small>${falta?`Faltam ${falta} níveis`:'Evolução pronta!'} · ${esc(prox.desc)}</small>`;
 }
 function celebrarEvolucaoPet(fase){
-  const d=PETS[estado.petAtual],ev=d.evolucoes[fase-1];
+  const d=PETS[estado.petAtual]; if(!d||!d.evolucoes)return;
+  const ev=d.evolucoes[fase-1];
   if(!ev)return;
   const pet=document.getElementById('pet-principal');
   const aura=document.getElementById('evolucao-aura');
@@ -2601,29 +2612,38 @@ let rpUltimoPetVisualKey='';
 let rpUltimoAcessorioVisualKey='';
 
 function atualizarTelaInterna(){
+  try{
+  if(typeof estado==='undefined'||!estado)return;
+  if(typeof PETS==='undefined'||!PETS[estado.petAtual]){
+    try{estado.petAtual=Object.keys(PETS||{})[0]||'gato'}catch(_){estado.petAtual='gato'}
+  }
   const def=PETS[estado.petAtual],p=obterDadosPetAtual(),fase=calcularFase(p.nivel);
-  document.getElementById('txt-moedas').textContent=estado.moedas;
+  const setTxt=(id,v)=>{const el=document.getElementById(id);if(el)el.textContent=v};
+  const setVal=(id,v)=>{const el=document.getElementById(id);if(el)el.value=v};
+  setTxt('txt-moedas',estado.moedas);
   const dinheiro=(estado.dinheiroAcumulado||0).toFixed(2).replace('.',',');
-  document.getElementById('txt-dinheiro').textContent=dinheiro;
-  document.getElementById('txt-painel-disponivel').textContent=dinheiro;
-  document.getElementById('txt-total-pago').textContent=(estado.totalSacado||0).toFixed(2).replace('.',',');
-  document.getElementById('texto-taxa-atual').textContent=(estado.taxaCambio||.01).toFixed(2).replace('.',',');
+  setTxt('txt-dinheiro',dinheiro);
+  setTxt('txt-painel-disponivel',dinheiro);
+  setTxt('txt-total-pago',(estado.totalSacado||0).toFixed(2).replace('.',','));
+  setTxt('texto-taxa-atual',(estado.taxaCambio||.01).toFixed(2).replace('.',','));
   
   const streakVal=Number(estado.streak)||0;
-  document.getElementById('txt-streak').textContent=streakVal;
+  setTxt('txt-streak',streakVal);
   const btnStreak=document.getElementById('btn-pill-streak');
   if(btnStreak)btnStreak.classList.toggle('streak-fogo',streakVal>=3);
-  document.getElementById('val-felicidade').textContent=p.felicidade;
+  setTxt('val-felicidade',p.felicidade);
   const barraFel=document.getElementById('barra-felicidade');
   if(barraFel){
     barraFel.style.width=p.felicidade+'%';
     barraFel.classList.toggle('glow-happy',p.felicidade>=80);
   }
-  document.getElementById('txt-saude').textContent=p.saude+'%';
-  document.getElementById('numero-nivel').textContent=p.nivel;
-  document.getElementById('texto-xp').textContent=`${p.xp}/100`;
-  document.getElementById('barra-xp').style.width=p.xp+'%';
-  document.getElementById('btn-pet-atual').textContent=def.emoji;
+  setTxt('txt-saude',(p.saude||0)+'%');
+  setTxt('numero-nivel',p.nivel);
+  setTxt('texto-xp',`${p.xp}/100`);
+  const barraXp=document.getElementById('barra-xp');
+  if(barraXp)barraXp.style.width=(p.xp||0)+'%';
+  const btnPet=document.getElementById('btn-pet-atual');
+  if(btnPet)btnPet.textContent=def.emoji;
   // Evita reescrever o SVG a cada tick (causa piscar da tela).
   const petVisualKey=`${estado.petAtual}|${fase}`;
   const svgBox=document.getElementById('pet-svg-container');
@@ -2633,15 +2653,17 @@ function atualizarTelaInterna(){
     rpUltimoAcessorioVisualKey=''; // força reaplicar acessórios após novo SVG
   }
   
-  document.getElementById('pet-evol-nome').textContent=`${def.nome} • ${def.evolucoes[fase-1].nome}`;
+  setTxt('pet-evol-nome',`${def.nome} • ${def.evolucoes[fase-1].nome}`);
   renderizarProgressoEvolucao();
   const modalNome=document.getElementById('modal-pet-evol-nome');
   if(modalNome)modalNome.textContent=def.nome;
-  document.getElementById('input-idade-crianca').value=estado.idadeCrianca||7;
-  document.getElementById('input-taxa-cambio').value=estado.taxaCambio;
+  setVal('input-idade-crianca',estado.idadeCrianca||7);
+  setVal('input-taxa-cambio',estado.taxaCambio);
   
   document.querySelectorAll('.opcao-pet').forEach(el=>{
-    const tipo=el.dataset.pet,ok=nivelJogador()>=PETS[tipo].desbloqueioNivel;
+    const tipo=el.dataset.pet, petDef=PETS[tipo];
+    if(!petDef)return;
+    const ok=nivelJogador()>=(petDef.desbloqueioNivel||0);
     el.classList.toggle('ativo',tipo===estado.petAtual);
     el.classList.toggle('bloqueado',!ok);
     el.querySelector('.lock-mini')?.remove();
@@ -2662,6 +2684,18 @@ function atualizarTelaInterna(){
   renderizarEvolucoes();
   renderizarConquistas();
   atualizarEstatisticas();
+  }catch(err){console.warn('atualizarTelaInterna:',err)}
+}
+/* Base de atualização de tela: coalescida em 1 frame. Patches posteriores
+   envolvem esta função — o guard final também preserva a cadeia. */
+let rpRenderAgendado=false;
+function atualizarTela(){
+  if(rpRenderAgendado)return;
+  rpRenderAgendado=true;
+  requestAnimationFrame(()=>{
+    rpRenderAgendado=false;
+    try{atualizarTelaInterna()}catch(e){console.warn('atualizarTela:',e)}
+  });
 }
 function estaDormindoAgora(){
   const h=new Date().getHours();
@@ -2736,48 +2770,48 @@ function agendarFalaAleatoria(){
 }
 let debounceAcao=false;
 function obterVolumeSom(){
-  const v=Number(estado.volumeSom);
-  return Number.isFinite(v)?Math.max(0,Math.min(1,v)):0.55;
+  try{
+    const v=Number(estado&&estado.volumeSom);
+    return Number.isFinite(v)?Math.max(0,Math.min(1,v)):0.55;
+  }catch(_){return 0.55}
 }
 let _audioPetAtual=null;
 let _audioPetSrcCache='';
 function tocarAudioPet(url){
   const vol=obterVolumeSom();
   if(vol<=0.01)return false;
-  const fonte=estado.vozSalva||url;
+  const fonte=(estado&&estado.vozSalva)||url;
   if(!fonte)return false;
   try{
-    // Desbloqueia AudioContext no gesto do usuário (iOS/Android).
     try{obterAudioContext()}catch(_){}
-
-    // Sempre usa um Audio dedicado com a voz salva — mais confiável que o
-    // <audio> do modal de gravação (que some/reseta ao fechar o modal).
-    if(!_audioPetAtual || _audioPetSrcCache!==String(fonte)){
+    // Novo Audio a cada toque quando é data-URL de voz: evita estado "preso"
+    // no iOS após pause/currentTime=0.
+    const isData=String(fonte).startsWith('data:');
+    if(isData || !_audioPetAtual || _audioPetSrcCache!==String(fonte)){
       if(_audioPetAtual){try{_audioPetAtual.pause()}catch(_){}}
-      _audioPetAtual=new Audio(String(fonte));
+      _audioPetAtual=new Audio();
       _audioPetAtual.preload='auto';
-      _audioPetAtual.playsInline=true;
-      _audioPetAtual.setAttribute('playsinline','');
+      try{_audioPetAtual.playsInline=true}catch(_){}
+      try{_audioPetAtual.setAttribute('playsinline','')}catch(_){}
+      try{_audioPetAtual.setAttribute('webkit-playsinline','')}catch(_){}
+      _audioPetAtual.src=String(fonte);
       _audioPetSrcCache=String(fonte);
     }
     const a=_audioPetAtual;
-    try{a.pause()}catch(_){}
-    try{a.currentTime=0}catch(_){}
     a.volume=vol;
     a.muted=false;
-
+    try{a.currentTime=0}catch(_){}
     const p=a.play();
     if(p&&typeof p.catch==='function'){
       p.catch(err=>{
         console.warn('Falha ao reproduzir voz do pet:',err);
-        // Retry único: recria o elemento e tenta de novo no mesmo gesto.
         try{
-          _audioPetAtual=new Audio(String(fonte));
-          _audioPetAtual.preload='auto';
-          _audioPetAtual.playsInline=true;
-          _audioPetAtual.volume=vol;
+          const b=new Audio(String(fonte));
+          b.volume=vol;
+          try{b.playsInline=true}catch(_){}
+          _audioPetAtual=b;
           _audioPetSrcCache=String(fonte);
-          _audioPetAtual.play().catch(()=>{});
+          b.play().catch(()=>{});
         }catch(_){}
       });
     }
@@ -2793,28 +2827,43 @@ function registrarLogAtividade(texto){
   if(estado.logAtividades.length>40)estado.logAtividades.length=40;
 }
 function interagirComPet(e){
-  if(debounceAcao)return;
-  debounceAcao=true;
-  setTimeout(()=>debounceAcao=false,280);
-  const d=obterDadosPetAtual();
-  d.felicidade=Math.min(100,d.felicidade+5);
-  // Prioridade: voz gravada; se não houver, som padrão do pet.
-  const tocou=tocarAudioPet(PETS[estado.petAtual]?.som);
-  navigator.vibrate?.(25);
-  criarTextoFlutuante(estado.vozSalva?'🗣️':'❤️ +5',e);
-  animarPetToque(e);
-  if(estado.vozSalva){
-    mostrarBalaoFala(tocou?'🗣️ Ouvindo a sua voz!':'🗣️ Toque de novo para ouvir a gravação');
-    if(tocou)mostrarToast(`🗣️ ${PETS[estado.petAtual].nome} está repetindo a gravação!`);
-  }else if(Math.random()<.55){
-    mostrarBalaoFala(escolherFalaContextual('carinho'));
-  }else{
-    mostrarToast(`❤️ ${PETS[estado.petAtual].nome} adorou!`);
+  try{
+    if(debounceAcao)return;
+    debounceAcao=true;
+    setTimeout(()=>debounceAcao=false,280);
+
+    // Reação visual PRIMEIRO (não depende de áudio/salvar).
+    try{animarPetToque(e)}catch(_){}
+    try{navigator.vibrate?.(25)}catch(_){}
+
+    const d=obterDadosPetAtual();
+    if(d)d.felicidade=Math.min(100,(Number(d.felicidade)||0)+5);
+
+    // Voz gravada tem prioridade; senão som padrão do pet.
+    let tocou=false;
+    try{tocou=!!tocarAudioPet(PETS[estado.petAtual]?.som)}catch(_){tocou=false}
+
+    try{criarTextoFlutuante(estado.vozSalva?'🗣️':'❤️ +5',e)}catch(_){}
+
+    const nome=(PETS[estado.petAtual]||{}).nome||'Pet';
+    if(estado.vozSalva){
+      try{mostrarBalaoFala(tocou?'🗣️ Ouvindo a sua voz!':'🗣️ Toque de novo para ouvir')}catch(_){}
+      if(tocou){try{mostrarToast('🗣️ '+nome+' está repetindo a gravação!')}catch(_){}}
+    }else{
+      try{
+        if(Math.random()<.6)mostrarBalaoFala(escolherFalaContextual('carinho'));
+        else mostrarToast('❤️ '+nome+' adorou!');
+      }catch(_){}
+    }
+
+    try{animarAcessorioTema?.()}catch(_){}
+    try{animarMoedasBump?.()}catch(_){}
+    try{salvar()}catch(_){}
+    try{atualizarTela()}catch(_){}
+  }catch(err){
+    console.warn('interagirComPet:',err);
+    try{animarPetToque(e)}catch(_){}
   }
-  salvar();
-  atualizarTela();
-  animarAcessorioTema();
-  animarMoedasBump();
 }
 function acaoPet(tipo){
   if(debounceAcao)return;
@@ -2829,7 +2878,7 @@ function acaoPet(tipo){
   debounceAcao=true;
   setTimeout(()=>debounceAcao=false,400);
   const d=obterDadosPetAtual();
-  const nome=PETS[estado.petAtual].nome;
+  const nome=(PETS[estado.petAtual]||{}).nome||'Pet';
   estado.ultimoAcaoPet[tipo]=agora;
   if(tipo==='alimentar'){
     d.felicidade=Math.min(100,d.felicidade+12);
@@ -2854,7 +2903,7 @@ function acaoPet(tipo){
     if(wrap){wrap.classList.add('pet-dormindo');setTimeout(()=>wrap.classList.remove('pet-dormindo'),2500)}
     criarTextoFlutuanteZzz();
   }
-  tocarAudioPet(PETS[estado.petAtual].som);
+  tocarAudioPet(PETS[estado.petAtual]?.som);
   navigator.vibrate?.(30);
   animarPetToque(null);
   salvar();
@@ -3270,7 +3319,21 @@ function darRemedio(){
   mostrarToast('💚 Saúde restaurada!');
   registrarLogAtividade('Remédio dado ao pet');
 }
-function criarTextoFlutuante(txt,e){const area=document.getElementById('pet-section-area'),s=document.createElement('div');s.className='floating-text';s.textContent=txt;const r=area.getBoundingClientRect();s.style.left=(e?.clientX?r.left<e.clientX?e.clientX-r.left:80:90)+'px';s.style.top='35%';area.appendChild(s);setTimeout(()=>s.remove(),900)}
+function criarTextoFlutuante(txt,e){
+  const area=document.getElementById('pet-section-area')||document.querySelector('.pet-stage')||document.body;
+  if(!area)return;
+  const s=document.createElement('div');
+  s.className='floating-text';
+  s.textContent=txt;
+  try{
+    const r=area.getBoundingClientRect();
+    const x=e&&e.clientX!=null?(e.clientX-r.left): (r.width*0.45);
+    s.style.left=Math.max(8,Math.min(r.width-40,x))+'px';
+  }catch(_){s.style.left='45%'}
+  s.style.top='32%';
+  area.appendChild(s);
+  setTimeout(()=>{try{s.remove()}catch(_){}},950);
+}
 const CORES_CONFETE_PET={gato:['#a78bfa','#1e293b','#f8fafc'],cachorra:['#f4a261','#e76f51','#fff7ed'],cabra:['#f5e6d3','#a0522d','#fefce8'],frango:['#fff9c4','#ff6b6b','#ffcc00'],unicornio:['#f0abfc','#a78bfa','#f9a8d4','#fef08a'],dinossauro:['#4ade80','#16a34a','#facc15','#84cc16'],capivara:['#d69e6b','#86efac','#38bdf8','#fbbf24']};
 function ganharXP(qtd,e){
   const p=obterDadosPetAtual();
@@ -3721,13 +3784,14 @@ function removerMetaPersonalizada(id){
 }
 function renderizarResumoCrianca(){ /* painel grande removido: resumo disponível no ícone Hoje */ }
 function renderizarTarefas(){
-  renderizarMetas();
-  renderizarResumoCrianca();
+  try{renderizarMetas()}catch(e){}
+  try{renderizarResumoCrianca()}catch(e){}
   const c=document.getElementById('lista-tarefas');
+  if(!c)return;
   c.innerHTML='';
   const hojeLista=tarefasDeHoje();
   const o=hojeLista.filter(t=>t.tipo==='obrigatoria'),x=hojeLista.filter(t=>t.tipo!=='obrigatoria');
-  document.getElementById('qtd-tarefas').textContent=`${o.length} fixas · ${x.length} extras`;
+  const qtdEl=document.getElementById('qtd-tarefas'); if(qtdEl)qtdEl.textContent=`${o.length} fixas · ${x.length} extras`;
   const pendentes=(estado.tarefas||[]).filter(t=>statusTarefaAtual(t)==='aguardando_aprovacao');
   const aprovadasLista=hojeLista.filter(t=>statusTarefaAtual(t)==='aprovada');
   const bannerPend=document.getElementById('banner-aprovacoes-pendentes');
@@ -3764,7 +3828,7 @@ function renderizarTarefas(){
     lista.forEach(t=>{
       const apr=statusTarefaAtual(t)==='aprovada',pend=statusTarefaAtual(t)==='aguardando_aprovacao';
       const badgeDias=t.dias&&t.dias.length?` • ${t.dias.map(x=>DIAS_LABEL[x]).join(',')}`:'';
-      const animar=idTarefaRecemAprovada===t.id?' pop-anim':'';
+      const animar=String(idTarefaRecemAprovada)===String(t.id)?' pop-anim':'';
       
       const row=document.createElement('div');
       row.className=`task-row${animar}`;
@@ -4844,7 +4908,7 @@ function adicionarTarefa(){
         moedas=Math.max(1,parseInt(document.getElementById('nova-tarefa-moedas').value)||5),
         tipo=document.getElementById('nova-tarefa-tipo')?.value==='extra'?'extra':'obrigatoria';
   if(!txt)return mostrarToast('Digite uma tarefa.');
-  const id=estado.tarefas.length?Math.max(...estado.tarefas.map(t=>Number(t.id)||0))+1:1;
+  const nums=(estado.tarefas||[]).map(t=>Number(t.id)||0);const id=nums.length?Math.max(...nums)+1:1;
   estado.tarefas.push({id,texto:txt,recompensa:moedas,xp:20,tipo,status:'pendente',foto:null,dias:[...diasSelecionadosNovaTarefa]});
   document.getElementById('nova-tarefa-texto').value='';
   diasSelecionadosNovaTarefa=[];
@@ -6123,6 +6187,8 @@ function salvarVoz(){
 }
 function limparVozPet(){
   estado.vozSalva=null;
+  try{if(_audioPetAtual){_audioPetAtual.pause();_audioPetAtual=null}}catch(_){}
+  try{_audioPetSrcCache=''}catch(_){}
   try{salvar()}catch(_){}
   mostrarToast('🎤 Voz do pet voltou ao padrão');
 }
@@ -6506,8 +6572,8 @@ function enviarElogioCrianca(texto){
   garantirEngajamento();estado.mensagensPais.push({texto,data:hojeLocal(),hora:Date.now(),lida:false});estado.mensagensPais=estado.mensagensPais.slice(-20);registrarEngajamento('Mensagem dos pais enviada');salvar();mostrarToast('💌 Mensagem enviada!');
 }
 function atualizarMissaoFamilia(){garantirEngajamento();estado.missaoFamilia.progresso=(Number(estado.missaoFamilia.progresso)||0)+1;salvar();}
-const atualizarTelaOriginal=atualizarTela;
-atualizarTela=function(){atualizarTelaOriginal();renderizarEngajamento();};
+const atualizarTelaOriginal=(typeof atualizarTela==='function'?atualizarTela:function(){try{atualizarTelaInterna()}catch(e){}});
+atualizarTela=function(){try{atualizarTelaOriginal()}catch(e){console.warn(e)} try{renderizarEngajamento()}catch(e){}};
 setTimeout(()=>{try{garantirEngajamento();renderizarEngajamento();}catch(e){console.warn('Engajamento:',e)}},300);
 </script><style>
 .atalhos-aventuras{display:grid;grid-template-columns:repeat(4,1fr);gap:7px;margin:8px 0 5px}
@@ -6896,7 +6962,16 @@ abrirCentralAventuras=function(){abrirCentralAventurasVida();setTimeout(()=>{con
   ];
   function state(){
     if(!window.estado)return null;
-    estado.casinha=estado.casinha||{itens:[]};
+    estado.casinha=estado.casinha||{itens:[],comprados:[],ativos:[]};
+    // Unifica formatos legados: itens <-> ativos
+    if(!Array.isArray(estado.casinha.itens))estado.casinha.itens=[];
+    if(!Array.isArray(estado.casinha.ativos))estado.casinha.ativos=[];
+    if(!Array.isArray(estado.casinha.comprados))estado.casinha.comprados=[];
+    // Mescla itens e ativos num só conjunto
+    const unificado=[...new Set([...(estado.casinha.itens||[]),...(estado.casinha.ativos||[])])];
+    estado.casinha.itens=unificado.slice();
+    estado.casinha.ativos=unificado.slice();
+    unificado.forEach(id=>{if(!estado.casinha.comprados.includes(id))estado.casinha.comprados.push(id)});
     return estado;
   }
   function missions(){return (estado.tarefas||[]).filter(t=>statusTarefaAtual(t)==='aprovada').length}
@@ -6955,12 +7030,12 @@ abrirCentralAventuras=function(){abrirCentralAventurasVida();setTimeout(()=>{con
       if(!state())return; const i=ITENS.find(x=>x.id===id); if(!i)return;
       if(missions()<i.req || coins()<i.cost)return;
       estado.casinha.itens=estado.casinha.itens||[]; if(estado.casinha.itens.includes(id))return;
-      setCoins(coins()-i.cost); estado.casinha.itens.push(id); save();
+      setCoins(coins()-i.cost); estado.casinha.itens.push(id); estado.casinha.ativos=estado.casinha.ativos||[]; if(!estado.casinha.ativos.includes(id))estado.casinha.ativos.push(id); estado.casinha.comprados=estado.casinha.comprados||[]; if(!estado.casinha.comprados.includes(id))estado.casinha.comprados.push(id); save();
       if(typeof mostrarToast==='function')mostrarToast('🏡 '+i.nome+' chegou na casinha!');
       this.abrir();
     },
     remover:function(id){
-      if(!state())return; estado.casinha.itens=(estado.casinha.itens||[]).filter(x=>x!==id);save();
+      if(!state())return; estado.casinha.itens=(estado.casinha.itens||[]).filter(x=>x!==id); estado.casinha.ativos=(estado.casinha.ativos||[]).filter(x=>x!==id);save();
       this.abrir();
     }
   };
@@ -7007,11 +7082,11 @@ abrirCentralAventuras=function(){abrirCentralAventurasVida();setTimeout(()=>{con
   function render(container){
     if(!container||!st())return;
     const r=calc(), p=r.p, mo=mood();
-    const vals=[['🥰','Carinho',r.carinhoso||r.scores.carinhoso],['💪','Missões',r.scores.determinado],['🔎','Curiosidade',r.scores.curioso],['⚖️','Equilíbrio',r.scores.equilibrado]];
+    const vals=[['🥰','Carinho',(r.scores&&r.scores.carinhoso)||0],['💪','Missões',r.scores.determinado],['🔎','Curiosidade',r.scores.curioso],['⚖️','Equilíbrio',r.scores.equilibrado]];
     container.innerHTML='<div class="personal-card">'+
       '<div class="personal-head"><div class="personal-face">'+p.emoji+'</div><div><div class="personal-name">'+p.nome+'</div><div class="personal-sub">'+p.desc+'</div></div></div>'+
       '<div class="mood-pill">'+mo[0]+' Humor atual: '+mo[1]+'</div>'+
-      '<div class="traits-grid">'+vals.map(v=>'<div class="trait"><div class="trait-top"><span>'+v[0]+' '+v[1]+'</span><span>'+Math.round(v[1])+'%</span></div><div class="trait-bar"><div class="trait-fill" style="width:'+Math.round(v[1])+'%;background:linear-gradient(90deg,#8cc8ff,#7a8cff)"></div></div></div>').join('')+'</div>'+
+      '<div class="traits-grid">'+vals.map(v=>'<div class="trait"><div class="trait-top"><span>'+v[0]+' '+v[1]+'</span><span>'+Math.round(Number(v[2])||0)+'%</span></div><div class="trait-bar"><div class="trait-fill" style="width:'+Math.round(Number(v[2])||0)+'%;background:linear-gradient(90deg,#8cc8ff,#7a8cff)"></div></div></div>').join('')+'</div>'+
       '<div class="persona-quote">'+p.fala+'</div>'+
       '<div class="persona-history">Interações: <b>'+r.c+'</b> • Missões concluídas: <b>'+r.m+'</b> • Descobertas: <b>'+r.e+'</b></div>'+
       '</div>';
@@ -8126,12 +8201,19 @@ if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',
 else setTimeout(bootMulti,400);
 setTimeout(bootMulti,1200);
 
-// Patch atualizarTela para re-render acessórios
+// Patch: acessórios já são re-renderizados em atualizarTelaInterna quando mudam.
+// Aqui só reaplicamos se a camada sumiu (ex.: troca de pet/fase).
 if(typeof window.atualizarTela==='function' && !window.atualizarTela.__multiAcc){
   const oldA=window.atualizarTela;
   window.atualizarTela=function(){
     const r=oldA.apply(this,arguments);
-    try{window.renderizarAcessorioNoContainer()}catch(e){}
+    try{
+      const c=document.getElementById('camada-acessorio');
+      const precisa=!c || (c.childElementCount===0 && (estado.acessorios?.ativos||[]).length>0);
+      if(precisa && typeof window.renderizarAcessorioNoContainer==='function'){
+        window.renderizarAcessorioNoContainer();
+      }
+    }catch(e){}
     return r;
   };
   window.atualizarTela.__multiAcc=true;
@@ -8180,16 +8262,18 @@ body:before{
 
 
 <script id="rotinapet-render-guard-v1">
-/* Estabilização V1: coalescer renders repetidos no mesmo ciclo. */
-let rpRenderAgendado=false;
-function atualizarTela(){
-  if(rpRenderAgendado)return;
-  rpRenderAgendado=true;
-  requestAnimationFrame(()=>{
-    rpRenderAgendado=false;
-    atualizarTelaInterna();
-  });
-}
+/* Estabilização V1: a coalescência já está na base de atualizarTela().
+   Este guard só garante que a cadeia de patches não foi perdida e
+   NÃO sobrescreve wrappers (engajamento, mapa, humor, acessórios…). */
+(function(){
+  if(typeof window.atualizarTela!=='function'){
+    window.atualizarTela=function(){
+      try{atualizarTelaInterna()}catch(e){console.warn(e)}
+    };
+  }
+  // Marca para debug
+  window.atualizarTela.__rpBaseOk=true;
+})();
 </script>
 
 
@@ -8209,6 +8293,275 @@ window.RotinaPetDiagnostico=function(){
     ultimoDiaConcluido:estado?.ultimoDiaConcluido||null
   };
 };
+</script>
+
+
+<style id="layout-fix-print-v1">
+/* ===== Correções do layout (print: top, stage, missões, dock) ===== */
+
+/* App: evita estouro horizontal e dá respiro vertical */
+.app{
+  overflow-x:hidden!important;
+  overflow-y:auto!important;
+  gap:5px!important;
+  padding-left:10px!important;
+  padding-right:10px!important;
+  padding-bottom:max(10px,env(safe-area-inset-bottom))!important;
+}
+
+/* Topo: pastilhas legíveis, sem texto cortado */
+.top-row{
+  gap:5px!important;
+  margin:0!important;
+}
+.top-pill{
+  min-height:40px!important;
+  padding:4px 5px!important;
+  gap:3px!important;
+}
+.top-pill-text{
+  font-size:9px!important;
+  max-width:100%!important;
+}
+.top-pill-sub{
+  font-size:6.5px!important;
+}
+
+/* Seletor do pet + ajuda: alinhados, sem “flutuar” torto */
+.pet-selector{
+  height:auto!important;
+  min-height:44px;
+  display:flex!important;
+  justify-content:center!important;
+  align-items:center!important;
+  gap:12px!important;
+  margin:2px 0 4px!important;
+  position:relative;
+  z-index:25;
+}
+.pet-unico-btn{
+  width:44px!important;
+  height:44px!important;
+  flex-shrink:0;
+}
+.btn-ajuda-flutuante{
+  position:static!important;
+  width:36px!important;
+  height:36px!important;
+  font-size:15px!important;
+  flex-shrink:0;
+  animation:none!important;
+  box-shadow:0 4px 12px rgba(124,58,237,.28)!important;
+}
+
+/* Status (saúde + humor): oculto a pedido — elementos ficam no DOM só para a lógica */
+.status-row{display:none!important}
+
+/* Ações do pet: sempre visíveis, em uma linha quando couber */
+.pet-actions{
+  display:flex!important;
+  flex-wrap:wrap!important;
+  justify-content:center!important;
+  gap:5px!important;
+  margin:2px 0 4px!important;
+  padding:0 2px;
+}
+.pet-action-btn{
+  min-width:0!important;
+  padding:6px 9px!important;
+  font-size:9px!important;
+  border-radius:11px!important;
+  flex:1 1 auto;
+  max-width:32%;
+}
+
+/* Palco do pet: sem vazamento lateral */
+.cat-section{
+  flex:1 1 auto!important;
+  min-height:0!important;
+  max-width:100%!important;
+  overflow:hidden!important;
+}
+.pet-stage{
+  width:min(210px,58vw)!important;
+  height:min(200px,30vh)!important;
+  min-height:140px!important;
+  max-width:100%!important;
+  margin:0 auto!important;
+  overflow:hidden!important;
+}
+#pet-svg-container{
+  width:min(140px,38vw)!important;
+  height:min(140px,38vw)!important;
+}
+.evo-progresso{
+  max-width:min(300px,92%)!important;
+  margin-left:auto!important;
+  margin-right:auto!important;
+}
+.level-badge,.xp-bar-bg,.evo-name{
+  max-width:100%!important;
+}
+
+/* Missões: cabeçalho limpo (título | contagem + seta) */
+.tasks-section{
+  max-height:min(140px,22vh)!important;
+  padding:8px 10px!important;
+  margin-top:2px!important;
+  flex-shrink:0!important;
+}
+.task-header-expansivel{
+  display:flex!important;
+  align-items:center!important;
+  justify-content:space-between!important;
+  gap:8px!important;
+  width:100%!important;
+  padding:4px 2px 6px!important;
+  margin:0!important;
+  border:0!important;
+  background:transparent!important;
+  text-align:left!important;
+}
+.task-header-left b{
+  font-size:11px!important;
+  font-weight:900!important;
+  color:#172033!important;
+  white-space:nowrap;
+}
+.task-header-right{
+  display:inline-flex!important;
+  align-items:center!important;
+  gap:6px!important;
+  flex-shrink:0!important;
+}
+#qtd-tarefas{
+  font-size:8px!important;
+  font-weight:900!important;
+  color:#0284c7!important;
+  background:#e0f2fe;
+  padding:3px 7px;
+  border-radius:99px;
+  white-space:nowrap;
+}
+#seta-missoes{
+  font-size:12px;
+  color:#64748b;
+  line-height:1;
+  display:inline-block;
+  transition:transform .2s ease;
+}
+
+/* Dock inferior: 5 botões legíveis, sem texto estourando */
+.bottom-buttons{
+  display:grid!important;
+  grid-template-columns:repeat(5,minmax(0,1fr))!important;
+  gap:4px!important;
+  margin-top:6px!important;
+  padding:7px 5px!important;
+  border-radius:18px!important;
+  flex-shrink:0!important;
+  position:relative!important;
+  z-index:30!important;
+  width:100%!important;
+  box-sizing:border-box!important;
+}
+.bottom-btn{
+  min-width:0!important;
+  min-height:54px!important;
+  max-width:100%!important;
+  padding:6px 2px!important;
+  border-radius:14px!important;
+  font-size:8px!important;
+  font-weight:900!important;
+  line-height:1.15!important;
+  gap:2px!important;
+  overflow:hidden!important;
+  white-space:nowrap!important;
+  text-overflow:ellipsis!important;
+  display:flex!important;
+  flex-direction:column!important;
+  align-items:center!important;
+  justify-content:center!important;
+}
+.bottom-btn .btn-icon{
+  width:20px!important;
+  height:20px!important;
+  font-size:15px!important;
+  margin:0 auto 2px!important;
+  display:flex!important;
+  align-items:center!important;
+  justify-content:center!important;
+  flex-shrink:0!important;
+  background:rgba(255,255,255,.2)!important;
+  border-radius:7px!important;
+}
+
+/* Telas bem estreitas */
+@media (max-width:360px){
+  .bottom-btn{font-size:7px!important;min-height:50px!important;padding:5px 1px!important}
+  .bottom-btn .btn-icon{font-size:14px!important;width:18px!important;height:18px!important}
+  .pet-action-btn{font-size:8px!important;padding:5px 6px!important;max-width:none;flex:1 1 30%}
+  .top-pill-text{font-size:8px!important}
+}
+@media (max-height:640px){
+  .pet-stage{height:min(170px,26vh)!important;min-height:120px!important}
+  #pet-svg-container{width:110px!important;height:110px!important}
+  .tasks-section{max-height:100px!important}
+  .bottom-btn{min-height:48px!important}
+}
+</style>
+
+
+<style id="pet-touch-fix-v1">
+/* Camada de objetos NÃO bloqueia o toque no pet */
+#objetos-pet-layer{pointer-events:none!important;z-index:4}
+#objetos-pet-layer .objeto-pet{pointer-events:auto!important;z-index:5}
+#pet-principal{
+  position:relative!important;
+  z-index:12!important;
+  pointer-events:auto!important;
+  cursor:pointer!important;
+  touch-action:manipulation!important;
+}
+#pet-svg-container,#pet-svg-container *{pointer-events:none!important}
+.pet-stage{isolation:isolate}
+/* Bounce precisa vencer o idle contínuo */
+#pet-principal.pet-bounce,
+.cat-wrapper.pet-bounce{
+  animation:petBounceSpring .55s cubic-bezier(.34,1.56,.64,1) both!important;
+}
+/* Não cortar balão / coração ao reagir */
+.cat-section{overflow:visible!important}
+.pet-stage{overflow:visible!important}
+.balao-fala{z-index:20!important}
+.floating-text{z-index:30!important}
+</style>
+
+
+<script id="pet-touch-bind-v1">
+(function(){
+  function bind(){
+    const pet=document.getElementById('pet-principal');
+    if(!pet||pet.dataset.touchBound==='1')return;
+    pet.dataset.touchBound='1';
+    pet.style.pointerEvents='auto';
+    pet.style.cursor='pointer';
+    const handler=function(ev){
+      try{
+        if(typeof window.interagirComPet==='function')window.interagirComPet(ev);
+        else if(typeof interagirComPet==='function')interagirComPet(ev);
+      }catch(err){console.warn('pet touch bind:',err)}
+    };
+    pet.addEventListener('click',handler);
+    pet.addEventListener('keydown',function(ev){
+      if(ev.key==='Enter'||ev.key===' '){ev.preventDefault();handler(ev)}
+    });
+  }
+  if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',bind);
+  else bind();
+  setTimeout(bind,400);
+  setTimeout(bind,1200);
+})();
 </script>
 
 </body>
