@@ -2713,40 +2713,30 @@ let _audioPetAtual=null;
 function tocarAudioPet(url){
   const vol=obterVolumeSom();
   if(vol<=0.01)return false;
+  const fonte=estado.vozSalva||url;
+  if(!fonte)return false;
   try{
-    if(_audioPetAtual){
-      try{_audioPetAtual.pause();_audioPetAtual.currentTime=0}catch(_){}
-      _audioPetAtual=null;
-    }
-    // Se existir uma gravação salva, ela sempre tem prioridade sobre o som padrão do pet.
-    const fonte=estado.vozSalva||url;
-    if(!fonte)return false;
+    if(_audioPetAtual){try{_audioPetAtual.pause();_audioPetAtual.currentTime=0}catch(_){} }
 
-    const a=new Audio();
-    a.src=fonte;
-    a.preload='auto';
-    a.playsInline=true;
+    // Reutiliza o elemento de áudio da gravação quando existir. Isso é mais confiável
+    // em celulares do que criar um novo Audio() a cada toque.
+    const preview=document.getElementById('audio-original');
+    const a=preview||new Audio();
+    if(preview && (!preview.src || preview.dataset.petVoiceSrc!==String(fonte))){
+      preview.src=String(fonte);
+      preview.dataset.petVoiceSrc=String(fonte);
+      try{preview.load()}catch(_){}
+    }else if(!preview){
+      a.src=String(fonte);
+      a.preload='auto';
+    }
     a.volume=vol;
+    a.currentTime=0;
+    a.playsInline=true;
     _audioPetAtual=a;
 
-    // play() é disparado diretamente a partir do toque no pet, permitindo reprodução
-    // em navegadores móveis que bloqueiam autoplay fora de uma ação do usuário.
-    a.load();
-    const promessa=a.play();
-    if(promessa&&typeof promessa.catch==='function'){
-      promessa.catch(err=>{
-        console.warn('Falha ao reproduzir voz do pet:',err);
-        // Tenta novamente usando o elemento de áudio já presente na gravação.
-        try{
-          const preview=document.getElementById('audio-original');
-          if(preview&&preview.src&&estado.vozSalva){
-            preview.currentTime=0;
-            preview.volume=vol;
-            preview.play().catch(()=>{});
-          }
-        }catch(_){}
-      });
-    }
+    const p=a.play();
+    if(p&&typeof p.catch==='function')p.catch(err=>console.warn('Falha ao reproduzir voz do pet:',err));
     return true;
   }catch(e){
     console.warn('tocarAudioPet:',e);
@@ -8080,7 +8070,7 @@ if(typeof window.atualizarTela==='function' && !window.atualizarTela.__multiAcc)
   const oldA=window.atualizarTela;
   window.atualizarTela=function(){
     const r=oldA.apply(this,arguments);
-    try{renderizarAcessorioNoContainer()}catch(e){}
+    try{window.renderizarAcessorioNoContainer()}catch(e){}
     return r;
   };
   window.atualizarTela.__multiAcc=true;
