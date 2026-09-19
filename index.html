@@ -2208,6 +2208,12 @@ async function iniciarSincronizacaoNuvem(){
     if(ignorarProximoSyncNuvem){ignorarProximoSyncNuvem=false;return}
     const d=s.val();
     if(d&&typeof d==='object'){
+      // Snapshot dos status locais ANTES de aplicar o remoto (para detectar aprovações).
+      try{
+        const snap={};
+        (estado.tarefas||[]).forEach(t=>{if(t&&t.id!=null)snap[String(t.id)]=statusTarefaAtual(t)});
+        window.__rpStatusTarefasAntesSync=snap;
+      }catch(_){}
       ultimoEstadoSincronizado=JSON.parse(JSON.stringify(d));
       ultimaSyncOkEm=Date.now();
       statusSyncAtual='online';
@@ -2227,6 +2233,23 @@ async function iniciarSincronizacaoNuvem(){
       const normalizouDiaNoListener=normalizarTarefasDoDia();
       try{localStorage.setItem(`ROTINAPET_SAVE_${codigoFamilia}`,JSON.stringify(estado))}catch(e){}
       if(mudouDiaNoListener||normalizouDiaNoListener)salvar();
+      // Detecta tarefas que passaram a aprovada neste sync (aparelho da criança/vovó).
+      try{
+        const antes=window.__rpStatusTarefasAntesSync||{};
+        const agoraMap={};
+        (estado.tarefas||[]).forEach(t=>{
+          if(!t||t.id==null)return;
+          const st=statusTarefaAtual(t);
+          agoraMap[String(t.id)]=st;
+          if(st==='aprovada' && antes[String(t.id)] && antes[String(t.id)]!=='aprovada'){
+            idTarefaRecemAprovada=t.id;
+            mostrarToast('🎉 Missão aprovada: '+String(t.texto||'').slice(0,40));
+            if(typeof mostrarBalaoFala==='function')mostrarBalaoFala('🏆 Os pais aprovaram sua missão!');
+            if(typeof dispararConfetes==='function')dispararConfetes(40);
+          }
+        });
+        window.__rpStatusTarefasAntesSync=agoraMap;
+      }catch(e){console.warn('sync aprovacao:',e)}
       atualizarTela();
       atualizarStatusSyncUI();
       mostrarToast('☁️ Sincronizado');
@@ -2601,7 +2624,14 @@ function atualizarTelaInterna(){
   document.getElementById('texto-xp').textContent=`${p.xp}/100`;
   document.getElementById('barra-xp').style.width=p.xp+'%';
   document.getElementById('btn-pet-atual').textContent=def.emoji;
-  document.getElementById('pet-svg-container').innerHTML=`<div class="camada-pet">${petSVG(estado.petAtual,fase)}</div><div class="camada-acessorio" id="camada-acessorio"></div>`;
+  // Evita reescrever o SVG a cada tick (causa piscar da tela).
+  const petVisualKey=`${estado.petAtual}|${fase}`;
+  const svgBox=document.getElementById('pet-svg-container');
+  if(svgBox && rpUltimoPetVisualKey!==petVisualKey){
+    svgBox.innerHTML=`<div class="camada-pet">${petSVG(estado.petAtual,fase)}</div><div class="camada-acessorio" id="camada-acessorio"></div>`;
+    rpUltimoPetVisualKey=petVisualKey;
+    rpUltimoAcessorioVisualKey=''; // força reaplicar acessórios após novo SVG
+  }
   
   document.getElementById('pet-evol-nome').textContent=`${def.nome} • ${def.evolucoes[fase-1].nome}`;
   renderizarProgressoEvolucao();
@@ -2621,7 +2651,7 @@ function atualizarTelaInterna(){
   atualizarHumorPet(p);
 
   // Acessórios também só são redesenhados quando mudam.
-  const acessorioKey=`${estado.petAtual}|${estado.acessorios?.ativo||''}`;
+  const acessorioKey=`${estado.petAtual}|${(estado.acessorios?.ativos||[estado.acessorios?.ativo]).filter(Boolean).join(',')}`;
   if(rpUltimoAcessorioVisualKey!==acessorioKey){
     renderizarAcessorioNoContainer();
     rpUltimoAcessorioVisualKey=acessorioKey;
@@ -2710,33 +2740,47 @@ function obterVolumeSom(){
   return Number.isFinite(v)?Math.max(0,Math.min(1,v)):0.55;
 }
 let _audioPetAtual=null;
+let _audioPetSrcCache='';
 function tocarAudioPet(url){
   const vol=obterVolumeSom();
   if(vol<=0.01)return false;
   const fonte=estado.vozSalva||url;
   if(!fonte)return false;
   try{
-    if(_audioPetAtual){try{_audioPetAtual.pause();_audioPetAtual.currentTime=0}catch(_){} }
+    // Desbloqueia AudioContext no gesto do usuário (iOS/Android).
+    try{obterAudioContext()}catch(_){}
 
-    // Reutiliza o elemento de áudio da gravação quando existir. Isso é mais confiável
-    // em celulares do que criar um novo Audio() a cada toque.
-    const preview=document.getElementById('audio-original');
-    const a=preview||new Audio();
-    if(preview && (!preview.src || preview.dataset.petVoiceSrc!==String(fonte))){
-      preview.src=String(fonte);
-      preview.dataset.petVoiceSrc=String(fonte);
-      try{preview.load()}catch(_){}
-    }else if(!preview){
-      a.src=String(fonte);
-      a.preload='auto';
+    // Sempre usa um Audio dedicado com a voz salva — mais confiável que o
+    // <audio> do modal de gravação (que some/reseta ao fechar o modal).
+    if(!_audioPetAtual || _audioPetSrcCache!==String(fonte)){
+      if(_audioPetAtual){try{_audioPetAtual.pause()}catch(_){}}
+      _audioPetAtual=new Audio(String(fonte));
+      _audioPetAtual.preload='auto';
+      _audioPetAtual.playsInline=true;
+      _audioPetAtual.setAttribute('playsinline','');
+      _audioPetSrcCache=String(fonte);
     }
+    const a=_audioPetAtual;
+    try{a.pause()}catch(_){}
+    try{a.currentTime=0}catch(_){}
     a.volume=vol;
-    a.currentTime=0;
-    a.playsInline=true;
-    _audioPetAtual=a;
+    a.muted=false;
 
     const p=a.play();
-    if(p&&typeof p.catch==='function')p.catch(err=>console.warn('Falha ao reproduzir voz do pet:',err));
+    if(p&&typeof p.catch==='function'){
+      p.catch(err=>{
+        console.warn('Falha ao reproduzir voz do pet:',err);
+        // Retry único: recria o elemento e tenta de novo no mesmo gesto.
+        try{
+          _audioPetAtual=new Audio(String(fonte));
+          _audioPetAtual.preload='auto';
+          _audioPetAtual.playsInline=true;
+          _audioPetAtual.volume=vol;
+          _audioPetSrcCache=String(fonte);
+          _audioPetAtual.play().catch(()=>{});
+        }catch(_){}
+      });
+    }
     return true;
   }catch(e){
     console.warn('tocarAudioPet:',e);
@@ -2754,14 +2798,14 @@ function interagirComPet(e){
   setTimeout(()=>debounceAcao=false,280);
   const d=obterDadosPetAtual();
   d.felicidade=Math.min(100,d.felicidade+5);
-  tocarAudioPet(PETS[estado.petAtual].som);
+  // Prioridade: voz gravada; se não houver, som padrão do pet.
+  const tocou=tocarAudioPet(PETS[estado.petAtual]?.som);
   navigator.vibrate?.(25);
-  criarTextoFlutuante('❤️ +5',e);
+  criarTextoFlutuante(estado.vozSalva?'🗣️':'❤️ +5',e);
   animarPetToque(e);
   if(estado.vozSalva){
-    if(Math.random()<.4)mostrarBalaoFala('🗣️ Ouvindo a sua voz!');
-    else if(Math.random()<.5)mostrarBalaoFala(escolherFalaContextual('carinho'));
-    else mostrarToast(`🗣️ ${PETS[estado.petAtual].nome} repetiu a sua voz!`);
+    mostrarBalaoFala(tocou?'🗣️ Ouvindo a sua voz!':'🗣️ Toque de novo para ouvir a gravação');
+    if(tocou)mostrarToast(`🗣️ ${PETS[estado.petAtual].nome} está repetindo a gravação!`);
   }else if(Math.random()<.55){
     mostrarBalaoFala(escolherFalaContextual('carinho'));
   }else{
@@ -3685,14 +3729,26 @@ function renderizarTarefas(){
   const o=hojeLista.filter(t=>t.tipo==='obrigatoria'),x=hojeLista.filter(t=>t.tipo!=='obrigatoria');
   document.getElementById('qtd-tarefas').textContent=`${o.length} fixas · ${x.length} extras`;
   const pendentes=(estado.tarefas||[]).filter(t=>statusTarefaAtual(t)==='aguardando_aprovacao');
+  const aprovadasLista=hojeLista.filter(t=>statusTarefaAtual(t)==='aprovada');
   const bannerPend=document.getElementById('banner-aprovacoes-pendentes');
   const txtPend=document.getElementById('txt-aprovacoes-pendentes');
   if(bannerPend){
     const n=pendentes.length;
+    const nApr=aprovadasLista.length;
     if(n>0){
       bannerPend.style.display='flex';
       bannerPend.classList.remove('hidden');
+      bannerPend.style.background='#fffbeb';
+      bannerPend.style.borderColor='#fcd34d';
+      bannerPend.style.color='#92400e';
       if(txtPend)txtPend.textContent=n===1?'1 tarefa aguardando aprovação dos pais':`${n} tarefas aguardando aprovação dos pais`;
+    }else if(nApr>0){
+      bannerPend.style.display='flex';
+      bannerPend.classList.remove('hidden');
+      bannerPend.style.background='#ecfdf5';
+      bannerPend.style.borderColor='#86efac';
+      bannerPend.style.color='#166534';
+      if(txtPend)txtPend.textContent=nApr===1?'✅ 1 missão aprovada pelos pais!':'✅ '+nApr+' missões aprovadas pelos pais!';
     }else{
       bannerPend.style.display='none';
       bannerPend.classList.add('hidden');
@@ -3712,14 +3768,16 @@ function renderizarTarefas(){
       
       const row=document.createElement('div');
       row.className=`task-row${animar}`;
+      if(apr){row.style.background='#ecfdf5';row.style.borderRadius='10px';row.style.padding='8px 6px';row.style.border='1px solid #86efac'}
+      else if(pend){row.style.background='#fffbeb';row.style.borderRadius='10px';row.style.padding='8px 6px'}
       row.innerHTML=`
         <div>
-          <div class="task-name" style="${apr?'text-decoration:line-through;color:#94a3b8':''}">${esc(t.texto)}<span style="font-size:7px;color:#7c3aed;font-weight:900">${esc(badgeDias)}</span></div>
+          <div class="task-name" style="${apr?'color:#166534;font-weight:900':''}">${apr?'✅ ':''}${esc(t.texto)}<span style="font-size:7px;color:#7c3aed;font-weight:900">${esc(badgeDias)}</span></div>
           <span class="task-reward">+${Number(t.xp)||20} XP • +${Number(t.recompensa)||5} 🪙 ${(t.fotoUrl||t.foto)?'• 📸':''}</span>
           ${t.motivoRecusa?`<div class="motivo-recusa">↩️ ${esc(t.motivoRecusa)}</div>`:''}
         </div>
         <div class="task-actions">
-          ${apr?'<span style="font-size:9px;color:#10b981;font-weight:900">✓ Missão concluída!</span>':pend?'<span style="font-size:8px;color:#f59e0b;font-weight:900">Os pais estão conferindo</span>':`<button class="task-btn btn-photo" onclick="dispararCamera(${t.id})">📷</button><button class="task-btn btn-ok" onclick="enviarParaAprovacao(${t.id})">Concluí!</button>`}
+          ${apr?'<span style="font-size:11px;color:#fff;font-weight:900;background:#16a34a;padding:6px 10px;border-radius:10px;display:inline-block;box-shadow:0 2px 8px #16a34a55">✅ APROVADA!</span>':pend?'<span style="font-size:9px;color:#92400e;font-weight:900;background:#fef3c7;padding:5px 8px;border-radius:8px;display:inline-block">⏳ Aguardando pais</span>':`<button class="task-btn btn-photo" onclick="dispararCamera(${t.id})">📷</button><button class="task-btn btn-ok" onclick="enviarParaAprovacao(${t.id})">Concluí!</button>`}
         </div>
       `;
       c.appendChild(row);
@@ -6054,7 +6112,10 @@ function salvarVoz(){
     try{
       if(_audioPetAtual){try{_audioPetAtual.pause()}catch(_){}}
       _audioPetAtual=new Audio(estado.vozSalva);
+      _audioPetAtual.preload='auto';
+      _audioPetAtual.playsInline=true;
       _audioPetAtual.volume=obterVolumeSom();
+      _audioPetSrcCache=String(estado.vozSalva);
     }catch(_){}
   };
   leitor.onerror=()=>mostrarToast('❌ Falha ao ler o áudio gravado.');
