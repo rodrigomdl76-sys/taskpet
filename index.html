@@ -1133,7 +1133,7 @@ function abrirMenuMais(){
     <span id="engajamento-streak"></span><div id="engajamento-desafio"></div><button id="btn-bau-diario">🎁 Baú do dia</button>
   </div>
   <div class="tasks-section" id="secao-missoes">
-    <button type="button" class="task-header task-header-expansivel" onclick="alternarMissoes()" aria-expanded="true">
+    <button type="button" class="task-header task-header-expansivel" id="btn-toggle-missoes" onclick="alternarMissoes(event)" aria-expanded="true" aria-controls="lista-tarefas">
       <span class="task-header-left"><b>✨ Missões de hoje</b></span>
       <span class="task-header-right"><span id="qtd-tarefas">2 missões</span><span id="seta-missoes" aria-hidden="true">⌃</span></span>
     </button>
@@ -2971,47 +2971,22 @@ let _audioPetAtual=null;
 let _audioPetSrcCache='';
 function tocarAudioPet(url){
   const vol=obterVolumeSom();
-  if(vol<=0.01)return false;
   const fonte=(estado&&estado.vozSalva)||url;
   if(!fonte)return false;
+  if(vol<=0.01){if(estado&&estado.vozSalva)mostrarToast('🔇 O volume do pet está no mudo.');return false;}
   try{
-    try{obterAudioContext()}catch(_){}
-    // Novo Audio a cada toque quando é data-URL de voz: evita estado "preso"
-    // no iOS após pause/currentTime=0.
-    const isData=String(fonte).startsWith('data:');
-    if(isData || !_audioPetAtual || _audioPetSrcCache!==String(fonte)){
-      if(_audioPetAtual){try{_audioPetAtual.pause()}catch(_){}}
-      _audioPetAtual=new Audio();
-      _audioPetAtual.preload='auto';
-      try{_audioPetAtual.playsInline=true}catch(_){}
-      try{_audioPetAtual.setAttribute('playsinline','')}catch(_){}
-      try{_audioPetAtual.setAttribute('webkit-playsinline','')}catch(_){}
-      _audioPetAtual.src=String(fonte);
-      _audioPetSrcCache=String(fonte);
-    }
-    const a=_audioPetAtual;
-    a.volume=vol;
-    a.muted=false;
-    try{a.currentTime=0}catch(_){}
+    const src=String(fonte);
+    if(_audioPetAtual){try{_audioPetAtual.pause()}catch(_){} try{_audioPetAtual.removeAttribute('src');_audioPetAtual.load()}catch(_){} }
+    const a=new Audio(src);
+    a.preload='auto';a.volume=vol;a.muted=false;
+    try{a.playsInline=true}catch(_){}
+    try{a.setAttribute('playsinline','')}catch(_){}
+    try{a.setAttribute('webkit-playsinline','')}catch(_){}
+    _audioPetAtual=a;_audioPetSrcCache=src;
     const p=a.play();
-    if(p&&typeof p.catch==='function'){
-      p.catch(err=>{
-        console.warn('Falha ao reproduzir voz do pet:',err);
-        try{
-          const b=new Audio(String(fonte));
-          b.volume=vol;
-          try{b.playsInline=true}catch(_){}
-          _audioPetAtual=b;
-          _audioPetSrcCache=String(fonte);
-          b.play().catch(()=>{});
-        }catch(_){}
-      });
-    }
+    if(p&&typeof p.catch==='function')p.catch(err=>console.warn('Falha ao reproduzir voz do pet:',err));
     return true;
-  }catch(e){
-    console.warn('tocarAudioPet:',e);
-    return false;
-  }
+  }catch(e){console.warn('tocarAudioPet:',e);return false;}
 }
 function registrarLogAtividade(texto){
   estado.logAtividades=Array.isArray(estado.logAtividades)?estado.logAtividades:[];
@@ -6734,19 +6709,28 @@ async function iniciarGravacao(){
     mediaRecorder=new MediaRecorder(stream);
     mediaRecorder.ondataavailable=e=>{if(e.data.size>0)pedacosAudio.push(e.data)};
     mediaRecorder.onstop=async ()=>{
-      const blob=new Blob(pedacosAudio,{type:pedacosAudio[0]?.type||'audio/webm'});
+      const tipoBlob=pedacosAudio[0]?.type||'audio/webm';
+      const blob=new Blob(pedacosAudio,{type:tipoBlob});
       audioBlobOriginal=blob;
       audioBlobFinal=blob;
-      document.getElementById('audio-original').src=URL.createObjectURL(blob);
+      const audioEl=document.getElementById('audio-original');
+      if(audioEl){audioEl.pause();audioEl.src=URL.createObjectURL(blob);audioEl.load();}
       document.getElementById('grav-result').classList.remove('hidden');
       try{
         const arrayBuf=await blob.arrayBuffer();
         const ctx=obterAudioContext();
         bufferGravado=await ctx.decodeAudioData(arrayBuf.slice(0));
+        try{
+          const wav=audioBufferParaWavBlob(bufferGravado);
+          if(wav&&wav.size){
+            audioBlobFinal=wav;
+            if(audioEl){audioEl.src=URL.createObjectURL(wav);audioEl.load();}
+          }
+        }catch(convErr){console.warn('conversão WAV:',convErr)}
       }catch(err){
         console.warn('decodeAudioData:',err);
         bufferGravado=null;
-        mostrarToast('⚠️ Áudio gravado, mas efeitos podem não funcionar neste navegador.');
+        mostrarToast('⚠️ A gravação foi criada. Efeitos de voz podem não funcionar neste navegador.');
       }
     };
     mediaRecorder.start();
@@ -7262,12 +7246,28 @@ setTimeout(()=>{try{garantirEngajamento();renderizarEngajamento();}catch(e){cons
 </script><style>
 .atalhos-aventuras{display:grid;grid-template-columns:repeat(4,1fr);gap:7px;margin:8px 0 5px}
 .atalho-aventura{border:1px solid #dbeafe;background:#fff;border-radius:14px;padding:7px 3px 5px;display:flex;flex-direction:column;align-items:center;gap:2px;box-shadow:0 2px 8px rgba(15,23,42,.05);cursor:pointer;transition:transform .15s,box-shadow .15s}
-.atalho-aventura:active{transform:scale(.94)}.atalho-aventura span{font-size:20px;line-height:22px}.atalho-aventura small{font-size:8px;font-weight:900;color:#475569}.task-header-expansivel{width:100%;border:0;background:transparent;text-align:left;cursor:pointer;padding:0}.task-header-expansivel:focus-visible{outline:2px solid #38bdf8;border-radius:8px}.tasks-section.recolhida #lista-tarefas,.tasks-section.recolhida #banner-aprovacoes-pendentes,.tasks-section.recolhida #status-ofensiva{display:none}.tasks-section.recolhida #seta-missoes{transform:rotate(180deg)}
+.atalho-aventura:active{transform:scale(.94)}.atalho-aventura span{font-size:20px;line-height:22px}.atalho-aventura small{font-size:8px;font-weight:900;color:#475569}.task-header-expansivel{width:100%;border:0;background:transparent;text-align:left;cursor:pointer;padding:0}.task-header-expansivel:focus-visible{outline:2px solid #38bdf8;border-radius:8px}.tasks-section.recolhida #lista-tarefas,.tasks-section.recolhida #banner-aprovacoes-pendentes,.tasks-section.recolhida #foco-agora-depois,.tasks-section.recolhida #status-ofensiva{display:none!important}.tasks-section.recolhida #seta-missoes{transform:rotate(180deg)}
 </style>
 <div id="modal-resumo-meta" class="modal-overlay"><div class="modal" style="max-width:340px"><div class="modal-title"><h3>🎯 Minha meta</h3><button class="close-btn" onclick="fecharModal('modal-resumo-meta')">×</button></div><div id="resumo-meta-conteudo"></div></div></div>
 <div id="modal-resumo-hoje" class="modal-overlay"><div class="modal" style="max-width:340px"><div class="modal-title"><h3>🗓️ Aventura de hoje</h3><button class="close-btn" onclick="fecharModal('modal-resumo-hoje')">×</button></div><div id="resumo-hoje-conteudo"></div></div></div>
 <script>
-function alternarMissoes(){const s=document.getElementById('secao-missoes'),h=s?.querySelector('.task-header-expansivel');if(!s)return;const fechada=s.classList.toggle('recolhida');if(h)h.setAttribute('aria-expanded',String(!fechada));}
+function alternarMissoes(ev){
+  if(ev){ev.preventDefault();ev.stopPropagation();}
+  const s=document.getElementById('secao-missoes'),h=s?.querySelector('.task-header-expansivel');if(!s||!h)return;
+  const fechada=!s.classList.contains('recolhida');
+  s.classList.toggle('recolhida',fechada);h.setAttribute('aria-expanded',String(!fechada));
+  ['banner-aprovacoes-pendentes','foco-agora-depois','lista-tarefas','status-ofensiva'].forEach(id=>{const el=document.getElementById(id);if(el)el.hidden=fechada;});
+  const seta=document.getElementById('seta-missoes');if(seta)seta.textContent=fechada?'⌄':'⌃';
+  try{localStorage.setItem('ROTINAPET_MISSOES_RECOLHIDAS',fechada?'1':'0')}catch(_){}
+}
+function restaurarEstadoMissoes(){
+  const s=document.getElementById('secao-missoes'),h=s?.querySelector('.task-header-expansivel');if(!s||!h)return;
+  let fechada=false;try{fechada=localStorage.getItem('ROTINAPET_MISSOES_RECOLHIDAS')==='1'}catch(_){}
+  s.classList.toggle('recolhida',fechada);h.setAttribute('aria-expanded',String(!fechada));
+  ['banner-aprovacoes-pendentes','foco-agora-depois','lista-tarefas','status-ofensiva'].forEach(id=>{const el=document.getElementById(id);if(el)el.hidden=fechada;});
+  const seta=document.getElementById('seta-missoes');if(seta)seta.textContent=fechada?'⌄':'⌃';
+}
+
 function abrirResumoMeta(){const c=document.getElementById('resumo-meta-conteudo'),metas=Array.isArray(estado.metasPersonalizadas)?estado.metasPersonalizadas:[];if(!c)return;c.innerHTML=metas.length?metas.map(m=>{const x=obterProgressoMeta(m);return `<div class="section-card" style="margin-bottom:7px"><b style="font-size:10px">${esc(m.emoji||'🎯')} ${esc(m.titulo)}</b><p style="font-size:9px;color:#64748b;margin:6px 0">${x.valor}/${x.alvo} · ${x.perc}%</p><div style="height:7px;background:#e2e8f0;border-radius:99px;overflow:hidden"><div style="height:100%;width:${x.perc}%;background:#8b5cf6"></div></div><small style="font-size:8px;color:#64748b">${x.perc>=100?'✅ Meta alcançada!':'Continue avançando!'}</small></div>`}).join(''):'<p style="font-size:10px;color:#64748b">Seus responsáveis ainda não criaram uma meta.</p>';abrirModal('modal-resumo-meta');}
 function abrirResumoHoje(){const c=document.getElementById('resumo-hoje-conteudo'),lista=tarefasDeHoje(),a=lista.filter(t=>statusTarefaAtual(t)==='aprovada').length;if(!c)return;c.innerHTML=`<div class="section-card"><b style="font-size:10px">${a}/${lista.length} missões concluídas</b><p style="font-size:10px;color:#64748b;margin:7px 0">${a===lista.length&&lista.length?'🏆 Você venceu o desafio de hoje!':'Complete as missões abaixo para ajudar seu pet a crescer.'}</p><button class="primary-btn green-btn" style="width:100%" onclick="fecharModal('modal-resumo-hoje');document.getElementById('secao-missoes')?.scrollIntoView({behavior:'smooth',block:'center'})">Ver minhas missões</button></div>`;abrirModal('modal-resumo-hoje');}
 </script>
@@ -9650,5 +9650,9 @@ button:focus-visible,.top-pill:focus-visible,.pet-action-btn:focus-visible{
 }
 </style>
 
+
+<style id="rp-fix-audio-missoes-v1">#secao-missoes{position:relative!important;isolation:isolate}#secao-missoes .task-header-expansivel{position:relative!important;z-index:20!important;pointer-events:auto!important;touch-action:manipulation!important;min-height:38px!important}#secao-missoes .task-header-right,#secao-missoes #seta-missoes{pointer-events:none!important}#secao-missoes.recolhida{overflow:hidden!important;max-height:none!important}</style>
 </body>
 </html>
+
+<script>window.addEventListener('DOMContentLoaded',()=>{try{restaurarEstadoMissoes()}catch(e){console.warn('restaurar missões:',e)}});</script>
