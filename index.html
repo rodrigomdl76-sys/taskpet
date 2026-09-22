@@ -525,6 +525,138 @@ button:focus-visible,input:focus-visible,.top-pill:focus-visible{
   100%{outline-offset:3px;outline-color:#a855f7}
 }
 
+
+/* ===== Foco avançado: microetapas + timer visual ===== */
+.foco-controles{display:flex;gap:6px;flex-wrap:wrap;margin-top:8px}
+.foco-btn{border:1px solid #cbd5e1;background:#fff;border-radius:10px;padding:7px 9px;font-size:8px;font-weight:900;cursor:pointer;color:#334155}
+.foco-timer{margin-top:8px;padding:8px;border-radius:12px;background:#fff;border:1px solid #ddd6fe}
+.foco-timer-num{font-size:20px;font-weight:950;color:#312e81;text-align:center;letter-spacing:.04em}
+.foco-timer-bar{height:7px;border-radius:99px;background:#e2e8f0;overflow:hidden;margin-top:5px}.foco-timer-bar>div{height:100%;width:0;background:#7c3aed;transition:width .4s}
+.foco-micro{margin-top:8px;padding:9px;border-radius:14px;background:#fff;border:1px solid #e2e8f0}
+.foco-micro-title{font-size:8px;font-weight:950;color:#475569}.foco-micro-step{font-size:14px;font-weight:950;color:#172033;margin-top:6px;line-height:1.25}
+.foco-passos-lista{display:flex;flex-direction:column;gap:5px;margin-top:8px}.foco-passo-card{display:flex;align-items:center;gap:7px;padding:7px 8px;border-radius:10px;background:#f8fafc;border:1px solid #e2e8f0;font-size:8px;font-weight:800;color:#64748b}.foco-passo-card.atual{background:#f5f3ff;border-color:#c4b5fd;color:#312e81;font-size:9px;font-weight:950}.foco-passo-card.feito{background:#f0fdf4;border-color:#bbf7d0;color:#166534}.foco-passo-num{width:20px;height:20px;display:grid;place-items:center;border-radius:50%;background:#e2e8f0;color:#475569;font-size:8px;font-weight:950;flex:0 0 auto}.foco-passo-card.atual .foco-passo-num{background:#7c3aed;color:#fff}.foco-passo-card.feito .foco-passo-num{background:#16a34a;color:#fff}.foco-fazer{width:100%;border:0;border-radius:11px;padding:9px;background:#7c3aed;color:#fff;font-size:9px;font-weight:950;cursor:pointer;margin-top:7px}.foco-fazer:focus-visible{outline:3px solid #c4b5fd;outline-offset:2px}
+body.modo-zen .foco-btn,body.modo-zen .foco-timer,body.modo-zen .foco-micro{box-shadow:none!important;transition:none!important}
+body.modo-zen.som-zen-suave .foco-timer{border-color:#cbd5e1}
+body.modo-zen.visual-zen-minimo .task-row:not(.tarefa-foco-atual){opacity:.6}
+
+
+/* ===== Suporte de autonomia e previsibilidade ===== */
+.task-help-btn{border:1px solid #cbd5e1;background:#fff;border-radius:9px;padding:4px 7px;margin:5px 3px 0 0;font-size:8px;font-weight:900;color:#475569;cursor:pointer}
+.tarefa-primeiro-depois{font-size:8px;color:#475569;margin-top:4px;padding:5px 7px;border-radius:8px;background:#f8fafc;border:1px solid #e2e8f0}
+body.modo-foco .tarefa-primeiro-depois{background:#fff;border-color:#ddd6fe;color:#4c1d95}
+body.modo-zen .task-help-btn,body.modo-zen .tarefa-primeiro-depois{box-shadow:none!important;transition:none!important}
+body.pausa-sensorial .tasks-section,body.pausa-sensorial .bottom-nav{filter:saturate(.7)}
+/* ===== UX acessível: menos erros e alvos de toque maiores ===== */
+.task-row{min-height:56px}
+.task-row .task-actions{display:flex;align-items:center;justify-content:flex-end;gap:5px;flex-wrap:wrap}
+.task-row .task-btn,.task-row .btn-ok,.task-row .btn-photo{min-height:42px;min-width:42px}
+.task-row .btn-ok{min-width:88px}
+.task-row button:focus-visible,.painel-pais-menu button:focus-visible,.acessibilidade-toggle:focus-visible,.foco-btn:focus-visible{outline:3px solid #a78bfa;outline-offset:2px}
+body.modo-foco .task-row:not(.tarefa-foco-atual) .task-actions{opacity:.72}
+body.modo-foco .tarefa-foco-atual .task-actions{opacity:1}
+body.pausa-sensorial #lista-tarefas,body.pausa-sensorial .bottom-nav{pointer-events:none;user-select:none;opacity:.48}
+body.pausa-sensorial #foco-agora-depois{position:relative;z-index:60}
+@media(max-width:380px){.task-row{grid-template-columns:minmax(0,1fr)!important}.task-row .task-actions{justify-content:stretch;margin-top:7px}.task-row .task-actions>*{flex:1}.task-row .btn-ok{min-width:0}}
+
+
+/* ===== Fluidez / anti-piscada ===== */
+#app,main,.app-shell{backface-visibility:hidden;-webkit-backface-visibility:hidden;}
+.modal-overlay,.foto-viewer,.toast,.balao-fala{will-change:opacity,transform;}
+body.transicoes-zen-instantaneas *,body.transicoes-zen-instantaneas *::before,body.transicoes-zen-instantaneas *::after{transition-duration:0s!important;animation-duration:0s!important;}
+@media (prefers-reduced-motion:reduce){*{scroll-behavior:auto!important;animation-duration:.001ms!important;animation-iteration-count:1!important;transition-duration:.001ms!important;}}
+/* ===== Acessibilidade sensorial: Modo Zen + Modo Foco ===== */
+body.modo-zen .particulas-cenario,
+body.modo-zen .cenario-detalhes{display:none!important}
+body.modo-zen .bg-layer,
+body.modo-zen .bg-layer.ativa{background:#f8fafc!important;opacity:1!important;z-index:-1}
+body.modo-zen .cat-wrapper,
+body.modo-zen .top-pill.streak-fogo,
+body.modo-zen .pet-stage,
+body.modo-zen .anim-bola{
+  animation:none!important;
+  box-shadow:none!important;
+}
+body.modo-zen .pet-stage{background:#f8fafc!important;border-color:#e2e8f0!important}
+body.modo-zen .cat-wrapper{filter:none!important}
+/* No Modo Foco, os atalhos continuam acessíveis: apenas perdem prioridade visual. */
+body.modo-foco.tarefas-pendentes .btn-game,
+body.modo-foco.tarefas-pendentes .btn-fundos,
+body.modo-foco.tarefas-pendentes .btn-premios{
+  opacity:.48!important;
+  filter:saturate(.55)!important;
+  box-shadow:none!important;
+}
+body.modo-foco .tasks-section{
+  box-shadow:0 10px 28px rgba(124,58,237,.10);
+}
+body.modo-foco .task-row:not(.tarefa-foco-atual){
+  opacity:.72;
+}
+body.modo-foco .tarefa-foco-atual{
+  opacity:1!important;
+  border:2px solid #7c3aed!important;
+  background:#faf5ff!important;
+  box-shadow:0 8px 22px rgba(124,58,237,.14);
+}
+body.modo-foco .tarefa-foco-atual .task-name{font-size:10px!important;color:#581c87!important;font-weight:950!important}
+body.modo-foco .tarefa-foco-atual .task-actions .btn-ok{transform:scale(1.04)}
+body.modo-foco .btn-game,body.modo-foco .btn-fundos,body.modo-foco .btn-premios{transition:opacity .2s,filter .2s,box-shadow .2s!important}
+body.modo-foco .foco-agora-depois{display:block}
+body:not(.modo-foco) .foco-agora-depois{display:none}
+.foco-agora-depois{margin:8px 0;padding:10px;border:1px solid #ddd6fe;background:#faf5ff;border-radius:15px}
+.foco-agora-depois .foco-label{font-size:7px;font-weight:950;letter-spacing:.08em;color:#7c3aed;text-transform:uppercase}
+.foco-agora-depois .foco-tarefa{font-size:12px;font-weight:950;color:#312e81;margin-top:2px}
+.foco-agora-depois .foco-depois{margin-top:7px;padding-top:7px;border-top:1px solid #e9d5ff}
+.foco-agora-depois .foco-depois-text{font-size:9px;font-weight:850;color:#475569;margin-top:2px}
+.foco-agora-depois .foco-vazio{font-size:9px;font-weight:900;color:#166534}
+body.modo-zen *{animation-duration:.01ms!important;animation-iteration-count:1!important;transition-duration:.01ms!important}
+body.modo-zen .pet-stage.pet-stage-celebracao::before,
+body.modo-zen .pet-stage.pet-stage-celebracao::after,
+body.modo-zen .evo-unlock,body.modo-zen .css-confetti{display:none!important}
+body.modo-zen .floating-text,body.modo-zen .heart-burst,body.modo-zen .pop-anim{animation:none!important}
+body.modo-zen .foco-agora-depois{border-color:#cbd5e1;background:#fff;color:#334155}
+body.modo-zen .foco-agora-depois .foco-label{color:#475569}
+body.modo-zen .foco-agora-depois .foco-tarefa{color:#1e293b}
+body.modo-zen .foco-agora-depois .foco-depois{border-top-color:#e2e8f0}
+
+.tarefa-nivel-ajuda{display:inline-flex;align-items:center;width:max-content;margin-top:4px;padding:3px 7px;border-radius:8px;background:#f8fafc;border:1px solid #e2e8f0;color:#475569;font-size:7px;font-weight:900}
+/* ===== Feedback do pet para microetapas ===== */
+.pet-micro-feedback{position:absolute;left:50%;top:24%;transform:translate(-50%,-50%);z-index:40;pointer-events:none;font-size:13px;font-weight:950;color:#312e81;background:#fff;border:1px solid #ddd6fe;border-radius:999px;padding:6px 10px;box-shadow:0 6px 18px rgba(15,23,42,.12);animation:petMicroFeedback .75s ease-out forwards}
+.pet-micro-feedback.grande{font-size:16px;color:#166534;border-color:#bbf7d0;background:#f0fdf4;animation:petMicroFeedbackGrande 1s ease-out forwards}
+@keyframes petMicroFeedback{0%{opacity:0;transform:translate(-50%,-30%) scale(.85)}20%{opacity:1;transform:translate(-50%,-50%) scale(1)}100%{opacity:0;transform:translate(-50%,-85%) scale(.98)}}
+@keyframes petMicroFeedbackGrande{0%{opacity:0;transform:translate(-50%,-35%) scale(.8)}18%{opacity:1;transform:translate(-50%,-50%) scale(1.06)}100%{opacity:0;transform:translate(-50%,-95%) scale(1)}}
+body.modo-zen .pet-micro-feedback{box-shadow:none!important;animation:none!important;opacity:1;transform:translate(-50%,-50%);border-color:#cbd5e1;background:#fff;color:#334155}
+body.modo-zen .pet-micro-feedback.grande{color:#166534;background:#f8fafc}
+@media(prefers-reduced-motion:reduce){
+  body.modo-foco .tarefa-foco-atual .task-actions .btn-ok{transform:none}
+}
+.acessibilidade-toggle{width:100%;display:flex;align-items:center;justify-content:space-between;gap:10px;border:1px solid #cbd5e1;background:#fff;border-radius:12px;padding:9px 10px;color:#172033;text-align:left;cursor:pointer}
+.acessibilidade-toggle .toggle-copy{min-width:0;display:flex;flex-direction:column;gap:2px}
+.acessibilidade-toggle .toggle-title{font-size:10px;font-weight:900}
+.acessibilidade-toggle .toggle-desc{font-size:8px;color:#64748b;line-height:1.25}
+.acessibilidade-toggle .toggle-pill{width:42px;height:24px;border-radius:99px;background:#cbd5e1;position:relative;flex:0 0 auto;transition:background .2s}
+.acessibilidade-toggle .toggle-pill::after{content:"";position:absolute;width:18px;height:18px;top:3px;left:3px;border-radius:50%;background:#fff;box-shadow:0 1px 4px #0003;transition:transform .2s}
+.acessibilidade-toggle.ativo .toggle-pill{background:#7c3aed}
+.acessibilidade-toggle.ativo .toggle-pill::after{transform:translateX(18px)}
+
+
+/* ===== Painel dos pais: navegação por categorias ===== */
+.painel-pais-menu{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:7px;margin:9px 0}
+.painel-pais-menu button{border:1px solid #dbe3ee;background:#fff;border-radius:14px;padding:10px;text-align:left;cursor:pointer;min-height:58px;box-shadow:0 1px 3px #0000000a}
+.painel-pais-menu button:active{transform:scale(.99)}
+.painel-pais-menu .menu-ico{font-size:18px;display:block;line-height:1;margin-bottom:4px}
+.painel-pais-menu .menu-titulo{font-size:10px;font-weight:900;color:#172033;display:block}
+.painel-pais-menu .menu-desc{font-size:7px;color:#64748b;display:block;margin-top:2px;line-height:1.25}
+.painel-pais-navegacao{display:none;align-items:center;justify-content:space-between;gap:7px;padding:8px 9px;margin:9px 0 7px;background:#f1f5f9;border:1px solid #dbe3ee;border-radius:12px}
+.painel-pais-navegacao.ativo{display:flex}
+.painel-pais-navegacao strong{font-size:10px;color:#172033}
+.painel-pais-navegacao small{display:block;font-size:7px;color:#64748b;margin-top:2px}
+.painel-pais-voltar{border:0;background:#fff;border:1px solid #cbd5e1;border-radius:9px;padding:6px 9px;font-size:9px;font-weight:900;color:#334155;cursor:pointer}
+.painel-pais-grupo{display:none}
+.painel-pais-grupo.ativo{display:block}
+.painel-pais-grupo .section-card:last-child{margin-bottom:9px}
+@media(max-width:330px){.painel-pais-menu{grid-template-columns:1fr}}
+
 /* Preferência de movimento reduzido */
 @media (prefers-reduced-motion:reduce){
   .cat-wrapper,.pet-stage,.xp-bar-fill,.bottom-btn,.top-pill,
@@ -1001,11 +1133,12 @@ function abrirMenuMais(){
     <span id="engajamento-streak"></span><div id="engajamento-desafio"></div><button id="btn-bau-diario">🎁 Baú do dia</button>
   </div>
   <div class="tasks-section" id="secao-missoes">
-    <button type="button" class="task-header task-header-expansivel" onclick="alternarMissoes()" aria-expanded="true">
+    <button type="button" class="task-header task-header-expansivel" id="btn-toggle-missoes" onclick="alternarMissoes(event)" aria-expanded="true" aria-controls="lista-tarefas">
       <span class="task-header-left"><b>✨ Missões de hoje</b></span>
       <span class="task-header-right"><span id="qtd-tarefas">2 missões</span><span id="seta-missoes" aria-hidden="true">⌃</span></span>
     </button>
     <div id="banner-aprovacoes-pendentes" class="hidden" style="margin-bottom:6px;padding:7px 9px;border-radius:12px;background:#fffbeb;border:1px solid #fcd34d;font-size:9px;font-weight:900;color:#92400e;display:none;align-items:center;gap:6px">⏳ <span id="txt-aprovacoes-pendentes">Há tarefas aguardando os pais</span></div>
+    <div id="foco-agora-depois" class="foco-agora-depois" aria-live="polite" aria-label="Próxima atividade"></div>
     <div id="lista-tarefas"></div>
     <div id="status-ofensiva" style="margin-top:7px;padding:7px 9px;border-radius:12px;background:#fff7ed;border:1px solid #fed7aa;font-size:9px;font-weight:900;color:#9a3412">🔥 Complete as missões fixas para manter a sequência</div>
   </div>
@@ -1207,6 +1340,35 @@ function abrirMenuMais(){
     </div>
     <small style="font-size:8px;color:#64748b;margin-top:3px;display:block">Controla meows, efeitos e voz gravada do pet.</small>
   </div>
+  <div class="section-card" id="card-acessibilidade-sensorial">
+    <label class="field-label">🧩 Acessibilidade Sensorial</label>
+    <div class="stack" style="margin-top:6px">
+      <button type="button" id="btn-modo-zen" class="acessibilidade-toggle" aria-pressed="false" onclick="alternarModoZen()">
+        <span class="toggle-copy"><span class="toggle-title">🌙 Modo Zen (Menos Estímulos)</span><span class="toggle-desc">Reduz movimentos, detalhes visuais e sons do app.</span></span>
+        <span class="toggle-pill" aria-hidden="true"></span>
+      </button>
+      <button type="button" id="btn-modo-foco" class="acessibilidade-toggle" aria-pressed="false" onclick="alternarModoFoco()">
+        <span class="toggle-copy"><span class="toggle-title">🎯 Modo Foco (Sem Distrações)</span><span class="toggle-desc">Destaca uma missão por vez e reduz visualmente as distrações sem bloquear as atividades.</span></span>
+        <span class="toggle-pill" aria-hidden="true"></span>
+      </button>
+    </div>
+  </div>
+  <div class="section-card" id="card-perfil-sensorial">
+    <label class="field-label">🎛️ Perfil sensorial da criança</label>
+    <select class="field" id="perfil-sensorial" onchange="aplicarPerfilSensorial(this.value)">
+      <option value="personalizado">Personalizado</option>
+      <option value="equilibrado">⚖️ Equilibrado</option>
+      <option value="baixo-estimulo">🌙 Baixo estímulo</option>
+      <option value="minimo">🧘 Mínimo de estímulos</option>
+    </select>
+    <small style="font-size:8px;color:#64748b;margin-top:4px;display:block">Escolha o ponto de partida; depois você pode ajustar cada preferência separadamente.</small>
+    <div class="stack" style="margin-top:6px">
+      <label style="font-size:8px;font-weight:800;color:#475569">🔊 Sons <select class="field" id="pref-som-zen" onchange="alterarPreferenciaZen('som',this.value)"><option value="normal">Normal</option><option value="suave">Suave</option><option value="silencioso">Silencioso</option></select></label>
+      <label style="font-size:8px;font-weight:800;color:#475569">🏃 Movimento <select class="field" id="pref-movimento-zen" onchange="alterarPreferenciaZen('movimento',this.value)"><option value="normal">Normal</option><option value="reduzido">Reduzido</option><option value="minimo">Mínimo</option></select></label>
+      <label style="font-size:8px;font-weight:800;color:#475569">🎨 Visual <select class="field" id="pref-visual-zen" onchange="alterarPreferenciaZen('visual',this.value)"><option value="normal">Normal</option><option value="simplificado">Simplificado</option><option value="minimo">Mínimo</option></select></label>
+      <label style="font-size:8px;font-weight:800;color:#475569">🔄 Transições <select class="field" id="pref-transicoes-zen" onchange="alterarPreferenciaZen('transicoes',this.value)"><option value="normais">Normais</option><option value="suaves">Suaves</option><option value="instantaneas">Instantâneas</option></select></label>
+    </div>
+  </div>
   <div class="section-card">
     <label class="field-label">📸 Fotos das tarefas</label>
     <button type="button" class="primary-btn red-btn" style="width:100%" onclick="limparTodasFotosTarefas()">🗑️ Apagar todas as fotos</button>
@@ -1280,7 +1442,7 @@ function abrirMenuMais(){
     <div class="stack" id="lista-solicitacoes-premios" style="margin-top:7px"></div>
   </div>
   <div class="section-card"><b style="font-size:10px">✏️ Gerenciar tarefas</b><div style="font-size:8px;color:#64748b;margin-top:4px">Obrigatórias 🔥 contam para a ofensiva. Extras ⭐ dão moedas sem travar o streak.</div><div class="stack" id="lista-edicao-tarefas" style="margin:6px 0"></div><div style="display:grid;grid-template-columns:1fr 48px 88px auto;gap:4px"><input class="field" id="nova-tarefa-texto" placeholder="Nova tarefa"><input class="field" id="nova-tarefa-moedas" type="number" value="5" min="1"><select class="field" id="nova-tarefa-tipo"><option value="obrigatoria">🔥 Obrigatória</option><option value="extra">⭐ Extra</option></select><button class="primary-btn blue-btn" onclick="adicionarTarefa()">+</button></div>
-    <div style="margin-top:6px"><span class="field-label" style="margin-bottom:2px">📅 Repetir em (vazio = todo dia)</span><div class="dias-semana-picker" id="dias-nova-tarefa"></div></div>
+    <div style="margin-top:6px"><span class="field-label" style="margin-bottom:2px">📅 Repetir em (vazio = todo dia)</span><div class="dias-semana-picker" id="dias-nova-tarefa"></div></div><div style="display:grid;grid-template-columns:1fr 1fr;gap:4px;margin-top:6px"><input class="field" id="nova-tarefa-tempo" type="number" min="0" max="120" value="0" placeholder="Minutos (0 = sem timer)"><input class="field" id="nova-tarefa-passos" placeholder="Microetapas separadas por ;"></div><div style="display:grid;grid-template-columns:1fr 1fr;gap:4px;margin-top:6px"><input class="field" id="nova-tarefa-ajuda" placeholder="Dica para quando precisar de ajuda"><select class="field" id="nova-tarefa-nivel-ajuda"><option value="sozinho">🟢 Faço sozinho</option><option value="dica">🟡 Preciso de uma dica</option><option value="ajuda">🔵 Preciso de ajuda</option></select><input class="field" id="nova-tarefa-primeiro-depois" placeholder="Primeiro → depois"></div><input class="field" id="nova-tarefa-instrucao-url" placeholder="URL de imagem de instrução (opcional)" style="margin-top:4px"><div style="font-size:7px;color:#64748b;margin-top:3px">💡 Use instruções curtas. A imagem aqui é uma referência visual da tarefa, separada da foto de comprovação.</div>
   </div>
   <div class="section-card"><div style="display:flex;justify-content:space-between;align-items:center;gap:5px"><b style="font-size:10px">📊 Resumo</b><div style="display:flex;gap:4px"><button class="primary-btn blue-btn" onclick="abrirRelatorioSemanal()">Semanal</button><button class="primary-btn pink-btn" onclick="abrirRelatorioMensal()">Mensal</button></div></div><div class="stat-grid" style="margin-top:6px"><div class="stat">📋 <b id="stat-feitas">0</b><span>tarefas feitas</span></div><div class="stat">🔥 <b id="stat-ofensiva-pais">0</b><span>dias de ofensiva</span></div><div class="stat">🏆 <b id="stat-conquistas">0</b><span>conquistas</span></div></div></div>
   <button class="primary-btn" style="width:100%;margin-top:5px;background:#e2e8f0;color:#475569" onclick="fecharModal('modal-pais');alternarPerfil()">🔄 Trocar Perfil de Usuário</button>
@@ -1563,6 +1725,70 @@ const earsOriginal=ears;
 if(tipo==='unicornio')ears=`<ellipse cx="82" cy="72" rx="20" ry="34" fill="url(#gradCorpo${tipo})"/><ellipse cx="188" cy="72" rx="20" ry="34" fill="url(#gradCorpo${tipo})"/><path d="M135 63L122 15l13 10 13-10-13 48z" fill="#f5f3ff" stroke="#a855f7" stroke-width="2"/>`;
 else if(tipo==='dinossauro')ears=`<path d="M82 78L68 42l32 24zM188 78l14-36-32 24z" fill="url(#gradCorpo${tipo})"/>`;
 else if(tipo==='capivara')ears=`<circle cx="83" cy="76" r="14" fill="#6b4935"/><circle cx="187" cy="76" r="14" fill="#6b4935"/><circle cx="83" cy="76" r="7" fill="#3f2b20"/><circle cx="187" cy="76" r="7" fill="#3f2b20"/>`;
+const paletaFase={
+ gato:['#33333d','#5b6475','#8b93a7','#d1b38b','#efe4c8'],
+ cachorra:['#F4A261','#d98b52','#c86b3f','#8b4b2f','#f1d7a8'],
+ cabra:['#F5E6D3','#d9c0a5','#b99372','#8a6548','#f0f0e8'],
+ frango:['#FFF4B8','#FFD43B','#F4B942','#D97706','#F6C453'],
+ unicornio:['#F7D9FF','#e9b7ff','#bfa2ff','#8b7cf6','#f3e8ff'],
+ dinossauro:['#8bd17c','#65b87a','#3f9b62','#277a54','#b8f36b'],
+ capivara:['#b9855c','#a86f49','#8f5d3d','#70452f','#d2a679']
+};
+const cf=(paletaFase[tipo]||[c,c,c,c,c])[Math.max(0,Math.min(4,fase-1))];
+const estrutura=`${(()=>{
+  const arm=(fill,sw=14,extra='')=>`<path d="M92 170Q55 185 72 214" stroke="${fill}" stroke-width="${sw}" stroke-linecap="round" fill="none"/><path d="M178 170Q215 185 198 214" stroke="${fill}" stroke-width="${sw}" stroke-linecap="round" fill="none"/>${extra}`;
+  const legs=(fill,sw=14)=>`<path d="M108 225q-4 28-17 38M162 225q4 28 17 38" stroke="${fill}" stroke-width="${sw}" stroke-linecap="round" fill="none"/>`;
+  const egg=(fill,stroke)=>`<path d="M135 58Q93 70 88 132Q84 195 105 224Q135 248 165 224Q186 195 182 132Q177 70 135 58z" fill="${fill}" stroke="${stroke}" stroke-width="4"/><path d="M99 126l22 13 19-17 19 17 22-13" fill="none" stroke="${stroke}" stroke-width="4" stroke-linecap="round"/>${arm(fill,12)}${legs(fill,12)}`;
+  const bodyHead=(fill,headR,bodyRx,bodyRy,stroke='#475569')=>`<ellipse cx="135" cy="188" rx="${bodyRx}" ry="${bodyRy}" fill="${fill}" stroke="${stroke}" stroke-width="3"/><circle cx="135" cy="116" r="${headR}" fill="${fill}" stroke="${stroke}" stroke-width="3"/>${arm(fill,14)}${legs(fill,15)}`;
+  if(tipo==='gato'){
+    if(fase===1)return egg(cf,'#6b7280');
+    if(fase===2)return `${bodyHead(cf,52,46,43,'#4b5563')}<path d="M91 82L74 42l34 27M179 82l17-40-34 27" fill="${cf}" stroke="#4b5563" stroke-width="4"/>${legs(cf,13)}`;
+    if(fase===3)return `${bodyHead(cf,59,57,50,'#374151')}<path d="M88 80L61 30l47 35M182 80l27-50-47 35" fill="${cf}" stroke="#374151" stroke-width="4"/><path d="M188 184Q230 188 216 229" stroke="${cf}" stroke-width="16" fill="none" stroke-linecap="round"/>`;
+    if(fase===4)return `${bodyHead(cf,66,67,58,'#1f2937')}<path d="M84 78L52 20l57 48M186 78l32-58-57 48" fill="${cf}" stroke="#1f2937" stroke-width="5"/><path d="M193 174Q246 177 222 235" stroke="${cf}" stroke-width="19" fill="none" stroke-linecap="round"/>${arm(cf,17)}`;
+    return `<ellipse cx="135" cy="186" rx="78" ry="66" fill="${cf}" stroke="#111827" stroke-width="5"/><path d="M135 45Q92 48 73 91L45 50l20 72Q80 96 135 98q55-2 70 24l20-72-28 41Q178 48 135 45z" fill="${cf}" stroke="#111827" stroke-width="5"/>${arm('#111827',18)}${legs(cf,20)}<path d="M193 168Q255 175 226 244" stroke="${cf}" stroke-width="20" fill="none" stroke-linecap="round"/>`;
+  }
+  if(tipo==='cachorra'){
+    if(fase===1)return egg(cf,'#a85f38');
+    if(fase===2)return `<ellipse cx="135" cy="190" rx="52" ry="45" fill="${cf}" stroke="#9a4f2d" stroke-width="3"/><circle cx="135" cy="119" r="54" fill="${cf}" stroke="#9a4f2d" stroke-width="3"/><path d="M91 91Q58 55 65 38q30 8 47 43M179 91q33-36 26-53-30 8-47 43" fill="#a85a32" stroke="#7c3f24" stroke-width="4"/>${arm(cf,15)}${legs(cf,15)}`;
+    if(fase===3)return `<ellipse cx="135" cy="188" rx="62" ry="53" fill="${cf}" stroke="#7c3f24" stroke-width="4"/><circle cx="135" cy="116" r="63" fill="${cf}" stroke="#7c3f24" stroke-width="4"/><path d="M83 89Q42 45 52 27q39 8 58 58M187 89q41-44 31-62-39 8-58 58" fill="#91502d" stroke="#6b371f" stroke-width="5"/>${arm(cf,17)}${legs(cf,18)}<path d="M191 182Q238 194 214 231" stroke="${cf}" stroke-width="18" fill="none" stroke-linecap="round"/>`;
+    if(fase===4)return `<ellipse cx="135" cy="185" rx="72" ry="61" fill="${cf}" stroke="#63351f" stroke-width="4"/><circle cx="135" cy="111" r="70" fill="${cf}" stroke="#63351f" stroke-width="4"/><path d="M79 90Q34 38 46 18q45 10 65 65M191 90q45-52 33-72-45 10-65 65" fill="#704021" stroke="#4b2816" stroke-width="5"/>${arm(cf,19)}${legs(cf,21)}<path d="M194 176Q252 190 220 243" stroke="${cf}" stroke-width="21" fill="none" stroke-linecap="round"/>`;
+    return `<path d="M63 205Q46 154 78 126Q94 103 135 107Q176 103 192 126Q224 154 207 205Q190 240 135 247Q80 240 63 205z" fill="${cf}" stroke="#4b2816" stroke-width="6"/><path d="M82 105Q28 34 48 12q48 10 72 78M188 105q54-71 34-93-48 10-72 78" fill="#5a321b" stroke="#3b2113" stroke-width="6"/>${arm('#5a321b',21)}${legs(cf,24)}<path d="M195 171Q270 190 226 255" stroke="${cf}" stroke-width="24" fill="none" stroke-linecap="round"/>`;
+  }
+  if(tipo==='cabra'){
+    if(fase===1)return egg(cf,'#8b6b4a');
+    const horns=(sw)=>`<path d="M94 83Q58 35 91 18M176 83Q212 35 179 18" stroke="${fase>=4?'#7c3aed':'#8b6b4a'}" stroke-width="${sw}" fill="none" stroke-linecap="round"/>`;
+    if(fase===2)return `${bodyHead(cf,53,50,44,'#8b6b4a')}${horns(10)}${arm(cf,15)}${legs(cf,15)}`;
+    if(fase===3)return `${bodyHead(cf,61,61,51,'#76563d')}${horns(14)}<path d="M87 83Q62 52 52 70M183 83Q208 52 218 70" stroke="${cf}" stroke-width="18" fill="none" stroke-linecap="round"/>${arm(cf,17)}${legs(cf,19)}`;
+    if(fase===4)return `<ellipse cx="135" cy="188" rx="73" ry="61" fill="${cf}" stroke="#60442e" stroke-width="5"/><circle cx="135" cy="109" r="70" fill="${cf}" stroke="#60442e" stroke-width="5"/>${horns(18)}<path d="M80 88Q42 47 36 70M190 88Q228 47 234 70" stroke="${cf}" stroke-width="23" fill="none" stroke-linecap="round"/>${arm(cf,20)}${legs(cf,22)}`;
+    return `<path d="M58 208Q48 148 82 123Q103 102 135 108Q167 102 188 123Q222 148 212 208Q190 246 135 252Q80 246 58 208z" fill="${cf}" stroke="#4b3628" stroke-width="6"/>${horns(23)}<path d="M72 94Q25 36 35 65M198 94Q245 36 235 65" stroke="${cf}" stroke-width="27" fill="none" stroke-linecap="round"/>${arm('#7c3aed',22)}${legs(cf,25)}<circle cx="135" cy="170" r="75" fill="#a78bfa" opacity=".12"/>`;
+  }
+  if(tipo==='frango'){
+    if(fase===1)return `<path d="M135 58Q92 70 88 132Q84 195 105 224Q135 248 165 224Q186 195 182 132Q177 70 135 58z" fill="${cf}" stroke="#d99a00" stroke-width="4"/><path d="M99 126l22 13 19-17 19 17 22-13" fill="none" stroke="#d99a00" stroke-width="4"/>${arm('#f7c948',11)}${legs('#d99a00',11)}`;
+    if(fase===2)return `<ellipse cx="135" cy="188" rx="55" ry="49" fill="${cf}" stroke="#d99a00" stroke-width="3"/><circle cx="135" cy="125" r="50" fill="${cf}" stroke="#d99a00" stroke-width="3"/><path d="M91 166Q55 150 61 185q15 22 37 11M179 166q36-16 30 19-15 22-37 11" fill="#ffd84d"/>${arm('#ffd84d',12)}${legs('#d99a00',13)}`;
+    if(fase===3)return `<ellipse cx="135" cy="187" rx="62" ry="51" fill="${cf}" stroke="#a85b12" stroke-width="4"/><circle cx="135" cy="119" r="58" fill="${cf}" stroke="#a85b12" stroke-width="4"/><path d="M89 170Q42 142 50 193q20 27 49 9M181 170q47-28 39 23-20 27-49 9" fill="#e9a11a"/><path d="M135 70q-18-25-30-7 2-32 30-15 28-17 30 15-12-18-30 7" fill="#ef4444"/>${arm('#e9a11a',15)}${legs('#b96b0b',16)}`;
+    if(fase===4)return `<ellipse cx="135" cy="184" rx="72" ry="57" fill="${cf}" stroke="#8a4b0b" stroke-width="5"/><path d="M76 174Q24 135 39 202q23 35 57 11M194 174q52-39 37 28-23 35-57 11" fill="#b86a0b"/><circle cx="135" cy="113" r="64" fill="${cf}" stroke="#8a4b0b" stroke-width="5"/><path d="M135 70q-20-34-34-9 0-40 34-20 34-20 34 20-14-25-34 9" fill="#dc2626"/>${arm('#b86a0b',19)}${legs('#9a5708',21)}`;
+    return `<path d="M62 212Q44 159 77 126Q100 103 135 111Q170 103 193 126Q226 159 208 212Q185 246 135 252Q85 246 62 212z" fill="${cf}" stroke="#8a4b0b" stroke-width="6"/><path d="M78 176Q18 122 32 205q25 42 66 14M192 176q60-54 46 29-25 42-66 14" fill="#fb923c"/><path d="M135 111Q112 70 95 101 103 57 135 84 167 57 175 101 158 70 135 111" fill="#f97316"/>${arm('#fb923c',23)}${legs('#b96b0b',25)}<path d="M94 224Q115 244 135 231Q155 244 176 224" fill="none" stroke="#fde68a" stroke-width="9"/>`;
+  }
+  if(tipo==='unicornio'){
+    if(fase===1)return egg(cf,'#c084fc')+`<path d="M135 67L123 25l12 10 12-10z" fill="#f0abfc"/>`;
+    if(fase===2)return `${bodyHead(cf,53,50,45,'#c084fc')}<path d="M135 67L120 12l15 12 15-12z" fill="#c084fc"/>${arm('#f0abfc',14)}${legs(cf,15)}`;
+    if(fase===3)return `${bodyHead(cf,61,62,52,'#8b5cf6')}<path d="M135 62L116 2l19 17 19-17z" fill="#8b5cf6"/><path d="M78 142Q22 105 25 154q25 40 65 18M192 142Q248 105 245 154q-25 40-65 18" fill="#c4b5fd"/>${arm('#c4b5fd',18)}${legs(cf,19)}`;
+    if(fase===4)return `<ellipse cx="135" cy="185" rx="72" ry="60" fill="${cf}" stroke="#7c3aed" stroke-width="5"/><circle cx="135" cy="108" r="70" fill="${cf}" stroke="#7c3aed" stroke-width="5"/><path d="M135 58L112-2l23 20 23-20z" fill="#facc15"/><path d="M74 145Q8 91 15 160q30 51 78 20M196 145Q262 91 255 160q-30 51-78 20" fill="#a78bfa"/>${arm('#c4b5fd',21)}${legs(cf,22)}`;
+    return `<path d="M57 210Q42 151 80 121Q103 100 135 109Q167 100 190 121Q228 151 213 210Q190 250 135 256Q80 250 57 210z" fill="${cf}" stroke="#6d28d9" stroke-width="6"/><path d="M135 54L108-15l27 23 27-23z" fill="#fef08a" stroke="#a855f7" stroke-width="3"/><path d="M70 150Q-8 70 5 170q37 67 93 27M200 150Q278 70 265 170q-37 67-93 27" fill="#ddd6fe"/>${arm('#c4b5fd',25)}${legs(cf,25)}<circle cx="135" cy="165" r="85" fill="#a78bfa" opacity=".12"/>`;
+  }
+  if(tipo==='dinossauro'){
+    if(fase===1)return egg(cf,'#3f9b62')+`<path d="M99 104l-14-28 27 17M171 104l14-28-27 17" fill="#3f9b62"/>`;
+    if(fase===2)return `${bodyHead(cf,54,55,47,'#277a54')}<path d="M94 83l-20-43 31 28 8-47 18 41M176 83l20-43-31 28-8-47-18 41" fill="#3f9b62"/>${arm('#3f9b62',16)}${legs(cf,17)}`;
+    if(fase===3)return `${bodyHead(cf,62,67,54,'#166534')}<path d="M88 82l-25-53 37 37 8-60 21 51M182 82l25-53-37 37-8-60-21 51" fill="#277a54"/>${arm('#277a54',19)}${legs(cf,20)}<path d="M190 184Q242 190 218 236" stroke="${cf}" stroke-width="18" fill="none" stroke-linecap="round"/>`;
+    if(fase===4)return `<ellipse cx="135" cy="184" rx="75" ry="61" fill="${cf}" stroke="#14532d" stroke-width="6"/><circle cx="135" cy="108" r="73" fill="${cf}" stroke="#14532d" stroke-width="6"/><path d="M84 78l-29-58 41 39 9-66 24 58M186 78l29-58-41 39-9-66-24 58" fill="#166534"/>${arm('#166534',22)}${legs(cf,23)}<path d="M194 177Q255 190 224 246" stroke="${cf}" stroke-width="23" fill="none" stroke-linecap="round"/>`;
+    return `<path d="M54 212Q40 148 78 119Q101 97 135 108Q169 97 192 119Q230 148 216 212Q190 253 135 258Q80 253 54 212z" fill="${cf}" stroke="#064e3b" stroke-width="7"/><path d="M78 81l-36-70 50 50 10-82 30 72M192 81l36-70-50 50-10-82-30 72" fill="#14532d"/>${arm('#14532d',26)}${legs(cf,27)}<path d="M196 171Q272 190 231 258" stroke="${cf}" stroke-width="27" fill="none" stroke-linecap="round"/><circle cx="135" cy="168" r="86" fill="#f97316" opacity=".1"/>`;
+  }
+  if(fase===1)return egg(cf,'#70452f');
+  if(fase===2)return `${bodyHead(cf,54,57,48,'#70452f')}<circle cx="82" cy="78" r="15" fill="#70452f"/><circle cx="188" cy="78" r="15" fill="#70452f"/>${arm('#70452f',15)}${legs(cf,16)}`;
+  if(fase===3)return `${bodyHead(cf,62,68,56,'#5b3928')}<circle cx="76" cy="70" r="18" fill="#70452f"/><circle cx="194" cy="70" r="18" fill="#70452f"/>${arm('#70452f',18)}${legs(cf,20)}<path d="M192 184Q240 192 217 232" stroke="${cf}" stroke-width="18" fill="none" stroke-linecap="round"/>`;
+  if(fase===4)return `<ellipse cx="135" cy="184" rx="76" ry="63" fill="${cf}" stroke="#54321f" stroke-width="5"/><ellipse cx="135" cy="108" rx="74" ry="69" fill="${cf}" stroke="#54321f" stroke-width="5"/><circle cx="72" cy="67" r="21" fill="#70452f"/><circle cx="198" cy="67" r="21" fill="#70452f"/>${arm('#70452f',21)}${legs(cf,23)}<path d="M195 178Q258 192 225 247" stroke="${cf}" stroke-width="22" fill="none" stroke-linecap="round"/>`;
+  return `<path d="M54 210Q42 151 78 122Q101 99 135 108Q169 99 192 122Q228 151 216 210Q190 251 135 257Q80 251 54 210z" fill="${cf}" stroke="#3f2b20" stroke-width="7"/><circle cx="70" cy="63" r="24" fill="#70452f"/><circle cx="200" cy="63" r="24" fill="#70452f"/>${arm('#70452f',26)}${legs(cf,27)}<path d="M196 174Q270 190 230 258" stroke="${cf}" stroke-width="25" fill="none" stroke-linecap="round"/><path d="M86 184Q110 200 135 190Q160 200 184 184" fill="none" stroke="#d2a679" stroke-width="8" opacity=".7"/>`;
+})()}`;
 const olhoLx=tipo==='frango'?100:108,olhoRx=tipo==='frango'?170:162,olhoY=tipo==='gato'?125:115;
 const pupLx=tipo==='frango'?107:115,pupRx=tipo==='frango'?163:155,pupY=tipo==='gato'?130:120;
 const brLx=tipo==='frango'?103:111,brRx=tipo==='frango'?159:151,brY=tipo==='gato'?122:112;
@@ -1621,7 +1847,7 @@ ${defsPet}
 </style>
 <ellipse cx="135" cy="271" rx="58" ry="11" fill="#000" opacity=".16" filter="url(#sombraMacia${tipo})"/>
 ${tipo==='cachorra'?`<path d="M196 208q38-8 38 22q0 27-27 22" stroke="url(#gradCorpo${tipo})" stroke-width="15" fill="none" stroke-linecap="round" class="anim-bandeira" style="transform-origin:196px 208px"/>`:''}
-<ellipse cx="135" cy="205" rx="57" ry="49" fill="url(#gradCorpo${tipo})"/><circle cx="135" cy="125" r="68" fill="url(#gradCorpo${tipo})"/>${ears}
+${estrutura}
 <ellipse cx="118" cy="88" rx="30" ry="17" fill="#fff" opacity=".16" transform="rotate(-16 118 88)"/>
 <ellipse cx="120" cy="195" rx="34" ry="24" fill="#fff" opacity=".1"/>
 <ellipse class="blink" cx="${olhoLx}" cy="${olhoY}" rx="27" ry="31" fill="white"/><ellipse class="blink" cx="${olhoRx}" cy="${olhoY}" rx="27" ry="31" fill="white"/>
@@ -1631,9 +1857,7 @@ ${tipo==='cachorra'?`<path d="M196 208q38-8 38 22q0 27-27 22" stroke="url(#gradC
 ${tipo==='frango'?'<path d="M135 138l-23 14h46z" fill="#ffcc00"/><ellipse cx="135" cy="150" rx="12" ry="8" fill="#552200"/>':tipo==='cabra'?'<ellipse cx="135" cy="150" rx="10" ry="7" fill="#ff9ebb"/><path d="M125 158q10 10 20 0" stroke="#2d1b10" stroke-width="2.5" fill="none"/>':tipo==='gato'?'<ellipse cx="135" cy="155" rx="7" ry="5" fill="#ff9ebb"/>':'<ellipse cx="135" cy="150" rx="12" ry="9" fill="#2d1b10"/><path d="M135 162l-7 10h14z" fill="#ff9ebb"/>'}
 <ellipse cx="85" cy="145" rx="12" ry="8" fill="url(#gradBochecha${tipo})"/><ellipse cx="185" cy="145" rx="12" ry="8" fill="url(#gradBochecha${tipo})"/>
 ${tipo==='gato'?'<g stroke="#fff" stroke-width="2" stroke-linecap="round" opacity=".8"><path d="M62 148h-27M64 156h-29M66 164h-26"/><path d="M208 148h27M206 156h29M204 164h26"/></g>':''}
-<path d="M95 235Q90 255 105 255M175 235Q180 255 165 255" stroke="url(#gradCorpo${tipo})" stroke-width="14" fill="none" stroke-linecap="round"/>
-<ellipse cx="99" cy="253" rx="6" ry="4" fill="${corEscura}" opacity=".5"/><ellipse cx="171" cy="253" rx="6" ry="4" fill="${corEscura}" opacity=".5"/>
-${tipo==='gato'?`<path d="M200 220q40 20 30 50" stroke="url(#gradCorpo${tipo})" stroke-width="16" fill="none" stroke-linecap="round"/>`:''}${extra}</svg>`;
+${extra}</svg>`;
 }
 const ACESSORIOS=[
 {id:'chapeu',nome:'Chapéu de Festa',emoji:'🎉',preco:15,svg:'<svg viewBox="0 0 270 285" xmlns="http://www.w3.org/2000/svg"><path d="M108 58 L135 8 L162 58 Z" fill="#f43f5e" stroke="#fff" stroke-width="3"/><circle cx="135" cy="8" r="7" fill="#fbbf24"/><path d="M100 60h70" stroke="#fff" stroke-width="4" stroke-linecap="round"/></svg>'},
@@ -1751,9 +1975,11 @@ const SKINS_HALLOWEEN=[
 ];
 TEMAS.push(...SKINS_HALLOWEEN);
 function buscarAcessorioPorId(id){
-  const normal=ACESSORIOS.find(a=>a.id===id);
+  if(id==null||id==='')return null;
+  const sid=String(id);
+  const normal=ACESSORIOS.find(a=>String(a.id)===sid);
   if(normal)return normal;
-  const tema=TEMAS.find(t=>t.acessorio.id===id);
+  const tema=TEMAS.find(t=>String(t.acessorio.id)===sid);
   return tema?tema.acessorio:null;
 }
 function soprarLinguaDeSogra(el){
@@ -1926,15 +2152,16 @@ const hojeLocal=()=>{const d=new Date();return `${d.getFullYear()}-${String(d.ge
 const ontemLocal=()=>{const d=new Date();d.setDate(d.getDate()-1);return `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`};
 // Campos que pertencem a UM filho específico (progresso do pet, tarefas, moedas...).
 // Tudo que NÃO está nessa lista é compartilhado pela família inteira (PIN, e-mails, taxa de câmbio).
-const CAMPOS_CRIANCA=['acessorios','conquistas','desafiosMathAcertos','dinheiroAcumulado','fundoAtual','fundosComprados','historicoConclusoes','idadeCrianca','lembreteEnviadoData','metaMoedas','moedas','onboardingVistoCrianca','pausaAte','petAtual','pets','recompensas','registroDiario','solicitacoesPremios','streak','surpresaResgatadaData','tarefas','tarefasHojeCount','timerFim','totalSacado','ultimoDiaAcesso','ultimoDiaConcluido','ultimoStreakPremiado','vozSalva','ultimoAcaoPet','ultimoDecay','desafioDiarioData','desafioDiarioFeitoData','bauDiarioAbertoData','escudosOfensiva','adesivos','eventoSemanalData','missaoFamilia','mensagensPais','historicoEngajamento','conquistasJornada','streakRecompensas'];
+const CAMPOS_CRIANCA=['acessorios','conquistas','desafiosMathAcertos','dinheiroAcumulado','fundoAtual','fundosComprados','historicoConclusoes','idadeCrianca','lembreteEnviadoData','metaMoedas','moedas','modoFocoAtivo','modoZenAtivo','onboardingVistoCrianca','pausaAte','petAtual','pets','recompensas','registroDiario','solicitacoesPremios','streak','surpresaResgatadaData','tarefas','tarefasHojeCount','timerFim','totalSacado','ultimoDiaAcesso','ultimoDiaConcluido','ultimoStreakPremiado','vozSalva','ultimoAcaoPet','ultimoDecay','desafioDiarioData','desafioDiarioFeitoData','bauDiarioAbertoData','escudosOfensiva','adesivos','eventoSemanalData','missaoFamilia','mensagensPais','historicoEngajamento','conquistasJornada','streakRecompensas','focoTimerFim','focoTimerTarefaId','focoMicroEtapa','preferenciaSomZen','preferenciaMovimentoZen','preferenciaVisualZen','preferenciaTransicoesZen','perfilSensorial','pausaSensorialAte'];
 function valoresPadraoCrianca(){
   return {
     petAtual:'gato',moedas:15,dinheiroAcumulado:.15,idadeCrianca:7,
+    modoFocoAtivo:false,modoZenAtivo:false,focoTimerFim:null,focoTimerTarefaId:null,focoMicroEtapa:0,preferenciaSomZen:'suave',preferenciaMovimentoZen:'minimo',preferenciaVisualZen:'simplificado',preferenciaTransicoesZen:'instantaneas',perfilSensorial:'personalizado',pausaSensorialAte:null,
     fundoAtual:'ceu',fundosComprados:['ceu'],metaMoedas:50,totalSacado:0,
     ultimoDiaAcesso:hojeLocal(),ultimoDiaConcluido:null,streak:0,ultimoStreakPremiado:0,conquistasJornada:{},streakRecompensas:{},
     tarefasHojeCount:0,desafiosMathAcertos:0,timerFim:null,vozSalva:null,
     pets:{gato:{nivel:1,xp:0,felicidade:100,saude:100},cachorra:{nivel:1,xp:0,felicidade:100,saude:100},cabra:{nivel:1,xp:0,felicidade:100,saude:100},frango:{nivel:1,xp:0,felicidade:100,saude:100},unicornio:{nivel:1,xp:0,felicidade:100,saude:100},dinossauro:{nivel:1,xp:0,felicidade:100,saude:100},capivara:{nivel:1,xp:0,felicidade:100,saude:100}},
-    tarefas:[{id:1,texto:'Escovar os dentes',recompensa:5,xp:20,tipo:'obrigatoria',status:'pendente',foto:null,dias:[]},{id:2,texto:'Arrumar a cama',recompensa:5,xp:20,tipo:'obrigatoria',status:'pendente',foto:null,dias:[]}],
+    tarefas:[{id:1,texto:'Escovar os dentes',recompensa:5,xp:20,tipo:'obrigatoria',status:'pendente',foto:null,dias:[],passos:[],tempoMin:0,ajuda:'',instrucaoFoto:null,primeiroDepois:'',},{id:2,texto:'Arrumar a cama',recompensa:5,xp:20,tipo:'obrigatoria',status:'pendente',foto:null,dias:[],passos:[],tempoMin:0,ajuda:'',instrucaoFoto:null,primeiroDepois:'',}],
     recompensas:[
       {id:1,texto:'15 min de tela',descricao:'Tempo de tela liberado pelos pais.',custo:10,tipo:'timer',minutos:15,icone:'📱',ativo:true},
       {id:2,texto:'30 min de tela',descricao:'Tempo de tela liberado pelos pais.',custo:18,tipo:'timer',minutos:30,icone:'🎮',ativo:true}
@@ -1989,11 +2216,12 @@ function garantirCriancaAtiva(){
 let estado={
   criancaAtivaId:'c1',criancas:{c1:{nome:'Minha Criança',emoji:'🐾'}},criancasDados:{},
   petAtual:'gato',moedas:15,taxaCambio:.01,pinHash:null,dinheiroAcumulado:.15,idadeCrianca:7,
+  modoFocoAtivo:false,modoZenAtivo:false,focoTimerFim:null,focoTimerTarefaId:null,focoMicroEtapa:0,preferenciaSomZen:'suave',preferenciaMovimentoZen:'minimo',preferenciaVisualZen:'simplificado',preferenciaTransicoesZen:'instantaneas',perfilSensorial:'personalizado',pausaSensorialAte:null,
   fundoAtual:'ceu',fundosComprados:['ceu'],metaMoedas:50,totalSacado:0,
   ultimoDiaAcesso:hojeLocal(),ultimoDiaConcluido:null,streak:0,ultimoStreakPremiado:0,
   tarefasHojeCount:0,desafiosMathAcertos:0,timerFim:null,vozSalva:null,
   pets:{gato:{nivel:1,xp:0,felicidade:100,saude:100},cachorra:{nivel:1,xp:0,felicidade:100,saude:100},cabra:{nivel:1,xp:0,felicidade:100,saude:100},frango:{nivel:1,xp:0,felicidade:100,saude:100},unicornio:{nivel:1,xp:0,felicidade:100,saude:100},dinossauro:{nivel:1,xp:0,felicidade:100,saude:100},capivara:{nivel:1,xp:0,felicidade:100,saude:100}},
-  tarefas:[{id:1,texto:'Escovar os dentes',recompensa:5,xp:20,tipo:'obrigatoria',status:'pendente',foto:null,dias:[]},{id:2,texto:'Arrumar a cama',recompensa:5,xp:20,tipo:'obrigatoria',status:'pendente',foto:null,dias:[]}],
+  tarefas:[{id:1,texto:'Escovar os dentes',recompensa:5,xp:20,tipo:'obrigatoria',status:'pendente',foto:null,dias:[],passos:[],tempoMin:0,ajuda:'',instrucaoFoto:null,primeiroDepois:'',},{id:2,texto:'Arrumar a cama',recompensa:5,xp:20,tipo:'obrigatoria',status:'pendente',foto:null,dias:[],passos:[],tempoMin:0,ajuda:'',instrucaoFoto:null,primeiroDepois:'',}],
   recompensas:[
     {id:1,texto:'15 min de tela',descricao:'Tempo de tela liberado pelos pais.',custo:10,tipo:'timer',minutos:15,icone:'📱',ativo:true},
     {id:2,texto:'30 min de tela',descricao:'Tempo de tela liberado pelos pais.',custo:18,tipo:'timer',minutos:30,icone:'🎮',ativo:true}
@@ -2045,6 +2273,16 @@ try{
     // `criancas` nem `criancaAtivaId` — cria o primeiro perfil com o progresso
     // que já estava solto no estado, sem mexer em mais nada.
     garantirCriancaAtiva();
+    if(estado.modoFocoAtivo===undefined)estado.modoFocoAtivo=false;
+    if(estado.modoZenAtivo===undefined)estado.modoZenAtivo=false;
+    if(estado.volumeSom===undefined)estado.volumeSom=.55;
+  if(estado.focoTimerFim===undefined)estado.focoTimerFim=null;
+  if(estado.focoTimerTarefaId===undefined)estado.focoTimerTarefaId=null;
+  if(estado.focoMicroEtapa===undefined)estado.focoMicroEtapa=0;
+  if(estado.preferenciaSomZen===undefined)estado.preferenciaSomZen='suave';
+  if(estado.preferenciaMovimentoZen===undefined)estado.preferenciaMovimentoZen='minimo';
+  if(estado.preferenciaVisualZen===undefined)estado.preferenciaVisualZen='simplificado';
+  if(estado.preferenciaTransicoesZen===undefined)estado.preferenciaTransicoesZen='instantaneas';
     if(d.pinPais&&!d.pinHash){
       hashPin(d.pinPais).then(h=>{estado.pinHash=h;delete estado.pinPais;salvar();});
     }
@@ -2554,7 +2792,7 @@ function aplicarFundoTela(id){
   }
   fundoTelaAtual=fundoId;
 
-  document.body.classList.forEach(c=>{
+  Array.from(document.body.classList).forEach(c=>{
     if(c.startsWith('cenario-'))document.body.classList.remove(c);
   });
   document.body.classList.add(cls);
@@ -2618,10 +2856,16 @@ function celebrarEvolucaoPet(fase){
 }
 let rpUltimoPetVisualKey='';
 let rpUltimoAcessorioVisualKey='';
+let rpUltimoEvolucaoVisualKey='';
+let rpUltimaTarefaRenderKey='';
 
 function atualizarTelaInterna(){
   try{
   if(typeof estado==='undefined'||!estado)return;
+  document.body.classList.toggle('modo-zen',!!estado.modoZenAtivo);
+  document.body.classList.toggle('modo-foco',!!estado.modoFocoAtivo);
+  document.body.classList.toggle('pausa-sensorial',Number(estado.pausaSensorialAte)>Date.now());
+    aplicarPreferenciasZen();
   if(typeof PETS==='undefined'||!PETS[estado.petAtual]){
     try{estado.petAtual=Object.keys(PETS||{})[0]||'gato'}catch(_){estado.petAtual='gato'}
   }
@@ -2662,7 +2906,11 @@ function atualizarTelaInterna(){
   }
   
   setTxt('pet-evol-nome',`${def.nome} • ${def.evolucoes[fase-1].nome}`);
-  renderizarProgressoEvolucao();
+  const evoVisualKey=`${estado.petAtual}|${fase}|${p.nivel}|${p.xp}`;
+  if(rpUltimoEvolucaoVisualKey!==evoVisualKey){
+    renderizarProgressoEvolucao();
+    rpUltimoEvolucaoVisualKey=evoVisualKey;
+  }
   const modalNome=document.getElementById('modal-pet-evol-nome');
   if(modalNome)modalNome.textContent=def.nome;
   setVal('input-idade-crianca',estado.idadeCrianca||7);
@@ -2787,47 +3035,22 @@ let _audioPetAtual=null;
 let _audioPetSrcCache='';
 function tocarAudioPet(url){
   const vol=obterVolumeSom();
-  if(vol<=0.01)return false;
   const fonte=(estado&&estado.vozSalva)||url;
   if(!fonte)return false;
+  if(vol<=0.01){if(estado&&estado.vozSalva)mostrarToast('🔇 O volume do pet está no mudo.');return false;}
   try{
-    try{obterAudioContext()}catch(_){}
-    // Novo Audio a cada toque quando é data-URL de voz: evita estado "preso"
-    // no iOS após pause/currentTime=0.
-    const isData=String(fonte).startsWith('data:');
-    if(isData || !_audioPetAtual || _audioPetSrcCache!==String(fonte)){
-      if(_audioPetAtual){try{_audioPetAtual.pause()}catch(_){}}
-      _audioPetAtual=new Audio();
-      _audioPetAtual.preload='auto';
-      try{_audioPetAtual.playsInline=true}catch(_){}
-      try{_audioPetAtual.setAttribute('playsinline','')}catch(_){}
-      try{_audioPetAtual.setAttribute('webkit-playsinline','')}catch(_){}
-      _audioPetAtual.src=String(fonte);
-      _audioPetSrcCache=String(fonte);
-    }
-    const a=_audioPetAtual;
-    a.volume=vol;
-    a.muted=false;
-    try{a.currentTime=0}catch(_){}
+    const src=String(fonte);
+    if(_audioPetAtual){try{_audioPetAtual.pause()}catch(_){} try{_audioPetAtual.removeAttribute('src');_audioPetAtual.load()}catch(_){} }
+    const a=new Audio(src);
+    a.preload='auto';a.volume=vol;a.muted=false;
+    try{a.playsInline=true}catch(_){}
+    try{a.setAttribute('playsinline','')}catch(_){}
+    try{a.setAttribute('webkit-playsinline','')}catch(_){}
+    _audioPetAtual=a;_audioPetSrcCache=src;
     const p=a.play();
-    if(p&&typeof p.catch==='function'){
-      p.catch(err=>{
-        console.warn('Falha ao reproduzir voz do pet:',err);
-        try{
-          const b=new Audio(String(fonte));
-          b.volume=vol;
-          try{b.playsInline=true}catch(_){}
-          _audioPetAtual=b;
-          _audioPetSrcCache=String(fonte);
-          b.play().catch(()=>{});
-        }catch(_){}
-      });
-    }
+    if(p&&typeof p.catch==='function')p.catch(err=>console.warn('Falha ao reproduzir voz do pet:',err));
     return true;
-  }catch(e){
-    console.warn('tocarAudioPet:',e);
-    return false;
-  }
+  }catch(e){console.warn('tocarAudioPet:',e);return false;}
 }
 function registrarLogAtividade(texto){
   estado.logAtividades=Array.isArray(estado.logAtividades)?estado.logAtividades:[];
@@ -3716,6 +3939,9 @@ function tarefasDeHoje(){return (Array.isArray(estado.tarefas)?estado.tarefas:[]
 function emPausaHoje(){return !!(estado.pausaAte&&hojeLocal()<=estado.pausaAte)}
 function todasObrigatoriasConcluidas(){const o=tarefasDeHoje().filter(t=>t.tipo==='obrigatoria');return o.length>0&&o.every(t=>statusTarefaAtual(t)==='aprovada')}
 function atualizarOfensiva(){
+  const obrigatorias=tarefasDeHoje().filter(t=>t.tipo==='obrigatoria');
+  const tarefasPendentes=obrigatorias.some(t=>statusTarefaAtual(t)!=='aprovada');
+  document.body.classList.toggle('tarefas-pendentes',tarefasPendentes);
   const el=document.getElementById('status-ofensiva');
   if(!el)return;
   if(emPausaHoje()){
@@ -3791,15 +4017,114 @@ function removerMetaPersonalizada(id){
   salvar();renderizarPainelPais();atualizarTela();mostrarToast('🗑️ Meta removida.');
 }
 function renderizarResumoCrianca(){ /* painel grande removido: resumo disponível no ícone Hoje */ }
+function atualizarFocoAgoraDepois(hojeLista){
+  const box=document.getElementById('foco-agora-depois');
+  if(!box)return;
+  const lista=Array.isArray(hojeLista)?hojeLista:[];
+  const pendentes=lista.filter(t=>{const st=statusTarefaAtual(t);return st!=='aprovada'&&st!=='aguardando_aprovacao'});
+  const atual=pendentes.find(t=>t.tipo==='obrigatoria')||pendentes[0];
+  const idx=atual?lista.findIndex(t=>String(t.id)===String(atual.id)):-1;
+  const depois=idx>=0?lista.slice(idx+1).find(t=>{const st=statusTarefaAtual(t);return st!=='aprovada'}):null;
+  if(!atual){
+    box.innerHTML='<div class="foco-vazio">✅ Tudo que precisava ser feito por enquanto está concluído.</div>';
+    return;
+  }
+  const passos=Array.isArray(atual.passos)?atual.passos.filter(Boolean):[];
+  const etapa=Math.min(Math.max(Number(estado.focoMicroEtapa)||0,0),Math.max(0,passos.length-1));
+  const tempo=Math.max(0,Number(atual.tempoMin)||0);
+  const timerAtivo=estado.focoTimerTarefaId!=null&&String(estado.focoTimerTarefaId)===String(atual.id)&&Number(estado.focoTimerFim)>Date.now();
+  const pausaSensorialAtiva=Number(estado.pausaSensorialAte)>Date.now();
+  const conteudoPausa=pausaSensorialAtiva?`<div class="foco-micro" style="background:#f0fdf4;border-color:#bbf7d0"><div class="foco-micro-title">🌿 PAUSA SENSORIAL</div><div class="foco-micro-step" style="font-size:12px">Tudo bem pausar. Quando estiver pronto, continue.</div><button class="foco-fazer" style="background:#166534" onclick="encerrarPausaSensorial()">▶ Continuar</button></div>`:`<div class="foco-label">🎯 AGORA</div><div class="foco-tarefa">${esc(atual.texto)}</div>
+    ${passos.length?`<div class="foco-micro"><div class="foco-micro-title">🧩 UM PASSO DE CADA VEZ</div><div class="foco-micro-step">${esc(passos[etapa])}</div><button class="foco-fazer" onclick="avancarMicroEtapa()">${etapa<passos.length-1?'✓ Fiz! Próximo passo':'✓ Fiz! Concluir passos'}</button><div class="foco-passos-lista">${passos.map((passo,i)=>`<div class="foco-passo-card ${i<etapa?'feito ':''}${i===etapa?'atual':''}"><span class="foco-passo-num">${i<etapa?'✓':i+1}</span><span>${esc(passo)}</span></div>`).join('')}</div></div>`:''}
+    ${tempo?`<div class="foco-timer"><div class="foco-label">⏳ TEMPO VISUAL</div><div id="foco-timer-num" class="foco-timer-num">${timerAtivo?formatarTempoFoco(Math.max(0,Number(estado.focoTimerFim)-Date.now())):formatarTempoFoco(tempo*60000)}</div><div class="foco-timer-bar"><div id="foco-timer-barra"></div></div><div class="foco-controles"><button class="foco-btn" onclick="alternarTimerFoco(${atual.id},${tempo})">${timerAtivo?'⏸ Pausar':'▶ Começar'}</button>${timerAtivo?'<button class="foco-btn" onclick="encerrarTimerFoco()">⏹ Encerrar</button>':''}</div></div>`:''}
+    ${depois?`<div class="foco-depois"><div class="foco-label">⏭️ DEPOIS</div><div class="foco-depois-text">${esc(depois.texto)}</div></div>`:''}${pausaSensorialAtiva?'':`<button class="foco-btn" style="margin-top:8px;width:100%" onclick="iniciarPausaSensorial(5)">🌿 Preciso de uma pausa</button>`}`;
+  box.innerHTML=conteudoPausa;
+  atualizarTimerFocoVisual();
+}
+function formatarTempoFoco(ms){const s=Math.max(0,Math.ceil(ms/1000)),m=Math.floor(s/60),r=s%60;return `${String(m).padStart(2,'0')}:${String(r).padStart(2,'0')}`}
+let intervaloTimerFoco=null;
+function iniciarLoopTimerFoco(){clearInterval(intervaloTimerFoco);intervaloTimerFoco=setInterval(atualizarTimerFocoVisual,500)}
+function atualizarTimerFocoVisual(){
+  const id=estado.focoTimerTarefaId, fim=Number(estado.focoTimerFim)||0;
+  const el=document.getElementById('foco-timer-num');
+  if(!id||!fim){clearInterval(intervaloTimerFoco);return}
+  const restante=Math.max(0,fim-Date.now());
+  if(el)el.textContent=formatarTempoFoco(restante);
+  const t=(estado.tarefas||[]).find(x=>String(x.id)===String(id));
+  const total=Math.max(1,(Number(t?.tempoMin)||1)*60000);
+  const bar=document.getElementById('foco-timer-barra');
+  if(bar)bar.style.width=Math.max(0,Math.min(100,100-(restante/total*100)))+'%';
+  if(restante<=0){encerrarTimerFoco(true);mostrarToast('⏰ Tempo da missão terminou.');}
+}
+function alternarTimerFoco(id,min){
+  if(estado.focoTimerTarefaId!=null&&String(estado.focoTimerTarefaId)===String(id)&&Number(estado.focoTimerFim)>Date.now()){encerrarTimerFoco();return}
+  estado.focoTimerTarefaId=id;estado.focoTimerFim=Date.now()+Math.max(1,Number(min)||1)*60000;salvar();iniciarLoopTimerFoco();renderizarTarefas();
+}
+function encerrarTimerFoco(silencioso=false){estado.focoTimerTarefaId=null;estado.focoTimerFim=null;clearInterval(intervaloTimerFoco);salvar();if(!silencioso)renderizarTarefas()}
+
+function reagirPetAoProgresso(tipo){
+  try{
+    const pet=document.getElementById('pet-principal');
+    const area=document.getElementById('pet-section-area')||document.querySelector('.pet-stage');
+    if(!pet||!area)return;
+    pet.classList.remove('pet-bounce');
+    void pet.offsetWidth;
+    pet.classList.add('pet-bounce');
+    setTimeout(()=>pet.classList.remove('pet-bounce'),tipo==='concluida'?800:500);
+    const feedback=document.createElement('div');
+    feedback.className='pet-micro-feedback'+(tipo==='concluida'?' grande':'');
+    feedback.textContent=tipo==='concluida'?'🎉 Missão concluída!':'💚 Muito bem!';
+    area.appendChild(feedback);
+    setTimeout(()=>{try{feedback.remove()}catch(_){}},tipo==='concluida'?1050:800);
+    if(tipo==='concluida'){
+      try{mostrarBalaoFala(escolherFalaContextual('aposTarefa'))}catch(_){}
+    }
+  }catch(e){console.warn('Feedback do pet:',e)}
+}
+
+function avancarMicroEtapa(){
+  const hoje=tarefasDeHoje();const atual=hoje.find(t=>{const st=statusTarefaAtual(t);return st!=='aprovada'&&st!=='aguardando_aprovacao'&&t.tipo==='obrigatoria'})||hoje.find(t=>statusTarefaAtual(t)!=='aprovada'&&statusTarefaAtual(t)!=='aguardando_aprovacao');
+  if(!atual)return;const passos=Array.isArray(atual.passos)?atual.passos.filter(Boolean):[];
+  if(!passos.length)return;
+  const atualEtapa=Number(estado.focoMicroEtapa)||0;
+  if(atualEtapa<passos.length-1){estado.focoMicroEtapa=atualEtapa+1;salvar();reagirPetAoProgresso('passo');renderizarTarefas();mostrarToast('🧩 Próximo passo!');}
+  else{estado.focoMicroEtapa=0;salvar();reagirPetAoProgresso('concluida');mostrarToast('✨ Todos os passos concluídos! Agora você pode enviar a missão.');renderizarTarefas();}
+}
+
+function marcarTarefaDeFocoAtual(idAtual){
+  document.querySelectorAll('#lista-tarefas .task-row').forEach(row=>row.classList.remove('tarefa-foco-atual'));
+  if(!estado.modoFocoAtivo||idAtual==null)return;
+  const alvo=document.querySelector(`#lista-tarefas .task-row[data-tarefa-id="${CSS.escape(String(idAtual))}"]`);
+  if(alvo)alvo.classList.add('tarefa-foco-atual');
+}
 function renderizarTarefas(){
   try{renderizarMetas()}catch(e){}
   try{renderizarResumoCrianca()}catch(e){}
   const c=document.getElementById('lista-tarefas');
   if(!c)return;
+  const pausaSensorialAtiva=Number(estado.pausaSensorialAte)>Date.now();
+  document.body.classList.toggle('pausa-sensorial',pausaSensorialAtiva);
+  const tarefas=Array.isArray(estado.tarefas)?estado.tarefas:[];
+  tarefas.forEach(t=>{if(!Array.isArray(t.passos))t.passos=[];if(t.tempoMin===undefined)t.tempoMin=0;if(t.ajuda===undefined)t.ajuda='';if(!['sozinho','dica','ajuda'].includes(t.nivelAjuda))t.nivelAjuda=t.ajuda?'dica':'sozinho';if(t.instrucaoFoto===undefined)t.instrucaoFoto=null;if(t.primeiroDepois===undefined)t.primeiroDepois='';});
+  const hojeLista=tarefas.filter(t=>t&&t.ativo!==false&&tarefaEhHoje(t));
+  const statusKey=tarefas.map(t=>`${t.id}:${statusTarefaAtual(t)}:${t.motivoRecusa||''}`).join('|');
+  const estruturaKey=tarefas.map(t=>`${t.id}:${t.texto}:${t.tipo}:${t.recompensa}:${t.xp}:${(t.dias||[]).join(',')}:${(t.passos||[]).join('¦')}:${t.tempoMin}:${t.ajuda}:${t.nivelAjuda}:${t.instrucaoFoto||''}:${t.primeiroDepois||''}`).join('||');
+  const focoKey=estado.modoFocoAtivo?'1':'0';
+  const timerKey=`${estado.focoTimerTarefaId||''}:${estado.focoTimerFim||''}`;
+  const renderKey=`${hojeLocal()}|${pausaSensorialAtiva?'1':'0'}|${focoKey}|${statusKey}|${estruturaKey}|${timerKey}`;
+  const precisaRedesenhar=rpUltimaTarefaRenderKey!==renderKey;
+  if(!precisaRedesenhar){
+    const focoAtual=(hojeLista.find(t=>{const st=statusTarefaAtual(t);return st!=='aprovada'&&st!=='aguardando_aprovacao'&&t.tipo==='obrigatoria'})||hojeLista.find(t=>statusTarefaAtual(t)!=='aprovada'&&statusTarefaAtual(t)!=='aguardando_aprovacao'));
+    atualizarFocoAgoraDepois(hojeLista);
+    atualizarOfensiva();
+    marcarTarefaDeFocoAtual(focoAtual?.id);
+    atualizarTimerFocoVisual();
+    return;
+  }
+  rpUltimaTarefaRenderKey=renderKey;
   c.innerHTML='';
-  const hojeLista=tarefasDeHoje();
   const o=hojeLista.filter(t=>t.tipo==='obrigatoria'),x=hojeLista.filter(t=>t.tipo!=='obrigatoria');
-  const qtdEl=document.getElementById('qtd-tarefas'); if(qtdEl)qtdEl.textContent=`${o.length} fixas · ${x.length} extras`;
+  const qtdEl=document.getElementById('qtd-tarefas'); if(qtdEl){qtdEl.textContent=`${o.length} fixas · ${x.length} extras`;qtdEl.setAttribute('aria-live','polite');}
   const pendentes=(estado.tarefas||[]).filter(t=>statusTarefaAtual(t)==='aguardando_aprovacao');
   const aprovadasLista=hojeLista.filter(t=>statusTarefaAtual(t)==='aprovada');
   const bannerPend=document.getElementById('banner-aprovacoes-pendentes');
@@ -3840,16 +4165,21 @@ function renderizarTarefas(){
       
       const row=document.createElement('div');
       row.className=`task-row${animar}`;
+      row.dataset.tarefaId=String(t.id);
       if(apr){row.style.background='#ecfdf5';row.style.borderRadius='10px';row.style.padding='8px 6px';row.style.border='1px solid #86efac'}
       else if(pend){row.style.background='#fffbeb';row.style.borderRadius='10px';row.style.padding='8px 6px'}
       row.innerHTML=`
         <div>
           <div class="task-name" style="${apr?'color:#166534;font-weight:900':''}">${apr?'✅ ':''}${esc(t.texto)}<span style="font-size:7px;color:#7c3aed;font-weight:900">${esc(badgeDias)}</span></div>
           <span class="task-reward">+${Number(t.xp)||20} XP • +${Number(t.recompensa)||5} 🪙 ${(t.fotoUrl||t.foto)?'• 📸':''}</span>
+          ${t.primeiroDepois?`<div class="tarefa-primeiro-depois"><b>🧭 Primeiro:</b> ${esc(t.primeiroDepois)} </div>`:''}
+          ${t.nivelAjuda!=='sozinho'?`<div class="tarefa-nivel-ajuda">${t.nivelAjuda==='dica'?'🟡 Preciso de uma dica':'🔵 Preciso de ajuda'}</div>`:''}
+          ${t.ajuda?`<button type="button" class="task-help-btn" onclick="mostrarAjudaTarefa(${t.id})">💡 Ver dica</button>`:''}
+          ${t.instrucaoFoto?`<button type="button" class="task-help-btn" onclick="abrirVisualizadorFoto('${t.instrucaoFoto}')">📷 Ver como fazer</button>`:''}
           ${t.motivoRecusa?`<div class="motivo-recusa">↩️ ${esc(t.motivoRecusa)}</div>`:''}
         </div>
         <div class="task-actions">
-          ${apr?'<span style="font-size:11px;color:#fff;font-weight:900;background:#16a34a;padding:6px 10px;border-radius:10px;display:inline-block;box-shadow:0 2px 8px #16a34a55">✅ APROVADA!</span>':pend?'<span style="font-size:9px;color:#92400e;font-weight:900;background:#fef3c7;padding:5px 8px;border-radius:8px;display:inline-block">⏳ Aguardando pais</span>':`<button class="task-btn btn-photo" onclick="dispararCamera(${t.id})">📷</button><button class="task-btn btn-ok" onclick="enviarParaAprovacao(${t.id})">Concluí!</button>`}
+          ${apr?'<span style="font-size:11px;color:#fff;font-weight:900;background:#16a34a;padding:6px 10px;border-radius:10px;display:inline-block;box-shadow:0 2px 8px #16a34a55">✅ APROVADA!</span>':pend?'<span style="font-size:9px;color:#92400e;font-weight:900;background:#fef3c7;padding:5px 8px;border-radius:8px;display:inline-block">⏳ Aguardando pais</span>':`<button type="button" class="task-btn btn-photo" aria-label="Enviar foto como comprovação de ${esc(t.texto)}" title="Enviar foto" onclick="dispararCamera(${t.id})">📷</button><button type="button" class="task-btn btn-ok" aria-label="Marcar ${esc(t.texto)} como concluída" onclick="enviarParaAprovacao(${t.id})">Concluí!</button>`}
         </div>
       `;
       c.appendChild(row);
@@ -3863,8 +4193,11 @@ function renderizarTarefas(){
     aviso.innerHTML='📅 Nenhuma missão está programada para hoje.<br><small>Peça aos responsáveis para conferir os dias da missão.</small>';
     c.appendChild(aviso);
   }
+  atualizarFocoAgoraDepois(hojeLista);
+  const focoAtual=(hojeLista.find(t=>{const st=statusTarefaAtual(t);return st!=='aprovada'&&st!=='aguardando_aprovacao'&&t.tipo==='obrigatoria'})||hojeLista.find(t=>statusTarefaAtual(t)!=='aprovada'&&statusTarefaAtual(t)!=='aguardando_aprovacao'));
   idTarefaRecemAprovada=null;
   atualizarOfensiva();
+  marcarTarefaDeFocoAtual(focoAtual?.id);
 }
 // Quem está usando o app agora (criança ou responsável) — fica salvo só neste
 // aparelho (localStorage), nunca sincroniza com a família. Assim, cada aparelho
@@ -4032,6 +4365,9 @@ function restaurarBackupEstado(arquivo){
     if(!Array.isArray(estado.recompensas))estado.recompensas=[];
     if(!Array.isArray(estado.solicitacoesPremios))estado.solicitacoesPremios=[];
     estado.conquistas=estado.conquistas||{};
+    estado.modoFocoAtivo=!!estado.modoFocoAtivo;
+   if(!estado.perfilSensorial)estado.perfilSensorial='personalizado';if(estado.pausaSensorialAte===undefined)estado.pausaSensorialAte=null;
+    estado.modoZenAtivo=!!estado.modoZenAtivo;
     estado.historicoConclusoes=estado.historicoConclusoes||{};
     estado.registroDiario=estado.registroDiario||{};
     normalizarEmailsRecuperacao();
@@ -4414,7 +4750,143 @@ function renderizarResumoPainelPais(){
     else elProx.textContent='🎯 Nenhuma missão pendente hoje.';
   }
 }
+function atualizarTogglesAcessibilidade(){
+  const zen=document.getElementById('btn-modo-zen');
+  const foco=document.getElementById('btn-modo-foco');
+  if(zen){zen.classList.toggle('ativo',!!estado.modoZenAtivo);zen.setAttribute('aria-pressed',String(!!estado.modoZenAtivo));}
+  if(foco){foco.classList.toggle('ativo',!!estado.modoFocoAtivo);foco.setAttribute('aria-pressed',String(!!estado.modoFocoAtivo));}
+}
+function alternarModoZen(){
+  estado.modoZenAtivo=!estado.modoZenAtivo;
+  document.body.classList.toggle('modo-zen',!!estado.modoZenAtivo);
+  if(estado.modoZenAtivo)atualizarVolumeSom(0);
+  salvar();
+  atualizarTogglesAcessibilidade();
+  atualizarTela();
+  mostrarToast(estado.modoZenAtivo?'🌙 Modo Zen ativado. Sons silenciados.':'☀️ Modo Zen desativado.');
+}
+function alternarModoFoco(){
+  estado.modoFocoAtivo=!estado.modoFocoAtivo;
+  document.body.classList.toggle('modo-foco',!!estado.modoFocoAtivo);
+  document.body.classList.toggle('pausa-sensorial',Number(estado.pausaSensorialAte)>Date.now());
+  salvar();
+  atualizarTogglesAcessibilidade();
+  atualizarOfensiva();
+  atualizarTela();
+  mostrarToast(estado.modoFocoAtivo?'🎯 Modo Foco ativado.':'🎯 Modo Foco desativado.');
+}
+function alterarPreferenciaZen(tipo,valor){
+  const mapa={som:'preferenciaSomZen',movimento:'preferenciaMovimentoZen',visual:'preferenciaVisualZen',transicoes:'preferenciaTransicoesZen'};
+  if(!mapa[tipo])return;estado[mapa[tipo]]=valor;aplicarPreferenciasZen();salvar();
+  if(tipo==='som'&&estado.modoZenAtivo&&valor==='silencioso')atualizarVolumeSom(0);
+}
+function aplicarPreferenciasZen(){
+  document.body.classList.toggle('som-zen-suave',estado.preferenciaSomZen==='suave');
+  document.body.classList.toggle('movimento-zen-reduzido',estado.preferenciaMovimentoZen==='reduzido');
+  document.body.classList.toggle('movimento-zen-minimo',estado.preferenciaMovimentoZen==='minimo');
+  document.body.classList.toggle('visual-zen-simplificado',estado.preferenciaVisualZen==='simplificado');
+  document.body.classList.toggle('visual-zen-minimo',estado.preferenciaVisualZen==='minimo');
+  document.body.classList.toggle('transicoes-zen-suaves',estado.preferenciaTransicoesZen==='suaves');
+  document.body.classList.toggle('transicoes-zen-instantaneas',estado.preferenciaTransicoesZen==='instantaneas');
+}
+function renderizarPreferenciasZen(){
+  const pares=[['pref-som-zen','preferenciaSomZen'],['pref-movimento-zen','preferenciaMovimentoZen'],['pref-visual-zen','preferenciaVisualZen'],['pref-transicoes-zen','preferenciaTransicoesZen']];
+  pares.forEach(([id,chave])=>{const el=document.getElementById(id);if(el)el.value=estado[chave]||el.value});aplicarPreferenciasZen();
+}
+function mostrarAjudaTarefa(id){
+  const t=estado.tarefas.find(x=>String(x.id)===String(id));
+  if(!t||!t.ajuda)return;
+  mostrarAviso('🆘','Uma dica para você',t.ajuda);
+}
+function iniciarPausaSensorial(minutos=5){
+  estado.pausaSensorialAte=Date.now()+Math.max(1,Number(minutos)||5)*60000;
+  if(estado.focoTimerTarefaId)encerrarTimerFoco(true);
+  salvar();renderizarTarefas();mostrarToast('🌿 Pausa sensorial iniciada.');
+}
+function encerrarPausaSensorial(){estado.pausaSensorialAte=null;salvar();renderizarTarefas();mostrarToast('🐾 Vamos continuar quando você estiver pronto.');}
+function aplicarPerfilSensorial(perfil){
+  estado.perfilSensorial=perfil||'personalizado';
+  const presets={
+    equilibrado:{som:'suave',movimento:'reduzido',visual:'simplificado',transicoes:'suaves'},
+    'baixo-estimulo':{som:'silencioso',movimento:'minimo',visual:'simplificado',transicoes:'instantaneas'},
+    minimo:{som:'silencioso',movimento:'minimo',visual:'minimo',transicoes:'instantaneas'}
+  };
+  const p=presets[perfil];
+  if(p){estado.preferenciaSomZen=p.som;estado.preferenciaMovimentoZen=p.movimento;estado.preferenciaVisualZen=p.visual;estado.preferenciaTransicoesZen=p.transicoes;if(estado.modoZenAtivo&&p.som==='silencioso')atualizarVolumeSom(0);}
+  aplicarPreferenciasZen();salvar();renderizarPreferenciasZen();mostrarToast(perfil==='personalizado'?'🎛️ Perfil personalizado.':'🎛️ Perfil sensorial aplicado.');
+}
+
+function configurarNavegacaoPainelPais(){
+  const modal=document.querySelector('#modal-pais .modal');
+  if(!modal)return;
+  if(document.getElementById('painel-pais-menu'))return;
+  const resumo=document.getElementById('painel-resumo-pais');
+  if(!resumo)return;
+  const menu=document.createElement('div');
+  menu.id='painel-pais-menu';
+  menu.className='painel-pais-menu';
+  menu.setAttribute('aria-label','Categorias do painel dos pais');
+  menu.innerHTML=`
+    <button type="button" onclick="abrirGrupoPainelPais('acessibilidade')"><span class="menu-ico">🧩</span><span class="menu-titulo">Acessibilidade</span><span class="menu-desc">Foco, Zen e preferências sensoriais</span></button>
+    <button type="button" onclick="abrirGrupoPainelPais('rotina')"><span class="menu-ico">📋</span><span class="menu-titulo">Rotina e tarefas</span><span class="menu-desc">Missões, ajuda, timer e pausas</span></button>
+    <button type="button" onclick="abrirGrupoPainelPais('recompensas')"><span class="menu-ico">🎁</span><span class="menu-titulo">Recompensas</span><span class="menu-desc">Prêmios, metas e cofrinho</span></button>
+    <button type="button" onclick="abrirGrupoPainelPais('familia')"><span class="menu-ico">👨‍👩‍👧‍👦</span><span class="menu-titulo">Família e conta</span><span class="menu-desc">Filhos, PIN, e-mail e backup</span></button>
+    <button type="button" onclick="abrirGrupoPainelPais('acompanhamento')"><span class="menu-ico">📊</span><span class="menu-titulo">Acompanhamento</span><span class="menu-desc">Aprovações, histórico e relatórios</span></button>
+    <button type="button" onclick="abrirGrupoPainelPais('comunicacao')"><span class="menu-ico">💌</span><span class="menu-titulo">Comunicação</span><span class="menu-desc">Lembretes, push e mensagens</span></button>`;
+  resumo.insertAdjacentElement('afterend',menu);
+
+  const nav=document.createElement('div');
+  nav.id='painel-pais-navegacao';
+  nav.className='painel-pais-navegacao';
+  nav.innerHTML='<div><strong id="painel-pais-titulo-secao">Configurações</strong><small id="painel-pais-subtitulo-secao">Escolha uma categoria.</small></div><button type="button" class="painel-pais-voltar" onclick="fecharGrupoPainelPais()">← Voltar</button>';
+  menu.insertAdjacentElement('afterend',nav);
+
+  const grupos={acessibilidade:[],rotina:[],recompensas:[],familia:[],acompanhamento:[],comunicacao:[]};
+  const cards=[...modal.querySelectorAll(':scope > .section-card')];
+  cards.forEach(card=>{
+    const id=card.id||'';
+    const txt=(card.textContent||'').toLowerCase();
+    let grupo='acompanhamento';
+    if(id==='card-acessibilidade-sensorial'||id==='card-perfil-sensorial'||txt.includes('volume dos sons'))grupo='acessibilidade';
+    else if(txt.includes('gerenciar tarefas')||txt.includes('tarefas das crianças')||txt.includes('pausa da ofensiva')||txt.includes('lembretes e push')||txt.includes('aprovações pendentes'))grupo='rotina';
+    else if(txt.includes('cofrinho')||txt.includes('gerenciar prêmios')||txt.includes('solicitações de prêmios')||txt.includes('metas personalizadas'))grupo='recompensas';
+    else if(txt.includes('filhos')||txt.includes('idade da criança')||txt.includes('valor por moeda')||txt.includes('alterar pin')||txt.includes('e-mail de recuperação')||txt.includes('backup')||txt.includes('código da família')||txt.includes('privacidade'))grupo='familia';
+    else if(txt.includes('incentivo rápido'))grupo='comunicacao';
+    else if(txt.includes('histórico de tarefas')||txt.includes('log de atividades')||txt.trim().startsWith('resumo'))grupo='acompanhamento';
+    card.dataset.painelGrupo=grupo;
+    card.classList.add('painel-card-config');
+    grupos[grupo].push(card);
+  });
+  Object.entries(grupos).forEach(([nome,lista])=>{
+    const wrap=document.createElement('div');wrap.className='painel-pais-grupo';wrap.dataset.painelGrupo=nome;wrap.id='painel-grupo-'+nome;
+    const primeiro=lista[0];
+    if(primeiro)primeiro.parentNode.insertBefore(wrap,primeiro);
+    lista.forEach(c=>wrap.appendChild(c));
+  });
+  fecharGrupoPainelPais();
+}
+function abrirGrupoPainelPais(grupo){
+  configurarNavegacaoPainelPais();
+  document.querySelectorAll('#modal-pais .painel-pais-grupo').forEach(el=>el.classList.toggle('ativo',el.dataset.painelGrupo===grupo));
+  const menu=document.getElementById('painel-pais-menu');
+  const nav=document.getElementById('painel-pais-navegacao');
+  if(menu)menu.style.display='none';
+  if(nav)nav.classList.add('ativo');
+  const nomes={acessibilidade:['🧩 Acessibilidade','Ajustes sensoriais e Modo Foco.'],rotina:['📋 Rotina e tarefas','Configure tarefas, etapas e pausas.'],recompensas:['🎁 Recompensas','Metas, prêmios e cofrinho.'],familia:['👨‍👩‍👧‍👦 Família e conta','Dados, segurança e backup.'],acompanhamento:['📊 Acompanhamento','Veja o progresso e as aprovações.'],comunicacao:['💌 Comunicação','Lembretes e mensagens positivas.']};
+  const info=nomes[grupo]||['Configurações',''];
+  const t=document.getElementById('painel-pais-titulo-secao'),sub=document.getElementById('painel-pais-subtitulo-secao');
+  if(t)t.textContent=info[0];if(sub)sub.textContent=info[1];
+}
+function fecharGrupoPainelPais(){
+  document.querySelectorAll('#modal-pais .painel-pais-grupo').forEach(el=>el.classList.remove('ativo'));
+  const menu=document.getElementById('painel-pais-menu');
+  const nav=document.getElementById('painel-pais-navegacao');
+  if(menu)menu.style.display='grid';
+  if(nav)nav.classList.remove('ativo');
+}
+
 function renderizarPainelPais(){
+  configurarNavegacaoPainelPais();
   document.getElementById('input-taxa-cambio').value=estado.taxaCambio;
   document.getElementById('input-idade-crianca').value=estado.idadeCrianca||7;
   renderizarResumoPainelPais();
@@ -4432,6 +4904,9 @@ function renderizarPainelPais(){
   montarPickerDiasNovaTarefa();
   atualizarBannerPausaPainel();
   atualizarBotaoLembrete();
+  atualizarTogglesAcessibilidade();
+  renderizarPreferenciasZen();
+  const perfilEl=document.getElementById('perfil-sensorial');if(perfilEl)perfilEl.value=estado.perfilSensorial||'personalizado';
   renderizarGerenciamentoPremiosPais();
   renderizarSolicitacoesPremiosPais();
   const ap=document.getElementById('lista-aprovacao-pais');
@@ -4450,7 +4925,7 @@ function renderizarPainelPais(){
     const diasTxt=t.dias&&t.dias.length?t.dias.map(i=>DIAS_LABEL[i]).join(','):'todo dia';
     ed.innerHTML+=`
     <div class="edit-row" style="gap:5px;flex-wrap:wrap">
-      <span style="flex:1">${t.tipo==='obrigatoria'?'🔥':'⭐'} ${esc(t.texto)} • ${Number(t.recompensa)||5}🪙 <br><small style="color:#94a3b8">📅 ${diasTxt}</small></span>
+      <span style="flex:1">${t.tipo==='obrigatoria'?'🔥':'⭐'} ${esc(t.texto)} • ${Number(t.recompensa)||5}🪙 <br><small style="color:#94a3b8">📅 ${diasTxt} · ${t.nivelAjuda==='ajuda'?'🔵 ajuda':t.nivelAjuda==='dica'?'🟡 dica':'🟢 sozinho'}</small></span>
       <select class="field" style="width:100px;padding:5px" onchange="alterarTipoTarefa(${t.id},this.value)">
         <option value="obrigatoria" ${t.tipo==='obrigatoria'?'selected':''}>Obrigatória</option>
         <option value="extra" ${t.tipo==='extra'?'selected':''}>Extra</option>
@@ -4681,6 +5156,7 @@ async function aprovarTarefaPais(id){
   ganharXP(xp);
   ganharFigurinhaPorMissao(t);
   dispararConfetes();
+  try{reagirPetAoProgresso('concluida')}catch(_){}
   marcarConquistas();
   registrarLogAtividade(`Tarefa aprovada: ${t.texto} (+${recompensa}🪙)`);
   mostrarAviso('🎉','Tarefa aprovada!',liberouOfensiva?'Obrigatórias concluídas! Ofensiva liberada 🔥':'Moedas e XP adicionados.');
@@ -4915,10 +5391,16 @@ function adicionarTarefa(){
   const txt=document.getElementById('nova-tarefa-texto').value.trim(),
         moedas=Math.max(1,parseInt(document.getElementById('nova-tarefa-moedas').value)||5),
         tipo=document.getElementById('nova-tarefa-tipo')?.value==='extra'?'extra':'obrigatoria';
+  const tempoMin=Math.max(0,Math.min(120,parseInt(document.getElementById('nova-tarefa-tempo')?.value)||0));
+  const passos=(document.getElementById('nova-tarefa-passos')?.value||'').split(';').map(s=>s.trim()).filter(Boolean).slice(0,10);
+  const ajuda=(document.getElementById('nova-tarefa-ajuda')?.value||'').trim().slice(0,180);
+  const nivelAjuda=['sozinho','dica','ajuda'].includes(document.getElementById('nova-tarefa-nivel-ajuda')?.value)?document.getElementById('nova-tarefa-nivel-ajuda').value:'sozinho';
+  const primeiroDepois=(document.getElementById('nova-tarefa-primeiro-depois')?.value||'').trim().slice(0,120);
+  const instrucaoFoto=(document.getElementById('nova-tarefa-instrucao-url')?.value||'').trim().slice(0,1000);
   if(!txt)return mostrarToast('Digite uma tarefa.');
   const nums=(estado.tarefas||[]).map(t=>Number(t.id)||0);const id=nums.length?Math.max(...nums)+1:1;
-  estado.tarefas.push({id,texto:txt,recompensa:moedas,xp:20,tipo,status:'pendente',foto:null,dias:[...diasSelecionadosNovaTarefa]});
-  document.getElementById('nova-tarefa-texto').value='';
+  estado.tarefas.push({id,texto:txt,recompensa:moedas,xp:20,tipo,status:'pendente',foto:null,dias:[...diasSelecionadosNovaTarefa],tempoMin,passos,ajuda,nivelAjuda,instrucaoFoto:instrucaoFoto||null,primeiroDepois});
+  document.getElementById('nova-tarefa-texto').value='';document.getElementById('nova-tarefa-tempo').value='0';document.getElementById('nova-tarefa-passos').value='';document.getElementById('nova-tarefa-ajuda').value='';document.getElementById('nova-tarefa-nivel-ajuda').value='sozinho';document.getElementById('nova-tarefa-primeiro-depois').value='';document.getElementById('nova-tarefa-instrucao-url').value='';
   diasSelecionadosNovaTarefa=[];
   document.querySelectorAll('#dias-nova-tarefa .dia-chip').forEach(c=>c.classList.remove('on'));
   salvar();
@@ -5927,11 +6409,26 @@ function renderizarGridAcessorios(){
 }
 function selecionarOuComprarAcessorio(a){
   if(estado.acessorios.comprados.includes(a.id)){
-    estado.acessorios.ativo=estado.acessorios.ativo===a.id?null:a.id;
+    estado.acessorios=estado.acessorios||{comprados:[],ativo:null,ativos:[]};
+    if(!Array.isArray(estado.acessorios.ativos))estado.acessorios.ativos=[];
+    const sid=String(a.id);
+    const ja=estado.acessorios.ativos.map(String).includes(sid)||String(estado.acessorios.ativo||'')===sid;
+    if(ja){
+      estado.acessorios.ativos=estado.acessorios.ativos.filter(x=>String(x)!==sid);
+      estado.acessorios.ativo=estado.acessorios.ativos.length?estado.acessorios.ativos[0]:null;
+      salvar();
+      if(typeof renderizarAcessorioNoContainer==='function')renderizarAcessorioNoContainer();
+      atualizarTela();
+      renderizarGridAcessorios();
+      return mostrarToast('Acessório removido.');
+    }
+    estado.acessorios.ativos.push(a.id);
+    estado.acessorios.ativo=a.id;
     salvar();
+    if(typeof renderizarAcessorioNoContainer==='function')renderizarAcessorioNoContainer();
     atualizarTela();
     renderizarGridAcessorios();
-    return mostrarToast(estado.acessorios.ativo?`🎀 ${a.nome} equipado!`:`Acessório removido.`);
+    return mostrarToast(`🎀 ${a.nome} equipado!`);
   }
   if(estado.moedas<a.preco)return mostrarToast(`🪙 Faltam ${a.preco-estado.moedas} moedas.`);
   mostrarConfirmacao(`Comprar "${a.nome}" por ${a.preco} moedas?`,()=>{
@@ -5949,29 +6446,33 @@ function renderizarAcessorioNoContainer(){
   const c=document.getElementById('camada-acessorio');
   const objetos=document.getElementById('objetos-pet-layer');
   const pet=document.getElementById('pet-principal');
-  const stage=document.querySelector('.pet-stage');
   if(!c)return;
-  const ativo=estado.acessorios?.ativo;
-  const item=buscarAcessorioPorId(ativo);
+  // Prefer lista multi; fallback para ativo único
+  let ids=[];
+  if(Array.isArray(estado.acessorios?.ativos)&&estado.acessorios.ativos.length){
+    ids=estado.acessorios.ativos.slice();
+  }else if(estado.acessorios?.ativo!=null&&estado.acessorios.ativo!==''){
+    ids=[estado.acessorios.ativo];
+  }
+  const itens=ids.map(id=>buscarAcessorioPorId(id)).filter(Boolean);
 
   if(pet){
     pet.classList.remove('pet-acessorio-ativo','acessorio-coroa','acessorio-fone','acessorio-grinalda','acessorio-bone','acessorio-chapeu','acessorio-oculos','acessorio-laco','acessorio-cachecol','acessorio-gravata');
-    if(item){
-      pet.classList.add('pet-acessorio-ativo','acessorio-'+item.id);
-    }
+    itens.forEach(item=>{
+      if(item.tipo!=='objeto')pet.classList.add('pet-acessorio-ativo','acessorio-'+item.id);
+    });
   }
-  if(!item){
+  if(!itens.length){
     c.innerHTML='';
     if(objetos)objetos.innerHTML='';
     return;
   }
-  if(objetos)objetos.innerHTML='';
-  if(item.tipo==='objeto'){
-    c.innerHTML='';
-    if(objetos)objetos.innerHTML=`<span class="objeto-pet ${item.classe}" title="${esc(item.nome)}">${item.emoji}</span>`;
-    return;
+  const wear=itens.filter(i=>i.tipo!=='objeto');
+  const objs=itens.filter(i=>i.tipo==='objeto');
+  c.innerHTML=wear.map(item=>item.svgPorEspecie?(item.svgPorEspecie[estado.petAtual]||item.svgPorEspecie.gato):item.svg).join('');
+  if(objetos){
+    objetos.innerHTML=objs.map(item=>`<span class="objeto-pet ${item.classe||''}" title="${typeof esc==='function'?esc(item.nome):(item.nome||'')}">${item.emoji||'✨'}</span>`).join('');
   }
-  c.innerHTML=item.svgPorEspecie?(item.svgPorEspecie[estado.petAtual]||item.svgPorEspecie.gato):item.svg;
 }
 
 function celebrarNovoAcessorio(){
@@ -6291,19 +6792,28 @@ async function iniciarGravacao(){
     mediaRecorder=new MediaRecorder(stream);
     mediaRecorder.ondataavailable=e=>{if(e.data.size>0)pedacosAudio.push(e.data)};
     mediaRecorder.onstop=async ()=>{
-      const blob=new Blob(pedacosAudio,{type:pedacosAudio[0]?.type||'audio/webm'});
+      const tipoBlob=pedacosAudio[0]?.type||'audio/webm';
+      const blob=new Blob(pedacosAudio,{type:tipoBlob});
       audioBlobOriginal=blob;
       audioBlobFinal=blob;
-      document.getElementById('audio-original').src=URL.createObjectURL(blob);
+      const audioEl=document.getElementById('audio-original');
+      if(audioEl){audioEl.pause();audioEl.src=URL.createObjectURL(blob);audioEl.load();}
       document.getElementById('grav-result').classList.remove('hidden');
       try{
         const arrayBuf=await blob.arrayBuffer();
         const ctx=obterAudioContext();
         bufferGravado=await ctx.decodeAudioData(arrayBuf.slice(0));
+        try{
+          const wav=audioBufferParaWavBlob(bufferGravado);
+          if(wav&&wav.size){
+            audioBlobFinal=wav;
+            if(audioEl){audioEl.src=URL.createObjectURL(wav);audioEl.load();}
+          }
+        }catch(convErr){console.warn('conversão WAV:',convErr)}
       }catch(err){
         console.warn('decodeAudioData:',err);
         bufferGravado=null;
-        mostrarToast('⚠️ Áudio gravado, mas efeitos podem não funcionar neste navegador.');
+        mostrarToast('⚠️ A gravação foi criada. Efeitos de voz podem não funcionar neste navegador.');
       }
     };
     mediaRecorder.start();
@@ -6819,12 +7329,28 @@ setTimeout(()=>{try{garantirEngajamento();renderizarEngajamento();}catch(e){cons
 </script><style>
 .atalhos-aventuras{display:grid;grid-template-columns:repeat(4,1fr);gap:7px;margin:8px 0 5px}
 .atalho-aventura{border:1px solid #dbeafe;background:#fff;border-radius:14px;padding:7px 3px 5px;display:flex;flex-direction:column;align-items:center;gap:2px;box-shadow:0 2px 8px rgba(15,23,42,.05);cursor:pointer;transition:transform .15s,box-shadow .15s}
-.atalho-aventura:active{transform:scale(.94)}.atalho-aventura span{font-size:20px;line-height:22px}.atalho-aventura small{font-size:8px;font-weight:900;color:#475569}.task-header-expansivel{width:100%;border:0;background:transparent;text-align:left;cursor:pointer;padding:0}.task-header-expansivel:focus-visible{outline:2px solid #38bdf8;border-radius:8px}.tasks-section.recolhida #lista-tarefas,.tasks-section.recolhida #banner-aprovacoes-pendentes,.tasks-section.recolhida #status-ofensiva{display:none}.tasks-section.recolhida #seta-missoes{transform:rotate(180deg)}
+.atalho-aventura:active{transform:scale(.94)}.atalho-aventura span{font-size:20px;line-height:22px}.atalho-aventura small{font-size:8px;font-weight:900;color:#475569}.task-header-expansivel{width:100%;border:0;background:transparent;text-align:left;cursor:pointer;padding:0}.task-header-expansivel:focus-visible{outline:2px solid #38bdf8;border-radius:8px}.tasks-section.recolhida #lista-tarefas,.tasks-section.recolhida #banner-aprovacoes-pendentes,.tasks-section.recolhida #foco-agora-depois,.tasks-section.recolhida #status-ofensiva{display:none!important}.tasks-section.recolhida #seta-missoes{transform:rotate(180deg)}
 </style>
 <div id="modal-resumo-meta" class="modal-overlay"><div class="modal" style="max-width:340px"><div class="modal-title"><h3>🎯 Minha meta</h3><button class="close-btn" onclick="fecharModal('modal-resumo-meta')">×</button></div><div id="resumo-meta-conteudo"></div></div></div>
 <div id="modal-resumo-hoje" class="modal-overlay"><div class="modal" style="max-width:340px"><div class="modal-title"><h3>🗓️ Aventura de hoje</h3><button class="close-btn" onclick="fecharModal('modal-resumo-hoje')">×</button></div><div id="resumo-hoje-conteudo"></div></div></div>
 <script>
-function alternarMissoes(){const s=document.getElementById('secao-missoes'),h=s?.querySelector('.task-header-expansivel');if(!s)return;const fechada=s.classList.toggle('recolhida');if(h)h.setAttribute('aria-expanded',String(!fechada));}
+function alternarMissoes(ev){
+  if(ev){ev.preventDefault();ev.stopPropagation();}
+  const s=document.getElementById('secao-missoes'),h=s?.querySelector('.task-header-expansivel');if(!s||!h)return;
+  const fechada=!s.classList.contains('recolhida');
+  s.classList.toggle('recolhida',fechada);h.setAttribute('aria-expanded',String(!fechada));
+  ['banner-aprovacoes-pendentes','foco-agora-depois','lista-tarefas','status-ofensiva'].forEach(id=>{const el=document.getElementById(id);if(el)el.hidden=fechada;});
+  const seta=document.getElementById('seta-missoes');if(seta)seta.textContent=fechada?'⌄':'⌃';
+  try{localStorage.setItem('ROTINAPET_MISSOES_RECOLHIDAS',fechada?'1':'0')}catch(_){}
+}
+function restaurarEstadoMissoes(){
+  const s=document.getElementById('secao-missoes'),h=s?.querySelector('.task-header-expansivel');if(!s||!h)return;
+  let fechada=false;try{fechada=localStorage.getItem('ROTINAPET_MISSOES_RECOLHIDAS')==='1'}catch(_){}
+  s.classList.toggle('recolhida',fechada);h.setAttribute('aria-expanded',String(!fechada));
+  ['banner-aprovacoes-pendentes','foco-agora-depois','lista-tarefas','status-ofensiva'].forEach(id=>{const el=document.getElementById(id);if(el)el.hidden=fechada;});
+  const seta=document.getElementById('seta-missoes');if(seta)seta.textContent=fechada?'⌄':'⌃';
+}
+
 function abrirResumoMeta(){const c=document.getElementById('resumo-meta-conteudo'),metas=Array.isArray(estado.metasPersonalizadas)?estado.metasPersonalizadas:[];if(!c)return;c.innerHTML=metas.length?metas.map(m=>{const x=obterProgressoMeta(m);return `<div class="section-card" style="margin-bottom:7px"><b style="font-size:10px">${esc(m.emoji||'🎯')} ${esc(m.titulo)}</b><p style="font-size:9px;color:#64748b;margin:6px 0">${x.valor}/${x.alvo} · ${x.perc}%</p><div style="height:7px;background:#e2e8f0;border-radius:99px;overflow:hidden"><div style="height:100%;width:${x.perc}%;background:#8b5cf6"></div></div><small style="font-size:8px;color:#64748b">${x.perc>=100?'✅ Meta alcançada!':'Continue avançando!'}</small></div>`}).join(''):'<p style="font-size:10px;color:#64748b">Seus responsáveis ainda não criaram uma meta.</p>';abrirModal('modal-resumo-meta');}
 function abrirResumoHoje(){const c=document.getElementById('resumo-hoje-conteudo'),lista=tarefasDeHoje(),a=lista.filter(t=>statusTarefaAtual(t)==='aprovada').length;if(!c)return;c.innerHTML=`<div class="section-card"><b style="font-size:10px">${a}/${lista.length} missões concluídas</b><p style="font-size:10px;color:#64748b;margin:7px 0">${a===lista.length&&lista.length?'🏆 Você venceu o desafio de hoje!':'Complete as missões abaixo para ajudar seu pet a crescer.'}</p><button class="primary-btn green-btn" style="width:100%" onclick="fecharModal('modal-resumo-hoje');document.getElementById('secao-missoes')?.scrollIntoView({behavior:'smooth',block:'center'})">Ver minhas missões</button></div>`;abrirModal('modal-resumo-hoje');}
 </script>
@@ -7010,7 +7536,7 @@ const oldRender=window.renderizarMapaAventura;window.renderizarMapaAventura=()=>
 })();</script>
 
 <style id="meu-pet-v1">.menu-mais-item.visual-pet{background:linear-gradient(145deg,#fdf4ff,#f5f3ff);border-color:#e9d5ff;color:#6d28d9}.meupet-modal{max-width:430px!important;background:linear-gradient(160deg,#fff,#faf5ff)}.meupet-hero{position:relative;overflow:hidden;border-radius:22px;padding:14px;background:linear-gradient(135deg,#ede9fe,#fce7f3);border:1px solid #e9d5ff;margin-bottom:10px;text-align:center}.meupet-hero:after{content:'✦';position:absolute;right:16px;top:5px;font-size:38px;color:#fff8;animation:meuPetBrilho 2.8s ease-in-out infinite}@keyframes meuPetBrilho{50%{transform:rotate(18deg) scale(1.15);opacity:.55}}.meupet-avatar{font-size:64px;line-height:1;margin:2px 0 5px;filter:drop-shadow(0 8px 10px #7c3aed22);animation:meuPetFloat 2.8s ease-in-out infinite}@keyframes meuPetFloat{50%{transform:translateY(-5px)}}.meupet-title{font-size:15px;font-weight:1000;color:#312e81}.meupet-sub{font-size:9px;color:#64748b;margin-top:2px;font-weight:800}.meupet-section-title{font-size:10px;font-weight:1000;color:#334155;margin:9px 0 6px}.meupet-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:7px}.meupet-item{position:relative;border:1px solid #e5e7eb;border-radius:15px;padding:9px;background:#fff;cursor:pointer;transition:transform .15s,box-shadow .15s,border-color .15s;text-align:center}.meupet-item:active{transform:scale(.96)}.meupet-item.ativo{border-color:#8b5cf6;box-shadow:0 0 0 2px #8b5cf622}.meupet-item.bloqueado{cursor:default;background:#f8fafc;opacity:.62}.meupet-item .mi-emoji{font-size:28px;display:block;margin-bottom:3px}.meupet-item b{font-size:9px;color:#334155;display:block}.meupet-item small{font-size:7px;color:#64748b;font-weight:800;display:block;margin-top:2px}.meupet-check{position:absolute;right:6px;top:5px;font-size:10px}.meupet-chip{display:inline-flex;align-items:center;gap:4px;padding:4px 8px;border-radius:99px;background:#ffffffaa;font-size:8px;font-weight:1000;color:#6d28d9;margin-top:7px}.meupet-reward{margin-top:8px;padding:8px 10px;border-radius:13px;background:#fffbeb;border:1px solid #fde68a;font-size:8px;color:#92400e;font-weight:900}@media(prefers-reduced-motion:reduce){.meupet-avatar,.meupet-hero:after{animation:none}}</style>
-<script id="meu-pet-v1-script">(()=>{const RECOMPENSAS_MAPA=[{id:'mapa_bosque_visual',missao:3,acessorio:'grinalda',local:'Bosque',texto:'🌸 Grinalda de Flores'},{id:'mapa_vale_visual',missao:7,acessorio:'fone',local:'Vale',texto:'🎧 Fone de Ouvido'},{id:'mapa_castelo_visual',missao:12,acessorio:'coroa',local:'Castelo',texto:'👑 Coroa Real'},{id:'mapa_meta_visual',missao:18,acessorio:'bone',local:'Grande Meta',texto:'🧢 Boné Estiloso'}];window.verificarRecompensasMapa=function(silencioso){if(!estado)return;estado.recompensasMapa=estado.recompensasMapa||{};estado.acessorios=estado.acessorios||{comprados:[],ativo:null};estado.acessorios.comprados=Array.isArray(estado.acessorios.comprados)?estado.acessorios.comprados:[];const n=(estado.tarefas||[]).filter(t=>statusTarefaAtual(t)==='aprovada').length;let mudou=false;RECOMPENSAS_MAPA.forEach(r=>{if(n>=r.missao&&!estado.recompensasMapa[r.id]){estado.recompensasMapa[r.id]=true;if(!estado.acessorios.comprados.includes(r.acessorio))estado.acessorios.comprados.push(r.acessorio);mudou=true;if(!silencioso)setTimeout(()=>{if(typeof dispararConfetes==='function')dispararConfetes();if(typeof mostrarToast==='function')mostrarToast(`🎁 Desbloqueou ${r.texto}!`);},250)}});if(mudou)salvar();return mudou};window.abrirMeuPet=function(){let m=document.getElementById('modal-meu-pet');if(!m){m=document.createElement('div');m.id='modal-meu-pet';m.className='modal-overlay';m.innerHTML='<div class="modal meupet-modal"><div class="modal-title"><div><h3 style="margin:0">🐾 Meu Pet</h3><small style="font-size:8px;color:#64748b;font-weight:800">Seu visual, suas conquistas</small></div><button class="close-btn" onclick="fecharModal(\'modal-meu-pet\')">×</button></div><div id="meupet-conteudo"></div></div></div>';document.body.appendChild(m)}verificarRecompensasMapa(true);renderizarMeuPet();abrirModal('modal-meu-pet')};window.renderizarMeuPet=function(){const c=document.getElementById('meupet-conteudo');if(!c)return;const ac=estado.acessorios||{comprados:[],ativo:null};const comprados=new Set(ac.comprados||[]);const atual=ACESSORIOS.find(a=>a.id===ac.ativo);const n=(estado.tarefas||[]).filter(t=>statusTarefaAtual(t)==='aprovada').length;c.innerHTML='<div class="meupet-hero"><div class="meupet-avatar">'+(estado.petEmoji||'🐾')+'</div><div class="meupet-title">'+(atual?atual.emoji+' '+esc(atual.nome):'Visual natural')+'</div><div class="meupet-sub">Complete missões para desbloquear novos acessórios.</div><span class="meupet-chip">⭐ '+n+' missões aprovadas</span></div><div class="meupet-section-title">🎀 Acessórios desbloqueados</div><div class="meupet-grid" id="meupet-grid-legacy"></div><div class="meupet-reward">🗺️ Recompensas do mapa são desbloqueadas automaticamente quando você chega a uma nova região.</div>';const g=document.getElementById('meupet-grid-legacy');ACESSORIOS.forEach(a=>{const tem=comprados.has(a.id),ativo=ac.ativo===a.id;const d=document.createElement('button');d.type='button';d.className='meupet-item '+(tem?'':'bloqueado')+(ativo?' ativo':'');d.innerHTML='<span class="meupet-check">'+(ativo?'✓':tem?'🎀':'🔒')+'</span><span class="mi-emoji">'+a.emoji+'</span><b>'+esc(a.nome)+'</b><small>'+(tem?(ativo?'Equipado · toque para tirar':'Toque para equipar'):(a.preco+' 🪙 na Loja'))+'</small>';if(tem)d.onclick=()=>{const removendo=ativo;estado.acessorios.ativo=removendo?null:a.id;salvar();renderizarAcessorioNoContainer();atualizarTela();renderizarMeuPet();if(!removendo){celebrarNovoAcessorio();}if(typeof mostrarToast==='function')mostrarToast(removendo?'Acessório removido':`🎀 ${a.nome} equipado!`)};g.appendChild(d)})};})();</script><script id="poderes-evolucao-js">
+<script id="meu-pet-v1-script">(()=>{const RECOMPENSAS_MAPA=[{id:'mapa_bosque_visual',missao:3,acessorio:'grinalda',local:'Bosque',texto:'🌸 Grinalda de Flores'},{id:'mapa_vale_visual',missao:7,acessorio:'fone',local:'Vale',texto:'🎧 Fone de Ouvido'},{id:'mapa_castelo_visual',missao:12,acessorio:'coroa',local:'Castelo',texto:'👑 Coroa Real'},{id:'mapa_meta_visual',missao:18,acessorio:'bone',local:'Grande Meta',texto:'🧢 Boné Estiloso'}];window.verificarRecompensasMapa=function(silencioso){if(!estado)return;estado.recompensasMapa=estado.recompensasMapa||{};estado.acessorios=estado.acessorios||{comprados:[],ativo:null};estado.acessorios.comprados=Array.isArray(estado.acessorios.comprados)?estado.acessorios.comprados:[];const n=(estado.tarefas||[]).filter(t=>statusTarefaAtual(t)==='aprovada').length;let mudou=false;RECOMPENSAS_MAPA.forEach(r=>{if(n>=r.missao&&!estado.recompensasMapa[r.id]){estado.recompensasMapa[r.id]=true;if(!estado.acessorios.comprados.includes(r.acessorio))estado.acessorios.comprados.push(r.acessorio);mudou=true;if(!silencioso)setTimeout(()=>{if(typeof dispararConfetes==='function')dispararConfetes();if(typeof mostrarToast==='function')mostrarToast(`🎁 Desbloqueou ${r.texto}!`);},250)}});if(mudou)salvar();return mudou};window.abrirMeuPet=function(){let m=document.getElementById('modal-meu-pet');if(!m){m=document.createElement('div');m.id='modal-meu-pet';m.className='modal-overlay';m.innerHTML='<div class="modal meupet-modal"><div class="modal-title"><div><h3 style="margin:0">🐾 Meu Pet</h3><small style="font-size:8px;color:#64748b;font-weight:800">Seu visual, suas conquistas</small></div><button class="close-btn" onclick="fecharModal(\'modal-meu-pet\')">×</button></div><div id="meupet-conteudo"></div></div></div>';document.body.appendChild(m)}verificarRecompensasMapa(true);renderizarMeuPet();abrirModal('modal-meu-pet')};window.renderizarMeuPet=function(){const c=document.getElementById('meupet-conteudo');if(!c)return;const ac=estado.acessorios||{comprados:[],ativo:null};const comprados=new Set(ac.comprados||[]);const atual=ACESSORIOS.find(a=>a.id===ac.ativo);const n=(estado.tarefas||[]).filter(t=>statusTarefaAtual(t)==='aprovada').length;c.innerHTML='<div class="meupet-hero"><div class="meupet-avatar">'+(estado.petEmoji||'🐾')+'</div><div class="meupet-title">'+(atual?atual.emoji+' '+esc(atual.nome):'Visual natural')+'</div><div class="meupet-sub">Complete missões para desbloquear novos acessórios.</div><span class="meupet-chip">⭐ '+n+' missões aprovadas</span></div><div class="meupet-section-title">🎀 Acessórios desbloqueados</div><div class="meupet-grid" id="meupet-grid-legacy"></div><div class="meupet-reward">🗺️ Recompensas do mapa são desbloqueadas automaticamente quando você chega a uma nova região.</div>';const g=document.getElementById('meupet-grid-legacy');ACESSORIOS.forEach(a=>{const tem=comprados.has(a.id),ativo=ac.ativo===a.id;const d=document.createElement('button');d.type='button';d.className='meupet-item '+(tem?'':'bloqueado')+(ativo?' ativo':'');d.innerHTML='<span class="meupet-check">'+(ativo?'✓':tem?'🎀':'🔒')+'</span><span class="mi-emoji">'+a.emoji+'</span><b>'+esc(a.nome)+'</b><small>'+(tem?(ativo?'Equipado · toque para tirar':'Toque para equipar'):(a.preco+' 🪙 na Loja'))+'</small>';if(tem)d.onclick=()=>{const removendo=ativo;estado.acessorios=estado.acessorios||{comprados:[],ativo:null,ativos:[]};if(!Array.isArray(estado.acessorios.ativos))estado.acessorios.ativos=[];if(removendo){estado.acessorios.ativos=estado.acessorios.ativos.filter(x=>String(x)!==String(a.id));estado.acessorios.ativo=estado.acessorios.ativos.length?estado.acessorios.ativos[0]:null}else{if(!estado.acessorios.ativos.map(String).includes(String(a.id)))estado.acessorios.ativos.push(a.id);estado.acessorios.ativo=a.id}salvar();renderizarAcessorioNoContainer();atualizarTela();renderizarMeuPet();if(!removendo){celebrarNovoAcessorio();}if(typeof mostrarToast==='function')mostrarToast(removendo?'Acessório removido':`🎀 ${a.nome} equipado!`)};g.appendChild(d)})};})();</script><script id="poderes-evolucao-js">
 (function(){
 const PODERES_EVOLUCAO=[
  {fase:1,nome:'Carinho Extra',icone:'💖',descricao:'Carinho faz o pet responder com mais energia.',eventos:['carinho']},
@@ -8176,12 +8702,20 @@ function garantirAcessoriosMulti(){
   estado.acessorios=estado.acessorios||{comprados:[],ativo:null,ativos:[]};
   if(!Array.isArray(estado.acessorios.comprados))estado.acessorios.comprados=[];
   if(!Array.isArray(estado.acessorios.ativos))estado.acessorios.ativos=[];
-  // Migração: ativo único -> lista
-  if(estado.acessorios.ativo!=null && !estado.acessorios.ativos.includes(estado.acessorios.ativo)){
-    estado.acessorios.ativos.push(estado.acessorios.ativo);
+  // Normaliza IDs para string e remove duplicatas
+  estado.acessorios.ativos=estado.acessorios.ativos
+    .filter(id=>id!=null&&id!=='')
+    .map(id=>String(id))
+    .filter((id,i,arr)=>arr.indexOf(id)===i);
+  // Migração: ativo único -> lista (somente se ainda não estiver na lista)
+  if(estado.acessorios.ativo!=null && estado.acessorios.ativo!==''){
+    const sid=String(estado.acessorios.ativo);
+    if(!estado.acessorios.ativos.includes(sid)){
+      estado.acessorios.ativos.push(sid);
+    }
   }
-  // Mantém ativo = primeiro wearable (compatibilidade com código legado)
-  estado.acessorios.ativo=estado.acessorios.ativos[0]||null;
+  // Mantém ativo sincronizado com a lista (ou null se vazia)
+  estado.acessorios.ativo=estado.acessorios.ativos.length?estado.acessorios.ativos[0]:null;
   estado.descobertasCenario=estado.descobertasCenario||{};
 }
 
@@ -8200,7 +8734,11 @@ function toggleAcessorio(id){
   const i=estado.acessorios.ativos.findIndex(x=>String(x)===sid);
   if(i>=0){
     estado.acessorios.ativos.splice(i,1);
-    estado.acessorios.ativo=estado.acessorios.ativos[0]||null;
+    estado.acessorios.ativo=estado.acessorios.ativos.length?estado.acessorios.ativos[0]:null;
+    // Garante que o legado não "ressuscita" o item removido
+    if(String(estado.acessorios.ativo||'')===sid){
+      estado.acessorios.ativo=estado.acessorios.ativos[0]||null;
+    }
     return false;
   }
   // Limite
@@ -8245,9 +8783,12 @@ window.renderizarAcessorioNoContainer=function(){
 
   // Wearables em camadas SVG
   const wear=itens.filter(i=>i.tipo!=='objeto');
+  const faseAtual=typeof calcularFase==='function'&&typeof obterDadosPetAtual==='function'
+    ? calcularFase(obterDadosPetAtual()?.nivel||1) : 1;
   c.innerHTML=wear.map((item,idx)=>{
     const svg=item.svgPorEspecie?(item.svgPorEspecie[estado.petAtual]||item.svgPorEspecie.gato):item.svg;
-    return `<div class="acc-layer" style="z-index:${idx+1}">${svg||''}</div>`;
+    const classeExtra=' acc-'+String(item.id).replace(/[^a-zA-Z0-9_-]/g,'-');
+    return `<div class="acc-layer${classeExtra}" data-acc-id="${String(item.id).replace(/"/g,'&quot;')}" data-pet="${String(estado.petAtual)}" data-fase="${faseAtual}" style="z-index:${idx+1}">${svg||''}</div>`;
   }).join('');
 
   // Objetos no palco
@@ -8273,10 +8814,12 @@ window.selecionarOuComprarAcessorio=function(a){
   if(!a)return;
   if((estado.acessorios.comprados||[]).includes(a.id)){
     const equipou=toggleAcessorio(a.id);
+    try{window.rpUltimoAcessorioVisualKey=''}catch(e){}
     if(typeof salvar==='function')salvar();
+    if(typeof renderizarAcessorioNoContainer==='function')renderizarAcessorioNoContainer();
     if(typeof atualizarTela==='function')atualizarTela();
-    else renderizarAcessorioNoContainer();
     if(typeof renderizarGridAcessorios==='function')renderizarGridAcessorios();
+    if(typeof renderizarMeuPet==='function')try{renderizarMeuPet()}catch(e){}
     if(typeof mostrarToast==='function')mostrarToast(equipou?`🎀 ${a.nome} equipado! (pode usar vários)`:`Acessório removido.`);
     if(equipou && typeof celebrarNovoAcessorio==='function')celebrarNovoAcessorio();
     return;
@@ -8341,7 +8884,11 @@ window.renderizarMeuPet=function(){
     d.innerHTML=`<span class="meupet-check">${ativo?'✓':tem?'🎀':'🔒'}</span><span class="mi-emoji">${a.emoji}</span><b>${typeof esc==='function'?esc(a.nome):a.nome}</b><small>${tem?(ativo?'Equipado · toque p/ tirar':(a.tipo==='objeto'?'Objeto · combinar':'Toque para equipar junto')):(a.preco+' 🪙 na Loja')}</small>`;
     if(tem)d.onclick=()=>{
       const equipou=toggleAcessorio(a.id);
-      salvar?.(); renderizarAcessorioNoContainer(); atualizarTela?.(); renderizarMeuPet();
+      try{window.rpUltimoAcessorioVisualKey=''}catch(e){}
+      salvar?.();
+      renderizarAcessorioNoContainer();
+      atualizarTela?.();
+      renderizarMeuPet();
       if(equipou)celebrarNovoAcessorio?.();
       mostrarToast?.(equipou?`🎀 ${a.nome} equipado!`:'Acessório removido');
     };
@@ -9207,5 +9754,164 @@ button:focus-visible,.top-pill:focus-visible,.pet-action-btn:focus-visible{
 }
 </style>
 
+
+<style id="rp-fix-audio-missoes-v1">#secao-missoes{position:relative!important;isolation:isolate}#secao-missoes .task-header-expansivel{position:relative!important;z-index:20!important;pointer-events:auto!important;touch-action:manipulation!important;min-height:38px!important}#secao-missoes .task-header-right,#secao-missoes #seta-missoes{pointer-events:none!important}#secao-missoes.recolhida{overflow:hidden!important;max-height:none!important}</style>
+<style id="rotinapet-acessorios-fit-v6">
+#camada-acessorio .acc-layer{position:absolute;inset:0;pointer-events:none;display:flex;align-items:stretch;justify-content:stretch;transform-origin:50% 50%}
+#camada-acessorio .acc-layer svg{width:100%;height:100%;display:block;overflow:visible}
+#camada-acessorio .acc-tema_halloween_abobora{z-index:20!important;pointer-events:none}
+#camada-acessorio .acc-tema_halloween_abobora[data-pet="gato"]{transform:translateY(1px)}
+#camada-acessorio .acc-tema_halloween_abobora[data-pet="cachorra"]{transform:translateY(3px)}
+#camada-acessorio .acc-tema_halloween_abobora[data-pet="cabra"]{transform:translateY(2px)}
+#camada-acessorio .acc-tema_halloween_abobora[data-pet="frango"]{transform:translateY(4px) scale(.94)}
+</style>
+<script id="rotinapet-acessorios-fit-v6-js">
+(()=>{
+'use strict';
+function sincronizarAcessoriosAtivos(){
+  if(typeof estado==='undefined')return;
+  estado.acessorios=estado.acessorios||{comprados:[],ativo:null,ativos:[]};
+  if(!Array.isArray(estado.acessorios.ativos))estado.acessorios.ativos=[];
+  if(estado.acessorios.ativo!=null&&estado.acessorios.ativo!==''&&!estado.acessorios.ativos.map(String).includes(String(estado.acessorios.ativo))){
+    estado.acessorios.ativos.push(String(estado.acessorios.ativo));
+  }
+  estado.acessorios.ativos=estado.acessorios.ativos
+    .map(id=>String(id))
+    .filter((id,i,arr)=>arr.indexOf(id)===i)
+    .filter(id=>{const a=typeof buscarAcessorioPorId==='function'?buscarAcessorioPorId(id):null;return !!a});
+  estado.acessorios.ativo=estado.acessorios.ativos.length?estado.acessorios.ativos[0]:null;
+}
+function aplicarTemaAcessorioExclusivo(t){
+  sincronizarAcessoriosAtivos();
+  const grupoCabeca=new Set(['chapeu','bone','coroa','chapeu_praia','grinalda','tema_halloween','tema_neve','tema_halloween_esqueleto','tema_halloween_vampiro','tema_halloween_abobora']);
+  estado.acessorios.ativos=estado.acessorios.ativos.filter(id=>{const it=typeof buscarAcessorioPorId==='function'?buscarAcessorioPorId(id):null;return !(it&&grupoCabeca.has(it.id))});
+  estado.acessorios.ativos.push(t.acessorio.id);
+  estado.acessorios.ativo=t.acessorio.id;
+}
+window.selecionarOuComprarTema=function(t){
+  if(!t)return;
+  const possui=typeof possuiTema==='function'&&possuiTema(t);
+  const usar=()=>{
+    estado.fundoAtual=t.fundoId;
+    aplicarTemaAcessorioExclusivo(t);
+    salvar();
+    if(typeof aplicarFundoTela==='function')aplicarFundoTela(t.fundoId);
+    if(typeof atualizarTela==='function')atualizarTela();
+    if(typeof renderizarGridTemas==='function')renderizarGridTemas();
+    if(typeof renderizarGridFundos==='function')renderizarGridFundos();
+    if(typeof renderizarGridAcessorios==='function')renderizarGridAcessorios();
+    if(typeof mostrarToast==='function')mostrarToast(`🎨 Tema ${t.nome} aplicado!`);
+  };
+  if(possui)return usar();
+  if((Number(estado.moedas)||0)<t.preco){if(typeof mostrarToast==='function')mostrarToast(`🪙 Faltam ${t.preco-(Number(estado.moedas)||0)} moedas.`);return;}
+  if(typeof mostrarConfirmacao==='function')mostrarConfirmacao(`Comprar o tema "${t.nome}" (fundo + acessório) por ${t.preco} moedas?`,()=>{
+    estado.moedas-=t.preco;
+    if(!estado.fundosComprados.includes(t.fundoId))estado.fundosComprados.push(t.fundoId);
+    if(!estado.acessorios.comprados.includes(t.acessorio.id))estado.acessorios.comprados.push(t.acessorio.id);
+    usar();
+    if(typeof dispararConfetes==='function')dispararConfetes();
+    if(typeof mostrarToast==='function')mostrarToast('🎉 Tema desbloqueado!');
+  });
+};
+window.limparCamadasAcessorios=function(){const c=document.getElementById('camada-acessorio');if(c)c.innerHTML='';const o=document.getElementById('objetos-pet-layer');if(o)o.innerHTML='';};
+})();
+</script>
+
+<style id="movimentos-pet-v5-css">
+/* Movimento natural: pequenas ações independentes, sem reconstruir o SVG. */
+#pet-principal.pet-mov-jump{animation:rpPetJump .72s cubic-bezier(.2,.9,.25,1) both!important}
+#pet-principal.pet-mov-dance{animation:rpPetDance 1.25s cubic-bezier(.22,1,.36,1) both!important}
+#pet-principal.pet-mov-wiggle{animation:rpPetWiggle .7s ease both!important}
+#pet-principal.pet-mov-stretch{animation:rpPetStretch 1s ease both!important}
+#pet-principal.pet-mov-happy{animation:rpPetHappy .85s cubic-bezier(.22,1,.36,1) both!important}
+#pet-principal.pet-mov-sleep{animation:rpPetSleep 1.8s ease both!important}
+@keyframes rpPetJump{0%{transform:translateY(0) scale(1)}25%{transform:translateY(-18px) scale(1.04)}55%{transform:translateY(-25px) scale(.98) rotate(-2deg)}80%{transform:translateY(-7px) scale(1.02) rotate(2deg)}100%{transform:translateY(0) scale(1)}}
+@keyframes rpPetDance{0%,100%{transform:translateY(0) rotate(0)}15%{transform:translateY(-5px) rotate(-8deg)}30%{transform:translateY(0) rotate(8deg)}45%{transform:translateY(-8px) rotate(-6deg)}60%{transform:translateY(0) rotate(6deg)}75%{transform:translateY(-4px) rotate(-4deg)}}
+@keyframes rpPetWiggle{0%,100%{transform:rotate(0)}20%{transform:rotate(-7deg) translateX(-3px)}40%{transform:rotate(7deg) translateX(3px)}60%{transform:rotate(-5deg)}80%{transform:rotate(4deg)}}
+@keyframes rpPetStretch{0%{transform:scale(1,1)}35%{transform:scale(1.08,.92) translateY(5px)}65%{transform:scale(.94,1.08) translateY(-4px)}100%{transform:scale(1,1)}}
+@keyframes rpPetHappy{0%,100%{transform:scale(1) translateY(0)}30%{transform:scale(1.06) translateY(-10px)}55%{transform:scale(.98) translateY(1px)}75%{transform:scale(1.04) translateY(-5px)}}
+@keyframes rpPetSleep{0%,100%{transform:translateY(0) scale(1)}50%{transform:translateY(3px) scale(.98)}}
+body.modo-zen #pet-principal.pet-mov-jump,body.modo-zen #pet-principal.pet-mov-dance,body.modo-zen #pet-principal.pet-mov-wiggle,body.modo-zen #pet-principal.pet-mov-stretch,body.modo-zen #pet-principal.pet-mov-happy{animation:none!important}
+#teste-evolucoes{margin:10px 0;padding:10px;border:1px dashed #a78bfa;border-radius:16px;background:#faf5ff}
+.teste-evo-head{display:flex;align-items:center;justify-content:space-between;gap:8px;margin-bottom:8px}.teste-evo-head b{font-size:11px;color:#4c1d95}.teste-evo-head small{font-size:7px;color:#64748b}
+.teste-evo-grid{display:grid;grid-template-columns:repeat(5,1fr);gap:5px}.teste-evo-grid button{min-height:38px;border:1px solid #ddd6fe;background:#fff;border-radius:10px;font-size:8px;font-weight:900;color:#4c1d95;cursor:pointer}.teste-evo-grid button.ativo{background:#7c3aed;color:#fff;border-color:#7c3aed}.teste-evo-pets{display:flex;gap:5px;overflow:auto;padding-bottom:5px;margin-bottom:6px}.teste-evo-pets button{flex:0 0 auto;border:1px solid #e5e7eb;background:#fff;border-radius:12px;padding:7px 9px;font-size:9px;font-weight:900}.teste-evo-pets button.ativo{border-color:#7c3aed;background:#ede9fe;color:#4c1d95}
+</style>
+<script id="movimentos-pet-v5-js">
+(()=>{
+ const movimentos=['jump','dance','wiggle','stretch','happy'];
+ let movimentoTimer=null;
+ function petEl(){return document.getElementById('pet-principal')}
+ function animarMovimentoPet(tipo){
+   const pet=petEl(); if(!pet)return;
+   if(document.body.classList.contains('modo-zen') || window.matchMedia?.('(prefers-reduced-motion: reduce)').matches)return;
+   const nome=movimentos.includes(tipo)?tipo:'happy';
+   pet.classList.remove('pet-mov-jump','pet-mov-dance','pet-mov-wiggle','pet-mov-stretch','pet-mov-happy','pet-mov-sleep');
+   void pet.offsetWidth;
+   pet.classList.add('pet-mov-'+nome);
+   setTimeout(()=>pet.classList.remove('pet-mov-'+nome),nome==='dance'?1350:1050);
+ }
+ window.animarMovimentoPet=animarMovimentoPet;
+ function agendarMovimento(){
+   clearTimeout(movimentoTimer);
+   movimentoTimer=setTimeout(()=>{
+     const pet=petEl();
+     if(pet && !document.hidden && !document.body.classList.contains('modo-zen')){
+       const fase=(typeof window.calcularFase==='function'&&typeof window.obterDadosPetAtual==='function')?window.calcularFase(window.obterDadosPetAtual()?.nivel||1):1;
+       const pool=fase>=4?['jump','dance','wiggle','stretch','happy']:fase>=2?['jump','wiggle','stretch','happy']:['wiggle','stretch','happy'];
+       animarMovimentoPet(pool[Math.floor(Math.random()*pool.length)]);
+     }
+     agendarMovimento();
+   },7000+Math.random()*6000);
+ }
+ function init(){if(window.__rpMovV5)return;window.__rpMovV5=true;agendarMovimento()}
+ if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',init,{once:true});else init();
+ window.addEventListener('beforeunload',()=>clearTimeout(movimentoTimer));
+})();
+</script>
+<script id="teste-evolucoes-v5-js">
+/* Laboratório de evoluções desativado: pets só desbloqueiam pelos níveis (desbloqueioNivel). */
+(()=>{
+  function limparLab(){
+    const host=document.getElementById('teste-evolucoes');
+    if(host)host.remove();
+  }
+  /** Desfaz o "todos os pets no nível 81" do laboratório de teste.
+   *  Só age se TODOS os pets tiverem exatamente nivel 81 e xp 0 (assinatura do lab).
+   *  Não altera progresso real do jogador. */
+  function reverterNiveisLabSeNecessario(){
+    try{
+      if(typeof estado==='undefined'||typeof PETS==='undefined')return;
+      estado.pets=estado.pets||{};
+      const ids=Object.keys(PETS);
+      if(!ids.length)return;
+      const todosLab=ids.every(id=>{
+        const p=estado.pets[id];
+        return p && Number(p.nivel)===81 && Number(p.xp||0)===0;
+      });
+      if(!todosLab)return;
+      ids.forEach(id=>{
+        const p=estado.pets[id]||{};
+        // Mantém felicidade/saúde; volta nível para 1
+        estado.pets[id]={...p,nivel:1,xp:0};
+      });
+      // Garante pet inicial liberado
+      if(!estado.petAtual||!PETS[estado.petAtual])estado.petAtual='gato';
+      if(typeof salvar==='function')salvar();
+      if(typeof atualizarTela==='function')atualizarTela();
+      console.info('[RotinaPet] Níveis de laboratório revertidos — pets desbloqueiam por nível novamente.');
+    }catch(e){console.warn('reverter lab:',e)}
+  }
+  function boot(){
+    limparLab();
+    reverterNiveisLabSeNecessario();
+  }
+  if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',boot,{once:true});
+  else boot();
+  setTimeout(boot,800);
+  setTimeout(reverterNiveisLabSeNecessario,2000);
+})();
+</script>
 </body>
 </html>
+
+<script>window.addEventListener('DOMContentLoaded',()=>{try{restaurarEstadoMissoes()}catch(e){console.warn('restaurar missões:',e)}});</script>
