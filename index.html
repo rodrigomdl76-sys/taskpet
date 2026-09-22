@@ -6323,20 +6323,74 @@ function renderizarGridTemas(){
   c.innerHTML='';
   TEMAS.forEach(t=>{
     const fundo=BANCO_FUNDOS.find(f=>f.id===t.fundoId);
-    const possui=possuiTema(t),ativo=estado.fundoAtual===t.fundoId&&estado.acessorios.ativo===t.acessorio.id,d=document.createElement('div');
-    d.className='fundo-card '+(ativo?'ativo':'');
+    const possui=possuiTema(t);
+    const accOn=typeof temaAcessorioEquipado==='function'?temaAcessorioEquipado(t):(String(estado.acessorios?.ativo||'')===String(t.acessorio.id));
+    const d=document.createElement('div');
+    d.className='fundo-card '+(accOn?'ativo':'');
     d.style.background=fundo?fundo.bg:'linear-gradient(160deg,#ede9fe,#ddd6fe)';
-    d.innerHTML=`<span style="font-size:25px">${t.emoji}</span><b style="font-size:10px;margin-top:3px">${esc(t.nome)}</b><span class="shop-tag">${ativo?'✓ Em uso':possui?'Usar':t.preco+' 🪙'}</span>`;
+    const tag=accOn?'✓ Toque p/ tirar':possui?'Usar':t.preco+' 🪙';
+    d.innerHTML=`<span style="font-size:25px">${t.emoji}</span><b style="font-size:10px;margin-top:3px">${esc(t.nome)}</b><span class="shop-tag">${tag}</span>`;
     d.onclick=()=>selecionarOuComprarTema(t);
     c.appendChild(d);
   });
 }
+function temaAcessorioEquipado(t){
+  if(!t||!t.acessorio)return false;
+  const sid=String(t.acessorio.id);
+  const ativos=Array.isArray(estado.acessorios?.ativos)?estado.acessorios.ativos.map(String):[];
+  if(ativos.includes(sid))return true;
+  return String(estado.acessorios?.ativo||'')===sid;
+}
+function removerAcessorioTema(t){
+  if(!t||!t.acessorio)return;
+  estado.acessorios=estado.acessorios||{comprados:[],ativo:null,ativos:[]};
+  if(!Array.isArray(estado.acessorios.ativos))estado.acessorios.ativos=[];
+  const sid=String(t.acessorio.id);
+  estado.acessorios.ativos=estado.acessorios.ativos.filter(x=>String(x)!==sid);
+  if(String(estado.acessorios.ativo||'')===sid){
+    estado.acessorios.ativo=estado.acessorios.ativos.length?estado.acessorios.ativos[0]:null;
+  }else if(!estado.acessorios.ativos.length){
+    estado.acessorios.ativo=null;
+  }else if(estado.acessorios.ativo==null){
+    estado.acessorios.ativo=estado.acessorios.ativos[0];
+  }
+}
+function equiparAcessorioTema(t){
+  if(!t||!t.acessorio)return;
+  estado.acessorios=estado.acessorios||{comprados:[],ativo:null,ativos:[]};
+  if(!Array.isArray(estado.acessorios.ativos))estado.acessorios.ativos=[];
+  const sid=String(t.acessorio.id);
+  // Remove outros acessórios de cabeça/tema para não empilhar fantasias
+  const grupoTema=new Set(['chapeu','bone','coroa','chapeu_praia','grinalda','tema_halloween','tema_neve','tema_praia','tema_astronauta','tema_princesa','tema_pirata','tema_estadio','tema_aniversario','tema_halloween_esqueleto','tema_halloween_vampiro','tema_halloween_abobora']);
+  estado.acessorios.ativos=estado.acessorios.ativos.filter(id=>{
+    const it=typeof buscarAcessorioPorId==='function'?buscarAcessorioPorId(id):null;
+    return !(it && (grupoTema.has(String(it.id)) || String(it.id).startsWith('tema_')));
+  });
+  if(!estado.acessorios.ativos.map(String).includes(sid))estado.acessorios.ativos.push(sid);
+  estado.acessorios.ativo=sid;
+  if(!estado.acessorios.comprados.includes(t.acessorio.id))estado.acessorios.comprados.push(t.acessorio.id);
+}
 function selecionarOuComprarTema(t){
   if(possuiTema(t)){
+    // Já possui: se o acessório do tema está equipado, remove; senão, aplica
+    if(temaAcessorioEquipado(t)){
+      removerAcessorioTema(t);
+      try{window.rpUltimoAcessorioVisualKey=''}catch(e){}
+      salvar();
+      if(typeof renderizarAcessorioNoContainer==='function')renderizarAcessorioNoContainer();
+      atualizarTela();
+      renderizarGridTemas();
+      renderizarGridFundos();
+      renderizarGridAcessorios();
+      if(typeof renderizarMeuPet==='function')try{renderizarMeuPet()}catch(e){}
+      return mostrarToast('🎀 Acessório do tema removido');
+    }
     estado.fundoAtual=t.fundoId;
-    estado.acessorios.ativo=t.acessorio.id;
+    equiparAcessorioTema(t);
+    try{window.rpUltimoAcessorioVisualKey=''}catch(e){}
     salvar();
     aplicarFundoTela(t.fundoId);
+    if(typeof renderizarAcessorioNoContainer==='function')renderizarAcessorioNoContainer();
     atualizarTela();
     renderizarGridTemas();
     renderizarGridFundos();
@@ -6349,9 +6403,11 @@ function selecionarOuComprarTema(t){
     if(!estado.fundosComprados.includes(t.fundoId))estado.fundosComprados.push(t.fundoId);
     if(!estado.acessorios.comprados.includes(t.acessorio.id))estado.acessorios.comprados.push(t.acessorio.id);
     estado.fundoAtual=t.fundoId;
-    estado.acessorios.ativo=t.acessorio.id;
+    equiparAcessorioTema(t);
+    try{window.rpUltimoAcessorioVisualKey=''}catch(e){}
     salvar();
     aplicarFundoTela(t.fundoId);
+    if(typeof renderizarAcessorioNoContainer==='function')renderizarAcessorioNoContainer();
     atualizarTela();
     renderizarGridTemas();
     renderizarGridFundos();
@@ -6360,6 +6416,11 @@ function selecionarOuComprarTema(t){
     mostrarToast('🎉 Tema desbloqueado!');
   });
 }
+// Expõe helpers de tema no window
+window.temaAcessorioEquipado=temaAcessorioEquipado;
+window.removerAcessorioTema=removerAcessorioTema;
+window.equiparAcessorioTema=equiparAcessorioTema;
+window.selecionarOuComprarTema=selecionarOuComprarTema;
 function renderizarGridFundos(){
   const c=document.getElementById('grid-fundos');
   c.innerHTML='';
@@ -8749,7 +8810,7 @@ function toggleAcessorio(id){
   // Se for wearable (não objeto), permite vários, mas evita conflito de chapéu/boné/coroa
   const item=(typeof buscarAcessorioPorId==='function'?buscarAcessorioPorId(id):null)||ACESSORIOS.find(a=>String(a.id)===sid);
   if(item && item.tipo!=='objeto'){
-    const grupoCabeca=new Set(['chapeu','bone','coroa','chapeu_praia','grinalda','tema_halloween','tema_neve','tema_halloween_esqueleto','tema_halloween_vampiro','tema_halloween_abobora']);
+    const grupoCabeca=new Set(['chapeu','bone','coroa','chapeu_praia','grinalda','tema_halloween','tema_neve','tema_praia','tema_astronauta','tema_princesa','tema_pirata','tema_estadio','tema_aniversario','tema_halloween_esqueleto','tema_halloween_vampiro','tema_halloween_abobora']);
     if(grupoCabeca.has(item.id)){
       estado.acessorios.ativos=estado.acessorios.ativos.filter(aid=>{
         const it=buscarAcessorioPorId?.(aid)||ACESSORIOS.find(a=>String(a.id)===String(aid));
@@ -8847,18 +8908,58 @@ window.renderizarGridAcessorios=function(){
   garantirAcessoriosMulti();
   const c=document.getElementById('grid-acessorios');
   if(!c){ if(typeof oldGrid==='function')return oldGrid(); return; }
-  c.innerHTML='<div class="acc-multi-hint">✨ Dica: equipe vários ao mesmo tempo (ex.: óculos + bola)</div>';
-  (ACESSORIOS||[]).forEach(a=>{
-    const comprado=(estado.acessorios.comprados||[]).includes(a.id);
+  c.innerHTML='<div class="acc-multi-hint">✨ Dica: toque de novo no equipado para tirar · temas também aparecem aqui</div>';
+  const lista=[...(ACESSORIOS||[])];
+  // Inclui acessórios de tema comprados para poder remover pela loja de acessórios
+  if(typeof TEMAS!=='undefined'){
+    TEMAS.forEach(t=>{
+      if(!t.acessorio)return;
+      if(lista.some(a=>String(a.id)===String(t.acessorio.id)))return;
+      lista.push({...t.acessorio, preco:t.preco, tipo:'visual', _tema:true, nome:t.acessorio.nome||t.nome});
+    });
+  }
+  lista.forEach(a=>{
+    const comprado=(estado.acessorios.comprados||[]).map(String).includes(String(a.id));
     const ativo=estaEquipado(a.id);
     const d=document.createElement('div');
     d.className='fundo-card '+(ativo?'ativo':'');
-    d.style.background='linear-gradient(160deg,#ede9fe,#ddd6fe)';
+    d.style.background=a._tema?'linear-gradient(160deg,#fef3c7,#fde68a)':'linear-gradient(160deg,#ede9fe,#ddd6fe)';
     d.style.color='#312e81';
     d.style.textShadow='none';
-    const tipo=a.tipo==='objeto'?'Objeto':'Visual';
-    d.innerHTML=`<span style="font-size:25px">${a.emoji}</span><b style="font-size:10px;margin-top:3px">${typeof esc==='function'?esc(a.nome):a.nome}</b><span style="font-size:7px;opacity:.7">${tipo}</span><span class="shop-tag" style="background:#312e81cc;color:#fff">${ativo?'✓ Equipado':comprado?'Usar junto':a.preco+' 🪙'}</span>`;
-    d.onclick=()=>selecionarOuComprarAcessorio(a);
+    const tipo=a._tema?'Tema':(a.tipo==='objeto'?'Objeto':'Visual');
+    d.innerHTML=`<span style="font-size:25px">${a.emoji}</span><b style="font-size:10px;margin-top:3px">${typeof esc==='function'?esc(a.nome):a.nome}</b><span style="font-size:7px;opacity:.7">${tipo}</span><span class="shop-tag" style="background:#312e81cc;color:#fff">${ativo?'✓ Toque p/ tirar':comprado?'Usar':(a.preco!=null?a.preco+' 🪙':'—')}</span>`;
+    d.onclick=()=>{
+      if(a._tema){
+        // Toggle só o acessório do tema (sem exigir recompra)
+        if(!comprado){
+          if(typeof mostrarToast==='function')mostrarToast('Compre o tema na aba Temas.');
+          return;
+        }
+        if(ativo){
+          if(typeof removerAcessorioTema==='function')removerAcessorioTema({acessorio:a});
+          else toggleAcessorio(a.id);
+          try{window.rpUltimoAcessorioVisualKey=''}catch(e){}
+          salvar?.();
+          renderizarAcessorioNoContainer();
+          atualizarTela?.();
+          renderizarGridAcessorios();
+          renderizarGridTemas?.();
+          mostrarToast?.('🎀 Acessório do tema removido');
+        }else{
+          if(typeof equiparAcessorioTema==='function')equiparAcessorioTema({acessorio:a});
+          else toggleAcessorio(a.id);
+          try{window.rpUltimoAcessorioVisualKey=''}catch(e){}
+          salvar?.();
+          renderizarAcessorioNoContainer();
+          atualizarTela?.();
+          renderizarGridAcessorios();
+          renderizarGridTemas?.();
+          mostrarToast?.(`🎀 ${a.nome} equipado!`);
+        }
+        return;
+      }
+      selecionarOuComprarAcessorio(a);
+    };
     c.appendChild(d);
   });
 };
@@ -8876,21 +8977,42 @@ window.renderizarMeuPet=function(){
   const nomes=listaAtivos().map(id=>{const a=ACESSORIOS.find(x=>String(x.id)===String(id));return a?a.emoji+' '+a.nome:null}).filter(Boolean);
   c.innerHTML=`<div class="meupet-hero"><div class="meupet-avatar">${estado.petEmoji||'🐾'}</div><div class="meupet-title">${nomes.length?nomes.join(' + '):'Visual natural'}</div><div class="meupet-sub">Equipe vários acessórios juntos · até ${MAX_ATIVOS}</div><span class="meupet-chip">⭐ ${n} missões · ${ativos.size} equipado(s)</span></div><div class="meupet-section-title">🎀 Acessórios</div><div class="meupet-grid" id="meupet-grid"></div>`;
   const g=document.getElementById('meupet-grid');
-  ACESSORIOS.forEach(a=>{
-    const tem=comprados.has(a.id),ativo=ativos.has(String(a.id));
+  const listaMeu=[...ACESSORIOS];
+  if(typeof TEMAS!=='undefined'){
+    TEMAS.forEach(t=>{
+      if(!t.acessorio)return;
+      if(listaMeu.some(a=>String(a.id)===String(t.acessorio.id)))return;
+      listaMeu.push({...t.acessorio, preco:t.preco, tipo:'visual', _tema:true, nome:t.acessorio.nome||t.nome});
+    });
+  }
+  listaMeu.forEach(a=>{
+    const tem=comprados.has(a.id)||comprados.has(String(a.id)),ativo=ativos.has(String(a.id));
     const d=document.createElement('button');
     d.type='button';
     d.className='meupet-item '+(tem?'':'bloqueado')+(ativo?' ativo':'');
-    d.innerHTML=`<span class="meupet-check">${ativo?'✓':tem?'🎀':'🔒'}</span><span class="mi-emoji">${a.emoji}</span><b>${typeof esc==='function'?esc(a.nome):a.nome}</b><small>${tem?(ativo?'Equipado · toque p/ tirar':(a.tipo==='objeto'?'Objeto · combinar':'Toque para equipar junto')):(a.preco+' 🪙 na Loja')}</small>`;
+    const sub=tem?(ativo?'Equipado · toque p/ tirar':(a._tema?'Tema · equipar':(a.tipo==='objeto'?'Objeto · combinar':'Toque para equipar junto'))):(a._tema?'Compre na aba Temas':(a.preco+' 🪙 na Loja'));
+    d.innerHTML=`<span class="meupet-check">${ativo?'✓':tem?'🎀':'🔒'}</span><span class="mi-emoji">${a.emoji}</span><b>${typeof esc==='function'?esc(a.nome):a.nome}</b><small>${sub}</small>`;
     if(tem)d.onclick=()=>{
-      const equipou=toggleAcessorio(a.id);
+      if(ativo){
+        if(a._tema && typeof removerAcessorioTema==='function')removerAcessorioTema({acessorio:a});
+        else toggleAcessorio(a.id);
+        try{window.rpUltimoAcessorioVisualKey=''}catch(e){}
+        salvar?.();
+        renderizarAcessorioNoContainer();
+        atualizarTela?.();
+        renderizarMeuPet();
+        mostrarToast?.('🎀 Acessório removido');
+        return;
+      }
+      if(a._tema && typeof equiparAcessorioTema==='function')equiparAcessorioTema({acessorio:a});
+      else toggleAcessorio(a.id);
       try{window.rpUltimoAcessorioVisualKey=''}catch(e){}
       salvar?.();
       renderizarAcessorioNoContainer();
       atualizarTela?.();
       renderizarMeuPet();
-      if(equipou)celebrarNovoAcessorio?.();
-      mostrarToast?.(equipou?`🎀 ${a.nome} equipado!`:'Acessório removido');
+      celebrarNovoAcessorio?.();
+      mostrarToast?.(`🎀 ${a.nome} equipado!`);
     };
     g.appendChild(d);
   });
@@ -9783,37 +9905,20 @@ function sincronizarAcessoriosAtivos(){
 }
 function aplicarTemaAcessorioExclusivo(t){
   sincronizarAcessoriosAtivos();
-  const grupoCabeca=new Set(['chapeu','bone','coroa','chapeu_praia','grinalda','tema_halloween','tema_neve','tema_halloween_esqueleto','tema_halloween_vampiro','tema_halloween_abobora']);
+  const grupoCabeca=new Set(['chapeu','bone','coroa','chapeu_praia','grinalda','tema_halloween','tema_neve','tema_praia','tema_astronauta','tema_princesa','tema_pirata','tema_estadio','tema_aniversario','tema_halloween_esqueleto','tema_halloween_vampiro','tema_halloween_abobora']);
   estado.acessorios.ativos=estado.acessorios.ativos.filter(id=>{const it=typeof buscarAcessorioPorId==='function'?buscarAcessorioPorId(id):null;return !(it&&grupoCabeca.has(it.id))});
   estado.acessorios.ativos.push(t.acessorio.id);
   estado.acessorios.ativo=t.acessorio.id;
 }
-window.selecionarOuComprarTema=function(t){
-  if(!t)return;
-  const possui=typeof possuiTema==='function'&&possuiTema(t);
-  const usar=()=>{
-    estado.fundoAtual=t.fundoId;
-    aplicarTemaAcessorioExclusivo(t);
-    salvar();
-    if(typeof aplicarFundoTela==='function')aplicarFundoTela(t.fundoId);
-    if(typeof atualizarTela==='function')atualizarTela();
-    if(typeof renderizarGridTemas==='function')renderizarGridTemas();
-    if(typeof renderizarGridFundos==='function')renderizarGridFundos();
-    if(typeof renderizarGridAcessorios==='function')renderizarGridAcessorios();
-    if(typeof mostrarToast==='function')mostrarToast(`🎨 Tema ${t.nome} aplicado!`);
-  };
-  if(possui)return usar();
-  if((Number(estado.moedas)||0)<t.preco){if(typeof mostrarToast==='function')mostrarToast(`🪙 Faltam ${t.preco-(Number(estado.moedas)||0)} moedas.`);return;}
-  if(typeof mostrarConfirmacao==='function')mostrarConfirmacao(`Comprar o tema "${t.nome}" (fundo + acessório) por ${t.preco} moedas?`,()=>{
-    estado.moedas-=t.preco;
-    if(!estado.fundosComprados.includes(t.fundoId))estado.fundosComprados.push(t.fundoId);
-    if(!estado.acessorios.comprados.includes(t.acessorio.id))estado.acessorios.comprados.push(t.acessorio.id);
-    usar();
-    if(typeof dispararConfetes==='function')dispararConfetes();
-    if(typeof mostrarToast==='function')mostrarToast('🎉 Tema desbloqueado!');
-  });
-};
+// Base selecionarOuComprarTema (com toggle) já está no escopo global —
+// não sobrescrever aqui para evitar quebrar a remoção do acessório do tema.
 window.limparCamadasAcessorios=function(){const c=document.getElementById('camada-acessorio');if(c)c.innerHTML='';const o=document.getElementById('objetos-pet-layer');if(o)o.innerHTML='';};
+// Garante helpers no window (podem ser usados pela loja multi)
+try{
+  if(typeof temaAcessorioEquipado==='function')window.temaAcessorioEquipado=temaAcessorioEquipado;
+  if(typeof removerAcessorioTema==='function')window.removerAcessorioTema=removerAcessorioTema;
+  if(typeof equiparAcessorioTema==='function')window.equiparAcessorioTema=equiparAcessorioTema;
+}catch(e){}
 })();
 </script>
 
