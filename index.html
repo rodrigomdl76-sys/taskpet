@@ -525,138 +525,6 @@ button:focus-visible,input:focus-visible,.top-pill:focus-visible{
   100%{outline-offset:3px;outline-color:#a855f7}
 }
 
-
-/* ===== Foco avançado: microetapas + timer visual ===== */
-.foco-controles{display:flex;gap:6px;flex-wrap:wrap;margin-top:8px}
-.foco-btn{border:1px solid #cbd5e1;background:#fff;border-radius:10px;padding:7px 9px;font-size:8px;font-weight:900;cursor:pointer;color:#334155}
-.foco-timer{margin-top:8px;padding:8px;border-radius:12px;background:#fff;border:1px solid #ddd6fe}
-.foco-timer-num{font-size:20px;font-weight:950;color:#312e81;text-align:center;letter-spacing:.04em}
-.foco-timer-bar{height:7px;border-radius:99px;background:#e2e8f0;overflow:hidden;margin-top:5px}.foco-timer-bar>div{height:100%;width:0;background:#7c3aed;transition:width .4s}
-.foco-micro{margin-top:8px;padding:9px;border-radius:14px;background:#fff;border:1px solid #e2e8f0}
-.foco-micro-title{font-size:8px;font-weight:950;color:#475569}.foco-micro-step{font-size:14px;font-weight:950;color:#172033;margin-top:6px;line-height:1.25}
-.foco-passos-lista{display:flex;flex-direction:column;gap:5px;margin-top:8px}.foco-passo-card{display:flex;align-items:center;gap:7px;padding:7px 8px;border-radius:10px;background:#f8fafc;border:1px solid #e2e8f0;font-size:8px;font-weight:800;color:#64748b}.foco-passo-card.atual{background:#f5f3ff;border-color:#c4b5fd;color:#312e81;font-size:9px;font-weight:950}.foco-passo-card.feito{background:#f0fdf4;border-color:#bbf7d0;color:#166534}.foco-passo-num{width:20px;height:20px;display:grid;place-items:center;border-radius:50%;background:#e2e8f0;color:#475569;font-size:8px;font-weight:950;flex:0 0 auto}.foco-passo-card.atual .foco-passo-num{background:#7c3aed;color:#fff}.foco-passo-card.feito .foco-passo-num{background:#16a34a;color:#fff}.foco-fazer{width:100%;border:0;border-radius:11px;padding:9px;background:#7c3aed;color:#fff;font-size:9px;font-weight:950;cursor:pointer;margin-top:7px}.foco-fazer:focus-visible{outline:3px solid #c4b5fd;outline-offset:2px}
-body.modo-zen .foco-btn,body.modo-zen .foco-timer,body.modo-zen .foco-micro{box-shadow:none!important;transition:none!important}
-body.modo-zen.som-zen-suave .foco-timer{border-color:#cbd5e1}
-body.modo-zen.visual-zen-minimo .task-row:not(.tarefa-foco-atual){opacity:.6}
-
-
-/* ===== Suporte de autonomia e previsibilidade ===== */
-.task-help-btn{border:1px solid #cbd5e1;background:#fff;border-radius:9px;padding:4px 7px;margin:5px 3px 0 0;font-size:8px;font-weight:900;color:#475569;cursor:pointer}
-.tarefa-primeiro-depois{font-size:8px;color:#475569;margin-top:4px;padding:5px 7px;border-radius:8px;background:#f8fafc;border:1px solid #e2e8f0}
-body.modo-foco .tarefa-primeiro-depois{background:#fff;border-color:#ddd6fe;color:#4c1d95}
-body.modo-zen .task-help-btn,body.modo-zen .tarefa-primeiro-depois{box-shadow:none!important;transition:none!important}
-body.pausa-sensorial .tasks-section,body.pausa-sensorial .bottom-nav{filter:saturate(.7)}
-/* ===== UX acessível: menos erros e alvos de toque maiores ===== */
-.task-row{min-height:56px}
-.task-row .task-actions{display:flex;align-items:center;justify-content:flex-end;gap:5px;flex-wrap:wrap}
-.task-row .task-btn,.task-row .btn-ok,.task-row .btn-photo{min-height:42px;min-width:42px}
-.task-row .btn-ok{min-width:88px}
-.task-row button:focus-visible,.painel-pais-menu button:focus-visible,.acessibilidade-toggle:focus-visible,.foco-btn:focus-visible{outline:3px solid #a78bfa;outline-offset:2px}
-body.modo-foco .task-row:not(.tarefa-foco-atual) .task-actions{opacity:.72}
-body.modo-foco .tarefa-foco-atual .task-actions{opacity:1}
-body.pausa-sensorial #lista-tarefas,body.pausa-sensorial .bottom-nav{pointer-events:none;user-select:none;opacity:.48}
-body.pausa-sensorial #foco-agora-depois{position:relative;z-index:60}
-@media(max-width:380px){.task-row{grid-template-columns:minmax(0,1fr)!important}.task-row .task-actions{justify-content:stretch;margin-top:7px}.task-row .task-actions>*{flex:1}.task-row .btn-ok{min-width:0}}
-
-
-/* ===== Fluidez / anti-piscada ===== */
-#app,main,.app-shell{backface-visibility:hidden;-webkit-backface-visibility:hidden;}
-.modal-overlay,.foto-viewer,.toast,.balao-fala{will-change:opacity,transform;}
-body.transicoes-zen-instantaneas *,body.transicoes-zen-instantaneas *::before,body.transicoes-zen-instantaneas *::after{transition-duration:0s!important;animation-duration:0s!important;}
-@media (prefers-reduced-motion:reduce){*{scroll-behavior:auto!important;animation-duration:.001ms!important;animation-iteration-count:1!important;transition-duration:.001ms!important;}}
-/* ===== Acessibilidade sensorial: Modo Zen + Modo Foco ===== */
-body.modo-zen .particulas-cenario,
-body.modo-zen .cenario-detalhes{display:none!important}
-body.modo-zen .bg-layer,
-body.modo-zen .bg-layer.ativa{background:#f8fafc!important;opacity:1!important;z-index:-1}
-body.modo-zen .cat-wrapper,
-body.modo-zen .top-pill.streak-fogo,
-body.modo-zen .pet-stage,
-body.modo-zen .anim-bola{
-  animation:none!important;
-  box-shadow:none!important;
-}
-body.modo-zen .pet-stage{background:#f8fafc!important;border-color:#e2e8f0!important}
-body.modo-zen .cat-wrapper{filter:none!important}
-/* No Modo Foco, os atalhos continuam acessíveis: apenas perdem prioridade visual. */
-body.modo-foco.tarefas-pendentes .btn-game,
-body.modo-foco.tarefas-pendentes .btn-fundos,
-body.modo-foco.tarefas-pendentes .btn-premios{
-  opacity:.48!important;
-  filter:saturate(.55)!important;
-  box-shadow:none!important;
-}
-body.modo-foco .tasks-section{
-  box-shadow:0 10px 28px rgba(124,58,237,.10);
-}
-body.modo-foco .task-row:not(.tarefa-foco-atual){
-  opacity:.72;
-}
-body.modo-foco .tarefa-foco-atual{
-  opacity:1!important;
-  border:2px solid #7c3aed!important;
-  background:#faf5ff!important;
-  box-shadow:0 8px 22px rgba(124,58,237,.14);
-}
-body.modo-foco .tarefa-foco-atual .task-name{font-size:10px!important;color:#581c87!important;font-weight:950!important}
-body.modo-foco .tarefa-foco-atual .task-actions .btn-ok{transform:scale(1.04)}
-body.modo-foco .btn-game,body.modo-foco .btn-fundos,body.modo-foco .btn-premios{transition:opacity .2s,filter .2s,box-shadow .2s!important}
-body.modo-foco .foco-agora-depois{display:block}
-body:not(.modo-foco) .foco-agora-depois{display:none}
-.foco-agora-depois{margin:8px 0;padding:10px;border:1px solid #ddd6fe;background:#faf5ff;border-radius:15px}
-.foco-agora-depois .foco-label{font-size:7px;font-weight:950;letter-spacing:.08em;color:#7c3aed;text-transform:uppercase}
-.foco-agora-depois .foco-tarefa{font-size:12px;font-weight:950;color:#312e81;margin-top:2px}
-.foco-agora-depois .foco-depois{margin-top:7px;padding-top:7px;border-top:1px solid #e9d5ff}
-.foco-agora-depois .foco-depois-text{font-size:9px;font-weight:850;color:#475569;margin-top:2px}
-.foco-agora-depois .foco-vazio{font-size:9px;font-weight:900;color:#166534}
-body.modo-zen *{animation-duration:.01ms!important;animation-iteration-count:1!important;transition-duration:.01ms!important}
-body.modo-zen .pet-stage.pet-stage-celebracao::before,
-body.modo-zen .pet-stage.pet-stage-celebracao::after,
-body.modo-zen .evo-unlock,body.modo-zen .css-confetti{display:none!important}
-body.modo-zen .floating-text,body.modo-zen .heart-burst,body.modo-zen .pop-anim{animation:none!important}
-body.modo-zen .foco-agora-depois{border-color:#cbd5e1;background:#fff;color:#334155}
-body.modo-zen .foco-agora-depois .foco-label{color:#475569}
-body.modo-zen .foco-agora-depois .foco-tarefa{color:#1e293b}
-body.modo-zen .foco-agora-depois .foco-depois{border-top-color:#e2e8f0}
-
-.tarefa-nivel-ajuda{display:inline-flex;align-items:center;width:max-content;margin-top:4px;padding:3px 7px;border-radius:8px;background:#f8fafc;border:1px solid #e2e8f0;color:#475569;font-size:7px;font-weight:900}
-/* ===== Feedback do pet para microetapas ===== */
-.pet-micro-feedback{position:absolute;left:50%;top:24%;transform:translate(-50%,-50%);z-index:40;pointer-events:none;font-size:13px;font-weight:950;color:#312e81;background:#fff;border:1px solid #ddd6fe;border-radius:999px;padding:6px 10px;box-shadow:0 6px 18px rgba(15,23,42,.12);animation:petMicroFeedback .75s ease-out forwards}
-.pet-micro-feedback.grande{font-size:16px;color:#166534;border-color:#bbf7d0;background:#f0fdf4;animation:petMicroFeedbackGrande 1s ease-out forwards}
-@keyframes petMicroFeedback{0%{opacity:0;transform:translate(-50%,-30%) scale(.85)}20%{opacity:1;transform:translate(-50%,-50%) scale(1)}100%{opacity:0;transform:translate(-50%,-85%) scale(.98)}}
-@keyframes petMicroFeedbackGrande{0%{opacity:0;transform:translate(-50%,-35%) scale(.8)}18%{opacity:1;transform:translate(-50%,-50%) scale(1.06)}100%{opacity:0;transform:translate(-50%,-95%) scale(1)}}
-body.modo-zen .pet-micro-feedback{box-shadow:none!important;animation:none!important;opacity:1;transform:translate(-50%,-50%);border-color:#cbd5e1;background:#fff;color:#334155}
-body.modo-zen .pet-micro-feedback.grande{color:#166534;background:#f8fafc}
-@media(prefers-reduced-motion:reduce){
-  body.modo-foco .tarefa-foco-atual .task-actions .btn-ok{transform:none}
-}
-.acessibilidade-toggle{width:100%;display:flex;align-items:center;justify-content:space-between;gap:10px;border:1px solid #cbd5e1;background:#fff;border-radius:12px;padding:9px 10px;color:#172033;text-align:left;cursor:pointer}
-.acessibilidade-toggle .toggle-copy{min-width:0;display:flex;flex-direction:column;gap:2px}
-.acessibilidade-toggle .toggle-title{font-size:10px;font-weight:900}
-.acessibilidade-toggle .toggle-desc{font-size:8px;color:#64748b;line-height:1.25}
-.acessibilidade-toggle .toggle-pill{width:42px;height:24px;border-radius:99px;background:#cbd5e1;position:relative;flex:0 0 auto;transition:background .2s}
-.acessibilidade-toggle .toggle-pill::after{content:"";position:absolute;width:18px;height:18px;top:3px;left:3px;border-radius:50%;background:#fff;box-shadow:0 1px 4px #0003;transition:transform .2s}
-.acessibilidade-toggle.ativo .toggle-pill{background:#7c3aed}
-.acessibilidade-toggle.ativo .toggle-pill::after{transform:translateX(18px)}
-
-
-/* ===== Painel dos pais: navegação por categorias ===== */
-.painel-pais-menu{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:7px;margin:9px 0}
-.painel-pais-menu button{border:1px solid #dbe3ee;background:#fff;border-radius:14px;padding:10px;text-align:left;cursor:pointer;min-height:58px;box-shadow:0 1px 3px #0000000a}
-.painel-pais-menu button:active{transform:scale(.99)}
-.painel-pais-menu .menu-ico{font-size:18px;display:block;line-height:1;margin-bottom:4px}
-.painel-pais-menu .menu-titulo{font-size:10px;font-weight:900;color:#172033;display:block}
-.painel-pais-menu .menu-desc{font-size:7px;color:#64748b;display:block;margin-top:2px;line-height:1.25}
-.painel-pais-navegacao{display:none;align-items:center;justify-content:space-between;gap:7px;padding:8px 9px;margin:9px 0 7px;background:#f1f5f9;border:1px solid #dbe3ee;border-radius:12px}
-.painel-pais-navegacao.ativo{display:flex}
-.painel-pais-navegacao strong{font-size:10px;color:#172033}
-.painel-pais-navegacao small{display:block;font-size:7px;color:#64748b;margin-top:2px}
-.painel-pais-voltar{border:0;background:#fff;border:1px solid #cbd5e1;border-radius:9px;padding:6px 9px;font-size:9px;font-weight:900;color:#334155;cursor:pointer}
-.painel-pais-grupo{display:none}
-.painel-pais-grupo.ativo{display:block}
-.painel-pais-grupo .section-card:last-child{margin-bottom:9px}
-@media(max-width:330px){.painel-pais-menu{grid-template-columns:1fr}}
-
 /* Preferência de movimento reduzido */
 @media (prefers-reduced-motion:reduce){
   .cat-wrapper,.pet-stage,.xp-bar-fill,.bottom-btn,.top-pill,
@@ -1133,12 +1001,11 @@ function abrirMenuMais(){
     <span id="engajamento-streak"></span><div id="engajamento-desafio"></div><button id="btn-bau-diario">🎁 Baú do dia</button>
   </div>
   <div class="tasks-section" id="secao-missoes">
-    <button type="button" class="task-header task-header-expansivel" id="btn-toggle-missoes" onclick="alternarMissoes(event)" aria-expanded="true" aria-controls="lista-tarefas">
+    <button type="button" class="task-header task-header-expansivel" onclick="alternarMissoes()" aria-expanded="true">
       <span class="task-header-left"><b>✨ Missões de hoje</b></span>
       <span class="task-header-right"><span id="qtd-tarefas">2 missões</span><span id="seta-missoes" aria-hidden="true">⌃</span></span>
     </button>
     <div id="banner-aprovacoes-pendentes" class="hidden" style="margin-bottom:6px;padding:7px 9px;border-radius:12px;background:#fffbeb;border:1px solid #fcd34d;font-size:9px;font-weight:900;color:#92400e;display:none;align-items:center;gap:6px">⏳ <span id="txt-aprovacoes-pendentes">Há tarefas aguardando os pais</span></div>
-    <div id="foco-agora-depois" class="foco-agora-depois" aria-live="polite" aria-label="Próxima atividade"></div>
     <div id="lista-tarefas"></div>
     <div id="status-ofensiva" style="margin-top:7px;padding:7px 9px;border-radius:12px;background:#fff7ed;border:1px solid #fed7aa;font-size:9px;font-weight:900;color:#9a3412">🔥 Complete as missões fixas para manter a sequência</div>
   </div>
@@ -1340,35 +1207,6 @@ function abrirMenuMais(){
     </div>
     <small style="font-size:8px;color:#64748b;margin-top:3px;display:block">Controla meows, efeitos e voz gravada do pet.</small>
   </div>
-  <div class="section-card" id="card-acessibilidade-sensorial">
-    <label class="field-label">🧩 Acessibilidade Sensorial</label>
-    <div class="stack" style="margin-top:6px">
-      <button type="button" id="btn-modo-zen" class="acessibilidade-toggle" aria-pressed="false" onclick="alternarModoZen()">
-        <span class="toggle-copy"><span class="toggle-title">🌙 Modo Zen (Menos Estímulos)</span><span class="toggle-desc">Reduz movimentos, detalhes visuais e sons do app.</span></span>
-        <span class="toggle-pill" aria-hidden="true"></span>
-      </button>
-      <button type="button" id="btn-modo-foco" class="acessibilidade-toggle" aria-pressed="false" onclick="alternarModoFoco()">
-        <span class="toggle-copy"><span class="toggle-title">🎯 Modo Foco (Sem Distrações)</span><span class="toggle-desc">Destaca uma missão por vez e reduz visualmente as distrações sem bloquear as atividades.</span></span>
-        <span class="toggle-pill" aria-hidden="true"></span>
-      </button>
-    </div>
-  </div>
-  <div class="section-card" id="card-perfil-sensorial">
-    <label class="field-label">🎛️ Perfil sensorial da criança</label>
-    <select class="field" id="perfil-sensorial" onchange="aplicarPerfilSensorial(this.value)">
-      <option value="personalizado">Personalizado</option>
-      <option value="equilibrado">⚖️ Equilibrado</option>
-      <option value="baixo-estimulo">🌙 Baixo estímulo</option>
-      <option value="minimo">🧘 Mínimo de estímulos</option>
-    </select>
-    <small style="font-size:8px;color:#64748b;margin-top:4px;display:block">Escolha o ponto de partida; depois você pode ajustar cada preferência separadamente.</small>
-    <div class="stack" style="margin-top:6px">
-      <label style="font-size:8px;font-weight:800;color:#475569">🔊 Sons <select class="field" id="pref-som-zen" onchange="alterarPreferenciaZen('som',this.value)"><option value="normal">Normal</option><option value="suave">Suave</option><option value="silencioso">Silencioso</option></select></label>
-      <label style="font-size:8px;font-weight:800;color:#475569">🏃 Movimento <select class="field" id="pref-movimento-zen" onchange="alterarPreferenciaZen('movimento',this.value)"><option value="normal">Normal</option><option value="reduzido">Reduzido</option><option value="minimo">Mínimo</option></select></label>
-      <label style="font-size:8px;font-weight:800;color:#475569">🎨 Visual <select class="field" id="pref-visual-zen" onchange="alterarPreferenciaZen('visual',this.value)"><option value="normal">Normal</option><option value="simplificado">Simplificado</option><option value="minimo">Mínimo</option></select></label>
-      <label style="font-size:8px;font-weight:800;color:#475569">🔄 Transições <select class="field" id="pref-transicoes-zen" onchange="alterarPreferenciaZen('transicoes',this.value)"><option value="normais">Normais</option><option value="suaves">Suaves</option><option value="instantaneas">Instantâneas</option></select></label>
-    </div>
-  </div>
   <div class="section-card">
     <label class="field-label">📸 Fotos das tarefas</label>
     <button type="button" class="primary-btn red-btn" style="width:100%" onclick="limparTodasFotosTarefas()">🗑️ Apagar todas as fotos</button>
@@ -1442,7 +1280,7 @@ function abrirMenuMais(){
     <div class="stack" id="lista-solicitacoes-premios" style="margin-top:7px"></div>
   </div>
   <div class="section-card"><b style="font-size:10px">✏️ Gerenciar tarefas</b><div style="font-size:8px;color:#64748b;margin-top:4px">Obrigatórias 🔥 contam para a ofensiva. Extras ⭐ dão moedas sem travar o streak.</div><div class="stack" id="lista-edicao-tarefas" style="margin:6px 0"></div><div style="display:grid;grid-template-columns:1fr 48px 88px auto;gap:4px"><input class="field" id="nova-tarefa-texto" placeholder="Nova tarefa"><input class="field" id="nova-tarefa-moedas" type="number" value="5" min="1"><select class="field" id="nova-tarefa-tipo"><option value="obrigatoria">🔥 Obrigatória</option><option value="extra">⭐ Extra</option></select><button class="primary-btn blue-btn" onclick="adicionarTarefa()">+</button></div>
-    <div style="margin-top:6px"><span class="field-label" style="margin-bottom:2px">📅 Repetir em (vazio = todo dia)</span><div class="dias-semana-picker" id="dias-nova-tarefa"></div></div><div style="display:grid;grid-template-columns:1fr 1fr;gap:4px;margin-top:6px"><input class="field" id="nova-tarefa-tempo" type="number" min="0" max="120" value="0" placeholder="Minutos (0 = sem timer)"><input class="field" id="nova-tarefa-passos" placeholder="Microetapas separadas por ;"></div><div style="display:grid;grid-template-columns:1fr 1fr;gap:4px;margin-top:6px"><input class="field" id="nova-tarefa-ajuda" placeholder="Dica para quando precisar de ajuda"><select class="field" id="nova-tarefa-nivel-ajuda"><option value="sozinho">🟢 Faço sozinho</option><option value="dica">🟡 Preciso de uma dica</option><option value="ajuda">🔵 Preciso de ajuda</option></select><input class="field" id="nova-tarefa-primeiro-depois" placeholder="Primeiro → depois"></div><input class="field" id="nova-tarefa-instrucao-url" placeholder="URL de imagem de instrução (opcional)" style="margin-top:4px"><div style="font-size:7px;color:#64748b;margin-top:3px">💡 Use instruções curtas. A imagem aqui é uma referência visual da tarefa, separada da foto de comprovação.</div>
+    <div style="margin-top:6px"><span class="field-label" style="margin-bottom:2px">📅 Repetir em (vazio = todo dia)</span><div class="dias-semana-picker" id="dias-nova-tarefa"></div></div>
   </div>
   <div class="section-card"><div style="display:flex;justify-content:space-between;align-items:center;gap:5px"><b style="font-size:10px">📊 Resumo</b><div style="display:flex;gap:4px"><button class="primary-btn blue-btn" onclick="abrirRelatorioSemanal()">Semanal</button><button class="primary-btn pink-btn" onclick="abrirRelatorioMensal()">Mensal</button></div></div><div class="stat-grid" style="margin-top:6px"><div class="stat">📋 <b id="stat-feitas">0</b><span>tarefas feitas</span></div><div class="stat">🔥 <b id="stat-ofensiva-pais">0</b><span>dias de ofensiva</span></div><div class="stat">🏆 <b id="stat-conquistas">0</b><span>conquistas</span></div></div></div>
   <button class="primary-btn" style="width:100%;margin-top:5px;background:#e2e8f0;color:#475569" onclick="fecharModal('modal-pais');alternarPerfil()">🔄 Trocar Perfil de Usuário</button>
@@ -2088,16 +1926,15 @@ const hojeLocal=()=>{const d=new Date();return `${d.getFullYear()}-${String(d.ge
 const ontemLocal=()=>{const d=new Date();d.setDate(d.getDate()-1);return `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`};
 // Campos que pertencem a UM filho específico (progresso do pet, tarefas, moedas...).
 // Tudo que NÃO está nessa lista é compartilhado pela família inteira (PIN, e-mails, taxa de câmbio).
-const CAMPOS_CRIANCA=['acessorios','conquistas','desafiosMathAcertos','dinheiroAcumulado','fundoAtual','fundosComprados','historicoConclusoes','idadeCrianca','lembreteEnviadoData','metaMoedas','moedas','modoFocoAtivo','modoZenAtivo','onboardingVistoCrianca','pausaAte','petAtual','pets','recompensas','registroDiario','solicitacoesPremios','streak','surpresaResgatadaData','tarefas','tarefasHojeCount','timerFim','totalSacado','ultimoDiaAcesso','ultimoDiaConcluido','ultimoStreakPremiado','vozSalva','ultimoAcaoPet','ultimoDecay','desafioDiarioData','desafioDiarioFeitoData','bauDiarioAbertoData','escudosOfensiva','adesivos','eventoSemanalData','missaoFamilia','mensagensPais','historicoEngajamento','conquistasJornada','streakRecompensas','focoTimerFim','focoTimerTarefaId','focoMicroEtapa','preferenciaSomZen','preferenciaMovimentoZen','preferenciaVisualZen','preferenciaTransicoesZen','perfilSensorial','pausaSensorialAte'];
+const CAMPOS_CRIANCA=['acessorios','conquistas','desafiosMathAcertos','dinheiroAcumulado','fundoAtual','fundosComprados','historicoConclusoes','idadeCrianca','lembreteEnviadoData','metaMoedas','moedas','onboardingVistoCrianca','pausaAte','petAtual','pets','recompensas','registroDiario','solicitacoesPremios','streak','surpresaResgatadaData','tarefas','tarefasHojeCount','timerFim','totalSacado','ultimoDiaAcesso','ultimoDiaConcluido','ultimoStreakPremiado','vozSalva','ultimoAcaoPet','ultimoDecay','desafioDiarioData','desafioDiarioFeitoData','bauDiarioAbertoData','escudosOfensiva','adesivos','eventoSemanalData','missaoFamilia','mensagensPais','historicoEngajamento','conquistasJornada','streakRecompensas'];
 function valoresPadraoCrianca(){
   return {
     petAtual:'gato',moedas:15,dinheiroAcumulado:.15,idadeCrianca:7,
-    modoFocoAtivo:false,modoZenAtivo:false,focoTimerFim:null,focoTimerTarefaId:null,focoMicroEtapa:0,preferenciaSomZen:'suave',preferenciaMovimentoZen:'minimo',preferenciaVisualZen:'simplificado',preferenciaTransicoesZen:'instantaneas',perfilSensorial:'personalizado',pausaSensorialAte:null,
     fundoAtual:'ceu',fundosComprados:['ceu'],metaMoedas:50,totalSacado:0,
     ultimoDiaAcesso:hojeLocal(),ultimoDiaConcluido:null,streak:0,ultimoStreakPremiado:0,conquistasJornada:{},streakRecompensas:{},
     tarefasHojeCount:0,desafiosMathAcertos:0,timerFim:null,vozSalva:null,
     pets:{gato:{nivel:1,xp:0,felicidade:100,saude:100},cachorra:{nivel:1,xp:0,felicidade:100,saude:100},cabra:{nivel:1,xp:0,felicidade:100,saude:100},frango:{nivel:1,xp:0,felicidade:100,saude:100},unicornio:{nivel:1,xp:0,felicidade:100,saude:100},dinossauro:{nivel:1,xp:0,felicidade:100,saude:100},capivara:{nivel:1,xp:0,felicidade:100,saude:100}},
-    tarefas:[{id:1,texto:'Escovar os dentes',recompensa:5,xp:20,tipo:'obrigatoria',status:'pendente',foto:null,dias:[],passos:[],tempoMin:0,ajuda:'',instrucaoFoto:null,primeiroDepois:'',},{id:2,texto:'Arrumar a cama',recompensa:5,xp:20,tipo:'obrigatoria',status:'pendente',foto:null,dias:[],passos:[],tempoMin:0,ajuda:'',instrucaoFoto:null,primeiroDepois:'',}],
+    tarefas:[{id:1,texto:'Escovar os dentes',recompensa:5,xp:20,tipo:'obrigatoria',status:'pendente',foto:null,dias:[]},{id:2,texto:'Arrumar a cama',recompensa:5,xp:20,tipo:'obrigatoria',status:'pendente',foto:null,dias:[]}],
     recompensas:[
       {id:1,texto:'15 min de tela',descricao:'Tempo de tela liberado pelos pais.',custo:10,tipo:'timer',minutos:15,icone:'📱',ativo:true},
       {id:2,texto:'30 min de tela',descricao:'Tempo de tela liberado pelos pais.',custo:18,tipo:'timer',minutos:30,icone:'🎮',ativo:true}
@@ -2152,12 +1989,11 @@ function garantirCriancaAtiva(){
 let estado={
   criancaAtivaId:'c1',criancas:{c1:{nome:'Minha Criança',emoji:'🐾'}},criancasDados:{},
   petAtual:'gato',moedas:15,taxaCambio:.01,pinHash:null,dinheiroAcumulado:.15,idadeCrianca:7,
-  modoFocoAtivo:false,modoZenAtivo:false,focoTimerFim:null,focoTimerTarefaId:null,focoMicroEtapa:0,preferenciaSomZen:'suave',preferenciaMovimentoZen:'minimo',preferenciaVisualZen:'simplificado',preferenciaTransicoesZen:'instantaneas',perfilSensorial:'personalizado',pausaSensorialAte:null,
   fundoAtual:'ceu',fundosComprados:['ceu'],metaMoedas:50,totalSacado:0,
   ultimoDiaAcesso:hojeLocal(),ultimoDiaConcluido:null,streak:0,ultimoStreakPremiado:0,
   tarefasHojeCount:0,desafiosMathAcertos:0,timerFim:null,vozSalva:null,
   pets:{gato:{nivel:1,xp:0,felicidade:100,saude:100},cachorra:{nivel:1,xp:0,felicidade:100,saude:100},cabra:{nivel:1,xp:0,felicidade:100,saude:100},frango:{nivel:1,xp:0,felicidade:100,saude:100},unicornio:{nivel:1,xp:0,felicidade:100,saude:100},dinossauro:{nivel:1,xp:0,felicidade:100,saude:100},capivara:{nivel:1,xp:0,felicidade:100,saude:100}},
-  tarefas:[{id:1,texto:'Escovar os dentes',recompensa:5,xp:20,tipo:'obrigatoria',status:'pendente',foto:null,dias:[],passos:[],tempoMin:0,ajuda:'',instrucaoFoto:null,primeiroDepois:'',},{id:2,texto:'Arrumar a cama',recompensa:5,xp:20,tipo:'obrigatoria',status:'pendente',foto:null,dias:[],passos:[],tempoMin:0,ajuda:'',instrucaoFoto:null,primeiroDepois:'',}],
+  tarefas:[{id:1,texto:'Escovar os dentes',recompensa:5,xp:20,tipo:'obrigatoria',status:'pendente',foto:null,dias:[]},{id:2,texto:'Arrumar a cama',recompensa:5,xp:20,tipo:'obrigatoria',status:'pendente',foto:null,dias:[]}],
   recompensas:[
     {id:1,texto:'15 min de tela',descricao:'Tempo de tela liberado pelos pais.',custo:10,tipo:'timer',minutos:15,icone:'📱',ativo:true},
     {id:2,texto:'30 min de tela',descricao:'Tempo de tela liberado pelos pais.',custo:18,tipo:'timer',minutos:30,icone:'🎮',ativo:true}
@@ -2209,16 +2045,6 @@ try{
     // `criancas` nem `criancaAtivaId` — cria o primeiro perfil com o progresso
     // que já estava solto no estado, sem mexer em mais nada.
     garantirCriancaAtiva();
-    if(estado.modoFocoAtivo===undefined)estado.modoFocoAtivo=false;
-    if(estado.modoZenAtivo===undefined)estado.modoZenAtivo=false;
-    if(estado.volumeSom===undefined)estado.volumeSom=.55;
-  if(estado.focoTimerFim===undefined)estado.focoTimerFim=null;
-  if(estado.focoTimerTarefaId===undefined)estado.focoTimerTarefaId=null;
-  if(estado.focoMicroEtapa===undefined)estado.focoMicroEtapa=0;
-  if(estado.preferenciaSomZen===undefined)estado.preferenciaSomZen='suave';
-  if(estado.preferenciaMovimentoZen===undefined)estado.preferenciaMovimentoZen='minimo';
-  if(estado.preferenciaVisualZen===undefined)estado.preferenciaVisualZen='simplificado';
-  if(estado.preferenciaTransicoesZen===undefined)estado.preferenciaTransicoesZen='instantaneas';
     if(d.pinPais&&!d.pinHash){
       hashPin(d.pinPais).then(h=>{estado.pinHash=h;delete estado.pinPais;salvar();});
     }
@@ -2728,7 +2554,7 @@ function aplicarFundoTela(id){
   }
   fundoTelaAtual=fundoId;
 
-  Array.from(document.body.classList).forEach(c=>{
+  document.body.classList.forEach(c=>{
     if(c.startsWith('cenario-'))document.body.classList.remove(c);
   });
   document.body.classList.add(cls);
@@ -2792,16 +2618,10 @@ function celebrarEvolucaoPet(fase){
 }
 let rpUltimoPetVisualKey='';
 let rpUltimoAcessorioVisualKey='';
-let rpUltimoEvolucaoVisualKey='';
-let rpUltimaTarefaRenderKey='';
 
 function atualizarTelaInterna(){
   try{
   if(typeof estado==='undefined'||!estado)return;
-  document.body.classList.toggle('modo-zen',!!estado.modoZenAtivo);
-  document.body.classList.toggle('modo-foco',!!estado.modoFocoAtivo);
-  document.body.classList.toggle('pausa-sensorial',Number(estado.pausaSensorialAte)>Date.now());
-    aplicarPreferenciasZen();
   if(typeof PETS==='undefined'||!PETS[estado.petAtual]){
     try{estado.petAtual=Object.keys(PETS||{})[0]||'gato'}catch(_){estado.petAtual='gato'}
   }
@@ -2842,11 +2662,7 @@ function atualizarTelaInterna(){
   }
   
   setTxt('pet-evol-nome',`${def.nome} • ${def.evolucoes[fase-1].nome}`);
-  const evoVisualKey=`${estado.petAtual}|${fase}|${p.nivel}|${p.xp}`;
-  if(rpUltimoEvolucaoVisualKey!==evoVisualKey){
-    renderizarProgressoEvolucao();
-    rpUltimoEvolucaoVisualKey=evoVisualKey;
-  }
+  renderizarProgressoEvolucao();
   const modalNome=document.getElementById('modal-pet-evol-nome');
   if(modalNome)modalNome.textContent=def.nome;
   setVal('input-idade-crianca',estado.idadeCrianca||7);
@@ -2971,22 +2787,47 @@ let _audioPetAtual=null;
 let _audioPetSrcCache='';
 function tocarAudioPet(url){
   const vol=obterVolumeSom();
+  if(vol<=0.01)return false;
   const fonte=(estado&&estado.vozSalva)||url;
   if(!fonte)return false;
-  if(vol<=0.01){if(estado&&estado.vozSalva)mostrarToast('🔇 O volume do pet está no mudo.');return false;}
   try{
-    const src=String(fonte);
-    if(_audioPetAtual){try{_audioPetAtual.pause()}catch(_){} try{_audioPetAtual.removeAttribute('src');_audioPetAtual.load()}catch(_){} }
-    const a=new Audio(src);
-    a.preload='auto';a.volume=vol;a.muted=false;
-    try{a.playsInline=true}catch(_){}
-    try{a.setAttribute('playsinline','')}catch(_){}
-    try{a.setAttribute('webkit-playsinline','')}catch(_){}
-    _audioPetAtual=a;_audioPetSrcCache=src;
+    try{obterAudioContext()}catch(_){}
+    // Novo Audio a cada toque quando é data-URL de voz: evita estado "preso"
+    // no iOS após pause/currentTime=0.
+    const isData=String(fonte).startsWith('data:');
+    if(isData || !_audioPetAtual || _audioPetSrcCache!==String(fonte)){
+      if(_audioPetAtual){try{_audioPetAtual.pause()}catch(_){}}
+      _audioPetAtual=new Audio();
+      _audioPetAtual.preload='auto';
+      try{_audioPetAtual.playsInline=true}catch(_){}
+      try{_audioPetAtual.setAttribute('playsinline','')}catch(_){}
+      try{_audioPetAtual.setAttribute('webkit-playsinline','')}catch(_){}
+      _audioPetAtual.src=String(fonte);
+      _audioPetSrcCache=String(fonte);
+    }
+    const a=_audioPetAtual;
+    a.volume=vol;
+    a.muted=false;
+    try{a.currentTime=0}catch(_){}
     const p=a.play();
-    if(p&&typeof p.catch==='function')p.catch(err=>console.warn('Falha ao reproduzir voz do pet:',err));
+    if(p&&typeof p.catch==='function'){
+      p.catch(err=>{
+        console.warn('Falha ao reproduzir voz do pet:',err);
+        try{
+          const b=new Audio(String(fonte));
+          b.volume=vol;
+          try{b.playsInline=true}catch(_){}
+          _audioPetAtual=b;
+          _audioPetSrcCache=String(fonte);
+          b.play().catch(()=>{});
+        }catch(_){}
+      });
+    }
     return true;
-  }catch(e){console.warn('tocarAudioPet:',e);return false;}
+  }catch(e){
+    console.warn('tocarAudioPet:',e);
+    return false;
+  }
 }
 function registrarLogAtividade(texto){
   estado.logAtividades=Array.isArray(estado.logAtividades)?estado.logAtividades:[];
@@ -3875,9 +3716,6 @@ function tarefasDeHoje(){return (Array.isArray(estado.tarefas)?estado.tarefas:[]
 function emPausaHoje(){return !!(estado.pausaAte&&hojeLocal()<=estado.pausaAte)}
 function todasObrigatoriasConcluidas(){const o=tarefasDeHoje().filter(t=>t.tipo==='obrigatoria');return o.length>0&&o.every(t=>statusTarefaAtual(t)==='aprovada')}
 function atualizarOfensiva(){
-  const obrigatorias=tarefasDeHoje().filter(t=>t.tipo==='obrigatoria');
-  const tarefasPendentes=obrigatorias.some(t=>statusTarefaAtual(t)!=='aprovada');
-  document.body.classList.toggle('tarefas-pendentes',tarefasPendentes);
   const el=document.getElementById('status-ofensiva');
   if(!el)return;
   if(emPausaHoje()){
@@ -3953,114 +3791,15 @@ function removerMetaPersonalizada(id){
   salvar();renderizarPainelPais();atualizarTela();mostrarToast('🗑️ Meta removida.');
 }
 function renderizarResumoCrianca(){ /* painel grande removido: resumo disponível no ícone Hoje */ }
-function atualizarFocoAgoraDepois(hojeLista){
-  const box=document.getElementById('foco-agora-depois');
-  if(!box)return;
-  const lista=Array.isArray(hojeLista)?hojeLista:[];
-  const pendentes=lista.filter(t=>{const st=statusTarefaAtual(t);return st!=='aprovada'&&st!=='aguardando_aprovacao'});
-  const atual=pendentes.find(t=>t.tipo==='obrigatoria')||pendentes[0];
-  const idx=atual?lista.findIndex(t=>String(t.id)===String(atual.id)):-1;
-  const depois=idx>=0?lista.slice(idx+1).find(t=>{const st=statusTarefaAtual(t);return st!=='aprovada'}):null;
-  if(!atual){
-    box.innerHTML='<div class="foco-vazio">✅ Tudo que precisava ser feito por enquanto está concluído.</div>';
-    return;
-  }
-  const passos=Array.isArray(atual.passos)?atual.passos.filter(Boolean):[];
-  const etapa=Math.min(Math.max(Number(estado.focoMicroEtapa)||0,0),Math.max(0,passos.length-1));
-  const tempo=Math.max(0,Number(atual.tempoMin)||0);
-  const timerAtivo=estado.focoTimerTarefaId!=null&&String(estado.focoTimerTarefaId)===String(atual.id)&&Number(estado.focoTimerFim)>Date.now();
-  const pausaSensorialAtiva=Number(estado.pausaSensorialAte)>Date.now();
-  const conteudoPausa=pausaSensorialAtiva?`<div class="foco-micro" style="background:#f0fdf4;border-color:#bbf7d0"><div class="foco-micro-title">🌿 PAUSA SENSORIAL</div><div class="foco-micro-step" style="font-size:12px">Tudo bem pausar. Quando estiver pronto, continue.</div><button class="foco-fazer" style="background:#166534" onclick="encerrarPausaSensorial()">▶ Continuar</button></div>`:`<div class="foco-label">🎯 AGORA</div><div class="foco-tarefa">${esc(atual.texto)}</div>
-    ${passos.length?`<div class="foco-micro"><div class="foco-micro-title">🧩 UM PASSO DE CADA VEZ</div><div class="foco-micro-step">${esc(passos[etapa])}</div><button class="foco-fazer" onclick="avancarMicroEtapa()">${etapa<passos.length-1?'✓ Fiz! Próximo passo':'✓ Fiz! Concluir passos'}</button><div class="foco-passos-lista">${passos.map((passo,i)=>`<div class="foco-passo-card ${i<etapa?'feito ':''}${i===etapa?'atual':''}"><span class="foco-passo-num">${i<etapa?'✓':i+1}</span><span>${esc(passo)}</span></div>`).join('')}</div></div>`:''}
-    ${tempo?`<div class="foco-timer"><div class="foco-label">⏳ TEMPO VISUAL</div><div id="foco-timer-num" class="foco-timer-num">${timerAtivo?formatarTempoFoco(Math.max(0,Number(estado.focoTimerFim)-Date.now())):formatarTempoFoco(tempo*60000)}</div><div class="foco-timer-bar"><div id="foco-timer-barra"></div></div><div class="foco-controles"><button class="foco-btn" onclick="alternarTimerFoco(${atual.id},${tempo})">${timerAtivo?'⏸ Pausar':'▶ Começar'}</button>${timerAtivo?'<button class="foco-btn" onclick="encerrarTimerFoco()">⏹ Encerrar</button>':''}</div></div>`:''}
-    ${depois?`<div class="foco-depois"><div class="foco-label">⏭️ DEPOIS</div><div class="foco-depois-text">${esc(depois.texto)}</div></div>`:''}${pausaSensorialAtiva?'':`<button class="foco-btn" style="margin-top:8px;width:100%" onclick="iniciarPausaSensorial(5)">🌿 Preciso de uma pausa</button>`}`;
-  box.innerHTML=conteudoPausa;
-  atualizarTimerFocoVisual();
-}
-function formatarTempoFoco(ms){const s=Math.max(0,Math.ceil(ms/1000)),m=Math.floor(s/60),r=s%60;return `${String(m).padStart(2,'0')}:${String(r).padStart(2,'0')}`}
-let intervaloTimerFoco=null;
-function iniciarLoopTimerFoco(){clearInterval(intervaloTimerFoco);intervaloTimerFoco=setInterval(atualizarTimerFocoVisual,500)}
-function atualizarTimerFocoVisual(){
-  const id=estado.focoTimerTarefaId, fim=Number(estado.focoTimerFim)||0;
-  const el=document.getElementById('foco-timer-num');
-  if(!id||!fim){clearInterval(intervaloTimerFoco);return}
-  const restante=Math.max(0,fim-Date.now());
-  if(el)el.textContent=formatarTempoFoco(restante);
-  const t=(estado.tarefas||[]).find(x=>String(x.id)===String(id));
-  const total=Math.max(1,(Number(t?.tempoMin)||1)*60000);
-  const bar=document.getElementById('foco-timer-barra');
-  if(bar)bar.style.width=Math.max(0,Math.min(100,100-(restante/total*100)))+'%';
-  if(restante<=0){encerrarTimerFoco(true);mostrarToast('⏰ Tempo da missão terminou.');}
-}
-function alternarTimerFoco(id,min){
-  if(estado.focoTimerTarefaId!=null&&String(estado.focoTimerTarefaId)===String(id)&&Number(estado.focoTimerFim)>Date.now()){encerrarTimerFoco();return}
-  estado.focoTimerTarefaId=id;estado.focoTimerFim=Date.now()+Math.max(1,Number(min)||1)*60000;salvar();iniciarLoopTimerFoco();renderizarTarefas();
-}
-function encerrarTimerFoco(silencioso=false){estado.focoTimerTarefaId=null;estado.focoTimerFim=null;clearInterval(intervaloTimerFoco);salvar();if(!silencioso)renderizarTarefas()}
-
-function reagirPetAoProgresso(tipo){
-  try{
-    const pet=document.getElementById('pet-principal');
-    const area=document.getElementById('pet-section-area')||document.querySelector('.pet-stage');
-    if(!pet||!area)return;
-    pet.classList.remove('pet-bounce');
-    void pet.offsetWidth;
-    pet.classList.add('pet-bounce');
-    setTimeout(()=>pet.classList.remove('pet-bounce'),tipo==='concluida'?800:500);
-    const feedback=document.createElement('div');
-    feedback.className='pet-micro-feedback'+(tipo==='concluida'?' grande':'');
-    feedback.textContent=tipo==='concluida'?'🎉 Missão concluída!':'💚 Muito bem!';
-    area.appendChild(feedback);
-    setTimeout(()=>{try{feedback.remove()}catch(_){}},tipo==='concluida'?1050:800);
-    if(tipo==='concluida'){
-      try{mostrarBalaoFala(escolherFalaContextual('aposTarefa'))}catch(_){}
-    }
-  }catch(e){console.warn('Feedback do pet:',e)}
-}
-
-function avancarMicroEtapa(){
-  const hoje=tarefasDeHoje();const atual=hoje.find(t=>{const st=statusTarefaAtual(t);return st!=='aprovada'&&st!=='aguardando_aprovacao'&&t.tipo==='obrigatoria'})||hoje.find(t=>statusTarefaAtual(t)!=='aprovada'&&statusTarefaAtual(t)!=='aguardando_aprovacao');
-  if(!atual)return;const passos=Array.isArray(atual.passos)?atual.passos.filter(Boolean):[];
-  if(!passos.length)return;
-  const atualEtapa=Number(estado.focoMicroEtapa)||0;
-  if(atualEtapa<passos.length-1){estado.focoMicroEtapa=atualEtapa+1;salvar();reagirPetAoProgresso('passo');renderizarTarefas();mostrarToast('🧩 Próximo passo!');}
-  else{estado.focoMicroEtapa=0;salvar();reagirPetAoProgresso('concluida');mostrarToast('✨ Todos os passos concluídos! Agora você pode enviar a missão.');renderizarTarefas();}
-}
-
-function marcarTarefaDeFocoAtual(idAtual){
-  document.querySelectorAll('#lista-tarefas .task-row').forEach(row=>row.classList.remove('tarefa-foco-atual'));
-  if(!estado.modoFocoAtivo||idAtual==null)return;
-  const alvo=document.querySelector(`#lista-tarefas .task-row[data-tarefa-id="${CSS.escape(String(idAtual))}"]`);
-  if(alvo)alvo.classList.add('tarefa-foco-atual');
-}
 function renderizarTarefas(){
   try{renderizarMetas()}catch(e){}
   try{renderizarResumoCrianca()}catch(e){}
   const c=document.getElementById('lista-tarefas');
   if(!c)return;
-  const pausaSensorialAtiva=Number(estado.pausaSensorialAte)>Date.now();
-  document.body.classList.toggle('pausa-sensorial',pausaSensorialAtiva);
-  const tarefas=Array.isArray(estado.tarefas)?estado.tarefas:[];
-  tarefas.forEach(t=>{if(!Array.isArray(t.passos))t.passos=[];if(t.tempoMin===undefined)t.tempoMin=0;if(t.ajuda===undefined)t.ajuda='';if(!['sozinho','dica','ajuda'].includes(t.nivelAjuda))t.nivelAjuda=t.ajuda?'dica':'sozinho';if(t.instrucaoFoto===undefined)t.instrucaoFoto=null;if(t.primeiroDepois===undefined)t.primeiroDepois='';});
-  const hojeLista=tarefas.filter(t=>t&&t.ativo!==false&&tarefaEhHoje(t));
-  const statusKey=tarefas.map(t=>`${t.id}:${statusTarefaAtual(t)}:${t.motivoRecusa||''}`).join('|');
-  const estruturaKey=tarefas.map(t=>`${t.id}:${t.texto}:${t.tipo}:${t.recompensa}:${t.xp}:${(t.dias||[]).join(',')}:${(t.passos||[]).join('¦')}:${t.tempoMin}:${t.ajuda}:${t.nivelAjuda}:${t.instrucaoFoto||''}:${t.primeiroDepois||''}`).join('||');
-  const focoKey=estado.modoFocoAtivo?'1':'0';
-  const timerKey=`${estado.focoTimerTarefaId||''}:${estado.focoTimerFim||''}`;
-  const renderKey=`${hojeLocal()}|${pausaSensorialAtiva?'1':'0'}|${focoKey}|${statusKey}|${estruturaKey}|${timerKey}`;
-  const precisaRedesenhar=rpUltimaTarefaRenderKey!==renderKey;
-  if(!precisaRedesenhar){
-    const focoAtual=(hojeLista.find(t=>{const st=statusTarefaAtual(t);return st!=='aprovada'&&st!=='aguardando_aprovacao'&&t.tipo==='obrigatoria'})||hojeLista.find(t=>statusTarefaAtual(t)!=='aprovada'&&statusTarefaAtual(t)!=='aguardando_aprovacao'));
-    atualizarFocoAgoraDepois(hojeLista);
-    atualizarOfensiva();
-    marcarTarefaDeFocoAtual(focoAtual?.id);
-    atualizarTimerFocoVisual();
-    return;
-  }
-  rpUltimaTarefaRenderKey=renderKey;
   c.innerHTML='';
+  const hojeLista=tarefasDeHoje();
   const o=hojeLista.filter(t=>t.tipo==='obrigatoria'),x=hojeLista.filter(t=>t.tipo!=='obrigatoria');
-  const qtdEl=document.getElementById('qtd-tarefas'); if(qtdEl){qtdEl.textContent=`${o.length} fixas · ${x.length} extras`;qtdEl.setAttribute('aria-live','polite');}
+  const qtdEl=document.getElementById('qtd-tarefas'); if(qtdEl)qtdEl.textContent=`${o.length} fixas · ${x.length} extras`;
   const pendentes=(estado.tarefas||[]).filter(t=>statusTarefaAtual(t)==='aguardando_aprovacao');
   const aprovadasLista=hojeLista.filter(t=>statusTarefaAtual(t)==='aprovada');
   const bannerPend=document.getElementById('banner-aprovacoes-pendentes');
@@ -4101,21 +3840,16 @@ function renderizarTarefas(){
       
       const row=document.createElement('div');
       row.className=`task-row${animar}`;
-      row.dataset.tarefaId=String(t.id);
       if(apr){row.style.background='#ecfdf5';row.style.borderRadius='10px';row.style.padding='8px 6px';row.style.border='1px solid #86efac'}
       else if(pend){row.style.background='#fffbeb';row.style.borderRadius='10px';row.style.padding='8px 6px'}
       row.innerHTML=`
         <div>
           <div class="task-name" style="${apr?'color:#166534;font-weight:900':''}">${apr?'✅ ':''}${esc(t.texto)}<span style="font-size:7px;color:#7c3aed;font-weight:900">${esc(badgeDias)}</span></div>
           <span class="task-reward">+${Number(t.xp)||20} XP • +${Number(t.recompensa)||5} 🪙 ${(t.fotoUrl||t.foto)?'• 📸':''}</span>
-          ${t.primeiroDepois?`<div class="tarefa-primeiro-depois"><b>🧭 Primeiro:</b> ${esc(t.primeiroDepois)} </div>`:''}
-          ${t.nivelAjuda!=='sozinho'?`<div class="tarefa-nivel-ajuda">${t.nivelAjuda==='dica'?'🟡 Preciso de uma dica':'🔵 Preciso de ajuda'}</div>`:''}
-          ${t.ajuda?`<button type="button" class="task-help-btn" onclick="mostrarAjudaTarefa(${t.id})">💡 Ver dica</button>`:''}
-          ${t.instrucaoFoto?`<button type="button" class="task-help-btn" onclick="abrirVisualizadorFoto('${t.instrucaoFoto}')">📷 Ver como fazer</button>`:''}
           ${t.motivoRecusa?`<div class="motivo-recusa">↩️ ${esc(t.motivoRecusa)}</div>`:''}
         </div>
         <div class="task-actions">
-          ${apr?'<span style="font-size:11px;color:#fff;font-weight:900;background:#16a34a;padding:6px 10px;border-radius:10px;display:inline-block;box-shadow:0 2px 8px #16a34a55">✅ APROVADA!</span>':pend?'<span style="font-size:9px;color:#92400e;font-weight:900;background:#fef3c7;padding:5px 8px;border-radius:8px;display:inline-block">⏳ Aguardando pais</span>':`<button type="button" class="task-btn btn-photo" aria-label="Enviar foto como comprovação de ${esc(t.texto)}" title="Enviar foto" onclick="dispararCamera(${t.id})">📷</button><button type="button" class="task-btn btn-ok" aria-label="Marcar ${esc(t.texto)} como concluída" onclick="enviarParaAprovacao(${t.id})">Concluí!</button>`}
+          ${apr?'<span style="font-size:11px;color:#fff;font-weight:900;background:#16a34a;padding:6px 10px;border-radius:10px;display:inline-block;box-shadow:0 2px 8px #16a34a55">✅ APROVADA!</span>':pend?'<span style="font-size:9px;color:#92400e;font-weight:900;background:#fef3c7;padding:5px 8px;border-radius:8px;display:inline-block">⏳ Aguardando pais</span>':`<button class="task-btn btn-photo" onclick="dispararCamera(${t.id})">📷</button><button class="task-btn btn-ok" onclick="enviarParaAprovacao(${t.id})">Concluí!</button>`}
         </div>
       `;
       c.appendChild(row);
@@ -4129,11 +3863,8 @@ function renderizarTarefas(){
     aviso.innerHTML='📅 Nenhuma missão está programada para hoje.<br><small>Peça aos responsáveis para conferir os dias da missão.</small>';
     c.appendChild(aviso);
   }
-  atualizarFocoAgoraDepois(hojeLista);
-  const focoAtual=(hojeLista.find(t=>{const st=statusTarefaAtual(t);return st!=='aprovada'&&st!=='aguardando_aprovacao'&&t.tipo==='obrigatoria'})||hojeLista.find(t=>statusTarefaAtual(t)!=='aprovada'&&statusTarefaAtual(t)!=='aguardando_aprovacao'));
   idTarefaRecemAprovada=null;
   atualizarOfensiva();
-  marcarTarefaDeFocoAtual(focoAtual?.id);
 }
 // Quem está usando o app agora (criança ou responsável) — fica salvo só neste
 // aparelho (localStorage), nunca sincroniza com a família. Assim, cada aparelho
@@ -4301,9 +4032,6 @@ function restaurarBackupEstado(arquivo){
     if(!Array.isArray(estado.recompensas))estado.recompensas=[];
     if(!Array.isArray(estado.solicitacoesPremios))estado.solicitacoesPremios=[];
     estado.conquistas=estado.conquistas||{};
-    estado.modoFocoAtivo=!!estado.modoFocoAtivo;
-   if(!estado.perfilSensorial)estado.perfilSensorial='personalizado';if(estado.pausaSensorialAte===undefined)estado.pausaSensorialAte=null;
-    estado.modoZenAtivo=!!estado.modoZenAtivo;
     estado.historicoConclusoes=estado.historicoConclusoes||{};
     estado.registroDiario=estado.registroDiario||{};
     normalizarEmailsRecuperacao();
@@ -4686,143 +4414,7 @@ function renderizarResumoPainelPais(){
     else elProx.textContent='🎯 Nenhuma missão pendente hoje.';
   }
 }
-function atualizarTogglesAcessibilidade(){
-  const zen=document.getElementById('btn-modo-zen');
-  const foco=document.getElementById('btn-modo-foco');
-  if(zen){zen.classList.toggle('ativo',!!estado.modoZenAtivo);zen.setAttribute('aria-pressed',String(!!estado.modoZenAtivo));}
-  if(foco){foco.classList.toggle('ativo',!!estado.modoFocoAtivo);foco.setAttribute('aria-pressed',String(!!estado.modoFocoAtivo));}
-}
-function alternarModoZen(){
-  estado.modoZenAtivo=!estado.modoZenAtivo;
-  document.body.classList.toggle('modo-zen',!!estado.modoZenAtivo);
-  if(estado.modoZenAtivo)atualizarVolumeSom(0);
-  salvar();
-  atualizarTogglesAcessibilidade();
-  atualizarTela();
-  mostrarToast(estado.modoZenAtivo?'🌙 Modo Zen ativado. Sons silenciados.':'☀️ Modo Zen desativado.');
-}
-function alternarModoFoco(){
-  estado.modoFocoAtivo=!estado.modoFocoAtivo;
-  document.body.classList.toggle('modo-foco',!!estado.modoFocoAtivo);
-  document.body.classList.toggle('pausa-sensorial',Number(estado.pausaSensorialAte)>Date.now());
-  salvar();
-  atualizarTogglesAcessibilidade();
-  atualizarOfensiva();
-  atualizarTela();
-  mostrarToast(estado.modoFocoAtivo?'🎯 Modo Foco ativado.':'🎯 Modo Foco desativado.');
-}
-function alterarPreferenciaZen(tipo,valor){
-  const mapa={som:'preferenciaSomZen',movimento:'preferenciaMovimentoZen',visual:'preferenciaVisualZen',transicoes:'preferenciaTransicoesZen'};
-  if(!mapa[tipo])return;estado[mapa[tipo]]=valor;aplicarPreferenciasZen();salvar();
-  if(tipo==='som'&&estado.modoZenAtivo&&valor==='silencioso')atualizarVolumeSom(0);
-}
-function aplicarPreferenciasZen(){
-  document.body.classList.toggle('som-zen-suave',estado.preferenciaSomZen==='suave');
-  document.body.classList.toggle('movimento-zen-reduzido',estado.preferenciaMovimentoZen==='reduzido');
-  document.body.classList.toggle('movimento-zen-minimo',estado.preferenciaMovimentoZen==='minimo');
-  document.body.classList.toggle('visual-zen-simplificado',estado.preferenciaVisualZen==='simplificado');
-  document.body.classList.toggle('visual-zen-minimo',estado.preferenciaVisualZen==='minimo');
-  document.body.classList.toggle('transicoes-zen-suaves',estado.preferenciaTransicoesZen==='suaves');
-  document.body.classList.toggle('transicoes-zen-instantaneas',estado.preferenciaTransicoesZen==='instantaneas');
-}
-function renderizarPreferenciasZen(){
-  const pares=[['pref-som-zen','preferenciaSomZen'],['pref-movimento-zen','preferenciaMovimentoZen'],['pref-visual-zen','preferenciaVisualZen'],['pref-transicoes-zen','preferenciaTransicoesZen']];
-  pares.forEach(([id,chave])=>{const el=document.getElementById(id);if(el)el.value=estado[chave]||el.value});aplicarPreferenciasZen();
-}
-function mostrarAjudaTarefa(id){
-  const t=estado.tarefas.find(x=>String(x.id)===String(id));
-  if(!t||!t.ajuda)return;
-  mostrarAviso('🆘','Uma dica para você',t.ajuda);
-}
-function iniciarPausaSensorial(minutos=5){
-  estado.pausaSensorialAte=Date.now()+Math.max(1,Number(minutos)||5)*60000;
-  if(estado.focoTimerTarefaId)encerrarTimerFoco(true);
-  salvar();renderizarTarefas();mostrarToast('🌿 Pausa sensorial iniciada.');
-}
-function encerrarPausaSensorial(){estado.pausaSensorialAte=null;salvar();renderizarTarefas();mostrarToast('🐾 Vamos continuar quando você estiver pronto.');}
-function aplicarPerfilSensorial(perfil){
-  estado.perfilSensorial=perfil||'personalizado';
-  const presets={
-    equilibrado:{som:'suave',movimento:'reduzido',visual:'simplificado',transicoes:'suaves'},
-    'baixo-estimulo':{som:'silencioso',movimento:'minimo',visual:'simplificado',transicoes:'instantaneas'},
-    minimo:{som:'silencioso',movimento:'minimo',visual:'minimo',transicoes:'instantaneas'}
-  };
-  const p=presets[perfil];
-  if(p){estado.preferenciaSomZen=p.som;estado.preferenciaMovimentoZen=p.movimento;estado.preferenciaVisualZen=p.visual;estado.preferenciaTransicoesZen=p.transicoes;if(estado.modoZenAtivo&&p.som==='silencioso')atualizarVolumeSom(0);}
-  aplicarPreferenciasZen();salvar();renderizarPreferenciasZen();mostrarToast(perfil==='personalizado'?'🎛️ Perfil personalizado.':'🎛️ Perfil sensorial aplicado.');
-}
-
-function configurarNavegacaoPainelPais(){
-  const modal=document.querySelector('#modal-pais .modal');
-  if(!modal)return;
-  if(document.getElementById('painel-pais-menu'))return;
-  const resumo=document.getElementById('painel-resumo-pais');
-  if(!resumo)return;
-  const menu=document.createElement('div');
-  menu.id='painel-pais-menu';
-  menu.className='painel-pais-menu';
-  menu.setAttribute('aria-label','Categorias do painel dos pais');
-  menu.innerHTML=`
-    <button type="button" onclick="abrirGrupoPainelPais('acessibilidade')"><span class="menu-ico">🧩</span><span class="menu-titulo">Acessibilidade</span><span class="menu-desc">Foco, Zen e preferências sensoriais</span></button>
-    <button type="button" onclick="abrirGrupoPainelPais('rotina')"><span class="menu-ico">📋</span><span class="menu-titulo">Rotina e tarefas</span><span class="menu-desc">Missões, ajuda, timer e pausas</span></button>
-    <button type="button" onclick="abrirGrupoPainelPais('recompensas')"><span class="menu-ico">🎁</span><span class="menu-titulo">Recompensas</span><span class="menu-desc">Prêmios, metas e cofrinho</span></button>
-    <button type="button" onclick="abrirGrupoPainelPais('familia')"><span class="menu-ico">👨‍👩‍👧‍👦</span><span class="menu-titulo">Família e conta</span><span class="menu-desc">Filhos, PIN, e-mail e backup</span></button>
-    <button type="button" onclick="abrirGrupoPainelPais('acompanhamento')"><span class="menu-ico">📊</span><span class="menu-titulo">Acompanhamento</span><span class="menu-desc">Aprovações, histórico e relatórios</span></button>
-    <button type="button" onclick="abrirGrupoPainelPais('comunicacao')"><span class="menu-ico">💌</span><span class="menu-titulo">Comunicação</span><span class="menu-desc">Lembretes, push e mensagens</span></button>`;
-  resumo.insertAdjacentElement('afterend',menu);
-
-  const nav=document.createElement('div');
-  nav.id='painel-pais-navegacao';
-  nav.className='painel-pais-navegacao';
-  nav.innerHTML='<div><strong id="painel-pais-titulo-secao">Configurações</strong><small id="painel-pais-subtitulo-secao">Escolha uma categoria.</small></div><button type="button" class="painel-pais-voltar" onclick="fecharGrupoPainelPais()">← Voltar</button>';
-  menu.insertAdjacentElement('afterend',nav);
-
-  const grupos={acessibilidade:[],rotina:[],recompensas:[],familia:[],acompanhamento:[],comunicacao:[]};
-  const cards=[...modal.querySelectorAll(':scope > .section-card')];
-  cards.forEach(card=>{
-    const id=card.id||'';
-    const txt=(card.textContent||'').toLowerCase();
-    let grupo='acompanhamento';
-    if(id==='card-acessibilidade-sensorial'||id==='card-perfil-sensorial'||txt.includes('volume dos sons'))grupo='acessibilidade';
-    else if(txt.includes('gerenciar tarefas')||txt.includes('tarefas das crianças')||txt.includes('pausa da ofensiva')||txt.includes('lembretes e push')||txt.includes('aprovações pendentes'))grupo='rotina';
-    else if(txt.includes('cofrinho')||txt.includes('gerenciar prêmios')||txt.includes('solicitações de prêmios')||txt.includes('metas personalizadas'))grupo='recompensas';
-    else if(txt.includes('filhos')||txt.includes('idade da criança')||txt.includes('valor por moeda')||txt.includes('alterar pin')||txt.includes('e-mail de recuperação')||txt.includes('backup')||txt.includes('código da família')||txt.includes('privacidade'))grupo='familia';
-    else if(txt.includes('incentivo rápido'))grupo='comunicacao';
-    else if(txt.includes('histórico de tarefas')||txt.includes('log de atividades')||txt.trim().startsWith('resumo'))grupo='acompanhamento';
-    card.dataset.painelGrupo=grupo;
-    card.classList.add('painel-card-config');
-    grupos[grupo].push(card);
-  });
-  Object.entries(grupos).forEach(([nome,lista])=>{
-    const wrap=document.createElement('div');wrap.className='painel-pais-grupo';wrap.dataset.painelGrupo=nome;wrap.id='painel-grupo-'+nome;
-    const primeiro=lista[0];
-    if(primeiro)primeiro.parentNode.insertBefore(wrap,primeiro);
-    lista.forEach(c=>wrap.appendChild(c));
-  });
-  fecharGrupoPainelPais();
-}
-function abrirGrupoPainelPais(grupo){
-  configurarNavegacaoPainelPais();
-  document.querySelectorAll('#modal-pais .painel-pais-grupo').forEach(el=>el.classList.toggle('ativo',el.dataset.painelGrupo===grupo));
-  const menu=document.getElementById('painel-pais-menu');
-  const nav=document.getElementById('painel-pais-navegacao');
-  if(menu)menu.style.display='none';
-  if(nav)nav.classList.add('ativo');
-  const nomes={acessibilidade:['🧩 Acessibilidade','Ajustes sensoriais e Modo Foco.'],rotina:['📋 Rotina e tarefas','Configure tarefas, etapas e pausas.'],recompensas:['🎁 Recompensas','Metas, prêmios e cofrinho.'],familia:['👨‍👩‍👧‍👦 Família e conta','Dados, segurança e backup.'],acompanhamento:['📊 Acompanhamento','Veja o progresso e as aprovações.'],comunicacao:['💌 Comunicação','Lembretes e mensagens positivas.']};
-  const info=nomes[grupo]||['Configurações',''];
-  const t=document.getElementById('painel-pais-titulo-secao'),sub=document.getElementById('painel-pais-subtitulo-secao');
-  if(t)t.textContent=info[0];if(sub)sub.textContent=info[1];
-}
-function fecharGrupoPainelPais(){
-  document.querySelectorAll('#modal-pais .painel-pais-grupo').forEach(el=>el.classList.remove('ativo'));
-  const menu=document.getElementById('painel-pais-menu');
-  const nav=document.getElementById('painel-pais-navegacao');
-  if(menu)menu.style.display='grid';
-  if(nav)nav.classList.remove('ativo');
-}
-
 function renderizarPainelPais(){
-  configurarNavegacaoPainelPais();
   document.getElementById('input-taxa-cambio').value=estado.taxaCambio;
   document.getElementById('input-idade-crianca').value=estado.idadeCrianca||7;
   renderizarResumoPainelPais();
@@ -4840,9 +4432,6 @@ function renderizarPainelPais(){
   montarPickerDiasNovaTarefa();
   atualizarBannerPausaPainel();
   atualizarBotaoLembrete();
-  atualizarTogglesAcessibilidade();
-  renderizarPreferenciasZen();
-  const perfilEl=document.getElementById('perfil-sensorial');if(perfilEl)perfilEl.value=estado.perfilSensorial||'personalizado';
   renderizarGerenciamentoPremiosPais();
   renderizarSolicitacoesPremiosPais();
   const ap=document.getElementById('lista-aprovacao-pais');
@@ -4861,7 +4450,7 @@ function renderizarPainelPais(){
     const diasTxt=t.dias&&t.dias.length?t.dias.map(i=>DIAS_LABEL[i]).join(','):'todo dia';
     ed.innerHTML+=`
     <div class="edit-row" style="gap:5px;flex-wrap:wrap">
-      <span style="flex:1">${t.tipo==='obrigatoria'?'🔥':'⭐'} ${esc(t.texto)} • ${Number(t.recompensa)||5}🪙 <br><small style="color:#94a3b8">📅 ${diasTxt} · ${t.nivelAjuda==='ajuda'?'🔵 ajuda':t.nivelAjuda==='dica'?'🟡 dica':'🟢 sozinho'}</small></span>
+      <span style="flex:1">${t.tipo==='obrigatoria'?'🔥':'⭐'} ${esc(t.texto)} • ${Number(t.recompensa)||5}🪙 <br><small style="color:#94a3b8">📅 ${diasTxt}</small></span>
       <select class="field" style="width:100px;padding:5px" onchange="alterarTipoTarefa(${t.id},this.value)">
         <option value="obrigatoria" ${t.tipo==='obrigatoria'?'selected':''}>Obrigatória</option>
         <option value="extra" ${t.tipo==='extra'?'selected':''}>Extra</option>
@@ -5092,7 +4681,6 @@ async function aprovarTarefaPais(id){
   ganharXP(xp);
   ganharFigurinhaPorMissao(t);
   dispararConfetes();
-  try{reagirPetAoProgresso('concluida')}catch(_){}
   marcarConquistas();
   registrarLogAtividade(`Tarefa aprovada: ${t.texto} (+${recompensa}🪙)`);
   mostrarAviso('🎉','Tarefa aprovada!',liberouOfensiva?'Obrigatórias concluídas! Ofensiva liberada 🔥':'Moedas e XP adicionados.');
@@ -5327,16 +4915,10 @@ function adicionarTarefa(){
   const txt=document.getElementById('nova-tarefa-texto').value.trim(),
         moedas=Math.max(1,parseInt(document.getElementById('nova-tarefa-moedas').value)||5),
         tipo=document.getElementById('nova-tarefa-tipo')?.value==='extra'?'extra':'obrigatoria';
-  const tempoMin=Math.max(0,Math.min(120,parseInt(document.getElementById('nova-tarefa-tempo')?.value)||0));
-  const passos=(document.getElementById('nova-tarefa-passos')?.value||'').split(';').map(s=>s.trim()).filter(Boolean).slice(0,10);
-  const ajuda=(document.getElementById('nova-tarefa-ajuda')?.value||'').trim().slice(0,180);
-  const nivelAjuda=['sozinho','dica','ajuda'].includes(document.getElementById('nova-tarefa-nivel-ajuda')?.value)?document.getElementById('nova-tarefa-nivel-ajuda').value:'sozinho';
-  const primeiroDepois=(document.getElementById('nova-tarefa-primeiro-depois')?.value||'').trim().slice(0,120);
-  const instrucaoFoto=(document.getElementById('nova-tarefa-instrucao-url')?.value||'').trim().slice(0,1000);
   if(!txt)return mostrarToast('Digite uma tarefa.');
   const nums=(estado.tarefas||[]).map(t=>Number(t.id)||0);const id=nums.length?Math.max(...nums)+1:1;
-  estado.tarefas.push({id,texto:txt,recompensa:moedas,xp:20,tipo,status:'pendente',foto:null,dias:[...diasSelecionadosNovaTarefa],tempoMin,passos,ajuda,nivelAjuda,instrucaoFoto:instrucaoFoto||null,primeiroDepois});
-  document.getElementById('nova-tarefa-texto').value='';document.getElementById('nova-tarefa-tempo').value='0';document.getElementById('nova-tarefa-passos').value='';document.getElementById('nova-tarefa-ajuda').value='';document.getElementById('nova-tarefa-nivel-ajuda').value='sozinho';document.getElementById('nova-tarefa-primeiro-depois').value='';document.getElementById('nova-tarefa-instrucao-url').value='';
+  estado.tarefas.push({id,texto:txt,recompensa:moedas,xp:20,tipo,status:'pendente',foto:null,dias:[...diasSelecionadosNovaTarefa]});
+  document.getElementById('nova-tarefa-texto').value='';
   diasSelecionadosNovaTarefa=[];
   document.querySelectorAll('#dias-nova-tarefa .dia-chip').forEach(c=>c.classList.remove('on'));
   salvar();
@@ -6709,28 +6291,19 @@ async function iniciarGravacao(){
     mediaRecorder=new MediaRecorder(stream);
     mediaRecorder.ondataavailable=e=>{if(e.data.size>0)pedacosAudio.push(e.data)};
     mediaRecorder.onstop=async ()=>{
-      const tipoBlob=pedacosAudio[0]?.type||'audio/webm';
-      const blob=new Blob(pedacosAudio,{type:tipoBlob});
+      const blob=new Blob(pedacosAudio,{type:pedacosAudio[0]?.type||'audio/webm'});
       audioBlobOriginal=blob;
       audioBlobFinal=blob;
-      const audioEl=document.getElementById('audio-original');
-      if(audioEl){audioEl.pause();audioEl.src=URL.createObjectURL(blob);audioEl.load();}
+      document.getElementById('audio-original').src=URL.createObjectURL(blob);
       document.getElementById('grav-result').classList.remove('hidden');
       try{
         const arrayBuf=await blob.arrayBuffer();
         const ctx=obterAudioContext();
         bufferGravado=await ctx.decodeAudioData(arrayBuf.slice(0));
-        try{
-          const wav=audioBufferParaWavBlob(bufferGravado);
-          if(wav&&wav.size){
-            audioBlobFinal=wav;
-            if(audioEl){audioEl.src=URL.createObjectURL(wav);audioEl.load();}
-          }
-        }catch(convErr){console.warn('conversão WAV:',convErr)}
       }catch(err){
         console.warn('decodeAudioData:',err);
         bufferGravado=null;
-        mostrarToast('⚠️ A gravação foi criada. Efeitos de voz podem não funcionar neste navegador.');
+        mostrarToast('⚠️ Áudio gravado, mas efeitos podem não funcionar neste navegador.');
       }
     };
     mediaRecorder.start();
@@ -7246,28 +6819,12 @@ setTimeout(()=>{try{garantirEngajamento();renderizarEngajamento();}catch(e){cons
 </script><style>
 .atalhos-aventuras{display:grid;grid-template-columns:repeat(4,1fr);gap:7px;margin:8px 0 5px}
 .atalho-aventura{border:1px solid #dbeafe;background:#fff;border-radius:14px;padding:7px 3px 5px;display:flex;flex-direction:column;align-items:center;gap:2px;box-shadow:0 2px 8px rgba(15,23,42,.05);cursor:pointer;transition:transform .15s,box-shadow .15s}
-.atalho-aventura:active{transform:scale(.94)}.atalho-aventura span{font-size:20px;line-height:22px}.atalho-aventura small{font-size:8px;font-weight:900;color:#475569}.task-header-expansivel{width:100%;border:0;background:transparent;text-align:left;cursor:pointer;padding:0}.task-header-expansivel:focus-visible{outline:2px solid #38bdf8;border-radius:8px}.tasks-section.recolhida #lista-tarefas,.tasks-section.recolhida #banner-aprovacoes-pendentes,.tasks-section.recolhida #foco-agora-depois,.tasks-section.recolhida #status-ofensiva{display:none!important}.tasks-section.recolhida #seta-missoes{transform:rotate(180deg)}
+.atalho-aventura:active{transform:scale(.94)}.atalho-aventura span{font-size:20px;line-height:22px}.atalho-aventura small{font-size:8px;font-weight:900;color:#475569}.task-header-expansivel{width:100%;border:0;background:transparent;text-align:left;cursor:pointer;padding:0}.task-header-expansivel:focus-visible{outline:2px solid #38bdf8;border-radius:8px}.tasks-section.recolhida #lista-tarefas,.tasks-section.recolhida #banner-aprovacoes-pendentes,.tasks-section.recolhida #status-ofensiva{display:none}.tasks-section.recolhida #seta-missoes{transform:rotate(180deg)}
 </style>
 <div id="modal-resumo-meta" class="modal-overlay"><div class="modal" style="max-width:340px"><div class="modal-title"><h3>🎯 Minha meta</h3><button class="close-btn" onclick="fecharModal('modal-resumo-meta')">×</button></div><div id="resumo-meta-conteudo"></div></div></div>
 <div id="modal-resumo-hoje" class="modal-overlay"><div class="modal" style="max-width:340px"><div class="modal-title"><h3>🗓️ Aventura de hoje</h3><button class="close-btn" onclick="fecharModal('modal-resumo-hoje')">×</button></div><div id="resumo-hoje-conteudo"></div></div></div>
 <script>
-function alternarMissoes(ev){
-  if(ev){ev.preventDefault();ev.stopPropagation();}
-  const s=document.getElementById('secao-missoes'),h=s?.querySelector('.task-header-expansivel');if(!s||!h)return;
-  const fechada=!s.classList.contains('recolhida');
-  s.classList.toggle('recolhida',fechada);h.setAttribute('aria-expanded',String(!fechada));
-  ['banner-aprovacoes-pendentes','foco-agora-depois','lista-tarefas','status-ofensiva'].forEach(id=>{const el=document.getElementById(id);if(el)el.hidden=fechada;});
-  const seta=document.getElementById('seta-missoes');if(seta)seta.textContent=fechada?'⌄':'⌃';
-  try{localStorage.setItem('ROTINAPET_MISSOES_RECOLHIDAS',fechada?'1':'0')}catch(_){}
-}
-function restaurarEstadoMissoes(){
-  const s=document.getElementById('secao-missoes'),h=s?.querySelector('.task-header-expansivel');if(!s||!h)return;
-  let fechada=false;try{fechada=localStorage.getItem('ROTINAPET_MISSOES_RECOLHIDAS')==='1'}catch(_){}
-  s.classList.toggle('recolhida',fechada);h.setAttribute('aria-expanded',String(!fechada));
-  ['banner-aprovacoes-pendentes','foco-agora-depois','lista-tarefas','status-ofensiva'].forEach(id=>{const el=document.getElementById(id);if(el)el.hidden=fechada;});
-  const seta=document.getElementById('seta-missoes');if(seta)seta.textContent=fechada?'⌄':'⌃';
-}
-
+function alternarMissoes(){const s=document.getElementById('secao-missoes'),h=s?.querySelector('.task-header-expansivel');if(!s)return;const fechada=s.classList.toggle('recolhida');if(h)h.setAttribute('aria-expanded',String(!fechada));}
 function abrirResumoMeta(){const c=document.getElementById('resumo-meta-conteudo'),metas=Array.isArray(estado.metasPersonalizadas)?estado.metasPersonalizadas:[];if(!c)return;c.innerHTML=metas.length?metas.map(m=>{const x=obterProgressoMeta(m);return `<div class="section-card" style="margin-bottom:7px"><b style="font-size:10px">${esc(m.emoji||'🎯')} ${esc(m.titulo)}</b><p style="font-size:9px;color:#64748b;margin:6px 0">${x.valor}/${x.alvo} · ${x.perc}%</p><div style="height:7px;background:#e2e8f0;border-radius:99px;overflow:hidden"><div style="height:100%;width:${x.perc}%;background:#8b5cf6"></div></div><small style="font-size:8px;color:#64748b">${x.perc>=100?'✅ Meta alcançada!':'Continue avançando!'}</small></div>`}).join(''):'<p style="font-size:10px;color:#64748b">Seus responsáveis ainda não criaram uma meta.</p>';abrirModal('modal-resumo-meta');}
 function abrirResumoHoje(){const c=document.getElementById('resumo-hoje-conteudo'),lista=tarefasDeHoje(),a=lista.filter(t=>statusTarefaAtual(t)==='aprovada').length;if(!c)return;c.innerHTML=`<div class="section-card"><b style="font-size:10px">${a}/${lista.length} missões concluídas</b><p style="font-size:10px;color:#64748b;margin:7px 0">${a===lista.length&&lista.length?'🏆 Você venceu o desafio de hoje!':'Complete as missões abaixo para ajudar seu pet a crescer.'}</p><button class="primary-btn green-btn" style="width:100%" onclick="fecharModal('modal-resumo-hoje');document.getElementById('secao-missoes')?.scrollIntoView({behavior:'smooth',block:'center'})">Ver minhas missões</button></div>`;abrirModal('modal-resumo-hoje');}
 </script>
@@ -9650,9 +9207,5 @@ button:focus-visible,.top-pill:focus-visible,.pet-action-btn:focus-visible{
 }
 </style>
 
-
-<style id="rp-fix-audio-missoes-v1">#secao-missoes{position:relative!important;isolation:isolate}#secao-missoes .task-header-expansivel{position:relative!important;z-index:20!important;pointer-events:auto!important;touch-action:manipulation!important;min-height:38px!important}#secao-missoes .task-header-right,#secao-missoes #seta-missoes{pointer-events:none!important}#secao-missoes.recolhida{overflow:hidden!important;max-height:none!important}</style>
 </body>
 </html>
-
-<script>window.addEventListener('DOMContentLoaded',()=>{try{restaurarEstadoMissoes()}catch(e){console.warn('restaurar missões:',e)}});</script>
