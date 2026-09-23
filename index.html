@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-<title>RotinaPet 2.0 — Seu Pet Virtual</title>
+<title>RotinaPet 2.0 — Laboratório de Sprites</title>
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <meta name="theme-color" content="#7c3aed">
@@ -1646,7 +1646,7 @@ function somConquista(){[523.25,659.25,783.99,1046.50].forEach((f,i)=>tocarTom(f
 function somBauLendario(){tocarTom(440,'sine',.08,0);tocarTom(554.37,'sine',.08,.07);tocarTom(659.25,'sine',.12,.14);setTimeout(()=>{tocarTom(587.33,'triangle',.15,0,.25);tocarTom(739.99,'triangle',.15,.12,.25);tocarTom(880,'triangle',.35,.24,.3);tocarTom(1174.66,'sine',.45,.24,.2)},220)}
 const PETS={
 gato:{id:'gato',nome:'Pipoca',emoji:'🐱',desbloqueioNivel:1,som:'https://assets.mixkit.co/sfx/preview/mixkit-cat-meow-14.mp3',evolucoes:[
-{nivel:1,nome:'Gatinho Sombra',desc:'Olhos grandes e fofos'},{nivel:21,nome:'Gato da Lua',desc:'Brilho prateado + mecha branca'},{nivel:41,nome:'Gato Estelar',desc:'Colar de estrelinhas + brilho'},{nivel:61,nome:'Gato Nobre',desc:'Coroa preta + capa de veludo'},{nivel:81,nome:'Lenda Sombria',desc:'Asas de sombra + olhos dourados'}]},
+{nivel:1,nome:'Gatinho Sombra',desc:'Olhos grandes e fofos'},{nivel:21,nome:'Gato da Lua',desc:'Brilho prateado + mecha branca'},{nivel:41,nome:'Gato Estelar',desc:'Colar de estrelinhas + brilho'},{nivel:61,nome:'Gato Nobre',desc:'Coroa preta + capa de veludo'}]},
 cachorra:{id:'cachorra',nome:'Mel',emoji:'🐶',desbloqueioNivel:5,som:'https://assets.mixkit.co/sfx/preview/mixkit-dog-barking-twice-1.mp3',evolucoes:[
 {nivel:1,nome:'Filhote Caramelo',desc:'Orelhas caídas, super fofinha'},{nivel:21,nome:'Cãozinho Brincalhão',desc:'Bandana colorida'},{nivel:41,nome:'Cão Guia',desc:'Colete brilhante + distintivo'},{nivel:61,nome:'Cão Campeão',desc:'Faixa + medalha dourada'},{nivel:81,nome:'Guardiã Lendária',desc:'Asas de anjo + aurora dourada'}]},
 cabra:{id:'cabra',nome:'Nuvem',emoji:'🐐',desbloqueioNivel:10,som:'https://assets.mixkit.co/sfx/preview/mixkit-goat-bleat-1.mp3',evolucoes:[
@@ -1736,58 +1736,56 @@ const paletaFase={
 };
 const cf=(paletaFase[tipo]||[c,c,c,c,c])[Math.max(0,Math.min(4,fase-1))];
 const estrutura=`${(()=>{
-  const arm=(fill,sw=14,extra='')=>`<path d="M92 170Q55 185 72 214" stroke="${fill}" stroke-width="${sw}" stroke-linecap="round" fill="none"/><path d="M178 170Q215 185 198 214" stroke="${fill}" stroke-width="${sw}" stroke-linecap="round" fill="none"/>${extra}`;
-  const legs=(fill,sw=14)=>`<path d="M108 225q-4 28-17 38M162 225q4 28 17 38" stroke="${fill}" stroke-width="${sw}" stroke-linecap="round" fill="none"/>`;
-  const egg=(fill,stroke)=>`<path d="M135 58Q93 70 88 132Q84 195 105 224Q135 248 165 224Q186 195 182 132Q177 70 135 58z" fill="${fill}" stroke="${stroke}" stroke-width="4"/><path d="M99 126l22 13 19-17 19 17 22-13" fill="none" stroke="${stroke}" stroke-width="4" stroke-linecap="round"/>${arm(fill,12)}${legs(fill,12)}`;
-  const bodyHead=(fill,headR,bodyRx,bodyRy,stroke='#475569')=>`<ellipse cx="135" cy="188" rx="${bodyRx}" ry="${bodyRy}" fill="${fill}" stroke="${stroke}" stroke-width="3"/><circle cx="135" cy="116" r="${headR}" fill="${fill}" stroke="${stroke}" stroke-width="3"/>${arm(fill,14)}${legs(fill,15)}`;
+  const G=`url(#gradCorpo${tipo})`,A=`url(#gradAcento${tipo})`;
+  if(tipo==='frango'){
+    if(fase===1)return `<path d="M92 215Q82 188 92 160Q102 133 135 128Q168 133 178 160Q188 188 178 215Q160 235 135 238Q110 235 92 215z" fill="${cf}" stroke="#eab308" stroke-width="3"/><path d="M102 156l-8-24 19 14M168 156l8-24-19 14" fill="#facc15"/><path d="M112 238q-4 18-15 22M158 238q4 18 15 22" stroke="#eab308" stroke-width="7" stroke-linecap="round"/><path d="M111 195q24-14 48 0" stroke="#fff" stroke-width="4" opacity=".45"/>`;
+    if(fase===2)return `<ellipse cx="135" cy="185" rx="60" ry="57" fill="${cf}"/><path d="M92 177Q58 160 70 195q15 20 35 6M178 177q34-17 22 18-15 20-35 6" fill="#ffe066"/><path d="M103 231q-5 20-14 24M167 231q5 20 14 24" stroke="#d99a00" stroke-width="8" stroke-linecap="round"/>`;
+    if(fase===3)return `<ellipse cx="135" cy="190" rx="58" ry="48" fill="${cf}"/><path d="M82 188Q42 160 52 205q18 25 42 7M188 188q40-28 30 17-18 25-42 7" fill="#f59e0b"/><path d="M135 143q-10-24-22-10 0-28 22-15 22-13 22 15-12-14-22 10" fill="#ef4444"/><path d="M104 232q-4 17-15 23M166 232q4 17 15 23" stroke="#d97706" stroke-width="9" stroke-linecap="round"/>`;
+    if(fase===4)return `<ellipse cx="135" cy="187" rx="63" ry="52" fill="${cf}"/><path d="M77 184Q32 150 45 207q20 30 48 6M193 184q45-34 32 23-20 30-48 6" fill="#b45309"/><path d="M135 140q-13-30-26-12 0-35 26-18 26-17 26 18-13-18-26 12" fill="#dc2626"/><path d="M100 235q-4 18-16 24M170 235q4 18 16 24" stroke="#a16207" stroke-width="10" stroke-linecap="round"/>`;
+    return `<path d="M73 215Q45 178 70 145Q90 118 118 130Q135 105 152 130Q180 118 200 145Q225 178 197 215Q170 244 135 246Q100 244 73 215z" fill="${cf}" stroke="#d97706" stroke-width="4"/><path d="M78 173Q30 130 42 195q20 35 52 15M192 173q48-43 36 22-20 35-52 15" fill="#fb923c"/><path d="M135 128Q117 90 101 120 108 78 135 104 162 78 169 120 153 90 135 128" fill="#f97316"/><path d="M88 205Q55 230 42 265M182 205q33 25 46 60" stroke="#f59e0b" stroke-width="10" stroke-linecap="round"/><path d="M94 234Q115 250 135 238Q155 250 176 234" fill="none" stroke="#fde68a" stroke-width="8" opacity=".8"/>`;
+  }
   if(tipo==='gato'){
-    if(fase===1)return egg(cf,'#6b7280');
-    if(fase===2)return `${bodyHead(cf,52,46,43,'#4b5563')}<path d="M91 82L74 42l34 27M179 82l17-40-34 27" fill="${cf}" stroke="#4b5563" stroke-width="4"/>${legs(cf,13)}`;
-    if(fase===3)return `${bodyHead(cf,59,57,50,'#374151')}<path d="M88 80L61 30l47 35M182 80l27-50-47 35" fill="${cf}" stroke="#374151" stroke-width="4"/><path d="M188 184Q230 188 216 229" stroke="${cf}" stroke-width="16" fill="none" stroke-linecap="round"/>`;
-    if(fase===4)return `${bodyHead(cf,66,67,58,'#1f2937')}<path d="M84 78L52 20l57 48M186 78l32-58-57 48" fill="${cf}" stroke="#1f2937" stroke-width="5"/><path d="M193 174Q246 177 222 235" stroke="${cf}" stroke-width="19" fill="none" stroke-linecap="round"/>${arm(cf,17)}`;
-    return `<ellipse cx="135" cy="186" rx="78" ry="66" fill="${cf}" stroke="#111827" stroke-width="5"/><path d="M135 45Q92 48 73 91L45 50l20 72Q80 96 135 98q55-2 70 24l20-72-28 41Q178 48 135 45z" fill="${cf}" stroke="#111827" stroke-width="5"/>${arm('#111827',18)}${legs(cf,20)}<path d="M193 168Q255 175 226 244" stroke="${cf}" stroke-width="20" fill="none" stroke-linecap="round"/>`;
+    if(fase===1)return `<ellipse cx="135" cy="190" rx="47" ry="42" fill="${cf}"/><circle cx="135" cy="125" r="57" fill="${cf}"/><path d="M92 92L78 45l39 33M178 92l14-47-39 33" fill="${cf}"/><path d="M105 229q-6 20-18 25M165 229q6 20 18 25" stroke="${cf}" stroke-width="13" stroke-linecap="round"/>`;
+    if(fase===2)return `<ellipse cx="135" cy="196" rx="53" ry="50" fill="${cf}"/><circle cx="135" cy="125" r="62" fill="${cf}"/><path d="M91 91L67 42l46 34M179 91l24-49-46 34" fill="${cf}"/><path d="M94 236q-5 22-19 28M176 236q5 22 19 28" stroke="${cf}" stroke-width="15" stroke-linecap="round"/>`;
+    if(fase===3)return `<ellipse cx="135" cy="195" rx="58" ry="54" fill="${cf}"/><circle cx="135" cy="120" r="66" fill="${cf}"/><path d="M88 88L60 34l53 42M182 88l28-54-53 42" fill="${cf}"/><path d="M91 239q-6 24-22 30M179 239q6 24 22 30" stroke="${cf}" stroke-width="17" stroke-linecap="round"/>`;
+    if(fase===4)return `<ellipse cx="135" cy="193" rx="62" ry="57" fill="${cf}"/><circle cx="135" cy="116" r="70" fill="${cf}"/><path d="M86 84L54 25l59 47M184 84l32-59-59 47" fill="${cf}"/><path d="M89 240q-8 28-25 34M181 240q8 28 25 34" stroke="${cf}" stroke-width="19" stroke-linecap="round"/><path d="M190 220q45 20 34 57" stroke="${cf}" stroke-width="17" fill="none" stroke-linecap="round"/>`;
+    return `<ellipse cx="135" cy="192" rx="67" ry="61" fill="${cf}"/><circle cx="135" cy="112" r="74" fill="${cf}"/><path d="M83 82L45 18l66 53M187 82l38-64-66 53" fill="${cf}"/><path d="M84 242q-10 31-30 37M186 242q10 31 30 37" stroke="${cf}" stroke-width="21" stroke-linecap="round"/><path d="M193 218q52 22 37 66" stroke="${cf}" stroke-width="20" fill="none" stroke-linecap="round"/>`;
   }
   if(tipo==='cachorra'){
-    if(fase===1)return egg(cf,'#a85f38');
-    if(fase===2)return `<ellipse cx="135" cy="190" rx="52" ry="45" fill="${cf}" stroke="#9a4f2d" stroke-width="3"/><circle cx="135" cy="119" r="54" fill="${cf}" stroke="#9a4f2d" stroke-width="3"/><path d="M91 91Q58 55 65 38q30 8 47 43M179 91q33-36 26-53-30 8-47 43" fill="#a85a32" stroke="#7c3f24" stroke-width="4"/>${arm(cf,15)}${legs(cf,15)}`;
-    if(fase===3)return `<ellipse cx="135" cy="188" rx="62" ry="53" fill="${cf}" stroke="#7c3f24" stroke-width="4"/><circle cx="135" cy="116" r="63" fill="${cf}" stroke="#7c3f24" stroke-width="4"/><path d="M83 89Q42 45 52 27q39 8 58 58M187 89q41-44 31-62-39 8-58 58" fill="#91502d" stroke="#6b371f" stroke-width="5"/>${arm(cf,17)}${legs(cf,18)}<path d="M191 182Q238 194 214 231" stroke="${cf}" stroke-width="18" fill="none" stroke-linecap="round"/>`;
-    if(fase===4)return `<ellipse cx="135" cy="185" rx="72" ry="61" fill="${cf}" stroke="#63351f" stroke-width="4"/><circle cx="135" cy="111" r="70" fill="${cf}" stroke="#63351f" stroke-width="4"/><path d="M79 90Q34 38 46 18q45 10 65 65M191 90q45-52 33-72-45 10-65 65" fill="#704021" stroke="#4b2816" stroke-width="5"/>${arm(cf,19)}${legs(cf,21)}<path d="M194 176Q252 190 220 243" stroke="${cf}" stroke-width="21" fill="none" stroke-linecap="round"/>`;
-    return `<path d="M63 205Q46 154 78 126Q94 103 135 107Q176 103 192 126Q224 154 207 205Q190 240 135 247Q80 240 63 205z" fill="${cf}" stroke="#4b2816" stroke-width="6"/><path d="M82 105Q28 34 48 12q48 10 72 78M188 105q54-71 34-93-48 10-72 78" fill="#5a321b" stroke="#3b2113" stroke-width="6"/>${arm('#5a321b',21)}${legs(cf,24)}<path d="M195 171Q270 190 226 255" stroke="${cf}" stroke-width="24" fill="none" stroke-linecap="round"/>`;
+    if(fase===1)return `<ellipse cx="135" cy="194" rx="51" ry="46" fill="${cf}"/><circle cx="135" cy="125" r="59" fill="${cf}"/><ellipse cx="82" cy="100" rx="23" ry="39" fill="#b95f31"/><ellipse cx="188" cy="100" rx="23" ry="39" fill="#b95f31"/><path d="M99 234q-5 18-17 24M171 234q5 18 17 24" stroke="${cf}" stroke-width="14" stroke-linecap="round"/>`;
+    if(fase===2)return `<ellipse cx="135" cy="195" rx="57" ry="51" fill="${cf}"/><circle cx="135" cy="120" r="65" fill="${cf}"/><ellipse cx="78" cy="96" rx="28" ry="45" fill="#a85a32"/><ellipse cx="192" cy="96" rx="28" ry="45" fill="#a85a32"/><path d="M92 238q-6 22-20 28M178 238q6 22 20 28" stroke="${cf}" stroke-width="16" stroke-linecap="round"/>`;
+    if(fase===3)return `<ellipse cx="135" cy="190" rx="63" ry="56" fill="${cf}"/><circle cx="135" cy="116" r="69" fill="${cf}"/><path d="M81 101Q48 57 57 44q32 7 47 49M189 101q33-44 24-57-32 7-47 49" fill="#9a4f2d"/><path d="M88 240q-7 25-23 31M182 240q7 25 23 31" stroke="${cf}" stroke-width="18" stroke-linecap="round"/>`;
+    if(fase===4)return `<ellipse cx="135" cy="187" rx="68" ry="60" fill="${cf}"/><circle cx="135" cy="111" r="73" fill="${cf}"/><path d="M79 101Q40 52 52 36q37 8 54 55M191 101q39-49 27-65-37 8-54 55" fill="#713f28"/><path d="M84 240q-8 29-26 36M186 240q8 29 26 36" stroke="${cf}" stroke-width="20" stroke-linecap="round"/>`;
+    return `<ellipse cx="135" cy="184" rx="73" ry="64" fill="${cf}"/><circle cx="135" cy="108" r="77" fill="${cf}"/><path d="M76 98Q30 40 45 22q44 8 62 65M194 98q46-58 31-76-44 8-62 65" fill="#5f351f"/><path d="M80 238q-10 34-30 42M190 238q10 34 30 42" stroke="${cf}" stroke-width="22" stroke-linecap="round"/>`;
   }
   if(tipo==='cabra'){
-    if(fase===1)return egg(cf,'#8b6b4a');
-    const horns=(sw)=>`<path d="M94 83Q58 35 91 18M176 83Q212 35 179 18" stroke="${fase>=4?'#7c3aed':'#8b6b4a'}" stroke-width="${sw}" fill="none" stroke-linecap="round"/>`;
-    if(fase===2)return `${bodyHead(cf,53,50,44,'#8b6b4a')}${horns(10)}${arm(cf,15)}${legs(cf,15)}`;
-    if(fase===3)return `${bodyHead(cf,61,61,51,'#76563d')}${horns(14)}<path d="M87 83Q62 52 52 70M183 83Q208 52 218 70" stroke="${cf}" stroke-width="18" fill="none" stroke-linecap="round"/>${arm(cf,17)}${legs(cf,19)}`;
-    if(fase===4)return `<ellipse cx="135" cy="188" rx="73" ry="61" fill="${cf}" stroke="#60442e" stroke-width="5"/><circle cx="135" cy="109" r="70" fill="${cf}" stroke="#60442e" stroke-width="5"/>${horns(18)}<path d="M80 88Q42 47 36 70M190 88Q228 47 234 70" stroke="${cf}" stroke-width="23" fill="none" stroke-linecap="round"/>${arm(cf,20)}${legs(cf,22)}`;
-    return `<path d="M58 208Q48 148 82 123Q103 102 135 108Q167 102 188 123Q222 148 212 208Q190 246 135 252Q80 246 58 208z" fill="${cf}" stroke="#4b3628" stroke-width="6"/>${horns(23)}<path d="M72 94Q25 36 35 65M198 94Q245 36 235 65" stroke="${cf}" stroke-width="27" fill="none" stroke-linecap="round"/>${arm('#7c3aed',22)}${legs(cf,25)}<circle cx="135" cy="170" r="75" fill="#a78bfa" opacity=".12"/>`;
-  }
-  if(tipo==='frango'){
-    if(fase===1)return `<path d="M135 58Q92 70 88 132Q84 195 105 224Q135 248 165 224Q186 195 182 132Q177 70 135 58z" fill="${cf}" stroke="#d99a00" stroke-width="4"/><path d="M99 126l22 13 19-17 19 17 22-13" fill="none" stroke="#d99a00" stroke-width="4"/>${arm('#f7c948',11)}${legs('#d99a00',11)}`;
-    if(fase===2)return `<ellipse cx="135" cy="188" rx="55" ry="49" fill="${cf}" stroke="#d99a00" stroke-width="3"/><circle cx="135" cy="125" r="50" fill="${cf}" stroke="#d99a00" stroke-width="3"/><path d="M91 166Q55 150 61 185q15 22 37 11M179 166q36-16 30 19-15 22-37 11" fill="#ffd84d"/>${arm('#ffd84d',12)}${legs('#d99a00',13)}`;
-    if(fase===3)return `<ellipse cx="135" cy="187" rx="62" ry="51" fill="${cf}" stroke="#a85b12" stroke-width="4"/><circle cx="135" cy="119" r="58" fill="${cf}" stroke="#a85b12" stroke-width="4"/><path d="M89 170Q42 142 50 193q20 27 49 9M181 170q47-28 39 23-20 27-49 9" fill="#e9a11a"/><path d="M135 70q-18-25-30-7 2-32 30-15 28-17 30 15-12-18-30 7" fill="#ef4444"/>${arm('#e9a11a',15)}${legs('#b96b0b',16)}`;
-    if(fase===4)return `<ellipse cx="135" cy="184" rx="72" ry="57" fill="${cf}" stroke="#8a4b0b" stroke-width="5"/><path d="M76 174Q24 135 39 202q23 35 57 11M194 174q52-39 37 28-23 35-57 11" fill="#b86a0b"/><circle cx="135" cy="113" r="64" fill="${cf}" stroke="#8a4b0b" stroke-width="5"/><path d="M135 70q-20-34-34-9 0-40 34-20 34-20 34 20-14-25-34 9" fill="#dc2626"/>${arm('#b86a0b',19)}${legs('#9a5708',21)}`;
-    return `<path d="M62 212Q44 159 77 126Q100 103 135 111Q170 103 193 126Q226 159 208 212Q185 246 135 252Q85 246 62 212z" fill="${cf}" stroke="#8a4b0b" stroke-width="6"/><path d="M78 176Q18 122 32 205q25 42 66 14M192 176q60-54 46 29-25 42-66 14" fill="#fb923c"/><path d="M135 111Q112 70 95 101 103 57 135 84 167 57 175 101 158 70 135 111" fill="#f97316"/>${arm('#fb923c',23)}${legs('#b96b0b',25)}<path d="M94 224Q115 244 135 231Q155 244 176 224" fill="none" stroke="#fde68a" stroke-width="9"/>`;
+    const horn=fase<3?'#9a6b45':fase<5?'#7c3aed':'#22c55e';
+    if(fase===1)return `<ellipse cx="135" cy="196" rx="50" ry="45" fill="${cf}"/><circle cx="135" cy="126" r="58" fill="${cf}"/><path d="M94 89Q72 58 88 48M176 89Q198 58 182 48" stroke="${horn}" stroke-width="9" fill="none" stroke-linecap="round"/><path d="M100 238q-4 18-15 24M170 238q4 18 15 24" stroke="${cf}" stroke-width="13" stroke-linecap="round"/>`;
+    if(fase===2)return `<ellipse cx="135" cy="195" rx="57" ry="51" fill="${cf}"/><circle cx="135" cy="120" r="64" fill="${cf}"/><path d="M94 88Q62 35 90 28M176 88Q208 35 180 28" stroke="${horn}" stroke-width="12" fill="none" stroke-linecap="round"/><path d="M93 239q-5 23-18 30M177 239q5 23 18 30" stroke="${cf}" stroke-width="16" stroke-linecap="round"/>`;
+    if(fase===3)return `<ellipse cx="135" cy="190" rx="63" ry="56" fill="${cf}"/><circle cx="135" cy="115" r="69" fill="${cf}"/><path d="M92 88Q45 18 89 20M178 88Q225 18 181 20" stroke="${horn}" stroke-width="15" fill="none" stroke-linecap="round"/><path d="M88 240q-7 27-21 34M182 240q7 27 21 34" stroke="${cf}" stroke-width="19" stroke-linecap="round"/>`;
+    if(fase===4)return `<ellipse cx="135" cy="186" rx="68" ry="60" fill="${cf}"/><circle cx="135" cy="110" r="73" fill="${cf}"/><path d="M90 88Q30 4 91 12M180 88Q240 4 179 12" stroke="${horn}" stroke-width="18" fill="none" stroke-linecap="round"/><path d="M84 240q-8 30-24 38M186 240q8 30 24 38" stroke="${cf}" stroke-width="21" stroke-linecap="round"/>`;
+    return `<ellipse cx="135" cy="182" rx="74" ry="65" fill="${cf}"/><circle cx="135" cy="105" r="78" fill="${cf}"/><path d="M88 88Q20-5 94 5M182 88Q250-5 176 5" stroke="${horn}" stroke-width="21" fill="none" stroke-linecap="round"/><path d="M80 240q-10 34-28 43M190 240q10 34 28 43" stroke="${cf}" stroke-width="23" stroke-linecap="round"/>`;
   }
   if(tipo==='unicornio'){
-    if(fase===1)return egg(cf,'#c084fc')+`<path d="M135 67L123 25l12 10 12-10z" fill="#f0abfc"/>`;
-    if(fase===2)return `${bodyHead(cf,53,50,45,'#c084fc')}<path d="M135 67L120 12l15 12 15-12z" fill="#c084fc"/>${arm('#f0abfc',14)}${legs(cf,15)}`;
-    if(fase===3)return `${bodyHead(cf,61,62,52,'#8b5cf6')}<path d="M135 62L116 2l19 17 19-17z" fill="#8b5cf6"/><path d="M78 142Q22 105 25 154q25 40 65 18M192 142Q248 105 245 154q-25 40-65 18" fill="#c4b5fd"/>${arm('#c4b5fd',18)}${legs(cf,19)}`;
-    if(fase===4)return `<ellipse cx="135" cy="185" rx="72" ry="60" fill="${cf}" stroke="#7c3aed" stroke-width="5"/><circle cx="135" cy="108" r="70" fill="${cf}" stroke="#7c3aed" stroke-width="5"/><path d="M135 58L112-2l23 20 23-20z" fill="#facc15"/><path d="M74 145Q8 91 15 160q30 51 78 20M196 145Q262 91 255 160q-30 51-78 20" fill="#a78bfa"/>${arm('#c4b5fd',21)}${legs(cf,22)}`;
-    return `<path d="M57 210Q42 151 80 121Q103 100 135 109Q167 100 190 121Q228 151 213 210Q190 250 135 256Q80 250 57 210z" fill="${cf}" stroke="#6d28d9" stroke-width="6"/><path d="M135 54L108-15l27 23 27-23z" fill="#fef08a" stroke="#a855f7" stroke-width="3"/><path d="M70 150Q-8 70 5 170q37 67 93 27M200 150Q278 70 265 170q-37 67-93 27" fill="#ddd6fe"/>${arm('#c4b5fd',25)}${legs(cf,25)}<circle cx="135" cy="165" r="85" fill="#a78bfa" opacity=".12"/>`;
+    if(fase===1)return `<ellipse cx="135" cy="195" rx="52" ry="46" fill="${cf}"/><circle cx="135" cy="126" r="59" fill="${cf}"/><path d="M135 72L123 27l12 10 12-10z" fill="#f0abfc"/><path d="M98 234q-5 19-17 25M172 234q5 19 17 25" stroke="${cf}" stroke-width="14" stroke-linecap="round"/>`;
+    if(fase===2)return `<ellipse cx="135" cy="194" rx="59" ry="52" fill="${cf}"/><circle cx="135" cy="120" r="65" fill="${cf}"/><path d="M135 66L120 12l15 12 15-12z" fill="#c084fc"/><path d="M82 90Q55 45 72 31M188 90Q215 45 198 31" stroke="#f9a8d4" stroke-width="12" fill="none"/><path d="M92 238q-6 22-20 29M178 238q6 22 20 29" stroke="${cf}" stroke-width="16" stroke-linecap="round"/>`;
+    if(fase===3)return `<ellipse cx="135" cy="190" rx="64" ry="57" fill="${cf}"/><circle cx="135" cy="114" r="69" fill="${cf}"/><path d="M135 62L118 5l17 14 17-14z" fill="#8b5cf6"/><path d="M82 105Q28 58 28 103q22 45 62 18M188 105Q242 58 242 103q-22 45-62 18" fill="#c4b5fd" opacity=".85"/><path d="M88 240q-8 26-23 33M182 240q8 26 23 33" stroke="${cf}" stroke-width="19" stroke-linecap="round"/>`;
+    if(fase===4)return `<ellipse cx="135" cy="186" rx="69" ry="61" fill="${cf}"/><circle cx="135" cy="109" r="73" fill="${cf}"/><path d="M135 58L115-2l20 17 20-17z" fill="#facc15"/><path d="M78 108Q15 45 18 110q28 57 70 25M192 108Q255 45 252 110q-28 57-70 25" fill="#a78bfa" opacity=".9"/><path d="M84 240q-9 30-25 38M186 240q9 30 25 38" stroke="${cf}" stroke-width="21" stroke-linecap="round"/>`;
+    return `<ellipse cx="135" cy="182" rx="75" ry="65" fill="${cf}"/><circle cx="135" cy="103" r="78" fill="${cf}"/><path d="M135 55L112-8l23 20 23-20z" fill="#fef08a" stroke="#a855f7" stroke-width="2"/><path d="M75 110Q0 30 8 120q35 67 86 29M195 110Q270 30 262 120q-35 67-86 29" fill="#ddd6fe"/><path d="M80 240q-10 34-28 43M190 240q10 34 28 43" stroke="${cf}" stroke-width="23" stroke-linecap="round"/>`;
   }
   if(tipo==='dinossauro'){
-    if(fase===1)return egg(cf,'#3f9b62')+`<path d="M99 104l-14-28 27 17M171 104l14-28-27 17" fill="#3f9b62"/>`;
-    if(fase===2)return `${bodyHead(cf,54,55,47,'#277a54')}<path d="M94 83l-20-43 31 28 8-47 18 41M176 83l20-43-31 28-8-47-18 41" fill="#3f9b62"/>${arm('#3f9b62',16)}${legs(cf,17)}`;
-    if(fase===3)return `${bodyHead(cf,62,67,54,'#166534')}<path d="M88 82l-25-53 37 37 8-60 21 51M182 82l25-53-37 37-8-60-21 51" fill="#277a54"/>${arm('#277a54',19)}${legs(cf,20)}<path d="M190 184Q242 190 218 236" stroke="${cf}" stroke-width="18" fill="none" stroke-linecap="round"/>`;
-    if(fase===4)return `<ellipse cx="135" cy="184" rx="75" ry="61" fill="${cf}" stroke="#14532d" stroke-width="6"/><circle cx="135" cy="108" r="73" fill="${cf}" stroke="#14532d" stroke-width="6"/><path d="M84 78l-29-58 41 39 9-66 24 58M186 78l29-58-41 39-9-66-24 58" fill="#166534"/>${arm('#166534',22)}${legs(cf,23)}<path d="M194 177Q255 190 224 246" stroke="${cf}" stroke-width="23" fill="none" stroke-linecap="round"/>`;
-    return `<path d="M54 212Q40 148 78 119Q101 97 135 108Q169 97 192 119Q230 148 216 212Q190 253 135 258Q80 253 54 212z" fill="${cf}" stroke="#064e3b" stroke-width="7"/><path d="M78 81l-36-70 50 50 10-82 30 72M192 81l36-70-50 50-10-82-30 72" fill="#14532d"/>${arm('#14532d',26)}${legs(cf,27)}<path d="M196 171Q272 190 231 258" stroke="${cf}" stroke-width="27" fill="none" stroke-linecap="round"/><circle cx="135" cy="168" r="86" fill="#f97316" opacity=".1"/>`;
+    if(fase===1)return `<ellipse cx="135" cy="197" rx="53" ry="46" fill="${cf}"/><circle cx="135" cy="128" r="59" fill="${cf}"/><path d="M94 92l-10-28 24 18M176 92l10-28-24 18" fill="${cf}"/><path d="M99 238q-5 18-16 24M171 238q5 18 16 24" stroke="${cf}" stroke-width="14" stroke-linecap="round"/>`;
+    if(fase===2)return `<ellipse cx="135" cy="194" rx="61" ry="53" fill="${cf}"/><circle cx="135" cy="120" r="65" fill="${cf}"/><path d="M90 84l-18-38 31 26 7-43 18 38M180 84l18-38-31 26-7-43-18 38" fill="#3f9b62"/><path d="M91 239q-6 23-19 30M179 239q6 23 19 30" stroke="${cf}" stroke-width="17" stroke-linecap="round"/>`;
+    if(fase===3)return `<ellipse cx="135" cy="190" rx="67" ry="57" fill="${cf}"/><circle cx="135" cy="114" r="69" fill="${cf}"/><path d="M88 83l-22-48 35 31 8-54 20 46M182 83l22-48-35 31-8-54-20 46" fill="#277a54"/><path d="M86 240q-8 28-23 35M184 240q8 28 23 35" stroke="${cf}" stroke-width="20" stroke-linecap="round"/>`;
+    if(fase===4)return `<ellipse cx="135" cy="186" rx="72" ry="61" fill="${cf}"/><circle cx="135" cy="108" r="74" fill="${cf}"/><path d="M85 80l-26-55 39 37 8-62 23 53M185 80l26-55-39 37-8-62-23 53" fill="#166534"/><path d="M82 240q-10 31-27 39M188 240q10 31 27 39" stroke="${cf}" stroke-width="22" stroke-linecap="round"/>`;
+    return `<ellipse cx="135" cy="181" rx="78" ry="66" fill="${cf}"/><circle cx="135" cy="101" r="80" fill="${cf}"/><path d="M82 78l-32-64 45 44 9-72 27 62M188 78l32-64-45 44-9-72-27 62" fill="#14532d"/><path d="M78 240q-12 36-32 45M192 240q12 36 32 45" stroke="${cf}" stroke-width="25" stroke-linecap="round"/>`;
   }
-  if(fase===1)return egg(cf,'#70452f');
-  if(fase===2)return `${bodyHead(cf,54,57,48,'#70452f')}<circle cx="82" cy="78" r="15" fill="#70452f"/><circle cx="188" cy="78" r="15" fill="#70452f"/>${arm('#70452f',15)}${legs(cf,16)}`;
-  if(fase===3)return `${bodyHead(cf,62,68,56,'#5b3928')}<circle cx="76" cy="70" r="18" fill="#70452f"/><circle cx="194" cy="70" r="18" fill="#70452f"/>${arm('#70452f',18)}${legs(cf,20)}<path d="M192 184Q240 192 217 232" stroke="${cf}" stroke-width="18" fill="none" stroke-linecap="round"/>`;
-  if(fase===4)return `<ellipse cx="135" cy="184" rx="76" ry="63" fill="${cf}" stroke="#54321f" stroke-width="5"/><ellipse cx="135" cy="108" rx="74" ry="69" fill="${cf}" stroke="#54321f" stroke-width="5"/><circle cx="72" cy="67" r="21" fill="#70452f"/><circle cx="198" cy="67" r="21" fill="#70452f"/>${arm('#70452f',21)}${legs(cf,23)}<path d="M195 178Q258 192 225 247" stroke="${cf}" stroke-width="22" fill="none" stroke-linecap="round"/>`;
-  return `<path d="M54 210Q42 151 78 122Q101 99 135 108Q169 99 192 122Q228 151 216 210Q190 251 135 257Q80 251 54 210z" fill="${cf}" stroke="#3f2b20" stroke-width="7"/><circle cx="70" cy="63" r="24" fill="#70452f"/><circle cx="200" cy="63" r="24" fill="#70452f"/>${arm('#70452f',26)}${legs(cf,27)}<path d="M196 174Q270 190 230 258" stroke="${cf}" stroke-width="25" fill="none" stroke-linecap="round"/><path d="M86 184Q110 200 135 190Q160 200 184 184" fill="none" stroke="#d2a679" stroke-width="8" opacity=".7"/>`;
+  // capivara
+  if(fase===1)return `<ellipse cx="135" cy="196" rx="55" ry="47" fill="${cf}"/><ellipse cx="135" cy="128" rx="62" ry="57" fill="${cf}"/><circle cx="83" cy="84" r="14" fill="#70452f"/><circle cx="187" cy="84" r="14" fill="#70452f"/><path d="M99 239q-5 19-17 25M171 239q5 19 17 25" stroke="${cf}" stroke-width="15" stroke-linecap="round"/>`;
+  if(fase===2)return `<ellipse cx="135" cy="194" rx="62" ry="53" fill="${cf}"/><ellipse cx="135" cy="121" rx="67" ry="63" fill="${cf}"/><circle cx="78" cy="82" r="16" fill="#70452f"/><circle cx="192" cy="82" r="16" fill="#70452f"/><path d="M92 240q-6 23-20 30M178 240q6 23 20 30" stroke="${cf}" stroke-width="17" stroke-linecap="round"/>`;
+  if(fase===3)return `<ellipse cx="135" cy="190" rx="68" ry="58" fill="${cf}"/><ellipse cx="135" cy="114" rx="72" ry="68" fill="${cf}"/><circle cx="76" cy="76" r="18" fill="#70452f"/><circle cx="194" cy="76" r="18" fill="#70452f"/><path d="M88 240q-8 28-23 35M182 240q8 28 23 35" stroke="${cf}" stroke-width="20" stroke-linecap="round"/>`;
+  if(fase===4)return `<ellipse cx="135" cy="186" rx="73" ry="62" fill="${cf}"/><ellipse cx="135" cy="108" rx="77" ry="73" fill="${cf}"/><circle cx="73" cy="70" r="20" fill="#70452f"/><circle cx="197" cy="70" r="20" fill="#70452f"/><path d="M84 240q-10 31-27 39M186 240q10 31 27 39" stroke="${cf}" stroke-width="22" stroke-linecap="round"/>`;
+  return `<ellipse cx="135" cy="181" rx="79" ry="67" fill="${cf}"/><ellipse cx="135" cy="101" rx="82" ry="78" fill="${cf}"/><circle cx="70" cy="65" r="22" fill="#70452f"/><circle cx="200" cy="65" r="22" fill="#70452f"/><path d="M80 240q-12 36-32 45M190 240q12 36 32 45" stroke="${cf}" stroke-width="24" stroke-linecap="round"/>`;
 })()}`;
 const olhoLx=tipo==='frango'?100:108,olhoRx=tipo==='frango'?170:162,olhoY=tipo==='gato'?125:115;
 const pupLx=tipo==='frango'?107:115,pupRx=tipo==='frango'?163:155,pupY=tipo==='gato'?130:120;
@@ -1975,11 +1973,9 @@ const SKINS_HALLOWEEN=[
 ];
 TEMAS.push(...SKINS_HALLOWEEN);
 function buscarAcessorioPorId(id){
-  if(id==null||id==='')return null;
-  const sid=String(id);
-  const normal=ACESSORIOS.find(a=>String(a.id)===sid);
+  const normal=ACESSORIOS.find(a=>a.id===id);
   if(normal)return normal;
-  const tema=TEMAS.find(t=>String(t.acessorio.id)===sid);
+  const tema=TEMAS.find(t=>t.acessorio.id===id);
   return tema?tema.acessorio:null;
 }
 function soprarLinguaDeSogra(el){
@@ -2819,7 +2815,15 @@ function aplicarFundoTela(id){
 }
 function obterDadosPetAtual(){if(!estado.pets[estado.petAtual])estado.pets[estado.petAtual]={nivel:1,xp:0,felicidade:100,saude:100};return estado.pets[estado.petAtual]}
 function nivelJogador(){const niveis=Object.values(estado.pets||{}).map(p=>p.nivel||1);return niveis.length?Math.max(...niveis):1}
-function calcularFase(n){n=Number(n)||1;return n>=81?5:n>=61?4:n>=41?3:n>=21?2:1}
+function calcularFase(n){
+  try{
+    if(typeof estado!=='undefined' && estado?.petAtual==='gato'){
+      const teste=Number(estado.faseTesteGato);
+      if(teste>=1&&teste<=4)return teste;
+    }
+  }catch(_){}
+  n=Number(n)||1;return n>=61?4:n>=41?3:n>=21?2:1
+}
 function renderizarProgressoEvolucao(){
   const el=document.getElementById('evo-progresso');
   if(!el)return;
@@ -2829,7 +2833,7 @@ function renderizarProgressoEvolucao(){
   const prox=d.evolucoes[fase];
   if(!atual){el.innerHTML='';return}
   if(!prox){
-    el.innerHTML=`<div class="evo-progresso-top"><strong>👑 Evolução máxima</strong><span>Fase ${fase}/5</span></div><div class="evo-progresso-bar"><div class="evo-progresso-fill" style="width:100%"></div></div><small>${esc(atual.desc)} · continue cuidando para manter seu pet brilhando!</small>`;
+    el.innerHTML=`<div class="evo-progresso-top"><strong>👑 Evolução máxima</strong><span>Fase ${fase}/4</span></div><div class="evo-progresso-bar"><div class="evo-progresso-fill" style="width:100%"></div></div><small>${esc(atual.desc)} · continue cuidando para manter seu pet brilhando!</small>`;
     return;
   }
   const base=atual.nivel,alvo=prox.nivel;
@@ -6323,74 +6327,20 @@ function renderizarGridTemas(){
   c.innerHTML='';
   TEMAS.forEach(t=>{
     const fundo=BANCO_FUNDOS.find(f=>f.id===t.fundoId);
-    const possui=possuiTema(t);
-    const accOn=typeof temaAcessorioEquipado==='function'?temaAcessorioEquipado(t):(String(estado.acessorios?.ativo||'')===String(t.acessorio.id));
-    const d=document.createElement('div');
-    d.className='fundo-card '+(accOn?'ativo':'');
+    const possui=possuiTema(t),ativo=estado.fundoAtual===t.fundoId&&estado.acessorios.ativo===t.acessorio.id,d=document.createElement('div');
+    d.className='fundo-card '+(ativo?'ativo':'');
     d.style.background=fundo?fundo.bg:'linear-gradient(160deg,#ede9fe,#ddd6fe)';
-    const tag=accOn?'✓ Toque p/ tirar':possui?'Usar':t.preco+' 🪙';
-    d.innerHTML=`<span style="font-size:25px">${t.emoji}</span><b style="font-size:10px;margin-top:3px">${esc(t.nome)}</b><span class="shop-tag">${tag}</span>`;
+    d.innerHTML=`<span style="font-size:25px">${t.emoji}</span><b style="font-size:10px;margin-top:3px">${esc(t.nome)}</b><span class="shop-tag">${ativo?'✓ Em uso':possui?'Usar':t.preco+' 🪙'}</span>`;
     d.onclick=()=>selecionarOuComprarTema(t);
     c.appendChild(d);
   });
 }
-function temaAcessorioEquipado(t){
-  if(!t||!t.acessorio)return false;
-  const sid=String(t.acessorio.id);
-  const ativos=Array.isArray(estado.acessorios?.ativos)?estado.acessorios.ativos.map(String):[];
-  if(ativos.includes(sid))return true;
-  return String(estado.acessorios?.ativo||'')===sid;
-}
-function removerAcessorioTema(t){
-  if(!t||!t.acessorio)return;
-  estado.acessorios=estado.acessorios||{comprados:[],ativo:null,ativos:[]};
-  if(!Array.isArray(estado.acessorios.ativos))estado.acessorios.ativos=[];
-  const sid=String(t.acessorio.id);
-  estado.acessorios.ativos=estado.acessorios.ativos.filter(x=>String(x)!==sid);
-  if(String(estado.acessorios.ativo||'')===sid){
-    estado.acessorios.ativo=estado.acessorios.ativos.length?estado.acessorios.ativos[0]:null;
-  }else if(!estado.acessorios.ativos.length){
-    estado.acessorios.ativo=null;
-  }else if(estado.acessorios.ativo==null){
-    estado.acessorios.ativo=estado.acessorios.ativos[0];
-  }
-}
-function equiparAcessorioTema(t){
-  if(!t||!t.acessorio)return;
-  estado.acessorios=estado.acessorios||{comprados:[],ativo:null,ativos:[]};
-  if(!Array.isArray(estado.acessorios.ativos))estado.acessorios.ativos=[];
-  const sid=String(t.acessorio.id);
-  // Remove outros acessórios de cabeça/tema para não empilhar fantasias
-  const grupoTema=new Set(['chapeu','bone','coroa','chapeu_praia','grinalda','tema_halloween','tema_neve','tema_praia','tema_astronauta','tema_princesa','tema_pirata','tema_estadio','tema_aniversario','tema_halloween_esqueleto','tema_halloween_vampiro','tema_halloween_abobora']);
-  estado.acessorios.ativos=estado.acessorios.ativos.filter(id=>{
-    const it=typeof buscarAcessorioPorId==='function'?buscarAcessorioPorId(id):null;
-    return !(it && (grupoTema.has(String(it.id)) || String(it.id).startsWith('tema_')));
-  });
-  if(!estado.acessorios.ativos.map(String).includes(sid))estado.acessorios.ativos.push(sid);
-  estado.acessorios.ativo=sid;
-  if(!estado.acessorios.comprados.includes(t.acessorio.id))estado.acessorios.comprados.push(t.acessorio.id);
-}
 function selecionarOuComprarTema(t){
   if(possuiTema(t)){
-    // Já possui: se o acessório do tema está equipado, remove; senão, aplica
-    if(temaAcessorioEquipado(t)){
-      removerAcessorioTema(t);
-      try{window.rpUltimoAcessorioVisualKey=''}catch(e){}
-      salvar();
-      if(typeof renderizarAcessorioNoContainer==='function')renderizarAcessorioNoContainer();
-      atualizarTela();
-      renderizarGridTemas();
-      renderizarGridFundos();
-      renderizarGridAcessorios();
-      if(typeof renderizarMeuPet==='function')try{renderizarMeuPet()}catch(e){}
-      return mostrarToast('🎀 Acessório do tema removido');
-    }
     estado.fundoAtual=t.fundoId;
-    equiparAcessorioTema(t);
-    try{window.rpUltimoAcessorioVisualKey=''}catch(e){}
+    estado.acessorios.ativo=t.acessorio.id;
     salvar();
     aplicarFundoTela(t.fundoId);
-    if(typeof renderizarAcessorioNoContainer==='function')renderizarAcessorioNoContainer();
     atualizarTela();
     renderizarGridTemas();
     renderizarGridFundos();
@@ -6403,11 +6353,9 @@ function selecionarOuComprarTema(t){
     if(!estado.fundosComprados.includes(t.fundoId))estado.fundosComprados.push(t.fundoId);
     if(!estado.acessorios.comprados.includes(t.acessorio.id))estado.acessorios.comprados.push(t.acessorio.id);
     estado.fundoAtual=t.fundoId;
-    equiparAcessorioTema(t);
-    try{window.rpUltimoAcessorioVisualKey=''}catch(e){}
+    estado.acessorios.ativo=t.acessorio.id;
     salvar();
     aplicarFundoTela(t.fundoId);
-    if(typeof renderizarAcessorioNoContainer==='function')renderizarAcessorioNoContainer();
     atualizarTela();
     renderizarGridTemas();
     renderizarGridFundos();
@@ -6416,11 +6364,6 @@ function selecionarOuComprarTema(t){
     mostrarToast('🎉 Tema desbloqueado!');
   });
 }
-// Expõe helpers de tema no window
-window.temaAcessorioEquipado=temaAcessorioEquipado;
-window.removerAcessorioTema=removerAcessorioTema;
-window.equiparAcessorioTema=equiparAcessorioTema;
-window.selecionarOuComprarTema=selecionarOuComprarTema;
 function renderizarGridFundos(){
   const c=document.getElementById('grid-fundos');
   c.innerHTML='';
@@ -6470,26 +6413,11 @@ function renderizarGridAcessorios(){
 }
 function selecionarOuComprarAcessorio(a){
   if(estado.acessorios.comprados.includes(a.id)){
-    estado.acessorios=estado.acessorios||{comprados:[],ativo:null,ativos:[]};
-    if(!Array.isArray(estado.acessorios.ativos))estado.acessorios.ativos=[];
-    const sid=String(a.id);
-    const ja=estado.acessorios.ativos.map(String).includes(sid)||String(estado.acessorios.ativo||'')===sid;
-    if(ja){
-      estado.acessorios.ativos=estado.acessorios.ativos.filter(x=>String(x)!==sid);
-      estado.acessorios.ativo=estado.acessorios.ativos.length?estado.acessorios.ativos[0]:null;
-      salvar();
-      if(typeof renderizarAcessorioNoContainer==='function')renderizarAcessorioNoContainer();
-      atualizarTela();
-      renderizarGridAcessorios();
-      return mostrarToast('Acessório removido.');
-    }
-    estado.acessorios.ativos.push(a.id);
-    estado.acessorios.ativo=a.id;
+    estado.acessorios.ativo=estado.acessorios.ativo===a.id?null:a.id;
     salvar();
-    if(typeof renderizarAcessorioNoContainer==='function')renderizarAcessorioNoContainer();
     atualizarTela();
     renderizarGridAcessorios();
-    return mostrarToast(`🎀 ${a.nome} equipado!`);
+    return mostrarToast(estado.acessorios.ativo?`🎀 ${a.nome} equipado!`:`Acessório removido.`);
   }
   if(estado.moedas<a.preco)return mostrarToast(`🪙 Faltam ${a.preco-estado.moedas} moedas.`);
   mostrarConfirmacao(`Comprar "${a.nome}" por ${a.preco} moedas?`,()=>{
@@ -6507,33 +6435,29 @@ function renderizarAcessorioNoContainer(){
   const c=document.getElementById('camada-acessorio');
   const objetos=document.getElementById('objetos-pet-layer');
   const pet=document.getElementById('pet-principal');
+  const stage=document.querySelector('.pet-stage');
   if(!c)return;
-  // Prefer lista multi; fallback para ativo único
-  let ids=[];
-  if(Array.isArray(estado.acessorios?.ativos)&&estado.acessorios.ativos.length){
-    ids=estado.acessorios.ativos.slice();
-  }else if(estado.acessorios?.ativo!=null&&estado.acessorios.ativo!==''){
-    ids=[estado.acessorios.ativo];
-  }
-  const itens=ids.map(id=>buscarAcessorioPorId(id)).filter(Boolean);
+  const ativo=estado.acessorios?.ativo;
+  const item=buscarAcessorioPorId(ativo);
 
   if(pet){
     pet.classList.remove('pet-acessorio-ativo','acessorio-coroa','acessorio-fone','acessorio-grinalda','acessorio-bone','acessorio-chapeu','acessorio-oculos','acessorio-laco','acessorio-cachecol','acessorio-gravata');
-    itens.forEach(item=>{
-      if(item.tipo!=='objeto')pet.classList.add('pet-acessorio-ativo','acessorio-'+item.id);
-    });
+    if(item){
+      pet.classList.add('pet-acessorio-ativo','acessorio-'+item.id);
+    }
   }
-  if(!itens.length){
+  if(!item){
     c.innerHTML='';
     if(objetos)objetos.innerHTML='';
     return;
   }
-  const wear=itens.filter(i=>i.tipo!=='objeto');
-  const objs=itens.filter(i=>i.tipo==='objeto');
-  c.innerHTML=wear.map(item=>item.svgPorEspecie?(item.svgPorEspecie[estado.petAtual]||item.svgPorEspecie.gato):item.svg).join('');
-  if(objetos){
-    objetos.innerHTML=objs.map(item=>`<span class="objeto-pet ${item.classe||''}" title="${typeof esc==='function'?esc(item.nome):(item.nome||'')}">${item.emoji||'✨'}</span>`).join('');
+  if(objetos)objetos.innerHTML='';
+  if(item.tipo==='objeto'){
+    c.innerHTML='';
+    if(objetos)objetos.innerHTML=`<span class="objeto-pet ${item.classe}" title="${esc(item.nome)}">${item.emoji}</span>`;
+    return;
   }
+  c.innerHTML=item.svgPorEspecie?(item.svgPorEspecie[estado.petAtual]||item.svgPorEspecie.gato):item.svg;
 }
 
 function celebrarNovoAcessorio(){
@@ -7597,7 +7521,7 @@ const oldRender=window.renderizarMapaAventura;window.renderizarMapaAventura=()=>
 })();</script>
 
 <style id="meu-pet-v1">.menu-mais-item.visual-pet{background:linear-gradient(145deg,#fdf4ff,#f5f3ff);border-color:#e9d5ff;color:#6d28d9}.meupet-modal{max-width:430px!important;background:linear-gradient(160deg,#fff,#faf5ff)}.meupet-hero{position:relative;overflow:hidden;border-radius:22px;padding:14px;background:linear-gradient(135deg,#ede9fe,#fce7f3);border:1px solid #e9d5ff;margin-bottom:10px;text-align:center}.meupet-hero:after{content:'✦';position:absolute;right:16px;top:5px;font-size:38px;color:#fff8;animation:meuPetBrilho 2.8s ease-in-out infinite}@keyframes meuPetBrilho{50%{transform:rotate(18deg) scale(1.15);opacity:.55}}.meupet-avatar{font-size:64px;line-height:1;margin:2px 0 5px;filter:drop-shadow(0 8px 10px #7c3aed22);animation:meuPetFloat 2.8s ease-in-out infinite}@keyframes meuPetFloat{50%{transform:translateY(-5px)}}.meupet-title{font-size:15px;font-weight:1000;color:#312e81}.meupet-sub{font-size:9px;color:#64748b;margin-top:2px;font-weight:800}.meupet-section-title{font-size:10px;font-weight:1000;color:#334155;margin:9px 0 6px}.meupet-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:7px}.meupet-item{position:relative;border:1px solid #e5e7eb;border-radius:15px;padding:9px;background:#fff;cursor:pointer;transition:transform .15s,box-shadow .15s,border-color .15s;text-align:center}.meupet-item:active{transform:scale(.96)}.meupet-item.ativo{border-color:#8b5cf6;box-shadow:0 0 0 2px #8b5cf622}.meupet-item.bloqueado{cursor:default;background:#f8fafc;opacity:.62}.meupet-item .mi-emoji{font-size:28px;display:block;margin-bottom:3px}.meupet-item b{font-size:9px;color:#334155;display:block}.meupet-item small{font-size:7px;color:#64748b;font-weight:800;display:block;margin-top:2px}.meupet-check{position:absolute;right:6px;top:5px;font-size:10px}.meupet-chip{display:inline-flex;align-items:center;gap:4px;padding:4px 8px;border-radius:99px;background:#ffffffaa;font-size:8px;font-weight:1000;color:#6d28d9;margin-top:7px}.meupet-reward{margin-top:8px;padding:8px 10px;border-radius:13px;background:#fffbeb;border:1px solid #fde68a;font-size:8px;color:#92400e;font-weight:900}@media(prefers-reduced-motion:reduce){.meupet-avatar,.meupet-hero:after{animation:none}}</style>
-<script id="meu-pet-v1-script">(()=>{const RECOMPENSAS_MAPA=[{id:'mapa_bosque_visual',missao:3,acessorio:'grinalda',local:'Bosque',texto:'🌸 Grinalda de Flores'},{id:'mapa_vale_visual',missao:7,acessorio:'fone',local:'Vale',texto:'🎧 Fone de Ouvido'},{id:'mapa_castelo_visual',missao:12,acessorio:'coroa',local:'Castelo',texto:'👑 Coroa Real'},{id:'mapa_meta_visual',missao:18,acessorio:'bone',local:'Grande Meta',texto:'🧢 Boné Estiloso'}];window.verificarRecompensasMapa=function(silencioso){if(!estado)return;estado.recompensasMapa=estado.recompensasMapa||{};estado.acessorios=estado.acessorios||{comprados:[],ativo:null};estado.acessorios.comprados=Array.isArray(estado.acessorios.comprados)?estado.acessorios.comprados:[];const n=(estado.tarefas||[]).filter(t=>statusTarefaAtual(t)==='aprovada').length;let mudou=false;RECOMPENSAS_MAPA.forEach(r=>{if(n>=r.missao&&!estado.recompensasMapa[r.id]){estado.recompensasMapa[r.id]=true;if(!estado.acessorios.comprados.includes(r.acessorio))estado.acessorios.comprados.push(r.acessorio);mudou=true;if(!silencioso)setTimeout(()=>{if(typeof dispararConfetes==='function')dispararConfetes();if(typeof mostrarToast==='function')mostrarToast(`🎁 Desbloqueou ${r.texto}!`);},250)}});if(mudou)salvar();return mudou};window.abrirMeuPet=function(){let m=document.getElementById('modal-meu-pet');if(!m){m=document.createElement('div');m.id='modal-meu-pet';m.className='modal-overlay';m.innerHTML='<div class="modal meupet-modal"><div class="modal-title"><div><h3 style="margin:0">🐾 Meu Pet</h3><small style="font-size:8px;color:#64748b;font-weight:800">Seu visual, suas conquistas</small></div><button class="close-btn" onclick="fecharModal(\'modal-meu-pet\')">×</button></div><div id="meupet-conteudo"></div></div></div>';document.body.appendChild(m)}verificarRecompensasMapa(true);renderizarMeuPet();abrirModal('modal-meu-pet')};window.renderizarMeuPet=function(){const c=document.getElementById('meupet-conteudo');if(!c)return;const ac=estado.acessorios||{comprados:[],ativo:null};const comprados=new Set(ac.comprados||[]);const atual=ACESSORIOS.find(a=>a.id===ac.ativo);const n=(estado.tarefas||[]).filter(t=>statusTarefaAtual(t)==='aprovada').length;c.innerHTML='<div class="meupet-hero"><div class="meupet-avatar">'+(estado.petEmoji||'🐾')+'</div><div class="meupet-title">'+(atual?atual.emoji+' '+esc(atual.nome):'Visual natural')+'</div><div class="meupet-sub">Complete missões para desbloquear novos acessórios.</div><span class="meupet-chip">⭐ '+n+' missões aprovadas</span></div><div class="meupet-section-title">🎀 Acessórios desbloqueados</div><div class="meupet-grid" id="meupet-grid-legacy"></div><div class="meupet-reward">🗺️ Recompensas do mapa são desbloqueadas automaticamente quando você chega a uma nova região.</div>';const g=document.getElementById('meupet-grid-legacy');ACESSORIOS.forEach(a=>{const tem=comprados.has(a.id),ativo=ac.ativo===a.id;const d=document.createElement('button');d.type='button';d.className='meupet-item '+(tem?'':'bloqueado')+(ativo?' ativo':'');d.innerHTML='<span class="meupet-check">'+(ativo?'✓':tem?'🎀':'🔒')+'</span><span class="mi-emoji">'+a.emoji+'</span><b>'+esc(a.nome)+'</b><small>'+(tem?(ativo?'Equipado · toque para tirar':'Toque para equipar'):(a.preco+' 🪙 na Loja'))+'</small>';if(tem)d.onclick=()=>{const removendo=ativo;estado.acessorios=estado.acessorios||{comprados:[],ativo:null,ativos:[]};if(!Array.isArray(estado.acessorios.ativos))estado.acessorios.ativos=[];if(removendo){estado.acessorios.ativos=estado.acessorios.ativos.filter(x=>String(x)!==String(a.id));estado.acessorios.ativo=estado.acessorios.ativos.length?estado.acessorios.ativos[0]:null}else{if(!estado.acessorios.ativos.map(String).includes(String(a.id)))estado.acessorios.ativos.push(a.id);estado.acessorios.ativo=a.id}salvar();renderizarAcessorioNoContainer();atualizarTela();renderizarMeuPet();if(!removendo){celebrarNovoAcessorio();}if(typeof mostrarToast==='function')mostrarToast(removendo?'Acessório removido':`🎀 ${a.nome} equipado!`)};g.appendChild(d)})};})();</script><script id="poderes-evolucao-js">
+<script id="meu-pet-v1-script">(()=>{const RECOMPENSAS_MAPA=[{id:'mapa_bosque_visual',missao:3,acessorio:'grinalda',local:'Bosque',texto:'🌸 Grinalda de Flores'},{id:'mapa_vale_visual',missao:7,acessorio:'fone',local:'Vale',texto:'🎧 Fone de Ouvido'},{id:'mapa_castelo_visual',missao:12,acessorio:'coroa',local:'Castelo',texto:'👑 Coroa Real'},{id:'mapa_meta_visual',missao:18,acessorio:'bone',local:'Grande Meta',texto:'🧢 Boné Estiloso'}];window.verificarRecompensasMapa=function(silencioso){if(!estado)return;estado.recompensasMapa=estado.recompensasMapa||{};estado.acessorios=estado.acessorios||{comprados:[],ativo:null};estado.acessorios.comprados=Array.isArray(estado.acessorios.comprados)?estado.acessorios.comprados:[];const n=(estado.tarefas||[]).filter(t=>statusTarefaAtual(t)==='aprovada').length;let mudou=false;RECOMPENSAS_MAPA.forEach(r=>{if(n>=r.missao&&!estado.recompensasMapa[r.id]){estado.recompensasMapa[r.id]=true;if(!estado.acessorios.comprados.includes(r.acessorio))estado.acessorios.comprados.push(r.acessorio);mudou=true;if(!silencioso)setTimeout(()=>{if(typeof dispararConfetes==='function')dispararConfetes();if(typeof mostrarToast==='function')mostrarToast(`🎁 Desbloqueou ${r.texto}!`);},250)}});if(mudou)salvar();return mudou};window.abrirMeuPet=function(){let m=document.getElementById('modal-meu-pet');if(!m){m=document.createElement('div');m.id='modal-meu-pet';m.className='modal-overlay';m.innerHTML='<div class="modal meupet-modal"><div class="modal-title"><div><h3 style="margin:0">🐾 Meu Pet</h3><small style="font-size:8px;color:#64748b;font-weight:800">Seu visual, suas conquistas</small></div><button class="close-btn" onclick="fecharModal(\'modal-meu-pet\')">×</button></div><div id="meupet-conteudo"></div></div></div>';document.body.appendChild(m)}verificarRecompensasMapa(true);renderizarMeuPet();abrirModal('modal-meu-pet')};window.renderizarMeuPet=function(){const c=document.getElementById('meupet-conteudo');if(!c)return;const ac=estado.acessorios||{comprados:[],ativo:null};const comprados=new Set(ac.comprados||[]);const atual=ACESSORIOS.find(a=>a.id===ac.ativo);const n=(estado.tarefas||[]).filter(t=>statusTarefaAtual(t)==='aprovada').length;c.innerHTML='<div class="meupet-hero"><div class="meupet-avatar">'+(estado.petEmoji||'🐾')+'</div><div class="meupet-title">'+(atual?atual.emoji+' '+esc(atual.nome):'Visual natural')+'</div><div class="meupet-sub">Complete missões para desbloquear novos acessórios.</div><span class="meupet-chip">⭐ '+n+' missões aprovadas</span></div><div class="meupet-section-title">🎀 Acessórios desbloqueados</div><div class="meupet-grid" id="meupet-grid-legacy"></div><div class="meupet-reward">🗺️ Recompensas do mapa são desbloqueadas automaticamente quando você chega a uma nova região.</div>';const g=document.getElementById('meupet-grid-legacy');ACESSORIOS.forEach(a=>{const tem=comprados.has(a.id),ativo=ac.ativo===a.id;const d=document.createElement('button');d.type='button';d.className='meupet-item '+(tem?'':'bloqueado')+(ativo?' ativo':'');d.innerHTML='<span class="meupet-check">'+(ativo?'✓':tem?'🎀':'🔒')+'</span><span class="mi-emoji">'+a.emoji+'</span><b>'+esc(a.nome)+'</b><small>'+(tem?(ativo?'Equipado · toque para tirar':'Toque para equipar'):(a.preco+' 🪙 na Loja'))+'</small>';if(tem)d.onclick=()=>{const removendo=ativo;estado.acessorios.ativo=removendo?null:a.id;salvar();renderizarAcessorioNoContainer();atualizarTela();renderizarMeuPet();if(!removendo){celebrarNovoAcessorio();}if(typeof mostrarToast==='function')mostrarToast(removendo?'Acessório removido':`🎀 ${a.nome} equipado!`)};g.appendChild(d)})};})();</script><script id="poderes-evolucao-js">
 (function(){
 const PODERES_EVOLUCAO=[
  {fase:1,nome:'Carinho Extra',icone:'💖',descricao:'Carinho faz o pet responder com mais energia.',eventos:['carinho']},
@@ -8763,20 +8687,12 @@ function garantirAcessoriosMulti(){
   estado.acessorios=estado.acessorios||{comprados:[],ativo:null,ativos:[]};
   if(!Array.isArray(estado.acessorios.comprados))estado.acessorios.comprados=[];
   if(!Array.isArray(estado.acessorios.ativos))estado.acessorios.ativos=[];
-  // Normaliza IDs para string e remove duplicatas
-  estado.acessorios.ativos=estado.acessorios.ativos
-    .filter(id=>id!=null&&id!=='')
-    .map(id=>String(id))
-    .filter((id,i,arr)=>arr.indexOf(id)===i);
-  // Migração: ativo único -> lista (somente se ainda não estiver na lista)
-  if(estado.acessorios.ativo!=null && estado.acessorios.ativo!==''){
-    const sid=String(estado.acessorios.ativo);
-    if(!estado.acessorios.ativos.includes(sid)){
-      estado.acessorios.ativos.push(sid);
-    }
+  // Migração: ativo único -> lista
+  if(estado.acessorios.ativo!=null && !estado.acessorios.ativos.includes(estado.acessorios.ativo)){
+    estado.acessorios.ativos.push(estado.acessorios.ativo);
   }
-  // Mantém ativo sincronizado com a lista (ou null se vazia)
-  estado.acessorios.ativo=estado.acessorios.ativos.length?estado.acessorios.ativos[0]:null;
+  // Mantém ativo = primeiro wearable (compatibilidade com código legado)
+  estado.acessorios.ativo=estado.acessorios.ativos[0]||null;
   estado.descobertasCenario=estado.descobertasCenario||{};
 }
 
@@ -8795,11 +8711,7 @@ function toggleAcessorio(id){
   const i=estado.acessorios.ativos.findIndex(x=>String(x)===sid);
   if(i>=0){
     estado.acessorios.ativos.splice(i,1);
-    estado.acessorios.ativo=estado.acessorios.ativos.length?estado.acessorios.ativos[0]:null;
-    // Garante que o legado não "ressuscita" o item removido
-    if(String(estado.acessorios.ativo||'')===sid){
-      estado.acessorios.ativo=estado.acessorios.ativos[0]||null;
-    }
+    estado.acessorios.ativo=estado.acessorios.ativos[0]||null;
     return false;
   }
   // Limite
@@ -8810,7 +8722,7 @@ function toggleAcessorio(id){
   // Se for wearable (não objeto), permite vários, mas evita conflito de chapéu/boné/coroa
   const item=(typeof buscarAcessorioPorId==='function'?buscarAcessorioPorId(id):null)||ACESSORIOS.find(a=>String(a.id)===sid);
   if(item && item.tipo!=='objeto'){
-    const grupoCabeca=new Set(['chapeu','bone','coroa','chapeu_praia','grinalda','tema_halloween','tema_neve','tema_praia','tema_astronauta','tema_princesa','tema_pirata','tema_estadio','tema_aniversario','tema_halloween_esqueleto','tema_halloween_vampiro','tema_halloween_abobora']);
+    const grupoCabeca=new Set(['chapeu','bone','coroa','chapeu_praia','grinalda','tema_halloween','tema_neve','tema_halloween_esqueleto','tema_halloween_vampiro','tema_halloween_abobora']);
     if(grupoCabeca.has(item.id)){
       estado.acessorios.ativos=estado.acessorios.ativos.filter(aid=>{
         const it=buscarAcessorioPorId?.(aid)||ACESSORIOS.find(a=>String(a.id)===String(aid));
@@ -8875,12 +8787,10 @@ window.selecionarOuComprarAcessorio=function(a){
   if(!a)return;
   if((estado.acessorios.comprados||[]).includes(a.id)){
     const equipou=toggleAcessorio(a.id);
-    try{window.rpUltimoAcessorioVisualKey=''}catch(e){}
     if(typeof salvar==='function')salvar();
-    if(typeof renderizarAcessorioNoContainer==='function')renderizarAcessorioNoContainer();
     if(typeof atualizarTela==='function')atualizarTela();
+    else renderizarAcessorioNoContainer();
     if(typeof renderizarGridAcessorios==='function')renderizarGridAcessorios();
-    if(typeof renderizarMeuPet==='function')try{renderizarMeuPet()}catch(e){}
     if(typeof mostrarToast==='function')mostrarToast(equipou?`🎀 ${a.nome} equipado! (pode usar vários)`:`Acessório removido.`);
     if(equipou && typeof celebrarNovoAcessorio==='function')celebrarNovoAcessorio();
     return;
@@ -8908,58 +8818,18 @@ window.renderizarGridAcessorios=function(){
   garantirAcessoriosMulti();
   const c=document.getElementById('grid-acessorios');
   if(!c){ if(typeof oldGrid==='function')return oldGrid(); return; }
-  c.innerHTML='<div class="acc-multi-hint">✨ Dica: toque de novo no equipado para tirar · temas também aparecem aqui</div>';
-  const lista=[...(ACESSORIOS||[])];
-  // Inclui acessórios de tema comprados para poder remover pela loja de acessórios
-  if(typeof TEMAS!=='undefined'){
-    TEMAS.forEach(t=>{
-      if(!t.acessorio)return;
-      if(lista.some(a=>String(a.id)===String(t.acessorio.id)))return;
-      lista.push({...t.acessorio, preco:t.preco, tipo:'visual', _tema:true, nome:t.acessorio.nome||t.nome});
-    });
-  }
-  lista.forEach(a=>{
-    const comprado=(estado.acessorios.comprados||[]).map(String).includes(String(a.id));
+  c.innerHTML='<div class="acc-multi-hint">✨ Dica: equipe vários ao mesmo tempo (ex.: óculos + bola)</div>';
+  (ACESSORIOS||[]).forEach(a=>{
+    const comprado=(estado.acessorios.comprados||[]).includes(a.id);
     const ativo=estaEquipado(a.id);
     const d=document.createElement('div');
     d.className='fundo-card '+(ativo?'ativo':'');
-    d.style.background=a._tema?'linear-gradient(160deg,#fef3c7,#fde68a)':'linear-gradient(160deg,#ede9fe,#ddd6fe)';
+    d.style.background='linear-gradient(160deg,#ede9fe,#ddd6fe)';
     d.style.color='#312e81';
     d.style.textShadow='none';
-    const tipo=a._tema?'Tema':(a.tipo==='objeto'?'Objeto':'Visual');
-    d.innerHTML=`<span style="font-size:25px">${a.emoji}</span><b style="font-size:10px;margin-top:3px">${typeof esc==='function'?esc(a.nome):a.nome}</b><span style="font-size:7px;opacity:.7">${tipo}</span><span class="shop-tag" style="background:#312e81cc;color:#fff">${ativo?'✓ Toque p/ tirar':comprado?'Usar':(a.preco!=null?a.preco+' 🪙':'—')}</span>`;
-    d.onclick=()=>{
-      if(a._tema){
-        // Toggle só o acessório do tema (sem exigir recompra)
-        if(!comprado){
-          if(typeof mostrarToast==='function')mostrarToast('Compre o tema na aba Temas.');
-          return;
-        }
-        if(ativo){
-          if(typeof removerAcessorioTema==='function')removerAcessorioTema({acessorio:a});
-          else toggleAcessorio(a.id);
-          try{window.rpUltimoAcessorioVisualKey=''}catch(e){}
-          salvar?.();
-          renderizarAcessorioNoContainer();
-          atualizarTela?.();
-          renderizarGridAcessorios();
-          renderizarGridTemas?.();
-          mostrarToast?.('🎀 Acessório do tema removido');
-        }else{
-          if(typeof equiparAcessorioTema==='function')equiparAcessorioTema({acessorio:a});
-          else toggleAcessorio(a.id);
-          try{window.rpUltimoAcessorioVisualKey=''}catch(e){}
-          salvar?.();
-          renderizarAcessorioNoContainer();
-          atualizarTela?.();
-          renderizarGridAcessorios();
-          renderizarGridTemas?.();
-          mostrarToast?.(`🎀 ${a.nome} equipado!`);
-        }
-        return;
-      }
-      selecionarOuComprarAcessorio(a);
-    };
+    const tipo=a.tipo==='objeto'?'Objeto':'Visual';
+    d.innerHTML=`<span style="font-size:25px">${a.emoji}</span><b style="font-size:10px;margin-top:3px">${typeof esc==='function'?esc(a.nome):a.nome}</b><span style="font-size:7px;opacity:.7">${tipo}</span><span class="shop-tag" style="background:#312e81cc;color:#fff">${ativo?'✓ Equipado':comprado?'Usar junto':a.preco+' 🪙'}</span>`;
+    d.onclick=()=>selecionarOuComprarAcessorio(a);
     c.appendChild(d);
   });
 };
@@ -8977,42 +8847,17 @@ window.renderizarMeuPet=function(){
   const nomes=listaAtivos().map(id=>{const a=ACESSORIOS.find(x=>String(x.id)===String(id));return a?a.emoji+' '+a.nome:null}).filter(Boolean);
   c.innerHTML=`<div class="meupet-hero"><div class="meupet-avatar">${estado.petEmoji||'🐾'}</div><div class="meupet-title">${nomes.length?nomes.join(' + '):'Visual natural'}</div><div class="meupet-sub">Equipe vários acessórios juntos · até ${MAX_ATIVOS}</div><span class="meupet-chip">⭐ ${n} missões · ${ativos.size} equipado(s)</span></div><div class="meupet-section-title">🎀 Acessórios</div><div class="meupet-grid" id="meupet-grid"></div>`;
   const g=document.getElementById('meupet-grid');
-  const listaMeu=[...ACESSORIOS];
-  if(typeof TEMAS!=='undefined'){
-    TEMAS.forEach(t=>{
-      if(!t.acessorio)return;
-      if(listaMeu.some(a=>String(a.id)===String(t.acessorio.id)))return;
-      listaMeu.push({...t.acessorio, preco:t.preco, tipo:'visual', _tema:true, nome:t.acessorio.nome||t.nome});
-    });
-  }
-  listaMeu.forEach(a=>{
-    const tem=comprados.has(a.id)||comprados.has(String(a.id)),ativo=ativos.has(String(a.id));
+  ACESSORIOS.forEach(a=>{
+    const tem=comprados.has(a.id),ativo=ativos.has(String(a.id));
     const d=document.createElement('button');
     d.type='button';
     d.className='meupet-item '+(tem?'':'bloqueado')+(ativo?' ativo':'');
-    const sub=tem?(ativo?'Equipado · toque p/ tirar':(a._tema?'Tema · equipar':(a.tipo==='objeto'?'Objeto · combinar':'Toque para equipar junto'))):(a._tema?'Compre na aba Temas':(a.preco+' 🪙 na Loja'));
-    d.innerHTML=`<span class="meupet-check">${ativo?'✓':tem?'🎀':'🔒'}</span><span class="mi-emoji">${a.emoji}</span><b>${typeof esc==='function'?esc(a.nome):a.nome}</b><small>${sub}</small>`;
+    d.innerHTML=`<span class="meupet-check">${ativo?'✓':tem?'🎀':'🔒'}</span><span class="mi-emoji">${a.emoji}</span><b>${typeof esc==='function'?esc(a.nome):a.nome}</b><small>${tem?(ativo?'Equipado · toque p/ tirar':(a.tipo==='objeto'?'Objeto · combinar':'Toque para equipar junto')):(a.preco+' 🪙 na Loja')}</small>`;
     if(tem)d.onclick=()=>{
-      if(ativo){
-        if(a._tema && typeof removerAcessorioTema==='function')removerAcessorioTema({acessorio:a});
-        else toggleAcessorio(a.id);
-        try{window.rpUltimoAcessorioVisualKey=''}catch(e){}
-        salvar?.();
-        renderizarAcessorioNoContainer();
-        atualizarTela?.();
-        renderizarMeuPet();
-        mostrarToast?.('🎀 Acessório removido');
-        return;
-      }
-      if(a._tema && typeof equiparAcessorioTema==='function')equiparAcessorioTema({acessorio:a});
-      else toggleAcessorio(a.id);
-      try{window.rpUltimoAcessorioVisualKey=''}catch(e){}
-      salvar?.();
-      renderizarAcessorioNoContainer();
-      atualizarTela?.();
-      renderizarMeuPet();
-      celebrarNovoAcessorio?.();
-      mostrarToast?.(`🎀 ${a.nome} equipado!`);
+      const equipou=toggleAcessorio(a.id);
+      salvar?.(); renderizarAcessorioNoContainer(); atualizarTela?.(); renderizarMeuPet();
+      if(equipou)celebrarNovoAcessorio?.();
+      mostrarToast?.(equipou?`🎀 ${a.nome} equipado!`:'Acessório removido');
     };
     g.appendChild(d);
   });
@@ -9894,126 +9739,221 @@ function sincronizarAcessoriosAtivos(){
   if(typeof estado==='undefined')return;
   estado.acessorios=estado.acessorios||{comprados:[],ativo:null,ativos:[]};
   if(!Array.isArray(estado.acessorios.ativos))estado.acessorios.ativos=[];
-  if(estado.acessorios.ativo!=null&&estado.acessorios.ativo!==''&&!estado.acessorios.ativos.map(String).includes(String(estado.acessorios.ativo))){
-    estado.acessorios.ativos.push(String(estado.acessorios.ativo));
-  }
-  estado.acessorios.ativos=estado.acessorios.ativos
-    .map(id=>String(id))
-    .filter((id,i,arr)=>arr.indexOf(id)===i)
-    .filter(id=>{const a=typeof buscarAcessorioPorId==='function'?buscarAcessorioPorId(id):null;return !!a});
-  estado.acessorios.ativo=estado.acessorios.ativos.length?estado.acessorios.ativos[0]:null;
+  if(estado.acessorios.ativo!=null&&!estado.acessorios.ativos.map(String).includes(String(estado.acessorios.ativo)))estado.acessorios.ativos.push(estado.acessorios.ativo);
+  estado.acessorios.ativos=estado.acessorios.ativos.filter(id=>{const a=typeof buscarAcessorioPorId==='function'?buscarAcessorioPorId(id):null;return !!a});
+  estado.acessorios.ativo=estado.acessorios.ativos[0]||null;
 }
 function aplicarTemaAcessorioExclusivo(t){
   sincronizarAcessoriosAtivos();
-  const grupoCabeca=new Set(['chapeu','bone','coroa','chapeu_praia','grinalda','tema_halloween','tema_neve','tema_praia','tema_astronauta','tema_princesa','tema_pirata','tema_estadio','tema_aniversario','tema_halloween_esqueleto','tema_halloween_vampiro','tema_halloween_abobora']);
+  const grupoCabeca=new Set(['chapeu','bone','coroa','chapeu_praia','grinalda','tema_halloween','tema_neve','tema_halloween_esqueleto','tema_halloween_vampiro','tema_halloween_abobora']);
   estado.acessorios.ativos=estado.acessorios.ativos.filter(id=>{const it=typeof buscarAcessorioPorId==='function'?buscarAcessorioPorId(id):null;return !(it&&grupoCabeca.has(it.id))});
   estado.acessorios.ativos.push(t.acessorio.id);
   estado.acessorios.ativo=t.acessorio.id;
 }
-// Base selecionarOuComprarTema (com toggle) já está no escopo global —
-// não sobrescrever aqui para evitar quebrar a remoção do acessório do tema.
+window.selecionarOuComprarTema=function(t){
+  if(!t)return;
+  const possui=typeof possuiTema==='function'&&possuiTema(t);
+  const usar=()=>{
+    estado.fundoAtual=t.fundoId;
+    aplicarTemaAcessorioExclusivo(t);
+    salvar();
+    if(typeof aplicarFundoTela==='function')aplicarFundoTela(t.fundoId);
+    if(typeof atualizarTela==='function')atualizarTela();
+    if(typeof renderizarGridTemas==='function')renderizarGridTemas();
+    if(typeof renderizarGridFundos==='function')renderizarGridFundos();
+    if(typeof renderizarGridAcessorios==='function')renderizarGridAcessorios();
+    if(typeof mostrarToast==='function')mostrarToast(`🎨 Tema ${t.nome} aplicado!`);
+  };
+  if(possui)return usar();
+  if((Number(estado.moedas)||0)<t.preco){if(typeof mostrarToast==='function')mostrarToast(`🪙 Faltam ${t.preco-(Number(estado.moedas)||0)} moedas.`);return;}
+  if(typeof mostrarConfirmacao==='function')mostrarConfirmacao(`Comprar o tema "${t.nome}" (fundo + acessório) por ${t.preco} moedas?`,()=>{
+    estado.moedas-=t.preco;
+    if(!estado.fundosComprados.includes(t.fundoId))estado.fundosComprados.push(t.fundoId);
+    if(!estado.acessorios.comprados.includes(t.acessorio.id))estado.acessorios.comprados.push(t.acessorio.id);
+    usar();
+    if(typeof dispararConfetes==='function')dispararConfetes();
+    if(typeof mostrarToast==='function')mostrarToast('🎉 Tema desbloqueado!');
+  });
+};
 window.limparCamadasAcessorios=function(){const c=document.getElementById('camada-acessorio');if(c)c.innerHTML='';const o=document.getElementById('objetos-pet-layer');if(o)o.innerHTML='';};
-// Garante helpers no window (podem ser usados pela loja multi)
-try{
-  if(typeof temaAcessorioEquipado==='function')window.temaAcessorioEquipado=temaAcessorioEquipado;
-  if(typeof removerAcessorioTema==='function')window.removerAcessorioTema=removerAcessorioTema;
-  if(typeof equiparAcessorioTema==='function')window.equiparAcessorioTema=equiparAcessorioTema;
-}catch(e){}
 })();
 </script>
 
-<style id="movimentos-pet-v5-css">
-/* Movimento natural: pequenas ações independentes, sem reconstruir o SVG. */
-#pet-principal.pet-mov-jump{animation:rpPetJump .72s cubic-bezier(.2,.9,.25,1) both!important}
-#pet-principal.pet-mov-dance{animation:rpPetDance 1.25s cubic-bezier(.22,1,.36,1) both!important}
-#pet-principal.pet-mov-wiggle{animation:rpPetWiggle .7s ease both!important}
-#pet-principal.pet-mov-stretch{animation:rpPetStretch 1s ease both!important}
-#pet-principal.pet-mov-happy{animation:rpPetHappy .85s cubic-bezier(.22,1,.36,1) both!important}
-#pet-principal.pet-mov-sleep{animation:rpPetSleep 1.8s ease both!important}
-@keyframes rpPetJump{0%{transform:translateY(0) scale(1)}25%{transform:translateY(-18px) scale(1.04)}55%{transform:translateY(-25px) scale(.98) rotate(-2deg)}80%{transform:translateY(-7px) scale(1.02) rotate(2deg)}100%{transform:translateY(0) scale(1)}}
-@keyframes rpPetDance{0%,100%{transform:translateY(0) rotate(0)}15%{transform:translateY(-5px) rotate(-8deg)}30%{transform:translateY(0) rotate(8deg)}45%{transform:translateY(-8px) rotate(-6deg)}60%{transform:translateY(0) rotate(6deg)}75%{transform:translateY(-4px) rotate(-4deg)}}
-@keyframes rpPetWiggle{0%,100%{transform:rotate(0)}20%{transform:rotate(-7deg) translateX(-3px)}40%{transform:rotate(7deg) translateX(3px)}60%{transform:rotate(-5deg)}80%{transform:rotate(4deg)}}
-@keyframes rpPetStretch{0%{transform:scale(1,1)}35%{transform:scale(1.08,.92) translateY(5px)}65%{transform:scale(.94,1.08) translateY(-4px)}100%{transform:scale(1,1)}}
-@keyframes rpPetHappy{0%,100%{transform:scale(1) translateY(0)}30%{transform:scale(1.06) translateY(-10px)}55%{transform:scale(.98) translateY(1px)}75%{transform:scale(1.04) translateY(-5px)}}
-@keyframes rpPetSleep{0%,100%{transform:translateY(0) scale(1)}50%{transform:translateY(3px) scale(.98)}}
-body.modo-zen #pet-principal.pet-mov-jump,body.modo-zen #pet-principal.pet-mov-dance,body.modo-zen #pet-principal.pet-mov-wiggle,body.modo-zen #pet-principal.pet-mov-stretch,body.modo-zen #pet-principal.pet-mov-happy{animation:none!important}
-#teste-evolucoes{margin:10px 0;padding:10px;border:1px dashed #a78bfa;border-radius:16px;background:#faf5ff}
-.teste-evo-head{display:flex;align-items:center;justify-content:space-between;gap:8px;margin-bottom:8px}.teste-evo-head b{font-size:11px;color:#4c1d95}.teste-evo-head small{font-size:7px;color:#64748b}
-.teste-evo-grid{display:grid;grid-template-columns:repeat(5,1fr);gap:5px}.teste-evo-grid button{min-height:38px;border:1px solid #ddd6fe;background:#fff;border-radius:10px;font-size:8px;font-weight:900;color:#4c1d95;cursor:pointer}.teste-evo-grid button.ativo{background:#7c3aed;color:#fff;border-color:#7c3aed}.teste-evo-pets{display:flex;gap:5px;overflow:auto;padding-bottom:5px;margin-bottom:6px}.teste-evo-pets button{flex:0 0 auto;border:1px solid #e5e7eb;background:#fff;border-radius:12px;padding:7px 9px;font-size:9px;font-weight:900}.teste-evo-pets button.ativo{border-color:#7c3aed;background:#ede9fe;color:#4c1d95}
+<style id="rotinapet-sprites-cat-v1">
+/* ===== RotinaPet — sprites da gata / fase 1 ===== */
+#pet-svg-container .rp-sprite-host{width:100%;height:100%;display:flex;align-items:center;justify-content:center;position:relative;z-index:2;pointer-events:none}
+#pet-svg-container .rp-sprite-img{width:100%;height:100%;object-fit:contain;display:block;pointer-events:none;user-select:none;-webkit-user-drag:none;image-rendering:auto}
+#pet-svg-container.rp-sprite-active svg{display:none!important}
+body.modo-zen #pet-svg-container .rp-sprite-img{filter:none!important}
+@media(prefers-reduced-motion:reduce){#pet-svg-container .rp-sprite-img{animation:none!important}}
 </style>
-<script id="movimentos-pet-v5-js">
+
+<script id="rotinapet-sprites-cat-v2-js">
 (()=>{
- const movimentos=['jump','dance','wiggle','stretch','happy'];
- let movimentoTimer=null;
- function petEl(){return document.getElementById('pet-principal')}
- function animarMovimentoPet(tipo){
-   const pet=petEl(); if(!pet)return;
-   if(document.body.classList.contains('modo-zen') || window.matchMedia?.('(prefers-reduced-motion: reduce)').matches)return;
-   const nome=movimentos.includes(tipo)?tipo:'happy';
-   pet.classList.remove('pet-mov-jump','pet-mov-dance','pet-mov-wiggle','pet-mov-stretch','pet-mov-happy','pet-mov-sleep');
-   void pet.offsetWidth;
-   pet.classList.add('pet-mov-'+nome);
-   setTimeout(()=>pet.classList.remove('pet-mov-'+nome),nome==='dance'?1350:1050);
- }
- window.animarMovimentoPet=animarMovimentoPet;
- function agendarMovimento(){
-   clearTimeout(movimentoTimer);
-   movimentoTimer=setTimeout(()=>{
-     const pet=petEl();
-     if(pet && !document.hidden && !document.body.classList.contains('modo-zen')){
-       const fase=(typeof window.calcularFase==='function'&&typeof window.obterDadosPetAtual==='function')?window.calcularFase(window.obterDadosPetAtual()?.nivel||1):1;
-       const pool=fase>=4?['jump','dance','wiggle','stretch','happy']:fase>=2?['jump','wiggle','stretch','happy']:['wiggle','stretch','happy'];
-       animarMovimentoPet(pool[Math.floor(Math.random()*pool.length)]);
-     }
-     agendarMovimento();
-   },7000+Math.random()*6000);
- }
- function init(){if(window.__rpMovV5)return;window.__rpMovV5=true;agendarMovimento()}
- if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',init,{once:true});else init();
- window.addEventListener('beforeunload',()=>clearTimeout(movimentoTimer));
+  // Sistema de sprites do gato: Fases 1, 2, 3 e 4.
+  // A Fase 2 usa exatamente a mesma estrutura de arquivos da Fase 1.
+  const ROOT='assets/sprites/gato/';
+  const counts={idle:8,danca:12,carinho:10,celebracao:12};
+  const DUR={idle:150,danca:85,carinho:105,celebracao:85};
+  let timer=0, token=0, current='idle', hostRef=null, faseAtual=1;
+
+  function fase(){
+    try{return Math.max(1,Math.min(4,Number(window.calcularFase?.(window.obterDadosPetAtual?.()?.nivel||1))||1))}
+    catch(_){return 1}
+  }
+  function ativo(){return window.estado?.petAtual==='gato' && fase()<=4}
+  function base(f){return `${ROOT}fase${f}/`}
+  function framesPara(tipo,f){
+    const n=counts[tipo]||counts.idle;
+    return Array.from({length:n},(_,i)=>`${base(f)}${tipo}/${tipo}_${String(i+1).padStart(2,'0')}.png`)
+  }
+  function frames(tipo,f){return framesPara(tipo,f)}
+  function box(){return document.getElementById('pet-svg-container')}
+
+  function renderHost(){
+    const b=box(); if(!b||!ativo())return null;
+    const f=fase();
+    let host=b.querySelector('.rp-sprite-host');
+    if(!host || faseAtual!==f){
+      b.innerHTML='<div class="rp-sprite-host"><img class="rp-sprite-img" alt="Gato em animação"></div><div class="camada-acessorio" id="camada-acessorio"></div>';
+      host=b.querySelector('.rp-sprite-host');
+      faseAtual=f;
+      b.classList.add('rp-sprite-active');
+      if(typeof window.renderizarAcessorioNoContainer==='function'){
+        try{window.renderizarAcessorioNoContainer()}catch(_){}
+      }
+    }
+    return host;
+  }
+
+  function setFrame(host,src,fallback){
+    const img=host?.querySelector('.rp-sprite-img'); if(!img)return;
+    if(img.dataset.src===src)return;
+    img.dataset.src=src;
+    img.onerror=()=>{
+      img.onerror=null;
+      if(fallback && img.src!==fallback)img.src=fallback;
+    };
+    img.src=src;
+  }
+  function stop(){clearTimeout(timer);timer=0;token++;hostRef=null}
+
+  function play(name='idle',loop=false){
+    if(!ativo())return false;
+    const host=renderHost(); if(!host)return false;
+    stop(); current=counts[name]?name:'idle'; const f=fase(); const fs=frames(current,f); const fb=f>1?frames(current,1):null;
+    const my=token; let i=0; hostRef=host;
+    const step=()=>{
+      if(my!==token||hostRef!==host)return;
+      if(!ativo())return;
+      setFrame(host,fs[i],fb?.[i]); i++;
+      if(i>=fs.length){if(!loop){play('idle',true);return}i=0}
+      timer=setTimeout(step,DUR[current]);
+    };
+    step(); return true;
+  }
+
+  function sync(){
+    if(!ativo())return;
+    const host=renderHost(); if(!host)return;
+    const f=fase();
+    if(hostRef!==host || !timer || faseAtual!==f)play(current,current==='idle');
+  }
+  window.rpSpritePlay=play;
+  window.rpSpriteSync=sync;
+
+  function wrapOnce(name){
+    if(typeof window[name]!=='function'||window[name].__rpSpriteWrapped)return;
+    const old=window[name];
+    const wrapped=function(){
+      const result=old.apply(this,arguments);
+      try{
+        if(name==='interagirComPet'&&ativo())play('carinho',false);
+        if(name==='acaoPet'&&ativo()&&arguments[0]==='brincar')play('danca',false);
+        if(name==='celebrarEvolucaoPet'&&window.estado?.petAtual==='gato'){
+          const f=Number(arguments[0])||fase();
+          if(f<=4)play('celebracao',false);
+        }
+      }catch(_){}
+      return result;
+    };
+    wrapped.__rpSpriteWrapped=true; window[name]=wrapped;
+  }
+
+  function boot(){wrapOnce('interagirComPet');wrapOnce('acaoPet');wrapOnce('celebrarEvolucaoPet');sync()}
+
+  const originalPetSVG=window.petSVG;
+  if(typeof originalPetSVG==='function'&&!originalPetSVG.__rpSpriteBase){
+    const spritePetSVG=function(tipo,f){
+      const faseNum=Number(f)||1;
+      if(tipo==='gato'&&faseNum<=4){
+        const src=`${base(faseNum)}idle/idle_01.png`;
+        const fallback=faseNum>1?`${base(1)}idle/idle_01.png`:src;
+        return '<div class="rp-sprite-host"><img class="rp-sprite-img" alt="Gato" src="'+src+'" onerror="this.onerror=null;this.src=\''+fallback+'\'"></div>';
+      }
+      return originalPetSVG.apply(this,arguments);
+    };
+    spritePetSVG.__rpSpriteBase=true; window.petSVG=spritePetSVG;
+  }
+
+  const oldAtualizar=window.atualizarTelaInterna;
+  if(typeof oldAtualizar==='function'&&!oldAtualizar.__rpSpriteWrapped){
+    const wrapped=function(){
+      const antes=fase();
+      const result=oldAtualizar.apply(this,arguments);
+      requestAnimationFrame(()=>{try{sync();}catch(_){} wrapOnce('interagirComPet');wrapOnce('acaoPet');wrapOnce('celebrarEvolucaoPet');});
+      return result;
+    };
+    wrapped.__rpSpriteWrapped=true; window.atualizarTelaInterna=wrapped;
+  }
+  if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',boot,{once:true});else boot();
+  setTimeout(boot,500);
 })();
 </script>
-<script id="teste-evolucoes-v5-js">
-/* Laboratório de evoluções desativado: pets só desbloqueiam pelos níveis (desbloqueioNivel). */
+
+<style id="rp-gato-fases-teste-css">
+#rp-gato-fases-teste{position:fixed;right:10px;bottom:76px;z-index:99999;background:rgba(15,23,42,.92);color:#fff;border:1px solid rgba(255,255,255,.18);border-radius:14px;padding:7px 8px;box-shadow:0 8px 24px rgba(0,0,0,.22);font:800 10px/1.1 Nunito,system-ui,sans-serif;backdrop-filter:blur(8px)}
+#rp-gato-fases-teste .rp-test-title{display:block;text-align:center;margin-bottom:5px;opacity:.78;font-size:8px;letter-spacing:.4px}
+#rp-gato-fases-teste .rp-test-row{display:flex;gap:5px}
+#rp-gato-fases-teste button{width:31px;height:29px;border:0;border-radius:9px;background:#fff;color:#334155;font:900 11px Nunito,system-ui;cursor:pointer;box-shadow:none}
+#rp-gato-fases-teste button.ativo{background:#facc15;color:#422006;transform:translateY(-1px)}
+#rp-gato-fases-teste[hidden]{display:none!important}
+</style>
+<script id="rp-gato-fases-teste-js">
 (()=>{
-  function limparLab(){
-    const host=document.getElementById('teste-evolucoes');
-    if(host)host.remove();
+  function faseTeste(){const f=Number(window.estado?.faseTesteGato);return f>=1&&f<=4?f:1}
+  function resetVisual(){
+    try{rpUltimoPetVisualKey='';rpUltimoAcessorioVisualKey='';rpUltimoEvolucaoVisualKey=''}catch(_){}
+    try{window.rpSpritePlay?.('idle',true)}catch(_){}
   }
-  /** Desfaz o "todos os pets no nível 81" do laboratório de teste.
-   *  Só age se TODOS os pets tiverem exatamente nivel 81 e xp 0 (assinatura do lab).
-   *  Não altera progresso real do jogador. */
-  function reverterNiveisLabSeNecessario(){
-    try{
-      if(typeof estado==='undefined'||typeof PETS==='undefined')return;
-      estado.pets=estado.pets||{};
-      const ids=Object.keys(PETS);
-      if(!ids.length)return;
-      const todosLab=ids.every(id=>{
-        const p=estado.pets[id];
-        return p && Number(p.nivel)===81 && Number(p.xp||0)===0;
-      });
-      if(!todosLab)return;
-      ids.forEach(id=>{
-        const p=estado.pets[id]||{};
-        // Mantém felicidade/saúde; volta nível para 1
-        estado.pets[id]={...p,nivel:1,xp:0};
-      });
-      // Garante pet inicial liberado
-      if(!estado.petAtual||!PETS[estado.petAtual])estado.petAtual='gato';
-      if(typeof salvar==='function')salvar();
-      if(typeof atualizarTela==='function')atualizarTela();
-      console.info('[RotinaPet] Níveis de laboratório revertidos — pets desbloqueiam por nível novamente.');
-    }catch(e){console.warn('reverter lab:',e)}
+  window.rpTestarFaseGato=function(f){
+    f=Math.max(1,Math.min(4,Number(f)||1));
+    if(!window.estado)return;
+    estado.petAtual='gato';
+    estado.faseTesteGato=f;
+    try{salvar()}catch(_){}
+    resetVisual();
+    try{atualizarTela()}catch(_){try{atualizarTelaInterna()}catch(__){}}
+    setTimeout(()=>{try{window.rpSpritePlay?.('idle',true)}catch(_){};render()},50);
+    try{mostrarToast?.('🐱 Testando Fase '+f)}catch(_){}
+  };
+  function render(){
+    let p=document.getElementById('rp-gato-fases-teste');
+    if(!p){
+      p=document.createElement('div');p.id='rp-gato-fases-teste';
+      p.innerHTML='<span class="rp-test-title">TESTE GATO</span><div class="rp-test-row">'+[1,2,3,4].map(f=>'<button type="button" data-f="'+f+'">F'+f+'</button>').join('')+'</div>';
+      p.addEventListener('click',e=>{const b=e.target.closest('button[data-f]');if(b)rpTestarFaseGato(b.dataset.f)});
+      document.body.appendChild(p);
+    }
+    p.hidden=window.estado?.petAtual!=='gato';
+    p.querySelectorAll('button[data-f]').forEach(b=>b.classList.toggle('ativo',Number(b.dataset.f)===faseTeste()));
   }
-  function boot(){
-    limparLab();
-    reverterNiveisLabSeNecessario();
+  const oldAtualizar=window.atualizarTela;
+  if(typeof oldAtualizar==='function'&&!oldAtualizar.__rpFasesTeste){
+    const w=function(){const r=oldAtualizar.apply(this,arguments);setTimeout(render,0);return r};w.__rpFasesTeste=true;window.atualizarTela=w;
   }
-  if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',boot,{once:true});
-  else boot();
-  setTimeout(boot,800);
-  setTimeout(reverterNiveisLabSeNecessario,2000);
+  if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',render,{once:true});else render();
+  setTimeout(render,600);
 })();
 </script>
 </body>
