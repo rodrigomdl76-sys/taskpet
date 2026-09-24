@@ -1917,18 +1917,36 @@ function verificarResetDiario(){
       estado.ultimoStreakPremiado=0;
     }
   }
+
+  // NOVO: cada dia recebe um registro próprio. O histórico dos dias anteriores
+  // permanece em t.registros, mas o dia atual SEMPRE começa pendente.
   estado.tarefas.forEach(t=>{
-    // Preserva comprovantes e tarefas que ainda aguardam os responsáveis.
-    if(t.status==='aguardando_aprovacao')return;
+    t.registros=t.registros||{};
+    t.registros[hojeStr]={
+      status:'pendente',
+      foto:null,
+      fotoUrl:null,
+      fotoPath:null,
+      atualizadoEm:Date.now()
+    };
     t.status='pendente';
     t.foto=null;
+    t.fotoUrl=null;
+    t.fotoPath=null;
     t.ultimoResetEm=hojeStr;
+    // Importante para o merge V2: impede uma versão antiga/aprovada do Firebase
+    // de vencer o reset recém-feito quando as tarefas individuais sincronizam.
+    t.atualizadoEm=Date.now();
   });
   estado.tarefasHojeCount=0;
   estado.ultimoDiaAcesso=hojeStr;
   return true;
 }
-verificarResetDiario();
+// Faz o reset imediatamente no estado local. A persistência definitiva também é
+// repetida após a primeira carga do Firebase, evitando a nuvem desfazer o reset.
+if(verificarResetDiario()){
+  try{localStorage.setItem(`ROTINAPET_SAVE_${codigoFamilia}`,JSON.stringify(estado))}catch(e){}
+}
 function salvarLocalmente(){
   try{
     localStorage.setItem(`ROTINAPET_SAVE_${codigoFamilia}`,JSON.stringify(estado));
@@ -2052,11 +2070,23 @@ async function iniciarSincronizacaoNuvem(){
   await carregarEstadoNuvem();
   try{await carregarTarefasIndividuaisComFallback();}catch(e){console.warn('Tarefas individuais:',e)}
   cargaNuvemPendente=false;
+
+  // CRÍTICO: a nuvem pode ter trazido ultimoDiaAcesso/status do dia anterior
+  // depois do reset local. Por isso verificamos novamente SOMENTE após terminar
+  // de carregar o estado e as tarefas V2.
+  const resetouAposNuvem=verificarResetDiario();
+  if(resetouAposNuvem){
+    salvarLocalmente();
+    // Atualiza também os nós individuais V2; sem isso um status antigo poderia
+    // voltar no próximo merge entre aparelhos.
+    try{
+      await Promise.all((estado.tarefas||[]).map(t=>persistirTarefaIndividualV2(t)));
+    }catch(e){console.warn('Reset diário: falha ao atualizar tarefas V2:',e)}
+  }
+
   ultimaSyncOkEm=Date.now();
   statusSyncAtual='online';
-  // Se algo tiver sido alterado localmente enquanto aguardávamos a carga
-  // (ex.: PIN padrão), reenvia agora o estado já mesclado — sem risco de
-  // sobrescrever a nuvem, pois carregarEstadoNuvem() já trouxe os dados reais.
+  // Reenvia o estado já mesclado/resetado sem risco de sobrescrever a carga inicial.
   salvar();
   atualizarStatusSyncUI();
   ref.on('value',s=>{
