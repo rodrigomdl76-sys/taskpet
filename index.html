@@ -1269,6 +1269,9 @@ function abrirMenuMais(){
       <button type="button" class="task-btn" id="efeito-normal" style="padding:9px 4px;font-size:9px" onclick="aplicarEfeitoVoz('normal',this)">🎤<br>Normal</button>
       <button type="button" class="task-btn" id="efeito-fininha" style="padding:9px 4px;font-size:9px" onclick="aplicarEfeitoVoz('fininha',this)">🐿️<br>Fininha</button>
       <button type="button" class="task-btn" id="efeito-grossa" style="padding:9px 4px;font-size:9px" onclick="aplicarEfeitoVoz('grossa',this)">🐻<br>Grossa</button>
+      <button type="button" class="task-btn" onclick="aplicarEfeitoVoz('robo',this)">🤖<br>Robô</button>
+      <button type="button" class="task-btn" onclick="aplicarEfeitoVoz('fantasma',this)">👻<br>Fantasma</button>
+      <button type="button" class="task-btn" onclick="aplicarEfeitoVoz('eco',this)">🗣️<br>Eco</button>
     </div>
   </div>
   <div id="efeito-processando" class="hidden" style="font-size:9px;font-weight:900;color:#7c3aed;margin-top:7px">⏳ Aplicando efeito...</div>
@@ -1776,7 +1779,7 @@ const hojeLocal=()=>{const d=new Date();return `${d.getFullYear()}-${String(d.ge
 const ontemLocal=()=>{const d=new Date();d.setDate(d.getDate()-1);return `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`};
 // Campos que pertencem a UM filho específico (progresso do pet, tarefas, moedas...).
 // Tudo que NÃO está nessa lista é compartilhado pela família inteira (PIN, e-mails, taxa de câmbio).
-const CAMPOS_CRIANCA=['acessorios','conquistas','desafiosMathAcertos','dinheiroAcumulado','fundoAtual','fundosComprados','historicoConclusoes','idadeCrianca','lembreteEnviadoData','metaMoedas','moedas','onboardingVistoCrianca','pausaAte','petAtual','pets','recompensas','registroDiario','solicitacoesPremios','streak','surpresaResgatadaData','tarefas','tarefasHojeCount','timerFim','totalSacado','ultimoDiaAcesso','ultimoDiaConcluido','ultimoStreakPremiado','vozSalva','ultimoAcaoPet','ultimoDecay','desafioDiarioData','desafioDiarioFeitoData','bauDiarioAbertoData','escudosOfensiva','adesivos','eventoSemanalData','missaoFamilia','mensagensPais','historicoEngajamento'];
+const CAMPOS_CRIANCA=['avisosRecompensas','acessorios','conquistas','desafiosMathAcertos','dinheiroAcumulado','fundoAtual','fundosComprados','historicoConclusoes','idadeCrianca','lembreteEnviadoData','metaMoedas','moedas','onboardingVistoCrianca','pausaAte','petAtual','pets','recompensas','registroDiario','solicitacoesPremios','streak','surpresaResgatadaData','tarefas','tarefasHojeCount','timerFim','totalSacado','ultimoDiaAcesso','ultimoDiaConcluido','ultimoStreakPremiado','vozSalva','ultimoAcaoPet','ultimoDecay','desafioDiarioData','desafioDiarioFeitoData','bauDiarioAbertoData','escudosOfensiva','adesivos','eventoSemanalData','missaoFamilia','mensagensPais','historicoEngajamento'];
 function valoresPadraoCrianca(){
   return {
     petAtual:'gato',moedas:15,dinheiroAcumulado:.15,idadeCrianca:7,
@@ -3559,6 +3562,7 @@ function abrirSelecaoCrianca(){
 }
 function entrarComoCrianca(){
   mostrarToast('🐾 Bem-vindo ao seu Pet!');
+  setTimeout(mostrarRecompensasCrianca,850);
   if(!estado.onboardingVistoCrianca){
     setTimeout(()=>abrirModal('modal-onboarding'),450);
   }
@@ -4240,9 +4244,7 @@ function abrirBauSemanal(streakAtual){
   ganharXP(xpGanho);
   salvar();
   atualizarTela();
-  somBauLendario();
-  try{window.confetti?.({particleCount:130,spread:85,origin:{y:.5}})}catch(e){}
-  mostrarAviso('🎁',`Baú dos ${streakAtual} Dias!`,`+${moedasGanhas} 🪙 e +${xpGanho} XP adicionados!`);
+  enfileirarRecompensaCrianca({tipo:'semanal',streak:streakAtual,moedas:moedasGanhas,xp:xpGanho});
 }
 function registrarNoRelatorioDiario(tarefasSomar,moedasSomar){
   const hoje=hojeLocal();
@@ -4305,7 +4307,7 @@ async function aprovarTarefaPais(id){
   persistirTarefaIndividualV2(t).catch(e=>console.warn('Tarefa individual:',e));
   salvar();
   idTarefaRecemAprovada=id;
-  if(estado.tarefasHojeCount===1)setTimeout(()=>{try{abrirBauDiario();}catch(e){console.warn('Baú diário:',e)}},900);
+  if(estado.tarefasHojeCount===1)enfileirarRecompensaCrianca({tipo:'bau',data:hoje});
   const liberouOfensiva=registrarConclusaoDoDia();
   if(liberouOfensiva){
     const s=estado.streak;
@@ -4315,11 +4317,9 @@ async function aprovarTarefaPais(id){
   }
   ganharXP(xp);
   ganharFigurinhaPorMissao(t);
-  dispararConfetes();
   marcarConquistas();
   registrarLogAtividade(`Tarefa aprovada: ${t.texto} (+${recompensa}🪙)`);
-  mostrarAviso('🎉','Tarefa aprovada!',liberouOfensiva?'Obrigatórias concluídas! Ofensiva liberada 🔥':'Moedas e XP adicionados.');
-  mostrarBalaoFala(escolherFalaContextual('aposTarefa'));
+  mostrarToast('✅ Aprovada! A criança verá suas recompensas ao entrar.');
   renderizarPainelPais();
   atualizarTela();
 }
@@ -5682,7 +5682,7 @@ function pausarFecharTimer(){
   salvar();
   fecharModal('modal-timer');
 }
-let mediaRecorder=null,pedacosAudio=[],bufferGravado=null,audioBlobFinal=null;
+let mediaRecorder=null,pedacosAudio=[],bufferGravado=null,audioBlobFinal=null,blobGravacaoOriginal=null;
 function alternarGravador(){
   abrirModal('modal-gravador');
 }
@@ -5697,7 +5697,7 @@ async function iniciarGravacao(){
       const arrayBuf=await blob.arrayBuffer();
       const ctx=obterAudioContext();
       bufferGravado=await ctx.decodeAudioData(arrayBuf);
-      audioBlobFinal=blob;
+      blobGravacaoOriginal=blob;audioBlobFinal=blob;
       document.getElementById('audio-original').src=URL.createObjectURL(blob);
       document.getElementById('grav-result').classList.remove('hidden');
     };
@@ -5722,6 +5722,7 @@ async function aplicarEfeitoVoz(tipo,btnEl){
   btnEl.style.background='#c7d2fe';
   
   if(tipo==='normal'){
+    audioBlobFinal=blobGravacaoOriginal;
     document.getElementById('audio-original').src=URL.createObjectURL(audioBlobFinal);
     return;
   }
@@ -5729,17 +5730,35 @@ async function aplicarEfeitoVoz(tipo,btnEl){
   const aviso=document.getElementById('efeito-processando');
   aviso.classList.remove('hidden');
   
-  const taxa=tipo==='fininha'?1.5:0.75;
+  const taxas={fininha:1.5,grossa:.75,robo:.92,fantasma:.78,eco:1};
+  const taxa=taxas[tipo]||1;
   const ctxOff=new OfflineAudioContext(
     bufferGravado.numberOfChannels,
-    Math.ceil(bufferGravado.length/taxa),
+    Math.ceil(bufferGravado.length/taxa+bufferGravado.sampleRate*(tipo==='eco'?.7:tipo==='fantasma'?.3:0)),
     bufferGravado.sampleRate
   );
   
   const src=ctxOff.createBufferSource();
   src.buffer=bufferGravado;
   src.playbackRate.value=taxa;
-  src.connect(ctxOff.destination);
+  let saida=src;
+  if(tipo==='robo'){
+    const filtro=ctxOff.createBiquadFilter();filtro.type='bandpass';filtro.frequency.value=1100;filtro.Q.value=.65;
+    const modulador=ctxOff.createGain();modulador.gain.value=.55;
+    const oscilador=ctxOff.createOscillator();oscilador.frequency.value=42;
+    const profundidade=ctxOff.createGain();profundidade.gain.value=.4;
+    oscilador.connect(profundidade);profundidade.connect(modulador.gain);oscilador.start(0);
+    src.connect(filtro);filtro.connect(modulador);saida=modulador;
+  }else if(tipo==='fantasma'){
+    const filtro=ctxOff.createBiquadFilter();filtro.type='lowpass';filtro.frequency.value=1500;src.connect(filtro);saida=filtro;
+  }
+  saida.connect(ctxOff.destination);
+  if(tipo==='fantasma'||tipo==='eco'){
+    const atraso=ctxOff.createDelay(1);atraso.delayTime.value=tipo==='eco'?.28:.18;
+    const retorno=ctxOff.createGain();retorno.gain.value=tipo==='eco'?.38:.23;
+    saida.connect(atraso);atraso.connect(retorno);retorno.connect(ctxOff.destination);
+    if(tipo==='eco'){const atraso2=ctxOff.createDelay(1);atraso2.delayTime.value=.55;const retorno2=ctxOff.createGain();retorno2.gain.value=.18;saida.connect(atraso2);atraso2.connect(retorno2);retorno2.connect(ctxOff.destination)}
+  }
   src.start(0);
   
   const renderizado=await ctxOff.startRendering();
@@ -6197,17 +6216,38 @@ const ALBUM_FIGURINHAS=[
 {id:'missao_paz',emoji:'🌿',nome:'Momento Zen',raridade:'Rara',grupo:'Bem-estar'},
 {id:'missao_familia',emoji:'🏠',nome:'Time Família',raridade:'Lendária',grupo:'Família'}
 ];
+
+function enfileirarRecompensaCrianca(aviso){
+  estado.avisosRecompensas=Array.isArray(estado.avisosRecompensas)?estado.avisosRecompensas:[];
+  estado.avisosRecompensas.push(aviso);
+  salvar();
+}
+let exibindoRecompensaCrianca=false;
+function mostrarRecompensasCrianca(){
+  if(perfilAtivo!=='crianca'||exibindoRecompensaCrianca)return;
+  const fila=estado.avisosRecompensas;
+  if(!Array.isArray(fila)||!fila.length)return;
+  exibindoRecompensaCrianca=true;
+  const aviso=fila.shift();salvar();
+  const proximo=()=>{exibindoRecompensaCrianca=false;setTimeout(mostrarRecompensasCrianca,450)};
+  if(aviso.tipo==='figurinha'){
+    const f=ALBUM_FIGURINHAS.find(x=>x.id===aviso.id);
+    if(f){const t=document.getElementById('sticker-toast'),s=document.getElementById('sticker-toast-text');if(t&&s){s.innerHTML='<b>'+f.emoji+' '+f.nome+'</b><span>'+f.raridade+' · '+f.grupo+'</span>';t.classList.add('mostrar');setTimeout(()=>t.classList.remove('mostrar'),3400)}abrirAlbumFigurinhas(true);dispararConfetes()}
+    setTimeout(proximo,4200);
+  }else if(aviso.tipo==='bau'){
+    if(estado.bauDiarioAbertoData!==hojeLocal())abrirBauDiario();
+    proximo();
+  }else if(aviso.tipo==='semanal'){
+    somBauLendario();dispararConfetes();mostrarAviso('🎁',`Baú dos ${aviso.streak} Dias!`,`+${aviso.moedas} 🪙 e +${aviso.xp} XP adicionados!`);setTimeout(proximo,3800);
+  }else proximo();
+}
 let albumFiltroAtual='Todos';
 function ganharFigurinhaPorMissao(){
  if(!Array.isArray(estado.adesivos))estado.adesivos=[];
  const f=ALBUM_FIGURINHAS.find(x=>!estado.adesivos.includes(x.id));
  if(!f)return null;
  estado.adesivos.push(f.id);
- setTimeout(()=>{
-  const t=document.getElementById('sticker-toast'),s=document.getElementById('sticker-toast-text');
-  if(t){s.innerHTML='<b>'+f.emoji+' '+f.nome+'</b><span>'+f.raridade+' · '+f.grupo+'</span>';t.classList.add('mostrar');setTimeout(()=>t.classList.remove('mostrar'),3400)}
-  abrirAlbumFigurinhas(true);
- },500);
+ enfileirarRecompensaCrianca({tipo:'figurinha',id:f.id});
  return f;
 }
 /* Versão base do álbum (grade simples por raridade). Fica inativa na prática: logo
