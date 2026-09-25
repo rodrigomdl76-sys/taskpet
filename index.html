@@ -879,6 +879,7 @@ function abrirMenuMais(){
   <div id="engajamento-card" style="display:none">
     <span id="engajamento-streak"></span><div id="engajamento-desafio"></div><button id="btn-bau-diario">🎁 Baú do dia</button>
   </div>
+  <button type="button" id="atalho-caixa-conquistas" class="caixa-conquistas-atalho" onclick="abrirCaixaConquistas()" style="display:none">🎁 <span id="texto-caixa-conquistas">Caixa de Conquistas</span> <b id="contador-caixa-conquistas">0</b></button>
   <div class="tasks-section" id="secao-missoes">
     <button type="button" class="task-header task-header-expansivel" onclick="alternarMissoes()" aria-expanded="true"><b style="font-size:10px">✨ Missões de hoje</b><span style="display:flex;align-items:center;gap:6px"><span style="font-size:8px;font-weight:900;color:#0284c7" id="qtd-tarefas">2 missões</span><span id="seta-missoes">⌃</span></span></button>
     <div id="banner-aprovacoes-pendentes" class="hidden" style="margin-bottom:6px;padding:7px 9px;border-radius:12px;background:#fffbeb;border:1px solid #fcd34d;font-size:9px;font-weight:900;color:#92400e;display:none;align-items:center;gap:6px">⏳ <span id="txt-aprovacoes-pendentes">Há tarefas aguardando os pais</span></div>
@@ -900,6 +901,7 @@ function abrirMenuMais(){
       <button class="menu-mais-item meta" onclick="fecharModal('modal-menu-mais');abrirResumoMeta()"><span>🎯</span><b>Meta</b><small>Acompanhar objetivos</small></button>
       <button class="menu-mais-item extras" onclick="fecharModal('modal-menu-mais');abrirCentralAventuras()"><span>🌟</span><b>Extras</b><small>Desafios e eventos</small></button>
       <button class="menu-mais-item hoje" onclick="fecharModal('modal-menu-mais');abrirResumoHoje()"><span>🗓️</span><b>Hoje</b><small>Progresso do dia</small></button>
+      <button class="menu-mais-item caixa" onclick="fecharModal('modal-menu-mais');abrirCaixaConquistas()"><span>🎁</span><b>Conquistas</b><small id="menu-caixa-contagem">Ver surpresas</small></button>
       <button class="menu-mais-item album" onclick="fecharModal('modal-menu-mais');abrirAlbumFigurinhas()"><span>📒</span><b>Álbum</b><small>Ver figurinhas</small></button>
       <button class="menu-mais-item mapa" onclick="abrirMapaAventura()"><span>🗺️</span><b>Mapa</b><small>Continuar aventura</small></button>
       <button class="menu-mais-item visual-pet" onclick="fecharModal('modal-menu-mais');abrirMeuPet()"><span>🐾</span><b>Meu Pet</b><small>Visual e acessórios</small></button>
@@ -908,6 +910,7 @@ function abrirMenuMais(){
   </div>
 </div>
 <button id="btn-instalar-pwa" class="primary-btn green-btn hidden" style="position:fixed;bottom:14px;left:50%;transform:translateX(-50%);z-index:90;box-shadow:0 8px 24px rgba(0,0,0,.3);padding:10px 18px;font-size:11px;border-radius:99px;display:flex;align-items:center;gap:6px"><span>📲</span> Instalar RotinaPet</button>
+<div id="modal-caixa-conquistas" class="modal-overlay"><div class="modal" style="max-width:370px"><div class="modal-title"><h3>🎁 Caixa de Conquistas</h3><button class="close-btn" onclick="fecharModal('modal-caixa-conquistas')">×</button></div><div id="conteudo-caixa-conquistas"></div></div></div>
 <div id="modal-selecao-perfil" class="modal-overlay">
   <div class="modal" style="text-align:center;max-width:320px">
     <div style="font-size:38px;margin-bottom:6px">👋</div>
@@ -1779,7 +1782,7 @@ const hojeLocal=()=>{const d=new Date();return `${d.getFullYear()}-${String(d.ge
 const ontemLocal=()=>{const d=new Date();d.setDate(d.getDate()-1);return `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`};
 // Campos que pertencem a UM filho específico (progresso do pet, tarefas, moedas...).
 // Tudo que NÃO está nessa lista é compartilhado pela família inteira (PIN, e-mails, taxa de câmbio).
-const CAMPOS_CRIANCA=['avisosRecompensas','acessorios','conquistas','desafiosMathAcertos','dinheiroAcumulado','fundoAtual','fundosComprados','historicoConclusoes','idadeCrianca','lembreteEnviadoData','metaMoedas','moedas','onboardingVistoCrianca','pausaAte','petAtual','pets','recompensas','registroDiario','solicitacoesPremios','streak','surpresaResgatadaData','tarefas','tarefasHojeCount','timerFim','totalSacado','ultimoDiaAcesso','ultimoDiaConcluido','ultimoStreakPremiado','vozSalva','ultimoAcaoPet','ultimoDecay','desafioDiarioData','desafioDiarioFeitoData','bauDiarioAbertoData','escudosOfensiva','adesivos','eventoSemanalData','missaoFamilia','mensagensPais','historicoEngajamento'];
+const CAMPOS_CRIANCA=['bauDatasResgatadas','historicoRecompensas','avisosRecompensas','acessorios','conquistas','desafiosMathAcertos','dinheiroAcumulado','fundoAtual','fundosComprados','historicoConclusoes','idadeCrianca','lembreteEnviadoData','metaMoedas','moedas','onboardingVistoCrianca','pausaAte','petAtual','pets','recompensas','registroDiario','solicitacoesPremios','streak','surpresaResgatadaData','tarefas','tarefasHojeCount','timerFim','totalSacado','ultimoDiaAcesso','ultimoDiaConcluido','ultimoStreakPremiado','vozSalva','ultimoAcaoPet','ultimoDecay','desafioDiarioData','desafioDiarioFeitoData','bauDiarioAbertoData','escudosOfensiva','adesivos','eventoSemanalData','missaoFamilia','mensagensPais','historicoEngajamento'];
 function valoresPadraoCrianca(){
   return {
     petAtual:'gato',moedas:15,dinheiroAcumulado:.15,idadeCrianca:7,
@@ -1794,7 +1797,7 @@ function valoresPadraoCrianca(){
     ],
     solicitacoesPremios:[],conquistas:{},acessorios:{comprados:[],ativo:null},pausaAte:null,
     historicoConclusoes:{},registroDiario:{},onboardingVistoCrianca:false,lembreteEnviadoData:null,
-    surpresaResgatadaData:null,metasPersonalizadas:[],ultimoAcaoPet:{},ultimoDecay:null,desafioDiarioData:null,desafioDiarioFeitoData:null,bauDiarioAbertoData:null,escudosOfensiva:0,adesivos:[],eventoSemanalData:null,missaoFamilia:{alvo:20,progresso:0,inicio:null},mensagensPais:[],historicoEngajamento:[]
+    surpresaResgatadaData:null,metasPersonalizadas:[],ultimoAcaoPet:{},ultimoDecay:null,desafioDiarioData:null,desafioDiarioFeitoData:null,bauDiarioAbertoData:null,bauDatasResgatadas:[],avisosRecompensas:[],historicoRecompensas:[],escudosOfensiva:0,adesivos:[],eventoSemanalData:null,missaoFamilia:{alvo:20,progresso:0,inicio:null},mensagensPais:[],historicoEngajamento:[]
   };
 }
 function capturarDadosCrianca(){
@@ -3562,7 +3565,7 @@ function abrirSelecaoCrianca(){
 }
 function entrarComoCrianca(){
   mostrarToast('🐾 Bem-vindo ao seu Pet!');
-  setTimeout(mostrarRecompensasCrianca,850);
+  setTimeout(()=>{atualizarCaixaConquistas();if((estado.avisosRecompensas||[]).length)mostrarToast('🎁 Suas conquistas estão na Caixa!')},850);
   if(!estado.onboardingVistoCrianca){
     setTimeout(()=>abrirModal('modal-onboarding'),450);
   }
@@ -6125,16 +6128,37 @@ function concluirDesafioDiario(){
   garantirEngajamento();if(estado.desafioDiarioFeitoData===hojeLocal())return;
   estado.desafioDiarioFeitoData=hojeLocal();estado.moedas=(Number(estado.moedas)||0)+10;estado.dinheiroAcumulado=(Number(estado.dinheiroAcumulado)||0)+(10*(Number(estado.taxaCambio)||.01));ganharXP(20);estado.adesivos.push('desafio_'+hojeLocal());registrarEngajamento('Desafio diário concluído');dispararConfetes();mostrarAviso('🌟','Desafio concluído!','+10 moedas, +20 XP e um adesivo foram adicionados.');atualizarTela();
 }
-function abrirBauDiario(){
-  garantirEngajamento();const hoje=hojeLocal();if(estado.bauDiarioAbertoData===hoje)return mostrarToast('✅ O baú de hoje já foi aberto.');
-  if(Number(estado.tarefasHojeCount||0)<=0&&estado.desafioDiarioFeitoData!==hoje)return mostrarToast('🔒 Complete uma missão ou o desafio diário primeiro.');
-  const c=document.getElementById('bau-diario-conteudo');if(c)c.innerHTML='<div style="font-size:48px;margin:8px">🎁</div><p style="font-size:10px;color:#64748b">Uma surpresa por dia para celebrar seu esforço!</p><button class="primary-btn pink-btn" style="width:100%;margin-top:8px" onclick="abrirPremioBauDiario()">✨ Abrir agora</button>';
+let bauDataEmAbertura=null;
+function bauJaResgatado(data){return estado.bauDiarioAbertoData===data||(estado.bauDatasResgatadas||[]).includes(data)}
+function abrirBauDiario(dataSolicitada){
+  garantirEngajamento();
+  const hoje=hojeLocal(),data=typeof dataSolicitada==='string'?dataSolicitada:hoje;
+  const pendente=(estado.avisosRecompensas||[]).some(a=>a.tipo==='bau'&&a.data===data);
+  if(bauJaResgatado(data))return mostrarToast('✅ Este baú já foi aberto.');
+  if(!pendente&&(data!==hoje||Number(estado.tarefasHojeCount||0)<=0&&estado.desafioDiarioFeitoData!==hoje))return mostrarToast('🔒 Complete uma missão ou o desafio diário primeiro.');
+  bauDataEmAbertura=data;
+  const c=document.getElementById('bau-diario-conteudo');
+  if(c)c.innerHTML='<div style="font-size:48px;margin:8px">🎁</div><p style="font-size:10px;color:#64748b">Uma surpresa pela missão concluída!</p><button class="primary-btn pink-btn" style="width:100%;margin-top:8px" onclick="abrirPremioBauDiario()">✨ Abrir agora</button>';
   abrirModal('modal-bau-diario');
 }
 function abrirPremioBauDiario(){
-  const hoje=hojeLocal();if(estado.bauDiarioAbertoData===hoje)return;estado.bauDiarioAbertoData=hoje;
-  const n=Math.random();let texto,valor;if(n<.55){valor=8+Math.floor(Math.random()*8);estado.moedas+=valor;estado.dinheiroAcumulado=(estado.dinheiroAcumulado||0)+valor*(Number(estado.taxaCambio)||.01);texto=`+${valor} moedas`;}else if(n<.9){valor=20;ganharXP(valor);texto=`+${valor} XP`;}else{estado.escudosOfensiva=Math.min(2,(Number(estado.escudosOfensiva)||0)+1);texto='🛡️ Escudo da ofensiva';}
-  estado.adesivos.push('bau_'+hoje);registrarEngajamento('Baú diário aberto');salvar();fecharModal('modal-bau-diario');dispararConfetes();mostrarAviso('🎁','Baú aberto!',`${texto} e um adesivo de coleção!`);atualizarTela();
+  const data=bauDataEmAbertura||hojeLocal(),hoje=hojeLocal();
+  if(bauJaResgatado(data))return;
+  const pendente=(estado.avisosRecompensas||[]).some(a=>a.tipo==='bau'&&a.data===data);
+  if(!pendente&&(data!==hoje||Number(estado.tarefasHojeCount||0)<=0&&estado.desafioDiarioFeitoData!==hoje))return;
+  estado.bauDatasResgatadas=Array.isArray(estado.bauDatasResgatadas)?estado.bauDatasResgatadas:[];
+  estado.bauDatasResgatadas.push(data);
+  estado.bauDatasResgatadas=estado.bauDatasResgatadas.slice(-90);
+  if(data===hoje)estado.bauDiarioAbertoData=hoje;
+  const n=Math.random();let texto,valor;
+  if(n<.55){valor=8+Math.floor(Math.random()*8);estado.moedas+=valor;estado.dinheiroAcumulado=(estado.dinheiroAcumulado||0)+valor*(Number(estado.taxaCambio)||.01);texto=`+${valor} moedas`;}
+  else if(n<.9){valor=20;ganharXP(valor);texto=`+${valor} XP`;}
+  else{estado.escudosOfensiva=Math.min(2,(Number(estado.escudosOfensiva)||0)+1);texto='🛡️ Escudo da ofensiva';}
+  estado.adesivos.push('bau_'+data);
+  const fila=estado.avisosRecompensas||[],indice=fila.findIndex(a=>a.tipo==='bau'&&a.data===data);
+  if(indice>=0){const aviso=fila.splice(indice,1)[0];estado.historicoRecompensas=Array.isArray(estado.historicoRecompensas)?estado.historicoRecompensas:[];estado.historicoRecompensas.push({...aviso,abertaEm:Date.now(),premio:texto});estado.historicoRecompensas=estado.historicoRecompensas.slice(-40)}
+  bauDataEmAbertura=null;
+  atualizarCaixaConquistas();registrarEngajamento('Baú diário aberto');salvar();fecharModal('modal-bau-diario');dispararConfetes();mostrarAviso('🎁','Baú aberto!',`${texto} e um adesivo de coleção!`);atualizarTela();
 }
 function abrirCentralAventuras(){
   garantirEngajamento();const c=document.getElementById('central-aventuras-conteudo');if(!c)return;
@@ -6147,9 +6171,10 @@ function enviarElogioCrianca(texto){
 }
 function atualizarMissaoFamilia(){garantirEngajamento();estado.missaoFamilia.progresso=(Number(estado.missaoFamilia.progresso)||0)+1;salvar();}
 const atualizarTelaOriginal=atualizarTela;
-atualizarTela=function(){atualizarTelaOriginal();renderizarEngajamento();};
+atualizarTela=function(){atualizarTelaOriginal();renderizarEngajamento();atualizarCaixaConquistas();};
 setTimeout(()=>{try{garantirEngajamento();renderizarEngajamento();}catch(e){console.warn('Engajamento:',e)}},300);
 </script><style>
+.caixa-conquistas-atalho{width:100%;align-items:center;gap:8px;margin:8px 0;padding:10px 12px;border:1px solid #f9a8d4;border-radius:14px;background:#fdf2f8;color:#831843;font-size:10px;font-weight:900;cursor:pointer;text-align:left}.caixa-conquistas-atalho b{margin-left:auto;border-radius:99px;background:#db2777;color:white;padding:4px 8px}.caixa-conquistas-linha{width:100%;display:flex;align-items:center;gap:9px;padding:10px;margin:6px 0;border:1px solid #e9d5ff;background:#faf5ff;border-radius:13px;text-align:left;cursor:pointer}.caixa-conquistas-linha>span:first-child{font-size:24px}.caixa-conquistas-linha>span:nth-child(2){flex:1}.caixa-conquistas-linha b,.caixa-conquistas-linha small{display:block}.caixa-conquistas-linha b{font-size:10px;color:#4c1d95}.caixa-conquistas-linha small{font-size:8px;color:#64748b;margin-top:3px}.caixa-conquistas-linha strong{font-size:8px;color:#7c3aed}.caixa-conquistas-linha.descoberta{background:#f8fafc;border-color:#e2e8f0;cursor:default}
 .atalhos-aventuras{display:grid;grid-template-columns:repeat(4,1fr);gap:7px;margin:8px 0 5px}
 .atalho-aventura{border:1px solid #dbeafe;background:#fff;border-radius:14px;padding:7px 3px 5px;display:flex;flex-direction:column;align-items:center;gap:2px;box-shadow:0 2px 8px rgba(15,23,42,.05);cursor:pointer;transition:transform .15s,box-shadow .15s}
 .atalho-aventura:active{transform:scale(.94)}.atalho-aventura span{font-size:20px;line-height:22px}.atalho-aventura small{font-size:8px;font-weight:900;color:#475569}.task-header-expansivel{width:100%;border:0;background:transparent;text-align:left;cursor:pointer;padding:0}.task-header-expansivel:focus-visible{outline:2px solid #38bdf8;border-radius:8px}.tasks-section.recolhida #lista-tarefas,.tasks-section.recolhida #banner-aprovacoes-pendentes,.tasks-section.recolhida #status-ofensiva{display:none}.tasks-section.recolhida #seta-missoes{transform:rotate(180deg)}
@@ -6219,35 +6244,62 @@ const ALBUM_FIGURINHAS=[
 
 function enfileirarRecompensaCrianca(aviso){
   estado.avisosRecompensas=Array.isArray(estado.avisosRecompensas)?estado.avisosRecompensas:[];
+  aviso.id=aviso.idAviso||('r_'+Date.now()+'_'+Math.random().toString(36).slice(2));
+  aviso.criadaEm=Date.now();
   estado.avisosRecompensas.push(aviso);
-  salvar();
+  salvar();atualizarCaixaConquistas();
 }
-let exibindoRecompensaCrianca=false;
-function mostrarRecompensasCrianca(){
-  if(perfilAtivo!=='crianca'||exibindoRecompensaCrianca)return;
-  const fila=estado.avisosRecompensas;
-  if(!Array.isArray(fila)||!fila.length)return;
-  exibindoRecompensaCrianca=true;
-  const aviso=fila.shift();salvar();
-  const proximo=()=>{exibindoRecompensaCrianca=false;setTimeout(mostrarRecompensasCrianca,450)};
-  if(aviso.tipo==='figurinha'){
-    const f=ALBUM_FIGURINHAS.find(x=>x.id===aviso.id);
-    if(f){const t=document.getElementById('sticker-toast'),s=document.getElementById('sticker-toast-text');if(t&&s){s.innerHTML='<b>'+f.emoji+' '+f.nome+'</b><span>'+f.raridade+' · '+f.grupo+'</span>';t.classList.add('mostrar');setTimeout(()=>t.classList.remove('mostrar'),3400)}abrirAlbumFigurinhas(true);dispararConfetes()}
-    setTimeout(proximo,4200);
-  }else if(aviso.tipo==='bau'){
-    if(estado.bauDiarioAbertoData!==hojeLocal())abrirBauDiario();
-    proximo();
-  }else if(aviso.tipo==='semanal'){
-    somBauLendario();dispararConfetes();mostrarAviso('🎁',`Baú dos ${aviso.streak} Dias!`,`+${aviso.moedas} 🪙 e +${aviso.xp} XP adicionados!`);setTimeout(proximo,3800);
-  }else proximo();
+function atualizarCaixaConquistas(){
+  const n=Array.isArray(estado.avisosRecompensas)?estado.avisosRecompensas.length:0;
+  const botao=document.getElementById('atalho-caixa-conquistas');
+  if(botao)botao.style.display=perfilAtivo==='crianca'&&n?'flex':'none';
+  const contador=document.getElementById('contador-caixa-conquistas');if(contador)contador.textContent=n;
+  const txt=document.getElementById('texto-caixa-conquistas');if(txt)txt.textContent=n===1?'Você tem 1 conquista para descobrir':`Você tem ${n} conquistas para descobrir`;
+  const menu=document.getElementById('menu-caixa-contagem');if(menu)menu.textContent=n?`${n} para descobrir`:'Ver histórico';
 }
+function descricaoConquista(a){
+  if(a.tipo==='figurinha'){const f=ALBUM_FIGURINHAS.find(x=>x.id===a.idFigurinha);return {emoji:f?.emoji||'📒',titulo:f?.nome||'Nova figurinha',texto:f?`${f.raridade} · ${f.grupo}`:'Confira seu álbum'};}
+  if(aviso.tipo==='bau')return {emoji:'🎁',titulo:'Baú do dia',texto:a.premio||'Uma surpresa pela missão concluída'};
+  if(a.tipo==='semanal')return {emoji:'🏆',titulo:`Baú dos ${Number(a.streak)||7} dias`,texto:`+${Number(a.moedas)||0} moedas e +${Number(a.xp)||0} XP`};
+  return {emoji:'⭐',titulo:'Conquista',texto:'Missão concluída'};
+}
+function renderizarCaixaConquistas(){
+  const c=document.getElementById('conteudo-caixa-conquistas');if(!c)return;
+  const fila=Array.isArray(estado.avisosRecompensas)?estado.avisosRecompensas:[];
+  const historico=Array.isArray(estado.historicoRecompensas)?estado.historicoRecompensas:[];
+  c.innerHTML=`<p style="font-size:10px;color:#64748b;margin:0 0 10px">${fila.length?`Você tem ${fila.length} surpresa(s) para descobrir!`:'Todas as surpresas foram descobertas.'}</p>`+
+    fila.map((a,i)=>{const d=descricaoConquista(a);return `<button class="caixa-conquistas-linha" onclick="abrirConquistaDaCaixa(${i})"><span>${d.emoji}</span><span><b>${esc(d.titulo)}</b><small>${esc(d.texto)}</small></span><strong>Descobrir ✨</strong></button>`}).join('')+
+    (historico.length?'<h4 style="margin:13px 0 6px;font-size:11px">Já descobertas</h4>'+historico.slice().reverse().slice(0,25).map(a=>{const d=descricaoConquista(a);return `<div class="caixa-conquistas-linha descoberta"><span>${d.emoji}</span><span><b>${esc(d.titulo)}</b><small>${esc(d.texto)} · ${new Date(a.abertaEm).toLocaleDateString('pt-BR')}</small></span></div>`}).join(''):'');
+}
+function abrirCaixaConquistas(){if(perfilAtivo!=='crianca')return;renderizarCaixaConquistas();abrirModal('modal-caixa-conquistas')}
+function abrirConquistaDaCaixa(indice){
+  if(perfilAtivo!=='crianca')return;
+  const fila=estado.avisosRecompensas;if(!Array.isArray(fila)||!fila[indice])return;
+  const aviso=fila[indice];
+  if(aviso.tipo==='bau'){
+    if(bauJaResgatado(aviso.data)){
+      fila.splice(indice,1);salvar();atualizarCaixaConquistas();renderizarCaixaConquistas();return;
+    }
+    fecharModal('modal-caixa-conquistas');abrirBauDiario(aviso.data);return;
+  }
+  fila.splice(indice,1);
+  estado.historicoRecompensas=Array.isArray(estado.historicoRecompensas)?estado.historicoRecompensas:[];
+  estado.historicoRecompensas.push({...aviso,abertaEm:Date.now()});
+  estado.historicoRecompensas=estado.historicoRecompensas.slice(-40);
+  salvar();atualizarCaixaConquistas();renderizarCaixaConquistas();
+  const d=descricaoConquista(aviso);
+  if(aviso.tipo==='figurinha'){fecharModal('modal-caixa-conquistas');abrirAlbumFigurinhas(true)}
+  else {fecharModal('modal-caixa-conquistas');somBauLendario();mostrarAviso(d.emoji,d.titulo,d.texto)}
+  dispararConfetes();
+}
+function mostrarRecompensasCrianca(){atualizarCaixaConquistas()}
 let albumFiltroAtual='Todos';
 function ganharFigurinhaPorMissao(){
  if(!Array.isArray(estado.adesivos))estado.adesivos=[];
  const f=ALBUM_FIGURINHAS.find(x=>!estado.adesivos.includes(x.id));
  if(!f)return null;
  estado.adesivos.push(f.id);
- enfileirarRecompensaCrianca({tipo:'figurinha',id:f.id});
+ enfileirarRecompensaCrianca({tipo:'figurinha',idFigurinha:f.id});
  return f;
 }
 /* Versão base do álbum (grade simples por raridade). Fica inativa na prática: logo
