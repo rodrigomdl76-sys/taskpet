@@ -6210,6 +6210,10 @@ function ganharFigurinhaPorMissao(){
  },500);
  return f;
 }
+/* Versão base do álbum (grade simples por raridade). Fica inativa na prática: logo
+   abaixo, rotinapet-map-v1-script substitui window.renderizarAlbumFigurinhas por uma
+   versão paginada por região ("P"). Mantida só como fallback de segurança —
+   se for mexer no álbum, edite a versão de baixo, que é a que realmente roda. */
 function renderizarAlbumFigurinhas(novo){
  const c=document.getElementById('album-figurinhas-conteudo');if(!c)return;
  const found=new Set(estado.adesivos||[]),n=ALBUM_FIGURINHAS.filter(f=>found.has(f.id)).length,p=Math.round(n/ALBUM_FIGURINHAS.length*100);
@@ -6271,24 +6275,45 @@ window.renderizarAlbumFigurinhas=()=>{
  c.innerHTML=`<div class="album-pages-wrap"><div class="album-page-tabs">${tabs}</div><div class="album-page"><div class="album-page-head"><div><div class="album-page-title">${p.i} ${p.n}</div><small>${p.s.filter(own).length}/${p.s.length} figurinhas</small></div><div class="album-page-reward">Recompensa<br><b>${p.r}</b></div></div><div class="adesivos-grade">${cards}</div>${p.s.every(own)?`<div class="album-page-complete">🎉 Página completa!<br><small>${p.r}</small></div>`:''}</div><div style="margin-top:12px;font-size:.82rem;opacity:.8">Álbum: <b>${n}/${total}</b> • ${Math.round(n/total*100)}%</div></div>`;
 };
 window.mostrarDetalheFigurinha=id=>{const f=(window.ALBUM_FIGURINHAS||[]).find(x=>x.id===id);if(!f)return;if(!(estado.adesivos||[]).includes(id)){mostrarToast('🔒 Complete mais missões para revelar.');return;}if(typeof mostrarAviso==='function')mostrarAviso(f.emoji,f.nome,f.raridade||'Comum');};
+/* Fonte única das áreas do Mapa Aventura — antes esses dados viviam duplicados
+   (um array simples aqui + um array "areas" mais completo em mapa-vivo-v2-script,
+   que reprocessava e re-renderizava tudo de novo por cima). Consolidado num só lugar. */
+const MAPA_AREAS=[
+ {id:'n1',name:'Começo',emoji:'🏡',need:0,x:12,y:67,desc:'A casinha do pet. Aqui começa a sua aventura!',reward:'✨ Primeiro passo'},
+ {id:'n2',name:'Bosque',emoji:'🌳',need:3,x:32,y:54,desc:'Um bosque tranquilo cheio de pequenas descobertas.',reward:'🌿 Medalha do Explorador'},
+ {id:'n3',name:'Vale',emoji:'🏞️',need:7,x:52,y:43,desc:'Um vale aberto onde os desafios ficam maiores.',reward:'⚡ Energia Extra'},
+ {id:'n4',name:'Castelo',emoji:'🏰',need:12,x:72,y:31,desc:'O grande castelo das conquistas da família.',reward:'🏅 Brasão do Castelo'},
+ {id:'n5',name:'Grande Meta',emoji:'⭐',need:18,x:89,y:18,desc:'O ponto mais alto da jornada. Uma conquista especial!',reward:'👑 Mestre da Aventura'}
+];
 window.abrirMapaAventura=()=>{
  const menu=document.getElementById('modal-menu-mais');
  if(menu)menu.classList.remove('mostrar','modal-top');
  let m=document.getElementById('modal-mapa-aventura');
  if(!m){
   m=document.createElement('div');m.id='modal-mapa-aventura';m.className='modal-overlay';
-  m.innerHTML=`<div class="modal" style="max-width:620px;padding:10px;background:transparent;box-shadow:none"><div class="mapa-aventura"><div class="mapa-topo"><div><div class="mapa-titulo">🗺️ Jornada do Pet</div><div class="mapa-subtitulo">Cada missão leva vocês mais longe.</div></div><button class="close-btn" onclick="fecharModal('modal-mapa-aventura')">×</button></div><div class="mapa-trilha" id="mapa-trilha"><div class="mapa-caminho"><i id="mapa-caminho-progresso"></i></div><div class="mapa-pet" id="mapa-pet">🐾</div>${[['n1','🏡','Começo',12,67],['n2','🌳','Bosque',32,54],['n3','🏞️','Vale',52,43],['n4','🏰','Castelo',72,31],['n5','⭐','Grande Meta',89,18]].map(x=>`<button class="mapa-node locked" data-node="${x[0]}" style="left:${x[3]}%;top:${x[4]}%"><span class="emoji">${x[1]}</span><small>${x[2]}</small></button>`).join('')}</div><div class="mapa-progresso">Progresso: <span id="mapa-pct">0%</span><div class="mapa-barra"><i id="mapa-barra-fill"></i></div></div><div class="mapa-dica" id="mapa-dica">Complete 3 missões para chegar ao Bosque. ✨</div></div></div>`;
+  m.innerHTML=`<div class="modal" style="max-width:620px;padding:10px;background:transparent;box-shadow:none"><div class="mapa-aventura"><div class="mapa-topo"><div><div class="mapa-titulo">🗺️ Jornada do Pet</div><div class="mapa-subtitulo">Cada missão leva vocês mais longe.</div></div><button class="close-btn" onclick="fecharModal('modal-mapa-aventura')">×</button></div><div class="mapa-trilha" id="mapa-trilha"><div class="mapa-caminho"><i id="mapa-caminho-progresso"></i></div><div class="mapa-pet" id="mapa-pet">🐾</div>${MAPA_AREAS.map(a=>`<button class="mapa-node locked" data-node="${a.id}" style="left:${a.x}%;top:${a.y}%"><span class="emoji">${a.emoji}</span><small>${a.name}</small></button>`).join('')}</div><div class="mapa-progresso">Progresso: <span id="mapa-pct">0%</span><div class="mapa-barra"><i id="mapa-barra-fill"></i></div></div><div class="mapa-dica" id="mapa-dica">Complete 3 missões para chegar ao Bosque. ✨</div></div></div>`;
   document.body.appendChild(m);
  }
- abrirModal('modal-mapa-aventura');window.renderizarMapaAventura();
+ abrirModal('modal-mapa-aventura');
+ document.querySelectorAll('#mapa-trilha .mapa-node').forEach((el,i)=>{el.onclick=()=>window.abrirAreaMapa(MAPA_AREAS[i].id)});
+ window.renderizarMapaAventura();
 };
 window.renderizarMapaAventura=()=>{
- const n=(estado.tarefas||[]).filter(t=>t.status==='aprovada').length,ms=[0,3,7,12,18],pct=Math.min(100,Math.round(n/18*100)),pts=[[12,67],[32,54],[52,43],[72,31],[89,18]];
- document.querySelectorAll('#mapa-trilha .mapa-node').forEach((e,i)=>{const u=n>=ms[i],d=i<4?n>=ms[i+1]:n>=18;e.classList.toggle('locked',!u);e.classList.toggle('current',u&&!d);e.classList.toggle('done',d)});
- let i=0;for(let j=0;j<ms.length;j++)if(n>=ms[j])i=j;
- const pet=document.getElementById('mapa-pet');if(pet){pet.style.left=pts[i][0]+'%';pet.style.top=pts[i][1]+'%'}
+ const n=(estado.tarefas||[]).filter(t=>t.status==='aprovada').length,pct=Math.min(100,Math.round(n/18*100));
+ document.querySelectorAll('#mapa-trilha .mapa-node').forEach((e,i)=>{const a=MAPA_AREAS[i],u=n>=a.need,d=i<4&&n>=MAPA_AREAS[i+1].need;e.classList.toggle('locked',!u);e.classList.toggle('current',u&&!d);e.classList.toggle('done',d)});
+ let i=0;for(let j=0;j<MAPA_AREAS.length;j++)if(n>=MAPA_AREAS[j].need)i=j;
+ const pet=document.getElementById('mapa-pet');if(pet){pet.style.left=MAPA_AREAS[i].x+'%';pet.style.top=MAPA_AREAS[i].y+'%'}
  const b=document.getElementById('mapa-caminho-progresso'),f=document.getElementById('mapa-barra-fill'),q=document.getElementById('mapa-pct');if(b)b.style.width=pct+'%';if(f)f.style.width=pct+'%';if(q)q.textContent=pct+'%';
- const d=document.getElementById('mapa-dica');if(d)d.textContent=n>=18?'👑 Grande meta alcançada!':n>=12?'🏰 O Castelo está perto!':n>=7?'🏞️ Você chegou ao Vale!':n>=3?'🌳 O Bosque foi descoberto!':'🏡 A aventura começou. Complete 3 missões para avançar.';
+ const d=document.getElementById('mapa-dica');
+ if(d)d.textContent=n>=18?'👑 Grande meta alcançada! Explore novamente e complete novas missões.':`📍 ${MAPA_AREAS[i].name}: ${MAPA_AREAS[i].desc} ${i<4?'Próxima área em '+(MAPA_AREAS[i+1].need-n)+' missões.':''}`;
+ const tr=document.getElementById('mapa-trilha');
+ if(tr){let c=tr.querySelector('.mapa-area-card');if(!c){c=document.createElement('div');c.className='mapa-area-card';tr.appendChild(c)}c.innerHTML='<b>'+MAPA_AREAS[i].emoji+' '+MAPA_AREAS[i].name+'</b> · '+MAPA_AREAS[i].reward}
+};
+window.abrirAreaMapa=id=>{
+ const a=MAPA_AREAS.find(x=>x.id===id),n=(estado.tarefas||[]).filter(t=>t.status==='aprovada').length;
+ if(!a)return;
+ if(n<a.need){mostrarAviso&&mostrarAviso('🔒','Área bloqueada',`Complete ${a.need-n} missão(ões) para desbloquear ${a.name}.`);return}
+ mostrarAviso&&mostrarAviso(a.emoji,a.name,a.desc+' '+a.reward)
 };
 const au=window.atualizarTela;if(typeof au==='function'&&!au.__map){const w=function(){const r=au.apply(this,arguments);try{window.renderizarMapaAventura()}catch(e){}return r};w.__map=true;window.atualizarTela=w;}
 })();
@@ -6309,19 +6334,9 @@ const au=window.atualizarTela;if(typeof au==='function'&&!au.__map){const w=func
 @media(max-width:600px){.mapa-trilha{height:350px}.mapa-node{width:68px;height:68px}.mapa-node .emoji{font-size:25px}.mapa-pet{font-size:34px}.mapa-titulo{font-size:18px}}
 @media(prefers-reduced-motion:reduce){.mapa-aventura:before,.mapa-trilha:before,.mapa-pet,.mapa-node.current{animation:none!important;transition:none!important}}
 </style>
-<script id="mapa-vivo-v2-script">(()=>{
-const areas=[
- {id:'n1',name:'Começo',emoji:'🏡',need:0,desc:'A casinha do pet. Aqui começa a sua aventura!',reward:'✨ Primeiro passo'},
- {id:'n2',name:'Bosque',emoji:'🌳',need:3,desc:'Um bosque tranquilo cheio de pequenas descobertas.',reward:'🌿 Medalha do Explorador'},
- {id:'n3',name:'Vale',emoji:'🏞️',need:7,desc:'Um vale aberto onde os desafios ficam maiores.',reward:'⚡ Energia Extra'},
- {id:'n4',name:'Castelo',emoji:'🏰',need:12,desc:'O grande castelo das conquistas da família.',reward:'🏅 Brasão do Castelo'},
- {id:'n5',name:'Grande Meta',emoji:'⭐',need:18,desc:'O ponto mais alto da jornada. Uma conquista especial!',reward:'👑 Mestre da Aventura'}
-];
-window.renderizarMapaAventuraVivo=()=>{const n=(estado.tarefas||[]).filter(t=>t.status==='aprovada').length,ms=areas.map(a=>a.need),pct=Math.min(100,Math.round(n/18*100)),pts=[[12,67],[32,54],[52,43],[72,31],[89,18]];document.querySelectorAll('#mapa-trilha .mapa-node').forEach((e,i)=>{const a=areas[i],u=n>=a.need,d=i<4&&n>=areas[i+1].need;e.classList.toggle('locked',!u);e.classList.toggle('current',u&&!d);e.classList.toggle('done',d)});let i=0;for(let j=0;j<ms.length;j++)if(n>=ms[j])i=j;const pet=document.getElementById('mapa-pet');if(pet){pet.style.left=pts[i][0]+'%';pet.style.top=pts[i][1]+'%'}const b=document.getElementById('mapa-caminho-progresso'),f=document.getElementById('mapa-barra-fill'),q=document.getElementById('mapa-pct');if(b)b.style.width=pct+'%';if(f)f.style.width=pct+'%';if(q)q.textContent=pct+'%';const d=document.getElementById('mapa-dica');if(d)d.textContent=n>=18?'👑 Grande meta alcançada! Explore novamente e complete novas missões.':`📍 ${areas[i].name}: ${areas[i].desc} ${i<4?'Próxima área em '+areas[i+1].need+' missões.':''}`;const tr=document.getElementById('mapa-trilha');if(tr){let c=tr.querySelector('.mapa-area-card');if(!c){c=document.createElement('div');c.className='mapa-area-card';tr.appendChild(c)}c.innerHTML='<b>'+areas[i].emoji+' '+areas[i].name+'</b> · '+areas[i].reward}};
-window.abrirAreaMapa=id=>{const a=areas.find(x=>x.id===id);const n=(estado.tarefas||[]).filter(t=>t.status==='aprovada').length;if(!a)return;if(n<a.need){mostrarAviso&&mostrarAviso('🔒','Área bloqueada',`Complete ${a.need-n} missão(ões) para desbloquear ${a.name}.`);return}mostrarAviso&&mostrarAviso(a.emoji,a.name,a.desc+' '+a.reward)};
-const oldOpen=window.abrirMapaAventura;window.abrirMapaAventura=()=>{if(oldOpen)oldOpen();setTimeout(()=>{document.querySelectorAll('#mapa-trilha .mapa-node').forEach((el,i)=>{el.onclick=()=>window.abrirAreaMapa(areas[i].id)});window.renderizarMapaAventuraVivo()},80)};
-const oldRender=window.renderizarMapaAventura;window.renderizarMapaAventura=()=>{if(oldRender)oldRender();window.renderizarMapaAventuraVivo()};
-})();</script>
+<!-- A lógica de JS que antes ficava em "mapa-vivo-v2-script" (áreas, cliques, cartão de
+     área, barra de progresso) foi unificada dentro de rotinapet-map-v1-script acima,
+     numa função só, sem duplo processamento. Este bloco de estilo continua sendo usado. -->
 
 <style id="meu-pet-v1">.menu-mais-item.visual-pet{background:linear-gradient(145deg,#fdf4ff,#f5f3ff);border-color:#e9d5ff;color:#6d28d9}.meupet-modal{max-width:430px!important;background:linear-gradient(160deg,#fff,#faf5ff)}.meupet-hero{position:relative;overflow:hidden;border-radius:22px;padding:14px;background:linear-gradient(135deg,#ede9fe,#fce7f3);border:1px solid #e9d5ff;margin-bottom:10px;text-align:center}.meupet-hero:after{content:'✦';position:absolute;right:16px;top:5px;font-size:38px;color:#fff8;animation:meuPetBrilho 2.8s ease-in-out infinite}@keyframes meuPetBrilho{50%{transform:rotate(18deg) scale(1.15);opacity:.55}}.meupet-avatar{font-size:64px;line-height:1;margin:2px 0 5px;filter:drop-shadow(0 8px 10px #7c3aed22);animation:meuPetFloat 2.8s ease-in-out infinite}@keyframes meuPetFloat{50%{transform:translateY(-5px)}}.meupet-title{font-size:15px;font-weight:1000;color:#312e81}.meupet-sub{font-size:9px;color:#64748b;margin-top:2px;font-weight:800}.meupet-section-title{font-size:10px;font-weight:1000;color:#334155;margin:9px 0 6px}.meupet-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:7px}.meupet-item{position:relative;border:1px solid #e5e7eb;border-radius:15px;padding:9px;background:#fff;cursor:pointer;transition:transform .15s,box-shadow .15s,border-color .15s;text-align:center}.meupet-item:active{transform:scale(.96)}.meupet-item.ativo{border-color:#8b5cf6;box-shadow:0 0 0 2px #8b5cf622}.meupet-item.bloqueado{cursor:default;background:#f8fafc;opacity:.62}.meupet-item .mi-emoji{font-size:28px;display:block;margin-bottom:3px}.meupet-item b{font-size:9px;color:#334155;display:block}.meupet-item small{font-size:7px;color:#64748b;font-weight:800;display:block;margin-top:2px}.meupet-check{position:absolute;right:6px;top:5px;font-size:10px}.meupet-chip{display:inline-flex;align-items:center;gap:4px;padding:4px 8px;border-radius:99px;background:#ffffffaa;font-size:8px;font-weight:1000;color:#6d28d9;margin-top:7px}.meupet-reward{margin-top:8px;padding:8px 10px;border-radius:13px;background:#fffbeb;border:1px solid #fde68a;font-size:8px;color:#92400e;font-weight:900}@media(prefers-reduced-motion:reduce){.meupet-avatar,.meupet-hero:after{animation:none}}</style>
 <script id="meu-pet-v1-script">(()=>{const RECOMPENSAS_MAPA=[{id:'mapa_bosque_visual',missao:3,acessorio:'grinalda',local:'Bosque',texto:'🌸 Grinalda de Flores'},{id:'mapa_vale_visual',missao:7,acessorio:'fone',local:'Vale',texto:'🎧 Fone de Ouvido'},{id:'mapa_castelo_visual',missao:12,acessorio:'coroa',local:'Castelo',texto:'👑 Coroa Real'},{id:'mapa_meta_visual',missao:18,acessorio:'bone',local:'Grande Meta',texto:'🧢 Boné Estiloso'}];window.verificarRecompensasMapa=function(silencioso){if(!estado)return;estado.recompensasMapa=estado.recompensasMapa||{};estado.acessorios=estado.acessorios||{comprados:[],ativo:null};estado.acessorios.comprados=Array.isArray(estado.acessorios.comprados)?estado.acessorios.comprados:[];const n=(estado.tarefas||[]).filter(t=>t.status==='aprovada').length;let mudou=false;RECOMPENSAS_MAPA.forEach(r=>{if(n>=r.missao&&!estado.recompensasMapa[r.id]){estado.recompensasMapa[r.id]=true;if(!estado.acessorios.comprados.includes(r.acessorio))estado.acessorios.comprados.push(r.acessorio);mudou=true;if(!silencioso)setTimeout(()=>{if(typeof dispararConfetes==='function')dispararConfetes();if(typeof mostrarToast==='function')mostrarToast(`🎁 Desbloqueou ${r.texto}!`);},250)}});if(mudou)salvar();return mudou};window.abrirMeuPet=function(){let m=document.getElementById('modal-meu-pet');if(!m){m=document.createElement('div');m.id='modal-meu-pet';m.className='modal-overlay';m.innerHTML='<div class="modal meupet-modal"><div class="modal-title"><div><h3 style="margin:0">🐾 Meu Pet</h3><small style="font-size:8px;color:#64748b;font-weight:800">Seu visual, suas conquistas</small></div><button class="close-btn" onclick="fecharModal(\'modal-meu-pet\')">×</button></div><div id="meupet-conteudo"></div></div></div>';document.body.appendChild(m)}verificarRecompensasMapa(true);renderizarMeuPet();abrirModal('modal-meu-pet')};window.renderizarMeuPet=function(){const c=document.getElementById('meupet-conteudo');if(!c)return;const ac=estado.acessorios||{comprados:[],ativo:null};const comprados=new Set(ac.comprados||[]);const atual=ACESSORIOS.find(a=>a.id===ac.ativo);const n=(estado.tarefas||[]).filter(t=>t.status==='aprovada').length;c.innerHTML='<div class="meupet-hero"><div class="meupet-avatar">'+(estado.petEmoji||'🐾')+'</div><div class="meupet-title">'+(atual?atual.emoji+' '+esc(atual.nome):'Visual natural')+'</div><div class="meupet-sub">Complete missões para desbloquear novos acessórios.</div><span class="meupet-chip">⭐ '+n+' missões aprovadas</span></div><div class="meupet-section-title">🎀 Acessórios desbloqueados</div><div class="meupet-grid" id="meupet-grid"></div><div class="meupet-reward">🗺️ Recompensas do mapa são desbloqueadas automaticamente quando você chega a uma nova região.</div>';const g=document.getElementById('meupet-grid');ACESSORIOS.forEach(a=>{const tem=comprados.has(a.id),ativo=ac.ativo===a.id;const d=document.createElement('button');d.type='button';d.className='meupet-item '+(tem?'':'bloqueado')+(ativo?' ativo':'');d.innerHTML='<span class="meupet-check">'+(ativo?'✓':tem?'🎀':'🔒')+'</span><span class="mi-emoji">'+a.emoji+'</span><b>'+esc(a.nome)+'</b><small>'+(tem?(ativo?'Equipado · toque para tirar':'Toque para equipar'):(a.preco+' 🪙 na Loja'))+'</small>';if(tem)d.onclick=()=>{const removendo=ativo;estado.acessorios.ativo=removendo?null:a.id;salvar();renderizarAcessorioNoContainer();atualizarTela();renderizarMeuPet();if(!removendo){celebrarNovoAcessorio();}if(typeof mostrarToast==='function')mostrarToast(removendo?'Acessório removido':`🎀 ${a.nome} equipado!`)};g.appendChild(d)})};})();</script></body>
