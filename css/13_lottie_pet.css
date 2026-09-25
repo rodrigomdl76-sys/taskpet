@@ -1,0 +1,5 @@
+/* A reação Lottie ocupa o mesmo espaço do desenho do pet. */
+#pet-principal{position:relative}
+#pet-principal .rp-lottie-reacao{position:absolute;inset:0;width:100%;height:100%;z-index:3;pointer-events:none;overflow:visible}
+#pet-principal.rp-lottie-ativa #pet-svg-container{visibility:hidden}
+#pet-principal .rp-lottie-reacao svg{width:100%;height:100%;overflow:visible}
