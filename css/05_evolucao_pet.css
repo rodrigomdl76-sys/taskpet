@@ -1,0 +1,17 @@
+
+.pet-evolucao-pulse{animation:petEvoPulse .9s cubic-bezier(.2,.9,.25,1)}
+@keyframes petEvoPulse{0%{transform:scale(1)}35%{transform:scale(1.09) rotate(-2deg)}65%{transform:scale(.98) rotate(2deg)}100%{transform:scale(1)}}
+.evolucao-aura{position:absolute;inset:8% 12%;pointer-events:none;border-radius:50%;opacity:0;filter:blur(1px);background:radial-gradient(circle,rgba(255,255,255,.72),rgba(167,139,250,.25) 38%,transparent 68%);z-index:0}
+.evolucao-aura.ativa{animation:evoAura 1.6s ease-out}
+@keyframes evoAura{0%{opacity:0;transform:scale(.65)}25%{opacity:.9}100%{opacity:0;transform:scale(1.35)}}
+.evo-progresso{margin:8px auto 0;max-width:310px;padding:9px 11px;border:1px solid rgba(255,255,255,.65);background:rgba(255,255,255,.72);backdrop-filter:blur(8px);border-radius:15px;box-shadow:0 7px 22px rgba(15,23,42,.09);font-size:9px}
+.evo-progresso-top{display:flex;justify-content:space-between;align-items:center;gap:8px;font-weight:900;color:#475569}
+.evo-progresso-top strong{color:#6b21a8;font-size:10px}
+.evo-progresso-bar{height:6px;border-radius:99px;background:#e9d5ff;overflow:hidden;margin-top:6px}
+.evo-progresso-fill{height:100%;width:0;border-radius:inherit;background:linear-gradient(90deg,#a78bfa,#f472b6);transition:width .7s ease}
+.evo-progresso small{display:block;margin-top:5px;color:#64748b;font-size:8px}
+.evo-unlock{position:fixed;left:50%;top:17%;transform:translate(-50%,-20px) scale(.9);z-index:10000;pointer-events:none;opacity:0;padding:13px 18px;border-radius:20px;background:rgba(255,255,255,.96);border:2px solid #f0abfc;box-shadow:0 16px 45px rgba(91,33,182,.22);text-align:center;min-width:230px}
+.evo-unlock.show{animation:evoUnlock 2.8s cubic-bezier(.2,.8,.2,1) both}
+.evo-unlock .evo-emoji{font-size:30px;display:block}.evo-unlock b{display:block;color:#6b21a8;font-size:15px;margin-top:3px}.evo-unlock span{font-size:9px;color:#64748b}
+@keyframes evoUnlock{0%{opacity:0;transform:translate(-50%,-20px) scale(.85)}12%,75%{opacity:1;transform:translate(-50%,0) scale(1)}100%{opacity:0;transform:translate(-50%,-10px) scale(.96)}}
+@media (prefers-reduced-motion:reduce){.pet-evolucao-pulse,.evolucao-aura.ativa,.evo-unlock.show{animation:none}.evo-unlock.show{opacity:1}.evo-progresso-fill{transition:none}}

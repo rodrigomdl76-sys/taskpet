@@ -1,0 +1,36 @@
+
+/* 🐾 Animações especiais por acessório */
+#pet-principal.pet-acessorio-ativo{transition:filter .25s ease,transform .25s ease}
+#pet-principal.pet-acessorio-ativo::after{content:"";position:absolute;inset:8% 10%;pointer-events:none;border-radius:50%;opacity:.0}
+#pet-principal.acessorio-coroa{animation:petRoyal 2.8s ease-in-out infinite}
+#pet-principal.acessorio-fone{animation:petDance 1.9s ease-in-out infinite}
+#pet-principal.acessorio-grinalda{animation:petFlowers 2.6s ease-in-out infinite}
+#pet-principal.acessorio-bone{animation:petCool 3.1s ease-in-out infinite}
+#pet-principal.acessorio-chapeu{animation:petParty 2.4s ease-in-out infinite}
+#pet-principal.acessorio-oculos{animation:petCool 3.4s ease-in-out infinite}
+#pet-principal.acessorio-laco{animation:petCute 2.7s ease-in-out infinite}
+#pet-principal.acessorio-cachecol{animation:petWarm 3s ease-in-out infinite}
+#pet-principal.acessorio-gravata{animation:petElegant 3s ease-in-out infinite}
+
+.pet-stage.pet-stage-celebracao::before,
+.pet-stage.pet-stage-celebracao::after{
+  position:absolute;pointer-events:none;z-index:12;font-size:20px;
+  animation:petBurst .9s ease-out forwards;
+}
+.pet-stage.pet-stage-celebracao::before{content:"✨  ✨  ✨";top:18%;left:8%}
+.pet-stage.pet-stage-celebracao::after{content:"💖  ⭐  💖";top:25%;right:5%;animation-delay:.08s}
+
+@keyframes petRoyal{0%,100%{transform:translateY(0) rotate(0)}35%{transform:translateY(-5px) rotate(-2deg)}70%{transform:translateY(0) rotate(2deg)}}
+@keyframes petDance{0%,100%{transform:translateY(0) rotate(0) scale(1)}25%{transform:translateY(-4px) rotate(-4deg) scale(1.015)}50%{transform:translateY(0) rotate(4deg) scale(1.02)}75%{transform:translateY(-3px) rotate(-3deg)}}
+@keyframes petFlowers{0%,100%{transform:translateY(0) scale(1)}50%{transform:translateY(-5px) scale(1.018)}}
+@keyframes petCool{0%,100%{transform:translateY(0) rotate(0)}50%{transform:translateY(-3px) rotate(1.5deg)}}
+@keyframes petParty{0%,100%{transform:translateY(0) rotate(0)}20%{transform:rotate(-4deg)}40%{transform:rotate(4deg)}60%{transform:rotate(-3deg)}80%{transform:rotate(2deg)}}
+@keyframes petCute{0%,100%{transform:translateY(0) scale(1)}50%{transform:translateY(-4px) scale(1.025)}}
+@keyframes petWarm{0%,100%{transform:translateY(0)}50%{transform:translateY(-3px) rotate(-1deg)}}
+@keyframes petElegant{0%,100%{transform:translateY(0) rotate(0)}50%{transform:translateY(-3px) rotate(1deg)}}
+@keyframes petBurst{0%{transform:scale(.5);opacity:0}20%{opacity:1}100%{transform:scale(1.8) translateY(-22px);opacity:0}}
+
+@media(prefers-reduced-motion:reduce){
+ #pet-principal.pet-acessorio-ativo{animation:none!important}
+ .pet-stage.pet-stage-celebracao::before,.pet-stage.pet-stage-celebracao::after{animation:none}
+}
