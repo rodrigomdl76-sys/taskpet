@@ -4276,8 +4276,8 @@ async function iniciarTourGuiado(){
       await esperar(2200);
     },
     async()=>{
-      setDemoHud('2/5 · Alimentar, brincar ou dormir');
-      apontarSpotlight(document.getElementById('pet-actions')||document.getElementById('btn-alimentar'));
+      setDemoHud('2/5 · Brincar com o pet');
+      apontarSpotlight(document.getElementById('pet-actions')||document.getElementById('pet-principal'));
       await esperar(2200);
     },
     async()=>{
