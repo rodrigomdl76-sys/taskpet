@@ -80,12 +80,13 @@
 <div class="app">
   <div class="top-row">
     <button class="top-pill" onclick="abrirPainelPais()"><span class="coin-dot"></span><span class="top-pill-text"><span id="txt-moedas">0</span> 🪙</span></button>
-    <button class="top-pill" onclick="abrirPainelPais()"><span style="font-size:13px">💰</span><span><span class="top-pill-text">R$ <span id="txt-dinheiro">0,00</span></span><span class="top-pill-sub" id="txt-status-nuvem">🔒 pais</span></span></button>
+    <button class="top-pill" id="topo-mesada" onclick="abrirPainelPais()"><span style="font-size:13px">💰</span><span><span class="top-pill-text">R$ <span id="txt-dinheiro">0,00</span></span><span class="top-pill-sub" id="txt-status-nuvem">🔒 pais</span></span></button>
     <button class="top-pill" id="btn-pill-streak" onclick="abrirModal('modal-conquistas')" title="Sequência diária"><span style="font-size:13px">🔥</span><span><span class="top-pill-text"><span id="txt-streak">0</span> dias</span><span class="top-pill-sub">sequência</span></span></button>
   </div>
   <div class="pet-selector">
     <button class="pet-unico-btn" id="btn-pet-atual" onclick="alternarListaPets(event)">🐱</button>
     <button type="button" class="btn-ajuda-flutuante" id="btn-ajuda" onclick="abrirModalAjuda()" title="Ajuda" aria-label="Abrir ajuda">❓</button>
+    <button type="button" class="btn-pais-flutuante" id="btn-pais" onclick="abrirPainelPais()" title="Painel dos pais" aria-label="Abrir painel dos pais">🔐</button>
     <div class="lista-pet-dropdown" id="lista-pets">
       <div class="opcao-pet" data-pet="gato" onclick="escolherPet('gato')">🐱</div>
       <div class="opcao-pet" data-pet="cachorra" onclick="escolherPet('cachorra')">🐶</div>
@@ -282,7 +283,8 @@
     <button type="button" class="primary-btn blue-btn botao-secundario" style="width:100%;margin-top:4px" onclick="abrirNovoFilho()">+ Adicionar filho</button>
     <small style="font-size:8px;color:#64748b;margin-top:3px;display:block">Cada filho tem pet, tarefas e moedas separados. Toque num filho para trocar quem está ativo.</small>
   </div>
-  <div class="section-card"><div style="display:flex;justify-content:space-between;align-items:center"><b style="font-size:10px">💸 Cofrinho</b><button class="primary-btn green-btn" onclick="sacarDinheiro()">Pagar / sacar</button></div><div style="font-size:9px;color:#64748b;margin-top:5px">Cada moeda vale R$ <span id="texto-taxa-atual">0,01</span>.</div></div>
+  <div class="section-card"><label class="field-label" for="opcao-mesada">💰 Mesada em dinheiro</label><label class="opcao-mesada"><input type="checkbox" id="opcao-mesada" onchange="alternarMesada(this.checked)"><span>Converter moedas em reais e mostrar o saldo no topo</span></label><small style="font-size:8px;color:#64748b">Ao desligar, as moedas virtuais continuam valendo no app. O saldo anterior fica guardado.</small></div>
+  <div class="section-card" id="card-cofrinho"><div style="display:flex;justify-content:space-between;align-items:center"><b style="font-size:10px">💸 Cofrinho</b><button class="primary-btn green-btn" onclick="sacarDinheiro()">Pagar / sacar</button></div><div style="font-size:9px;color:#64748b;margin-top:5px">Cada moeda vale R$ <span id="texto-taxa-atual">0,01</span>.</div></div>
   <div class="section-card"><label class="field-label">👶 Idade da criança</label><input class="field" id="input-idade-crianca" type="number" min="3" max="15" onchange="atualizarIdadeCrianca(this.value)"></div>
   <div class="section-card"><label class="field-label">🎮 Dificuldade dos jogos</label><select class="field" id="input-dificuldade-jogos" onchange="atualizarDificuldadeJogos(this.value)"><option value="auto">Automática pela idade</option><option value="facil">Fácil</option><option value="medio">Média</option><option value="dificil">Difícil</option></select><small style="font-size:8px;color:#64748b">A idade também ajusta os jogos quando a opção automática está selecionada.</small></div>
   <div class="section-card"><label class="field-label">💵 Valor por moeda (R$)</label><input class="field" id="input-taxa-cambio" type="number" min="0" step="0.01" onchange="atualizarTaxaCambio(this.value)"></div>
@@ -397,7 +399,8 @@
     <div style="font-size:8px;color:#64748b;margin-top:4px">As moedas só são descontadas depois da aprovação. A criança pode acompanhar o histórico.</div>
     <div class="stack" id="lista-solicitacoes-premios" style="margin-top:7px"></div>
   </div>
-  <div class="section-card"><b style="font-size:10px">✏️ Gerenciar tarefas</b><div style="font-size:8px;color:#64748b;margin-top:4px">Obrigatórias 🔥 contam para a ofensiva. Extras ⭐ dão moedas sem travar o streak.</div><div class="stack" id="lista-edicao-tarefas" style="margin:6px 0"></div><div style="display:grid;grid-template-columns:1fr 48px 88px auto;gap:4px"><input class="field" id="nova-tarefa-texto" placeholder="Nova tarefa"><input class="field" id="nova-tarefa-moedas" type="number" value="5" min="1"><select class="field" id="nova-tarefa-tipo"><option value="obrigatoria">🔥 Obrigatória</option><option value="extra">⭐ Extra</option></select><button class="primary-btn blue-btn" onclick="adicionarTarefa()">+</button></div>
+  <div class="section-card"><b style="font-size:10px">✏️ Gerenciar tarefas</b><div style="font-size:8px;color:#64748b;margin-top:4px">Obrigatórias 🔥 contam para a ofensiva. Escolha uma habilidade para que a criança conquiste emblemas com tarefas aprovadas.</div><div class="stack" id="lista-edicao-tarefas" style="margin:6px 0"></div><div style="display:grid;grid-template-columns:1fr 48px 88px auto;gap:4px"><input class="field" id="nova-tarefa-texto" placeholder="Nova tarefa"><input class="field" id="nova-tarefa-moedas" type="number" value="5" min="1"><select class="field" id="nova-tarefa-tipo"><option value="obrigatoria">🔥 Obrigatória</option><option value="extra">⭐ Extra</option></select><button class="primary-btn blue-btn" onclick="adicionarTarefa()">+</button></div>
+    <select class="field" id="nova-tarefa-habilidade" aria-label="Habilidade da tarefa" style="margin-top:6px"><option value="">Sem habilidade</option><option value="organizacao">🧺 Organização</option><option value="leitura">📚 Leitura</option><option value="natureza">🌱 Cuidado com a natureza</option></select>
     <div style="margin-top:6px"><span class="field-label" style="margin-bottom:2px">📅 Repetir em (vazio = todo dia)</span><div class="dias-semana-picker" id="dias-nova-tarefa"></div></div>
   </div>
   <div class="section-card"><div style="display:flex;justify-content:space-between;align-items:center;gap:5px"><b style="font-size:10px">📊 Resumo</b><div style="display:flex;gap:4px"><button class="primary-btn blue-btn" onclick="abrirRelatorioSemanal()">Semanal</button><button class="primary-btn pink-btn" onclick="abrirRelatorioMensal()">Mensal</button></div></div><div class="stat-grid" style="margin-top:6px"><div class="stat">📋 <b id="stat-feitas">0</b><span>tarefas feitas</span></div><div class="stat">🔥 <b id="stat-ofensiva-pais">0</b><span>dias de ofensiva</span></div><div class="stat">🏆 <b id="stat-conquistas">0</b><span>conquistas</span></div></div></div>
@@ -502,6 +505,8 @@
       <small id="rpd-proxima-texto">Complete as obrigatórias para manter sua ofensiva.</small>
     </div>
   </div>
+  <h4 class="titulo-habilidades">🌟 Habilidades que estou praticando</h4>
+  <div class="grid-habilidades" id="lista-habilidades"></div>
   <div class="stack" id="lista-conquistas"></div>
 </div></div>
 <div id="modal-gravador" class="modal-overlay"><div class="modal" style="text-align:center"><div class="modal-title"><h3>🎙️ Gravar Voz</h3><button class="close-btn" onclick="fecharModal('modal-gravador')">×</button></div><p style="font-size:10px;color:#64748b;margin-bottom:10px">Grave uma mensagem para o seu pet.</p><button id="btn-iniciar-grav" class="primary-btn red-btn" onclick="iniciarGravacao()">🔴 Começar</button><button id="btn-parar-grav" class="primary-btn" style="display:none;background:#475569" onclick="pararGravacao()">⏹️ Parar</button><div id="grav-result" class="hidden" style="margin-top:10px">

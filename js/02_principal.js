@@ -193,6 +193,31 @@ const TEMAS_INTERFACE=[
   {id:'lunar',nome:'Futebol Lunar',emoji:'⚽',fundo:'estadio_lunar',icons:['📣','🏆','⚽']},
   {id:'doces',nome:'Doces',emoji:'🍭',fundo:'reino_dos_doces',icons:['🎵','🍬','🍭']}
 ];
+const CURIOSIDADES_FUNDOS={
+  ceu:'As nuvens são formadas por gotinhas de água ou pequenos cristais de gelo.',
+  chuva:'A água da chuva pode evaporar e voltar a formar nuvens: é parte do ciclo da água.',
+  noite:'A Lua reflete a luz do Sol; ela não produz luz própria.',
+  arcoiris:'O arco-íris aparece quando a luz atravessa gotinhas de água e se separa em cores.',
+  praia:'As ondas transportam energia pelo mar e ajudam a modelar as praias.',
+  floresta:'As árvores oferecem abrigo e alimento para muitos seres vivos.',
+  floresta_luminosa:'Alguns fungos brilham no escuro graças a um processo chamado bioluminescência.',
+  reino_submarino:'Os corais são animais que vivem em grupos e formam recifes.',
+  arena_galactica:'No espaço, a gravidade também atua: ela mantém a Terra em órbita do Sol.',
+  estadio_lunar:'Na Lua, um salto dura mais tempo porque sua gravidade é menor que a da Terra.',
+  reino_dos_doces:'O cacau, usado para fazer chocolate, nasce dentro de frutos do cacaueiro.',
+  festa:'Muitos instrumentos fazem som ao vibrar, como as cordas de um violão.',
+  halloween:'Abóboras são frutos: elas crescem a partir de flores e contêm sementes.',
+  estadio:'O futebol é praticado em muitos países, com diferentes formas de comemorar.',
+  quarto:'Organizar os objetos ajuda a encontrar o que precisamos com mais facilidade.',
+  mario:'Uma aventura pode começar com um mapa: mapas usam símbolos para representar lugares.',
+  dino:'Os fósseis ajudam pesquisadores a estudar animais e plantas do passado.',
+  princesa:'Castelos históricos foram construídos com diferentes materiais e estilos.',
+  astronauta:'A Estação Espacial Internacional dá várias voltas ao redor da Terra a cada dia.',
+  pirata:'Antigos navegadores observavam as estrelas para se orientar à noite.',
+  fazenda:'As abelhas ajudam a polinizar flores de muitas plantas cultivadas.',
+  neve:'Cada floco de neve é formado por pequenos cristais de gelo.',
+  aniversario:'Em muitos lugares, aniversários são celebrados com costumes próprios.'
+};
 // Compras antigas permanecem no estado; os acessórios dos combos não são mais exibidos.
 function buscarAcessorioPorId(id){
   return ACESSORIOS.find(a=>a.id===id)||null;
@@ -364,10 +389,10 @@ const hojeLocal=()=>{const d=new Date();return `${d.getFullYear()}-${String(d.ge
 const ontemLocal=()=>{const d=new Date();d.setDate(d.getDate()-1);return `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`};
 // Campos que pertencem a UM filho específico (progresso do pet, tarefas, moedas...).
 // Tudo que NÃO está nessa lista é compartilhado pela família inteira (PIN, e-mails, taxa de câmbio).
-const CAMPOS_CRIANCA=['bauDatasResgatadas','historicoRecompensas','avisosRecompensas','acessorios','conquistas','desafiosMathAcertos','dinheiroAcumulado','fundoAtual','fundosComprados','temaInterfaceAtual','historicoConclusoes','idadeCrianca','dificuldadeJogos','nomePet','lembreteEnviadoData','metaMoedas','moedas','onboardingVistoCrianca','pausaAte','petAtual','pets','recompensas','registroDiario','solicitacoesPremios','streak','surpresaResgatadaData','tarefas','tarefasHojeCount','timerFim','totalSacado','ultimoDiaAcesso','ultimoDiaConcluido','ultimoStreakPremiado','vozSalva','ultimoAcaoPet','ultimoDecay','desafioDiarioData','desafioDiarioFeitoData','bauDiarioAbertoData','escudosOfensiva','adesivos','eventoSemanalData','missaoFamilia','mensagensPais','historicoEngajamento'];
+const CAMPOS_CRIANCA=['bauDatasResgatadas','historicoRecompensas','avisosRecompensas','acessorios','conquistas','habilidades','desafiosMathAcertos','dinheiroAcumulado','mesadaAtiva','fundoAtual','fundosComprados','temaInterfaceAtual','historicoConclusoes','idadeCrianca','dificuldadeJogos','nomePet','lembreteEnviadoData','metaMoedas','moedas','onboardingVistoCrianca','pausaAte','petAtual','pets','recompensas','registroDiario','solicitacoesPremios','streak','surpresaResgatadaData','tarefas','tarefasHojeCount','timerFim','totalSacado','ultimoDiaAcesso','ultimoDiaConcluido','ultimoStreakPremiado','vozSalva','ultimoAcaoPet','ultimoDecay','desafioDiarioData','desafioDiarioFeitoData','bauDiarioAbertoData','escudosOfensiva','adesivos','eventoSemanalData','missaoFamilia','mensagensPais','historicoEngajamento'];
 function valoresPadraoCrianca(){
   return {
-    petAtual:'gato',moedas:15,dinheiroAcumulado:.15,idadeCrianca:7,dificuldadeJogos:'auto',nomePet:'Pipoca',
+    petAtual:'gato',moedas:15,dinheiroAcumulado:.15,mesadaAtiva:true,idadeCrianca:7,dificuldadeJogos:'auto',nomePet:'Pipoca',
     fundoAtual:'ceu',fundosComprados:['ceu'],temaInterfaceAtual:'classico',metaMoedas:50,totalSacado:0,
     ultimoDiaAcesso:hojeLocal(),ultimoDiaConcluido:null,streak:0,ultimoStreakPremiado:0,
     tarefasHojeCount:0,desafiosMathAcertos:0,timerFim:null,vozSalva:null,
@@ -377,7 +402,7 @@ function valoresPadraoCrianca(){
       {id:1,texto:'15 min de tela',descricao:'Tempo de tela liberado pelos pais.',custo:10,tipo:'timer',minutos:15,icone:'📱',ativo:true},
       {id:2,texto:'30 min de tela',descricao:'Tempo de tela liberado pelos pais.',custo:18,tipo:'timer',minutos:30,icone:'🎮',ativo:true}
     ],
-    solicitacoesPremios:[],conquistas:{},acessorios:{comprados:[],ativo:null},pausaAte:null,
+    solicitacoesPremios:[],conquistas:{},habilidades:{},acessorios:{comprados:[],ativo:null},pausaAte:null,
     historicoConclusoes:{},registroDiario:{},onboardingVistoCrianca:false,lembreteEnviadoData:null,
     surpresaResgatadaData:null,metasPersonalizadas:[],ultimoAcaoPet:{},ultimoDecay:null,desafioDiarioData:null,desafioDiarioFeitoData:null,bauDiarioAbertoData:null,bauDatasResgatadas:[],avisosRecompensas:[],historicoRecompensas:[],escudosOfensiva:0,adesivos:[],eventoSemanalData:null,missaoFamilia:{alvo:20,progresso:0,inicio:null},mensagensPais:[],historicoEngajamento:[]
   };
@@ -426,7 +451,7 @@ function garantirCriancaAtiva(){
 }
 let estado={
   criancaAtivaId:'c1',criancas:{c1:{nome:'Minha Criança',emoji:'🐾'}},criancasDados:{},
-  petAtual:'gato',moedas:15,taxaCambio:.01,pinHash:null,dinheiroAcumulado:.15,idadeCrianca:7,dificuldadeJogos:'auto',nomePet:'Pipoca',
+  petAtual:'gato',moedas:15,taxaCambio:.01,pinHash:null,dinheiroAcumulado:.15,mesadaAtiva:true,idadeCrianca:7,dificuldadeJogos:'auto',nomePet:'Pipoca',
   fundoAtual:'ceu',fundosComprados:['ceu'],temaInterfaceAtual:'classico',metaMoedas:50,totalSacado:0,
   ultimoDiaAcesso:hojeLocal(),ultimoDiaConcluido:null,streak:0,ultimoStreakPremiado:0,
   tarefasHojeCount:0,desafiosMathAcertos:0,timerFim:null,vozSalva:null,
@@ -437,7 +462,7 @@ let estado={
     {id:2,texto:'30 min de tela',descricao:'Tempo de tela liberado pelos pais.',custo:18,tipo:'timer',minutos:30,icone:'🎮',ativo:true}
   ],
   solicitacoesPremios:[],
-  conquistas:{},
+  conquistas:{},habilidades:{},
   pinBloqueadoAte:null,pinTentativasFalhas:0,pinPersonalizado:false,privacidadeAceita:false,onboardingVistoPais:false,
   acessorios:{comprados:[],ativo:null},
   pausaAte:null,
@@ -908,7 +933,7 @@ const DETALHES_CENARIO={
     <g class="anim-balao" style="animation-delay:-3.2s"><ellipse cx="370" cy="208" rx="16" ry="21" fill="#fb7185"/><path d="M370 229v50" stroke="#fb7185" stroke-width="1.5" fill="none"/></g>
     <g transform="translate(200,120)"><path d="M-150 -22 L150 -22 L136 0 L150 22 L-150 22 L-136 0Z" fill="url(#rpFaixaAniv)" opacity=".94"/>
     <text x="0" y="-2" text-anchor="middle" font-family="Arial,sans-serif" font-size="20" font-weight="900" fill="#fff" style="paint-order:stroke" stroke="#831843" stroke-width="1">FELIZ ANIVERSÁRIO</text>
-    <text x="0" y="17" text-anchor="middle" font-family="Arial,sans-serif" font-size="17" font-weight="900" fill="#fef08a" style="paint-order:stroke" stroke="#831843" stroke-width="1">BERNARDO! 🎉</text></g>
+    <text x="0" y="17" text-anchor="middle" font-family="Arial,sans-serif" font-size="17" font-weight="900" fill="#fef08a" style="paint-order:stroke" stroke="#831843" stroke-width="1">VIVA! 🎉</text></g>
     <g>${[[40,270,'#f472b6',0],[382,95,'#4ade80',30],[225,58,'#38bdf8',15],[132,258,'#fbbf24',45],[300,266,'#a78bfa',10],[70,64,'#fb7185',60],[360,248,'#fde047',20]].map(([x,y,cor,rot])=>`<rect x="${x}" y="${y}" width="8" height="8" rx="2" fill="${cor}" transform="rotate(${rot} ${x} ${y})"/>`).join('')}</g>
     <g transform="translate(200,0)">
     <ellipse cx="0" cy="650" rx="90" ry="14" fill="#000" opacity=".12"/>
@@ -1030,6 +1055,10 @@ function atualizarTela(){
   document.getElementById('txt-moedas').textContent=estado.moedas;
   const dinheiro=(estado.dinheiroAcumulado||0).toFixed(2).replace('.',',');
   document.getElementById('txt-dinheiro').textContent=dinheiro;
+  const mesadaAtiva=estado.mesadaAtiva!==false;
+  document.getElementById('topo-mesada').hidden=!mesadaAtiva;
+  document.body.classList.toggle('mesada-desativada',!mesadaAtiva);
+  document.getElementById('card-cofrinho').hidden=!mesadaAtiva;
   document.getElementById('txt-painel-disponivel').textContent=dinheiro;
   document.getElementById('txt-total-pago').textContent=(estado.totalSacado||0).toFixed(2).replace('.',',');
   document.getElementById('texto-taxa-atual').textContent=(estado.taxaCambio||.01).toFixed(2).replace('.',',');
@@ -1305,7 +1334,7 @@ function abrirSurpresaDia(){
   const xpBonus=Math.random()<.4?3:0;
   estado.surpresaResgatadaData=hoje;
   estado.moedas+=moedas;
-  estado.dinheiroAcumulado=(estado.dinheiroAcumulado||0)+moedas*(Number(estado.taxaCambio)||.01);
+  creditoMesada(moedas);
   registrarNoRelatorioDiario(0,moedas);
   if(xpBonus)ganharXP(xpBonus);
   const p=obterDadosPetAtual();
@@ -1378,7 +1407,7 @@ function resgatarBonusEvento(){
   estado.eventoBonusData=hojeLocal();
   estado.eventoBonusId=ev.id;
   estado.moedas+=ev.bonusMoedas;
-  estado.dinheiroAcumulado=(estado.dinheiroAcumulado||0)+ev.bonusMoedas*(Number(estado.taxaCambio)||.01);
+  creditoMesada(ev.bonusMoedas);
   registrarNoRelatorioDiario(0,ev.bonusMoedas);
   ganharXP(ev.bonusXp);
   // Oferece aplicar fundo do evento se já comprado
@@ -1441,7 +1470,7 @@ function resgatarBauFamiliar(){
   const moedas=20+Math.floor(Math.random()*15);
   const xp=40;
   estado.moedas+=moedas;
-  estado.dinheiroAcumulado=(estado.dinheiroAcumulado||0)+moedas*(Number(estado.taxaCambio)||.01);
+  creditoMesada(moedas);
   estado.metaFamiliarResgatadaEm=Date.now();
   estado.metaFamiliarResgatadaStreak=progresso;
   estado.metaFamiliarUltimoResgate=meta;
@@ -2637,6 +2666,8 @@ function renderizarPainelPais(){
   document.getElementById('input-taxa-cambio').value=estado.taxaCambio;
   document.getElementById('input-idade-crianca').value=estado.idadeCrianca||7;
   document.getElementById('input-dificuldade-jogos').value=estado.dificuldadeJogos||'auto';
+  const opcaoMesada=document.getElementById('opcao-mesada');
+  if(opcaoMesada)opcaoMesada.checked=estado.mesadaAtiva!==false;
   renderizarResumoPainelPais();
   renderizarMetas();
   renderizarListaCriancasPais();
@@ -2691,10 +2722,20 @@ function renderizarPainelPais(){
       </select>
       <button type="button" class="primary-btn blue-btn btn-dias-tarefa">📅</button>
       <button type="button" class="primary-btn red-btn btn-remover-tarefa">Excluir</button>
+      <select class="field seletor-habilidade-tarefa" aria-label="Habilidade da tarefa" style="width:100%">
+        <option value="" ${!t.habilidade?'selected':''}>Sem habilidade</option>
+        ${EMBLEMAS_HABILIDADES.map(h=>`<option value="${h.id}" ${t.habilidade===h.id?'selected':''}>${h.emoji} ${h.nome}</option>`).join('')}
+      </select>
     `;
     row.querySelector('select').addEventListener('change',evento=>alterarTipoTarefa(t.id,evento.target.value));
     row.querySelector('.btn-dias-tarefa').addEventListener('click',()=>editarDiasTarefa(t.id));
     row.querySelector('.btn-remover-tarefa').addEventListener('click',()=>removerTarefa(t.id));
+    row.querySelector('.seletor-habilidade-tarefa').addEventListener('change',evento=>{
+      t.habilidade=evento.target.value;
+      persistirTarefaIndividualV2(t).catch(e=>console.warn('Tarefa individual:',e));
+      salvar();
+      mostrarToast('🌟 Habilidade da tarefa atualizada.');
+    });
     ed.appendChild(row);
   });
   atualizarEstatisticas();
@@ -2837,7 +2878,7 @@ function abrirBauSemanal(streakAtual){
   const moedasGanhas=15+Math.floor(Math.random()*16);
   const xpGanho=50;
   estado.moedas+=moedasGanhas;
-  estado.dinheiroAcumulado=(estado.dinheiroAcumulado||0)+(moedasGanhas*(Number(estado.taxaCambio)||.01));
+  creditoMesada(moedasGanhas);
   estado.ultimoStreakPremiado=streakAtual;
   ganharXP(xpGanho);
   salvar();
@@ -2898,9 +2939,10 @@ async function aprovarTarefaPais(id){
   // O marcador é salvo antes das atualizações visuais. Se o usuário tocar novamente,
   // a função retorna sem conceder moedas ou XP em duplicidade.
   estado.moedas=(Number(estado.moedas)||0)+recompensa;
-  estado.dinheiroAcumulado=(Number(estado.dinheiroAcumulado)||0)+(recompensa*(Number(estado.taxaCambio)||.01));
+  creditoMesada(recompensa);
   estado.tarefasHojeCount=(Number(estado.tarefasHojeCount)||0)+1;
   registrarNoRelatorioDiario(1,recompensa);
+  registrarHabilidadeAprovada(t);
   if(typeof garantirEngajamento==='function'){
     garantirEngajamento();
     estado.missaoFamilia.progresso=Math.min(Number(estado.missaoFamilia.alvo)||20,(Number(estado.missaoFamilia.progresso)||0)+1);
@@ -3119,7 +3161,19 @@ function verificarLembreteTarde(){
   const texto=`Faltam ${pend.length} missão(ões) obrigatória(s). Ainda dá tempo! ⚡`;
   enviarNotificacaoLocal('🐾 Lembrete da tarde',texto,'rotinapet-tarde');
 }
+function alternarMesada(ativa){
+  if(perfilAtivo!=='pais')return;
+  estado.mesadaAtiva=!!ativa;
+  salvar();
+  atualizarTela();
+  mostrarToast(ativa?'💰 Mesada ativada.':'🪙 Mesada desativada; moedas virtuais continuam.');
+}
+function creditoMesada(moedas){
+  if(estado.mesadaAtiva===false)return;
+  estado.dinheiroAcumulado=(Number(estado.dinheiroAcumulado)||0)+Number(moedas)*(Number(estado.taxaCambio)||.01);
+}
 function sacarDinheiro(){
+  if(estado.mesadaAtiva===false)return;
   const v=Number(estado.dinheiroAcumulado)||0;
   if(v<=0)return mostrarAviso('💰','Sem saldo','Ainda não há saldo disponível.');
   mostrarConfirmacao(`Registrar pagamento de R$ ${v.toFixed(2).replace('.',',')}?`,()=>{
@@ -3151,10 +3205,11 @@ function montarPickerDiasNovaTarefa(){
 function adicionarTarefa(){
   const txt=document.getElementById('nova-tarefa-texto').value.trim(),
         moedas=Math.max(1,parseInt(document.getElementById('nova-tarefa-moedas').value)||5),
-        tipo=document.getElementById('nova-tarefa-tipo')?.value==='extra'?'extra':'obrigatoria';
+        tipo=document.getElementById('nova-tarefa-tipo')?.value==='extra'?'extra':'obrigatoria',
+        habilidade=document.getElementById('nova-tarefa-habilidade')?.value||'';
   if(!txt)return mostrarToast('Digite uma tarefa.');
   const id=estado.tarefas.length?Math.max(...estado.tarefas.map(t=>Number(t.id)||0))+1:1;
-  estado.tarefas.push({id,texto:txt,recompensa:moedas,xp:20,tipo,status:'pendente',foto:null,dias:[...diasSelecionadosNovaTarefa]});
+  estado.tarefas.push({id,texto:txt,recompensa:moedas,xp:20,tipo,habilidade,status:'pendente',foto:null,dias:[...diasSelecionadosNovaTarefa]});
   document.getElementById('nova-tarefa-texto').value='';
   diasSelecionadosNovaTarefa=[];
   document.querySelectorAll('#dias-nova-tarefa .dia-chip').forEach(c=>c.classList.remove('on'));
@@ -3482,6 +3537,34 @@ const CONQUISTAS=[
   ['objeto','🎪','Cantinho do Pet','Equipe um objeto animado ao lado do pet.',35],
   ['streak30','🏆','Lenda da Ofensiva','Atinja 30 dias seguidos de ofensiva.',100]
 ];
+const EMBLEMAS_HABILIDADES=[
+  {id:'organizacao',emoji:'🧺',nome:'Mestre da Organização',descricao:'Cuidar dos próprios espaços e pertences.'},
+  {id:'leitura',emoji:'📚',nome:'Leitor Curioso',descricao:'Explorar histórias, ideias e perguntas.'},
+  {id:'natureza',emoji:'🌱',nome:'Guardião da Natureza',descricao:'Cuidar das plantas e do ambiente.'}
+];
+function registrarHabilidadeAprovada(t){
+  const habilidade=EMBLEMAS_HABILIDADES.find(h=>h.id===t.habilidade);
+  if(!habilidade)return;
+  estado.habilidades=estado.habilidades||{};
+  const anterior=Math.max(0,Number(estado.habilidades[habilidade.id])||0);
+  estado.habilidades[habilidade.id]=anterior+1;
+  if(anterior<3 && estado.habilidades[habilidade.id]>=3){
+    mostrarAviso(habilidade.emoji,'Emblema conquistado!',habilidade.nome+' — seu esforço fez a diferença!');
+  }
+}
+function renderizarHabilidades(){
+  const grid=document.getElementById('lista-habilidades');
+  if(!grid)return;
+  grid.replaceChildren();
+  EMBLEMAS_HABILIDADES.forEach(h=>{
+    const pontos=Math.max(0,Number(estado.habilidades?.[h.id])||0);
+    const concluido=pontos>=3;
+    const card=document.createElement('div');
+    card.className='habilidade-card'+(concluido?' conquistado':'');
+    card.innerHTML=`<span class="habilidade-icone">${h.emoji}</span><b>${esc(h.nome)}</b><small>${esc(h.descricao)}</small><strong>${concluido?'✓ Emblema conquistado':Math.min(3,pontos)+'/3 tarefas aprovadas'}</strong>`;
+    grid.appendChild(card);
+  });
+}
 function contarFeitas(){return estado.tarefas.filter(t=>statusTarefaAtual(t)==='aprovada').length}
 function marcarConquistas(){
   estado.conquistas=estado.conquistas||{};
@@ -3493,7 +3576,7 @@ function marcarConquistas(){
       const c=CONQUISTAS.find(x=>x[0]===id);
       const premio=Number(c[4])||0;
       estado.moedas=(estado.moedas||0)+premio;
-      estado.dinheiroAcumulado=(estado.dinheiroAcumulado||0)+premio*(Number(estado.taxaCambio)||.01);
+      creditoMesada(premio);
       mostrarAviso(c[1],'🏆 Nova Conquista!',`${c[2]} +${premio} moedas`);
       ganharXP(30);
     }
@@ -3569,6 +3652,7 @@ function renderizarPainelProgresso(){
 }
 function renderizarConquistas(){
   renderizarPainelProgresso();
+  renderizarHabilidades();
   const c=document.getElementById('lista-conquistas');
   if(!c)return;
   renderizarHeatmap();
@@ -3604,7 +3688,7 @@ function atualizarEstatisticas(){
 }
 function recompensarMiniJogo(moedas,xp,msg){
   estado.moedas+=moedas;
-  estado.dinheiroAcumulado=(estado.dinheiroAcumulado||0)+moedas*(Number(estado.taxaCambio)||.01);
+  creditoMesada(moedas);
   registrarNoRelatorioDiario(0,moedas);
   ganharXP(xp);
   dispararConfetes();
@@ -3817,7 +3901,7 @@ function renderizarGridFundos(){
     const comprado=estado.fundosComprados.includes(f.id)||f.preco===0,ativo=estado.fundoAtual===f.id,d=document.createElement('div');
     d.className='fundo-card '+(ativo?'ativo':'');
     d.style.background=f.bg;
-    d.innerHTML=`<span style="font-size:25px">${f.emoji}</span><b style="font-size:10px;margin-top:3px">${esc(f.nome)}</b><span class="shop-tag">${ativo?'✓ Em uso':f.preco===0?'Grátis · Usar':comprado?'Usar':f.preco+' 🪙'}</span>`;
+    d.innerHTML=`<span style="font-size:25px">${f.emoji}</span><b style="font-size:10px;margin-top:3px">${esc(f.nome)}</b><span class="shop-tag">${ativo?'✓ Em uso':f.preco===0?'Grátis · Usar':comprado?'Usar':f.preco+' 🪙'}</span><small class="fundo-curiosidade">💡 ${esc(CURIOSIDADES_FUNDOS[f.id]||'Um cenário novo para explorar.')}</small>`;
     d.onclick=()=>selecionarOuComprarFundo(f);
     c.appendChild(d);
   });

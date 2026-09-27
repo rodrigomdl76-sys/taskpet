@@ -725,3 +725,23 @@ body.tema-doces .bottom-btn.btn-game{background:linear-gradient(135deg,#8c79d7,#
 body.tema-doces .bottom-btn.btn-mais-aventuras{background:linear-gradient(135deg,#37abbb,#267b9a)}
 body.tema-doces .top-pill,body.tema-doces .tasks-section,body.tema-doces .pet-action-btn{background:rgba(255,249,253,.9);border:2px solid #f8adcd;border-radius:24px}
 body.tema-doces .pet-stage{border-radius:45%;border:2px solid #ffdbecaa}
+
+.fundo-card{min-height:145px;gap:3px}
+.fundo-curiosidade{display:block;max-width:100%;margin-top:5px;padding:5px 6px;border-radius:8px;background:rgba(15,23,42,.8);color:#fff;font-size:8px;font-weight:700;line-height:1.3;text-align:center;text-shadow:none}
+.titulo-habilidades{font-size:11px;color:#334155;margin:16px 0 7px}
+.grid-habilidades{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:6px;margin-bottom:12px}
+.habilidade-card{border:1px solid #d9e2ed;border-radius:13px;background:#f8fafc;padding:8px 5px;text-align:center;display:flex;flex-direction:column;align-items:center;gap:4px;min-width:0}
+.habilidade-card.conquistado{background:#fff8e6;border-color:#f4bf56;box-shadow:0 3px 12px #f59e0b22}
+.habilidade-icone{font-size:24px;filter:grayscale(1);opacity:.7}
+.habilidade-card.conquistado .habilidade-icone{filter:none;opacity:1}
+.habilidade-card b{font-size:9px;color:#25334d;line-height:1.2}
+.habilidade-card small{font-size:7px;color:#64748b;line-height:1.3}
+.habilidade-card strong{font-size:7px;color:#815b14;margin-top:auto}
+
+.top-row{grid-template-columns:repeat(3,minmax(0,1fr))}
+body.mesada-desativada .top-row{grid-template-columns:repeat(2,minmax(0,1fr))}
+[hidden]{display:none!important}
+.btn-pais-flutuante{width:42px;height:42px;border-radius:50%;border:3px solid #fff;background:linear-gradient(145deg,#059669,#0f766e);color:#fff;font-size:18px;display:flex;align-items:center;justify-content:center;box-shadow:0 5px 15px #05966955;cursor:pointer;flex-shrink:0}
+.btn-pais-flutuante:active{transform:scale(.92)}
+.opcao-mesada{display:flex;align-items:center;gap:9px;font-size:9px;font-weight:800;color:#334155;cursor:pointer;margin:6px 0}
+.opcao-mesada input{width:18px;height:18px;accent-color:#059669;flex-shrink:0}
