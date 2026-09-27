@@ -43,7 +43,7 @@ function atualizarCaixaConquistas(){
 }
 function descricaoConquista(a){
   if(a.tipo==='figurinha'){const f=ALBUM_FIGURINHAS.find(x=>x.id===a.idFigurinha);return {emoji:f?.emoji||'📒',titulo:f?.nome||'Nova figurinha',texto:f?`${f.raridade} · ${f.grupo}`:'Confira seu álbum'};}
-  if(aviso.tipo==='bau')return {emoji:'🎁',titulo:'Baú do dia',texto:a.premio||'Uma surpresa pela missão concluída'};
+  if(a.tipo==='bau')return {emoji:'🎁',titulo:'Baú do dia',texto:a.premio||'Uma surpresa pela missão concluída'};
   if(a.tipo==='semanal')return {emoji:'🏆',titulo:`Baú dos ${Number(a.streak)||7} dias`,texto:`+${Number(a.moedas)||0} moedas e +${Number(a.xp)||0} XP`};
   return {emoji:'⭐',titulo:'Conquista',texto:'Missão concluída'};
 }
