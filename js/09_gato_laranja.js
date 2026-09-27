@@ -19,8 +19,8 @@
     const pet=document.getElementById('pet-principal');if(!pet)return false;
     if(!img || img.parentNode!==pet){
       chave='';img=document.createElement('img');img.className='gato-laranja-img';img.alt='Gato animado';img.draggable=false;
-      img.onerror=()=>{pet.classList.remove('gato-laranja-pronto');img.alt='Imagem do pet indisponível'};
-      img.onload=()=>pet.classList.add('gato-laranja-pronto');pet.appendChild(img);
+      img.onerror=()=>{pet.classList.remove('gato-laranja-pronto');img.style.display='none';img.alt='Imagem do pet indisponível'};
+      img.onload=()=>{img.style.display='';pet.classList.add('gato-laranja-pronto')};pet.appendChild(img);
     }
     return true;
   }

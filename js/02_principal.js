@@ -1071,8 +1071,9 @@ function atualizarTela(){
   document.getElementById('texto-xp').textContent=`${p.xp}/100`;
   document.getElementById('barra-xp').style.width=p.xp+'%';
   document.getElementById('btn-pet-atual').textContent=def.emoji;
-  document.getElementById('pet-svg-container').innerHTML=estado.petAtual==='gato'?'':`<div class="camada-pet">${petSVG(estado.petAtual,fase)}</div><div class="camada-acessorio" id="camada-acessorio"></div>`;
-  const petWrap=document.getElementById('pet-principal'); if(petWrap)petWrap.className='cat-wrapper pet-tipo-'+estado.petAtual;
+  document.getElementById('pet-svg-container').innerHTML=`<div class="camada-pet">${petSVG(estado.petAtual,fase)}</div><div class="camada-acessorio" id="camada-acessorio"></div>`;
+  const petWrap=document.getElementById('pet-principal');
+  if(petWrap)petWrap.className='cat-wrapper pet-tipo-'+estado.petAtual+(petWrap.classList.contains('gato-laranja-pronto')?' gato-laranja-pronto':'');
   
   document.getElementById('pet-evol-nome').textContent=`${def.nome} • ${def.evolucoes[fase-1].nome}`;
   renderizarProgressoEvolucao();
@@ -1093,7 +1094,6 @@ function atualizarTela(){
   aplicarTemaInterface();
   atualizarHumorPet(p);
   renderizarAcessorioNoContainer();
-  atualizarBotaoSurpresaDia();
   renderizarTarefas();
   renderizarEvolucoes();
   renderizarConquistas();

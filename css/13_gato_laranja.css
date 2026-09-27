@@ -1,7 +1,8 @@
 /* Novo personagem: o GIF usa a mesma área e tamanho do pet antigo. */
 #pet-principal{position:relative;display:block;width:148px;height:148px;flex:0 0 148px}
 #pet-principal .gato-laranja-img{position:absolute;inset:0;width:100%;height:100%;object-fit:contain;z-index:3;pointer-events:none}
-#pet-principal #pet-svg-container{display:none!important}
+#pet-principal #pet-svg-container{display:block}
+#pet-principal.gato-laranja-pronto #pet-svg-container{display:none!important}
 @media(max-height:650px){#pet-principal{width:116px;height:116px;flex-basis:116px}}
 #btn-pet-atual,#lista-pets,.opcao-pet,#tab-col-pets,#painel-col-pets{display:none!important}
 .pet-actions{display:flex;align-items:center;justify-content:center;gap:6px;flex-wrap:wrap;width:100%;padding:2px 0 4px}
