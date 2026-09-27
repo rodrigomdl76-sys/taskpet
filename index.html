@@ -81,7 +81,6 @@
   <div class="top-row">
     <button class="top-pill" onclick="abrirPainelPais()"><span class="coin-dot"></span><span class="top-pill-text"><span id="txt-moedas">0</span> 🪙</span></button>
     <button class="top-pill" onclick="abrirPainelPais()"><span style="font-size:13px">💰</span><span><span class="top-pill-text">R$ <span id="txt-dinheiro">0,00</span></span><span class="top-pill-sub" id="txt-status-nuvem">🔒 pais</span></span></button>
-    <button class="top-pill" onclick="abrirColecao()" title="Coleção"><span style="font-size:13px">📚</span><span><span class="top-pill-text">Coleção</span><span class="top-pill-sub">ações e itens</span></span></button>
     <button class="top-pill" id="btn-pill-streak" onclick="abrirModal('modal-conquistas')" title="Sequência diária"><span style="font-size:13px">🔥</span><span><span class="top-pill-text"><span id="txt-streak">0</span> dias</span><span class="top-pill-sub">sequência</span></span></button>
   </div>
   <div class="pet-selector">
@@ -131,8 +130,6 @@
   <div class="bottom-buttons">
     <button class="bottom-btn btn-voice" onclick="alternarGravador()"><span class="btn-icon">🎤</span>Voz</button>
     <button class="bottom-btn btn-game" onclick="abrirDesafio()"><span class="btn-icon">⚡</span>Jogar</button>
-    <button class="bottom-btn btn-fundos" onclick="abrirLojaFundos()"><span class="btn-icon">🎨</span>Visual</button>
-    <button class="bottom-btn btn-premios" onclick="abrirLojaRecompensas()"><span class="btn-icon">🏆</span>Loja</button>
     <button class="bottom-btn btn-mais-aventuras" onclick="abrirMenuMais()" aria-label="Abrir mais opções"><span class="btn-icon">✦</span>Mais</button>
   </div>
 </div>
@@ -146,6 +143,9 @@
       <button class="menu-mais-item caixa" onclick="fecharModal('modal-menu-mais');abrirCaixaConquistas()"><span>🎁</span><b>Conquistas</b><small id="menu-caixa-contagem">Ver surpresas</small></button>
       <button class="menu-mais-item album" onclick="fecharModal('modal-menu-mais');abrirAlbumFigurinhas()"><span>📒</span><b>Álbum</b><small>Ver figurinhas</small></button>
       <button class="menu-mais-item mapa" onclick="abrirMapaAventura()"><span>🗺️</span><b>Mapa</b><small>Continuar aventura</small></button>
+      <button class="menu-mais-item visual" onclick="fecharModal('modal-menu-mais');abrirLojaFundos()"><span>🎨</span><b>Visual</b><small>Fundos do pet</small></button>
+      <button class="menu-mais-item loja" onclick="fecharModal('modal-menu-mais');abrirLojaRecompensas()"><span>🏆</span><b>Loja</b><small>Trocar moedas</small></button>
+      <button class="menu-mais-item colecao" onclick="fecharModal('modal-menu-mais');abrirColecao()"><span>📚</span><b>Coleção</b><small>Itens e ações</small></button>
       <button class="menu-mais-item visual-pet" onclick="fecharModal('modal-menu-mais');abrirMeuPet()"><span>🐾</span><b>Meu Pet</b><small>Ações e evolução</small></button>
       <button class="menu-mais-item bau" onclick="fecharModal('modal-menu-mais');abrirBauDiario()"><span id="menu-mais-bau-emoji">🎁</span><b>Baú</b><small>Prêmio do dia</small></button>
     </div>
