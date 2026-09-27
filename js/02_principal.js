@@ -358,10 +358,10 @@ const hojeLocal=()=>{const d=new Date();return `${d.getFullYear()}-${String(d.ge
 const ontemLocal=()=>{const d=new Date();d.setDate(d.getDate()-1);return `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`};
 // Campos que pertencem a UM filho específico (progresso do pet, tarefas, moedas...).
 // Tudo que NÃO está nessa lista é compartilhado pela família inteira (PIN, e-mails, taxa de câmbio).
-const CAMPOS_CRIANCA=['bauDatasResgatadas','historicoRecompensas','avisosRecompensas','acessorios','conquistas','desafiosMathAcertos','dinheiroAcumulado','fundoAtual','fundosComprados','historicoConclusoes','idadeCrianca','lembreteEnviadoData','metaMoedas','moedas','onboardingVistoCrianca','pausaAte','petAtual','pets','recompensas','registroDiario','solicitacoesPremios','streak','surpresaResgatadaData','tarefas','tarefasHojeCount','timerFim','totalSacado','ultimoDiaAcesso','ultimoDiaConcluido','ultimoStreakPremiado','vozSalva','ultimoAcaoPet','ultimoDecay','desafioDiarioData','desafioDiarioFeitoData','bauDiarioAbertoData','escudosOfensiva','adesivos','eventoSemanalData','missaoFamilia','mensagensPais','historicoEngajamento'];
+const CAMPOS_CRIANCA=['bauDatasResgatadas','historicoRecompensas','avisosRecompensas','acessorios','conquistas','desafiosMathAcertos','dinheiroAcumulado','fundoAtual','fundosComprados','historicoConclusoes','idadeCrianca','dificuldadeJogos','nomePet','lembreteEnviadoData','metaMoedas','moedas','onboardingVistoCrianca','pausaAte','petAtual','pets','recompensas','registroDiario','solicitacoesPremios','streak','surpresaResgatadaData','tarefas','tarefasHojeCount','timerFim','totalSacado','ultimoDiaAcesso','ultimoDiaConcluido','ultimoStreakPremiado','vozSalva','ultimoAcaoPet','ultimoDecay','desafioDiarioData','desafioDiarioFeitoData','bauDiarioAbertoData','escudosOfensiva','adesivos','eventoSemanalData','missaoFamilia','mensagensPais','historicoEngajamento'];
 function valoresPadraoCrianca(){
   return {
-    petAtual:'gato',moedas:15,dinheiroAcumulado:.15,idadeCrianca:7,
+    petAtual:'gato',moedas:15,dinheiroAcumulado:.15,idadeCrianca:7,dificuldadeJogos:'auto',nomePet:'Pipoca',
     fundoAtual:'ceu',fundosComprados:['ceu'],metaMoedas:50,totalSacado:0,
     ultimoDiaAcesso:hojeLocal(),ultimoDiaConcluido:null,streak:0,ultimoStreakPremiado:0,
     tarefasHojeCount:0,desafiosMathAcertos:0,timerFim:null,vozSalva:null,
@@ -420,7 +420,7 @@ function garantirCriancaAtiva(){
 }
 let estado={
   criancaAtivaId:'c1',criancas:{c1:{nome:'Minha Criança',emoji:'🐾'}},criancasDados:{},
-  petAtual:'gato',moedas:15,taxaCambio:.01,pinHash:null,dinheiroAcumulado:.15,idadeCrianca:7,
+  petAtual:'gato',moedas:15,taxaCambio:.01,pinHash:null,dinheiroAcumulado:.15,idadeCrianca:7,dificuldadeJogos:'auto',nomePet:'Pipoca',
   fundoAtual:'ceu',fundosComprados:['ceu'],metaMoedas:50,totalSacado:0,
   ultimoDiaAcesso:hojeLocal(),ultimoDiaConcluido:null,streak:0,ultimoStreakPremiado:0,
   tarefasHojeCount:0,desafiosMathAcertos:0,timerFim:null,vozSalva:null,
@@ -1036,8 +1036,9 @@ function atualizarTela(){
   document.getElementById('pet-evol-nome').textContent=`${def.nome} • ${def.evolucoes[fase-1].nome}`;
   renderizarProgressoEvolucao();
   const modalNome=document.getElementById('modal-pet-evol-nome');
-  if(modalNome)modalNome.textContent=def.nome;
+  if(modalNome)modalNome.textContent=estado.nomePet||def.nome;
   document.getElementById('input-idade-crianca').value=estado.idadeCrianca||7;
+  document.getElementById('input-dificuldade-jogos').value=estado.dificuldadeJogos||'auto';
   document.getElementById('input-taxa-cambio').value=estado.taxaCambio;
   
   document.querySelectorAll('.opcao-pet').forEach(el=>{
@@ -1178,7 +1179,7 @@ function acaoPet(tipo){
   debounceAcao=true;
   setTimeout(()=>debounceAcao=false,400);
   const d=obterDadosPetAtual();
-  const nome=PETS[estado.petAtual].nome;
+  const nome=estado.nomePet||PETS[estado.petAtual].nome;
   estado.ultimoAcaoPet[tipo]=agora;
   if(tipo==='alimentar'){
     d.felicidade=Math.min(100,d.felicidade+12);
@@ -2051,9 +2052,11 @@ function renderizarTarefas(){
           ${t.motivoRecusa?`<div class="motivo-recusa">↩️ ${esc(t.motivoRecusa)}</div>`:''}
         </div>
         <div class="task-actions">
-          ${apr?'<span style="font-size:9px;color:#10b981;font-weight:900">✓ Missão concluída!</span>':pend?'<span style="font-size:8px;color:#f59e0b;font-weight:900">Os pais estão conferindo</span>':`<button class="task-btn btn-photo" onclick="dispararCamera(${t.id})">📷</button><button class="task-btn btn-ok" onclick="enviarParaAprovacao(${t.id})">Concluí!</button>`}
+          ${apr?'<span style="font-size:9px;color:#10b981;font-weight:900">✓ Missão concluída!</span>':pend?'<span style="font-size:8px;color:#f59e0b;font-weight:900">Os pais estão conferindo</span>':`<button type="button" class="task-btn btn-photo" aria-label="Adicionar foto à missão">📷</button><button type="button" class="task-btn btn-ok">Concluí!</button>`}
         </div>
       `;
+      row.querySelector('.btn-photo')?.addEventListener('click',()=>dispararCamera(t.id));
+      row.querySelector('.btn-ok')?.addEventListener('click',()=>enviarParaAprovacao(t.id));
       c.appendChild(row);
     });
   };
@@ -2620,6 +2623,7 @@ function renderizarResumoPainelPais(){
 function renderizarPainelPais(){
   document.getElementById('input-taxa-cambio').value=estado.taxaCambio;
   document.getElementById('input-idade-crianca').value=estado.idadeCrianca||7;
+  document.getElementById('input-dificuldade-jogos').value=estado.dificuldadeJogos||'auto';
   renderizarResumoPainelPais();
   renderizarMetas();
   renderizarListaCriancasPais();
@@ -2638,30 +2642,48 @@ function renderizarPainelPais(){
   renderizarGerenciamentoPremiosPais();
   renderizarSolicitacoesPremiosPais();
   const ap=document.getElementById('lista-aprovacao-pais');
-  ap.innerHTML='';
   const ps=estado.tarefas.filter(t=>statusTarefaAtual(t)==='aguardando_aprovacao');
-  if(!ps.length)ap.innerHTML='<span style="font-size:9px;color:#94a3b8">Nenhuma pendente.</span>';
-  ps.forEach(t=>{
+  const contador=document.getElementById('contador-aprovacoes-pais');
+  if(contador)contador.textContent=ps.length?`(${ps.length})`:'';
+  ap.innerHTML=ps.length?ps.map(t=>{
     const fotoSrc=t.fotoUrl||t.foto||'';
-    const fotoHtml=fotoSrc?`<img class="approval-foto" src="${fotoSrc}" onclick="abrirVisualizadorFoto('${fotoSrc}')">`:'';
-    ap.innerHTML+=`<div class="approval-row"><div class="approval-top"><span>${t.tipo==='obrigatoria'?'🔥':'⭐'} <b>${esc(t.texto)}</b> ${(t.fotoUrl||t.foto)?'📸':''}</span><div style="display:flex;gap:4px"><button class="primary-btn red-btn" onclick="reprovarTarefaPais(${t.id})">Recusar</button><button class="primary-btn green-btn" onclick="aprovarTarefaPais(${t.id})">Aprovar</button></div></div>${fotoHtml}</div>`;
-  });
+    const fotoHtml=fotoSrc?`<img class="approval-foto" src="${esc(fotoSrc)}" alt="Comprovante da missão">`:'';
+    return `<div class="approval-row" data-task-id="${esc(String(t.id))}"><div class="approval-top"><span>${t.tipo==='obrigatoria'?'🔥':'⭐'} <b>${esc(t.texto)}</b> ${fotoSrc?'📸':''}</span><div style="display:flex;gap:4px"><button type="button" class="primary-btn red-btn" data-aprovacao="recusar">Recusar</button><button type="button" class="primary-btn green-btn" data-aprovacao="aprovar">Aprovar</button></div></div>${fotoHtml}</div>`;
+  }).join(''):'<span style="font-size:9px;color:#94a3b8">Nenhuma pendente.</span>';
+  ap.onclick=evento=>{
+    const botao=evento.target.closest('[data-aprovacao]');
+    if(botao){
+      const id=botao.closest('.approval-row')?.dataset.taskId;
+      if(id==null)return;
+      if(botao.dataset.aprovacao==='aprovar')aprovarTarefaPais(id);
+      else reprovarTarefaPais(id);
+      return;
+    }
+    const foto=evento.target.closest('.approval-foto');
+    if(foto)abrirVisualizadorFoto(foto.currentSrc||foto.src);
+  };
   
   const ed=document.getElementById('lista-edicao-tarefas');
   ed.innerHTML='';
   estado.tarefas.forEach(t=>{
     const diasTxt=t.dias&&t.dias.length?t.dias.map(i=>DIAS_LABEL[i]).join(','):'todo dia';
-    ed.innerHTML+=`
-    <div class="edit-row" style="gap:5px;flex-wrap:wrap">
+    const row=document.createElement('div');
+    row.className='edit-row';
+    row.style.cssText='gap:5px;flex-wrap:wrap';
+    row.innerHTML=`
       <span style="flex:1">${t.tipo==='obrigatoria'?'🔥':'⭐'} ${esc(t.texto)} • ${Number(t.recompensa)||5}🪙 <br><small style="color:#94a3b8">📅 ${diasTxt}</small></span>
-      <select class="field" style="width:100px;padding:5px" onchange="alterarTipoTarefa(${t.id},this.value)">
+      <select class="field" style="width:100px;padding:5px">
         <option value="obrigatoria" ${t.tipo==='obrigatoria'?'selected':''}>Obrigatória</option>
         <option value="extra" ${t.tipo==='extra'?'selected':''}>Extra</option>
       </select>
-      <button class="primary-btn blue-btn" onclick="editarDiasTarefa(${t.id})">📅</button>
-      <button class="primary-btn red-btn" onclick="removerTarefa(${t.id})">Excluir</button>
-    </div>
-  `;});
+      <button type="button" class="primary-btn blue-btn btn-dias-tarefa">📅</button>
+      <button type="button" class="primary-btn red-btn btn-remover-tarefa">Excluir</button>
+    `;
+    row.querySelector('select').addEventListener('change',evento=>alterarTipoTarefa(t.id,evento.target.value));
+    row.querySelector('.btn-dias-tarefa').addEventListener('click',()=>editarDiasTarefa(t.id));
+    row.querySelector('.btn-remover-tarefa').addEventListener('click',()=>removerTarefa(t.id));
+    ed.appendChild(row);
+  });
   atualizarEstatisticas();
   renderizarVolumeSomPainel();
   renderizarHistoricoTarefas();
@@ -2738,8 +2760,8 @@ function fecharVisualizadorFoto(){
   document.getElementById('foto-viewer').classList.remove('mostrar');
 }
 function reprovarTarefaPais(id){
-  const t=estado.tarefas.find(x=>x.id===id);
-  if(!t)return;
+  const t=estado.tarefas.find(x=>String(x.id)===String(id));
+  if(!t||statusTarefaAtual(t)!=='aguardando_aprovacao')return;
   const motivo=window.prompt(`Por que a tarefa "${t.texto}" precisa ser refeita?`,t.motivoRecusa||'')
   if(motivo===null)return;
   const texto=motivo.trim().slice(0,180);
@@ -2789,7 +2811,7 @@ async function trocarFamiliaManualmente(){
   mostrarToast('🏠 Família alterada com sucesso.');
 }
 function alterarTipoTarefa(id,tipo){
-  const t=estado.tarefas.find(x=>x.id===id);
+  const t=estado.tarefas.find(x=>String(x.id)===String(id));
   if(!t)return;
   t.tipo=tipo==='extra'?'extra':'obrigatoria';
   salvar();
@@ -2838,6 +2860,10 @@ async function aprovarTarefaPais(id){
   // O marcador fica no registro diário e continua após recarregar ou sincronizar.
   if(t.status==='aprovada'||registroAprovacao.status==='aprovada'||registroAprovacao.recompensaPagaEm){
     mostrarToast('ℹ️ Esta tarefa já foi processada hoje.');
+    return;
+  }
+  if(statusTarefaAtual(t)!=='aguardando_aprovacao'){
+    mostrarToast('ℹ️ A missão não está aguardando aprovação.');
     return;
   }
   const agora=Date.now();
@@ -3125,7 +3151,7 @@ function adicionarTarefa(){
   mostrarToast(tipo==='obrigatoria'?'🔥 Tarefa criada!':'⭐ Tarefa extra criada!');
 }
 function editarDiasTarefa(id){
-  const t=estado.tarefas.find(x=>x.id===id);
+  const t=estado.tarefas.find(x=>String(x.id)===String(id));
   if(!t)return;
   const atual=(t.dias||[]).map(i=>DIAS_LABEL[i]).join(',');
   const resp=window.prompt('Dias da semana (Dom,Seg,Ter,Qua,Qui,Sex,Sáb) ou vazio para todos:',atual);
@@ -3143,7 +3169,7 @@ function editarDiasTarefa(id){
   mostrarToast('📅 Recorrência atualizada.');
 }
 function removerTarefa(id){
-  estado.tarefas=estado.tarefas.filter(t=>t.id!==id);
+  estado.tarefas=estado.tarefas.filter(t=>String(t.id)!==String(id));
   salvar();
   renderizarPainelPais();
   atualizarTela();
@@ -3270,6 +3296,14 @@ function atualizarIdadeCrianca(v){
   estado.idadeCrianca=Math.max(3,Math.min(15,parseInt(v)||7));
   salvar();
   mostrarToast(`👶 Idade: ${estado.idadeCrianca} anos`);
+}
+function atualizarDificuldadeJogos(v){
+  estado.dificuldadeJogos=['auto','facil','medio','dificil'].includes(v)?v:'auto';
+  salvar();
+  mostrarToast('🎮 Dificuldade dos jogos atualizada.');
+}
+function idadeEfetivaJogos(){
+  return {facil:5,medio:8,dificil:11}[estado.dificuldadeJogos] || Number(estado.idadeCrianca)||7;
 }
 function alternarListaPets(e){
   e?.stopPropagation();
@@ -3600,7 +3634,7 @@ function abrirDesafio(){
 }
 let contaCorreta=0;
 function abrirDesafioMatematica(){
-  const idade=estado.idadeCrianca||7;
+  const idade=idadeEfetivaJogos();
   let a,b,op;
   if(idade<=5){a=1+Math.floor(Math.random()*5);b=1+Math.floor(Math.random()*5);op='+'}
   else if(idade<=7){a=1+Math.floor(Math.random()*10);b=1+Math.floor(Math.random()*10);op=Math.random()>.5?'+':'-';if(op==='-'&&b>a)[a,b]=[b,a]}
@@ -3625,7 +3659,7 @@ function testarMath(v){
 const EMOJIS_MEMORIA=['🐱','🐶','🐐','🐔'];
 let sequenciaMemoria=[],progressoMemoria=0,memoriaTravada=true;
 function iniciarJogoMemoria(){
-  const idade=estado.idadeCrianca||7;
+  const idade=idadeEfetivaJogos();
   const tamanho=idade<=6?3:idade<=9?4:5;
   sequenciaMemoria=Array.from({length:tamanho},()=>Math.floor(Math.random()*4));
   progressoMemoria=0;
@@ -3692,7 +3726,7 @@ function tocarTileMemoria(i){
 const EMOJIS_REACAO=['🍎','🍌','🍇','🍊','🍉','🍓','🥕','🍒'];
 let reacaoAlvoIndex=-1,reacaoTimer=null;
 function iniciarJogoReacao(){
-  const idade=estado.idadeCrianca||7;
+  const idade=idadeEfetivaJogos();
   const qtd=idade<=6?4:idade<=9?6:8;
   const escolhidos=[...EMOJIS_REACAO].sort(()=>Math.random()-.5).slice(0,qtd);
   reacaoAlvoIndex=Math.floor(Math.random()*qtd);
@@ -3712,7 +3746,7 @@ function iniciarJogoReacao(){
       mostrarToast('⏰ Tempo esgotado!');
       fecharModal('modal-desafio');
     }
-  },5000);
+  },(idade<=6?8000:idade<=9?6500:5000));
 }
 function testarReacao(acertou){
   clearTimeout(reacaoTimer);
@@ -3722,8 +3756,42 @@ function testarReacao(acertou){
 }
 let estrelasPegas=0,estrelaTimer=null;
 function iniciarJogoEstrelas(){
-  clearTimeout(estrelaTimer);estrelasPegas=0;const area=document.getElementById('estrelas-area'),status=document.getElementById('estrelas-status');if(!area)return;area.innerHTML='';status.textContent='Pegue 5 estrelas em 12 segundos!';
-  const colocar=()=>{if(!document.getElementById('modal-desafio')?.classList.contains('mostrar'))return;const b=document.createElement('button');b.textContent='⭐';b.style.cssText=`position:absolute;left:${8+Math.random()*82}%;top:${8+Math.random()*76}%;font-size:28px;background:none;border:0;cursor:pointer;animation:pulseSurpresa .8s infinite`;b.onclick=()=>{b.remove();estrelasPegas++;status.textContent=`⭐ ${estrelasPegas}/5 estrelas`;if(estrelasPegas>=5){clearTimeout(estrelaTimer);estado.adesivos=Array.isArray(estado.adesivos)?estado.adesivos:[];estado.adesivos.push('estrelas_'+hojeLocal()+'_'+Date.now());fecharModal('modal-desafio');recompensarMiniJogo(3,3,'Caça às estrelas!');renderizarColecao();}else colocar();};area.appendChild(b);};colocar();estrelaTimer=setTimeout(()=>{if(estrelasPegas<5){fecharModal('modal-desafio');mostrarToast('⏰ As estrelas escaparam. Tente novamente!')}},12000);
+  clearTimeout(estrelaTimer);
+  estrelasPegas=0;
+  const idade=idadeEfetivaJogos(),alvo=idade<=6?3:idade<=9?4:5,tempo=idade<=6?18:idade<=9?15:12;
+  const area=document.getElementById('estrelas-area'),status=document.getElementById('estrelas-status');
+  if(!area||!status)return;
+  area.replaceChildren();
+  status.textContent=`Pegue ${alvo} estrelas em ${tempo} segundos!`;
+  const colocar=()=>{
+    const b=document.createElement('button');
+    b.type='button';
+    b.textContent='⭐';
+    b.setAttribute('aria-label','Pegar estrela');
+    b.style.cssText=`position:absolute;left:${5+Math.random()*78}%;top:${5+Math.random()*70}%;width:46px;height:46px;font-size:30px;line-height:1;background:transparent;border:0;cursor:pointer;z-index:2;touch-action:manipulation`;
+    b.onclick=()=>{
+      b.remove();
+      estrelasPegas++;
+      status.textContent=`⭐ ${estrelasPegas}/${alvo} estrelas`;
+      if(estrelasPegas>=alvo){
+        clearTimeout(estrelaTimer);
+        estado.adesivos=Array.isArray(estado.adesivos)?estado.adesivos:[];
+        estado.adesivos.push('estrelas_'+hojeLocal()+'_'+Date.now());
+        fecharModal('modal-desafio');
+        recompensarMiniJogo(3,3,'Caça às estrelas!');
+        renderizarColecao();
+      }else colocar();
+    };
+    area.appendChild(b);
+  };
+  // A primeira estrela é criada antes da abertura do modal.
+  colocar();
+  estrelaTimer=setTimeout(()=>{
+    if(estrelasPegas<alvo && document.getElementById('modal-desafio')?.classList.contains('mostrar')){
+      fecharModal('modal-desafio');
+      mostrarToast('⏰ As estrelas escaparam. Tente novamente!');
+    }
+  },tempo*1000);
 }
 function abrirLojaFundos(){
   renderizarGridFundos();
