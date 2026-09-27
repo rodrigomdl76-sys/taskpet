@@ -745,3 +745,18 @@ body.mesada-desativada .top-row{grid-template-columns:repeat(2,minmax(0,1fr))}
 .btn-pais-flutuante:active{transform:scale(.92)}
 .opcao-mesada{display:flex;align-items:center;gap:9px;font-size:9px;font-weight:800;color:#334155;cursor:pointer;margin:6px 0}
 .opcao-mesada input{width:18px;height:18px;accent-color:#059669;flex-shrink:0}
+
+.top-row{grid-template-columns:repeat(4,minmax(0,1fr));gap:4px}
+body.mesada-desativada .top-row{grid-template-columns:repeat(3,minmax(0,1fr))}
+.top-row .top-pill{min-width:0;min-height:35px;padding:3px 2px;border-radius:11px;gap:2px;box-shadow:0 2px 7px #0f172a1a}
+.top-row .top-pill-text{font-size:8px;white-space:nowrap}
+.top-row .top-pill-sub{font-size:6px;margin-top:0}
+.top-row .coin-dot{width:10px;height:10px}
+.top-row .top-pill>span:first-child:not(.coin-dot):not(.perfil-crianca-emoji){font-size:11px!important}
+.top-perfil-crianca{display:flex;flex-direction:column;align-items:center;justify-content:center}
+.perfil-crianca-emoji{font-size:16px;line-height:1}
+.perfil-crianca-nome{display:block;width:100%;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;font-size:8px;font-weight:900;color:#25344a;text-align:center}
+.opcoes-icone-crianca{display:grid;grid-template-columns:repeat(6,minmax(0,1fr));gap:6px}
+.opcao-icone-crianca{height:42px;border:2px solid #e2e8f0;border-radius:12px;background:#f8fafc;font-size:23px;cursor:pointer}
+.opcao-icone-crianca.selecionado{background:#ecfdf5;border-color:#10b981;box-shadow:0 0 0 2px #10b98133}
+@media(max-width:360px){.top-row .top-pill-text{font-size:7px}.top-row .top-pill-sub{font-size:5.5px}.perfil-crianca-nome{font-size:7px}}

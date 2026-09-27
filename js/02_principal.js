@@ -449,6 +449,51 @@ function garantirCriancaAtiva(){
   }
   estado.criancasDados=estado.criancasDados||{};
 }
+const ICONES_PERFIL_CRIANCA=['🐾','🦁','🐱','🐶','🦊','🐼','🐸','🦄','🐬','⭐','🚀','🌈'];
+let iconePerfilSelecionado='🐾';
+function atualizarAtalhoPerfilCrianca(){
+  const info=estado.criancas?.[estado.criancaAtivaId]||{nome:'Meu perfil',emoji:'🐾'};
+  const nome=(info.nome||'Meu perfil').trim();
+  document.getElementById('perfil-crianca-emoji').textContent=info.emoji||'🐾';
+  document.getElementById('perfil-crianca-nome').textContent=nome;
+  document.getElementById('btn-perfil-crianca').setAttribute('aria-label',`Perfil de ${nome}. Escolher ícone e apelido`);
+}
+function renderizarOpcoesIconeCrianca(){
+  const c=document.getElementById('opcoes-icone-crianca');
+  c.replaceChildren();
+  ICONES_PERFIL_CRIANCA.forEach(emoji=>{
+    const botao=document.createElement('button');
+    botao.type='button';
+    botao.className='opcao-icone-crianca'+(iconePerfilSelecionado===emoji?' selecionado':'');
+    botao.textContent=emoji;
+    botao.setAttribute('aria-label',`Escolher ${emoji}`);
+    botao.setAttribute('aria-pressed',String(iconePerfilSelecionado===emoji));
+    botao.onclick=()=>{iconePerfilSelecionado=emoji;renderizarOpcoesIconeCrianca()};
+    c.appendChild(botao);
+  });
+}
+function abrirPerfilCrianca(){
+  if(perfilAtivo!=='crianca')return mostrarToast('Troque para o perfil da criança para personalizar.');
+  const info=estado.criancas?.[estado.criancaAtivaId];
+  if(!info)return;
+  document.getElementById('input-apelido-crianca').value=info.nome==='Minha Criança'?'':info.nome;
+  iconePerfilSelecionado=ICONES_PERFIL_CRIANCA.includes(info.emoji)?info.emoji:'🐾';
+  renderizarOpcoesIconeCrianca();
+  abrirModal('modal-perfil-crianca');
+}
+function salvarPerfilCrianca(){
+  if(perfilAtivo!=='crianca')return;
+  const info=estado.criancas?.[estado.criancaAtivaId];
+  if(!info)return;
+  const nome=document.getElementById('input-apelido-crianca').value.replace(/[\u0000-\u001f\u007f]/g,' ').trim().replace(/\s+/g,' ').slice(0,18);
+  if(!nome)return mostrarToast('Escreva seu nome ou apelido.');
+  info.nome=nome;
+  info.emoji=ICONES_PERFIL_CRIANCA.includes(iconePerfilSelecionado)?iconePerfilSelecionado:'🐾';
+  salvar();
+  atualizarAtalhoPerfilCrianca();
+  fecharModal('modal-perfil-crianca');
+  mostrarToast('🌟 Seu perfil foi atualizado!');
+}
 let estado={
   criancaAtivaId:'c1',criancas:{c1:{nome:'Minha Criança',emoji:'🐾'}},criancasDados:{},
   petAtual:'gato',moedas:15,taxaCambio:.01,pinHash:null,dinheiroAcumulado:.15,mesadaAtiva:true,idadeCrianca:7,dificuldadeJogos:'auto',nomePet:'Pipoca',
@@ -1052,6 +1097,7 @@ function celebrarEvolucaoPet(fase){
 }
 function atualizarTela(){
   const def=PETS[estado.petAtual],p=obterDadosPetAtual(),fase=calcularFase(p.nivel);
+  atualizarAtalhoPerfilCrianca();
   document.getElementById('txt-moedas').textContent=estado.moedas;
   const dinheiro=(estado.dinheiroAcumulado||0).toFixed(2).replace('.',',');
   document.getElementById('txt-dinheiro').textContent=dinheiro;

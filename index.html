@@ -16,7 +16,7 @@
 <script src="https://www.gstatic.com/firebasejs/12.18.0/firebase-database-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/12.18.0/firebase-messaging-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/12.18.0/firebase-storage-compat.js"></script>
-<link rel="stylesheet" href="css/01_base.css">
+<link rel="stylesheet" href="css/01_base.css?v=perfil-v1">
 <script src="js/01_menu.js"></script>
 <link rel="stylesheet" href="css/02_menu.css">
 <link rel="stylesheet" href="css/03_mapa_album.css">
@@ -82,6 +82,7 @@
     <button class="top-pill" onclick="abrirPainelPais()"><span class="coin-dot"></span><span class="top-pill-text"><span id="txt-moedas">0</span> 🪙</span></button>
     <button class="top-pill" id="topo-mesada" onclick="abrirPainelPais()"><span style="font-size:13px">💰</span><span><span class="top-pill-text">R$ <span id="txt-dinheiro">0,00</span></span><span class="top-pill-sub" id="txt-status-nuvem">🔒 pais</span></span></button>
     <button class="top-pill" id="btn-pill-streak" onclick="abrirModal('modal-conquistas')" title="Sequência diária"><span style="font-size:13px">🔥</span><span><span class="top-pill-text"><span id="txt-streak">0</span> dias</span><span class="top-pill-sub">sequência</span></span></button>
+    <button type="button" class="top-pill top-perfil-crianca" id="btn-perfil-crianca" onclick="abrirPerfilCrianca()" aria-label="Escolher ícone e apelido do perfil"><span class="perfil-crianca-emoji" id="perfil-crianca-emoji">🐾</span><span class="perfil-crianca-nome" id="perfil-crianca-nome">Meu perfil</span></button>
   </div>
   <div class="pet-selector">
     <button class="pet-unico-btn" id="btn-pet-atual" onclick="alternarListaPets(event)">🐱</button>
@@ -128,6 +129,14 @@
     <button class="bottom-btn btn-mais-aventuras" onclick="abrirMenuMais()" aria-label="Abrir mais opções"><span class="btn-icon">✦</span>Mais</button>
   </div>
 </div>
+<div id="modal-perfil-crianca" class="modal-overlay"><div class="modal" style="max-width:330px">
+  <div class="modal-title"><h3>🌟 Meu perfil</h3><button type="button" class="close-btn" onclick="fecharModal('modal-perfil-crianca')" aria-label="Fechar">×</button></div>
+  <label class="field-label" for="input-apelido-crianca">Como você quer aparecer?</label>
+  <input class="field" id="input-apelido-crianca" maxlength="18" autocomplete="off" placeholder="Seu nome ou apelido">
+  <p class="field-label" style="margin:12px 0 6px">Escolha seu ícone</p>
+  <div id="opcoes-icone-crianca" class="opcoes-icone-crianca" role="group" aria-label="Ícones do perfil"></div>
+  <button type="button" class="primary-btn green-btn" style="width:100%;margin-top:14px" onclick="salvarPerfilCrianca()">Salvar meu perfil</button>
+</div></div>
 <div id="modal-menu-mais" class="modal-overlay">
   <div class="modal menu-mais-modal" style="max-width:360px">
     <div class="modal-title"><div><h3 style="margin:0">✦ Mais aventuras</h3><small style="font-size:8px;color:#64748b;font-weight:800">Seus atalhos em um só lugar</small></div><button class="close-btn" onclick="fecharModal('modal-menu-mais')">×</button></div>
@@ -556,6 +565,7 @@
       <button type="button" class="tab-btn" id="tab-ajuda-pais" onclick="alternarAbaAjuda('pais')">👨‍👩‍👧 Pais</button>
     </div>
     <div id="painel-ajuda-crianca">
+      <div class="ajuda-item"><span class="ajuda-ico">🌟</span><div><b>Meu perfil</b><span>Toque no seu ícone no alto da tela para escolher um apelido e um ícone.</span></div></div>
       <div class="ajuda-item"><span class="ajuda-ico">👆</span><div><b>Toque no pet</b><span>Dê carinho: sobe a felicidade e o pet responde com sons e falas.</span></div></div>
       <div class="ajuda-item"><span class="ajuda-ico">🎾</span><div><b>Brincar com o pet</b><span>Use o botão Brincar acima do pet para interagir com o Pipoca.</span></div></div>
       <div class="ajuda-item"><span class="ajuda-ico">🛡️</span><div><b>Tarefas do dia</b><span>Tire foto ou envie para os pais aprovarem. Obrigatórias 🔥 liberam a ofensiva; extras ⭐ dão moedas extras.</span></div></div>
@@ -591,7 +601,7 @@
 <div class="toast" id="toast"></div>
 <div class="banner-offline" id="banner-offline">📡 Sem conexão — as alterações serão sincronizadas quando a internet voltar.</div>
 <div class="banner-evento" id="banner-evento" onclick="abrirModalEventoSazonal()"></div>
-<script src="js/02_principal.js?v=pet-visivel-2"></script>
+<script src="js/02_principal.js?v=perfil-v1"></script>
   <script src="js/03_extras_01.js"></script>
 <div id="modal-central-aventuras" class="modal-overlay"><div class="modal" style="max-width:360px"><div class="modal-title"><h3>🌟 Central de Aventuras</h3><button class="close-btn" onclick="fecharModal('modal-central-aventuras')">×</button></div><div id="central-aventuras-conteudo"></div></div></div>
 <div id="modal-bau-diario" class="modal-overlay"><div class="modal" style="max-width:320px;text-align:center"><div class="modal-title"><h3>🎁 Baú do Dia</h3><button class="close-btn" onclick="fecharModal('modal-bau-diario')">×</button></div><div id="bau-diario-conteudo"></div></div></div>
