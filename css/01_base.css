@@ -691,3 +691,37 @@ button:focus-visible,input:focus-visible,.top-pill:focus-visible{
 .pais-grupo[open]>summary:after{transform:rotate(180deg)}
 .pais-grupo>.section-card{margin:6px 8px 8px}
 #card-aprovacoes-pais{border:1px solid #fbbf24;background:#fffbeb}
+
+/* Cenários fotográficos e temas visuais desbloqueados junto com cada cenário. */
+body.cenario-arena_galactica,.bg-layer.cenario-arena_galactica{background:#0b1634 url('../assets/fundos/arena_galactica.webp') center center / cover no-repeat}
+body.cenario-estadio_lunar,.bg-layer.cenario-estadio_lunar{background:#102552 url('../assets/fundos/estadio_lunar.webp') center center / cover no-repeat}
+body.cenario-reino_dos_doces,.bg-layer.cenario-reino_dos_doces{background:#a5d9f2 url('../assets/fundos/reino_dos_doces.webp') center center / cover no-repeat}
+.titulo-temas-loja{font-size:12px;color:#26344b;margin:18px 0 4px}
+.descricao-temas-loja{font-size:9px;color:#64748b;line-height:1.4;margin-bottom:8px}
+.grid-temas{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}
+.tema-card{border:2px solid #e2e8f0;background:#f8fafc;border-radius:16px;padding:10px 6px;min-height:82px;color:#172033;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px;cursor:pointer}
+.tema-card:disabled{opacity:.5;cursor:not-allowed}
+.tema-card.ativo{border-color:#16a34a;box-shadow:0 0 0 2px #16a34a33}
+.tema-card-icone{font-size:22px}.tema-card b{font-size:10px}.tema-card small{font-size:8px}
+.tema-card-galactico{background:linear-gradient(135deg,#122a62,#483485);color:#fff}
+.tema-card-lunar{background:linear-gradient(135deg,#102e57,#0d725f);color:#fff}
+.tema-card-doces{background:linear-gradient(135deg,#ffd2ea,#bce9fd);color:#653350}
+body.tema-galactico .bottom-btn{border:1px solid #88ddff;border-radius:10px;box-shadow:inset 0 0 0 1px #ffffff44,0 0 16px #43d3ff66}
+body.tema-galactico .bottom-btn.btn-voice{background:linear-gradient(135deg,#155897,#113269)}
+body.tema-galactico .bottom-btn.btn-game{background:linear-gradient(135deg,#742aa3,#3f247b)}
+body.tema-galactico .bottom-btn.btn-mais-aventuras{background:linear-gradient(135deg,#086b82,#123768)}
+body.tema-galactico .top-pill,body.tema-galactico .tasks-section,body.tema-galactico .pet-action-btn{background:rgba(236,250,255,.86);border:1px solid #70caff;border-radius:11px}
+body.tema-galactico .pet-stage{border-radius:18px;border:1px solid #70caffaa}
+body.tema-lunar .bottom-btn{border-radius:99px;border:2px solid #d3f8e5;box-shadow:0 5px 0 #075b4a}
+body.tema-lunar .bottom-btn.btn-voice{background:#086b56}
+body.tema-lunar .bottom-btn.btn-game{background:#144e92}
+body.tema-lunar .bottom-btn.btn-mais-aventuras{background:#157368}
+body.tema-lunar .top-pill,body.tema-lunar .tasks-section,body.tema-lunar .pet-action-btn{background:rgba(243,255,250,.9);border:2px solid #27a987;border-radius:18px}
+body.tema-lunar .pet-stage{border-radius:50%;border:2px solid #caffecaa}
+body.tema-doces .bottom-buttons{grid-template-columns:repeat(3,minmax(0,1fr));gap:9px;padding:0 5px}
+body.tema-doces .bottom-btn{border-radius:24px 24px 13px 13px;border:2px solid #fff;box-shadow:0 5px 0 #bd78a244}
+body.tema-doces .bottom-btn.btn-voice{background:linear-gradient(135deg,#df72a7,#a94486)}
+body.tema-doces .bottom-btn.btn-game{background:linear-gradient(135deg,#8c79d7,#6150b8)}
+body.tema-doces .bottom-btn.btn-mais-aventuras{background:linear-gradient(135deg,#37abbb,#267b9a)}
+body.tema-doces .top-pill,body.tema-doces .tasks-section,body.tema-doces .pet-action-btn{background:rgba(255,249,253,.9);border:2px solid #f8adcd;border-radius:24px}
+body.tema-doces .pet-stage{border-radius:45%;border:2px solid #ffdbecaa}

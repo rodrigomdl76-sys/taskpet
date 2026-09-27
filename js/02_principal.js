@@ -186,7 +186,13 @@ const OBJETOS_PET=[
 ACESSORIOS.push(...OBJETOS_PET);
 ACESSORIOS.push({id:'unicornio_estelar',nome:'Diadema Estelar da Lumi',emoji:'✨',preco:32,svg:'<svg viewBox="0 0 270 285" xmlns="http://www.w3.org/2000/svg"><path d="M95 62Q135 28 175 62" fill="none" stroke="#c084fc" stroke-width="7"/><circle cx="135" cy="38" r="9" fill="#fde047"/><circle cx="112" cy="49" r="4" fill="#67e8f9"/><circle cx="158" cy="49" r="4" fill="#f472b6"/></svg>'},{id:'dino_crista',nome:'Crista de Explorador Rex',emoji:'🦖',preco:30,svg:'<svg viewBox="0 0 270 285" xmlns="http://www.w3.org/2000/svg"><path d="M95 60l10-25 12 18 12-27 12 27 12-18 10 25z" fill="#f97316" stroke="#9a3412" stroke-width="2"/></svg>'},{id:'capi_lotus',nome:'Coroa de Lótus da Capi',emoji:'🪷',preco:28,svg:'<svg viewBox="0 0 270 285" xmlns="http://www.w3.org/2000/svg"><g fill="#f9a8d4" stroke="#be185d" stroke-width="1"><path d="M135 58Q120 30 135 18Q150 30 135 58Z"/><path d="M135 58Q95 42 105 25Q125 30 135 58Z"/><path d="M135 58Q175 42 165 25Q145 30 135 58Z"/></g><circle cx="135" cy="48" r="6" fill="#fde68a"/></svg>'});
 const BANCO_FUNDOS=[
-{id:'ceu',nome:'Céu de Verão',emoji:'☀️',preco:0,bg:'linear-gradient(180deg,#38bdf8,#e0f2fe,#fef9c3)'},{id:'chuva',nome:'Chuva Suave',emoji:'🌧️',preco:12,bg:'linear-gradient(180deg,#334155,#94a3b8)'},{id:'noite',nome:'Noite Estrelada',emoji:'🌙',preco:20,bg:'radial-gradient(ellipse at 70% 20%,#1e3a8a,#020617)'},{id:'arcoiris',nome:'Arco-Íris',emoji:'🌈',preco:30,bg:'linear-gradient(180deg,#f87171,#fbbf24,#4ade80,#38bdf8,#a78bfa)'},{id:'praia',nome:'Praia Tropical',emoji:'🏖️',preco:25,bg:'linear-gradient(180deg,#7dd3fc,#38bdf8,#fde68a,#fbbf24)'},{id:'floresta',nome:'Floresta Mágica',emoji:'🌲',preco:22,bg:'linear-gradient(180deg,#86efac,#166534)'},{id:'floresta_luminosa',nome:'Floresta Luminosa',emoji:'🍄',preco:0,bg:"url('assets/fundos/floresta_luminosa.webp') center / cover no-repeat"},{id:'reino_submarino',nome:'Reino Submarino',emoji:'🐠',preco:0,bg:"url('assets/fundos/reino_submarino.webp') center / cover no-repeat"},{id:'festa',nome:'Balada Neon',emoji:'🎉',preco:35,bg:'linear-gradient(160deg,#f472b6,#a78bfa,#22d3ee)'},{id:'halloween',nome:'Noite de Halloween',emoji:'🎃',preco:40,bg:'linear-gradient(180deg,#1a1033,#7c2d12)'},{id:'estadio',nome:'Campo de Futebol',emoji:'⚽',preco:45,bg:'linear-gradient(180deg,#0c4a6e,#16a34a,#14532d)'},{id:'quarto',nome:'Quarto Fofo',emoji:'🛏️',preco:35,bg:'linear-gradient(180deg,#faf5ff,#e9d5ff)'},{id:'mario',nome:'Mundo Aventura',emoji:'🍄',preco:50,bg:'linear-gradient(180deg,#67e8f9,#4ade80)'},{id:'dino',nome:'Era dos Dinos',emoji:'🦖',preco:45,bg:'linear-gradient(180deg,#fef3c7,#84cc16,#166534)'},{id:'princesa',nome:'Castelo Real',emoji:'👑',preco:40,bg:'linear-gradient(180deg,#fdf2f8,#f9a8d4)'},{id:'astronauta',nome:'Espaço Sideral',emoji:'🚀',preco:50,bg:'radial-gradient(ellipse at 50% 30%,#312e81,#020617)'},{id:'pirata',nome:'Mar dos Piratas',emoji:'🏴‍☠️',preco:45,bg:'linear-gradient(180deg,#0ea5e9,#78350f,#1c1917)'},{id:'fazenda',nome:'Fazenda Feliz',emoji:'🐄',preco:35,bg:'linear-gradient(180deg,#7dd3fc,#fde68a,#4ade80)'},{id:'neve',nome:'Natal Nevado',emoji:'🎄',preco:40,bg:'linear-gradient(180deg,#e0f2fe,#fff)'},{id:'aniversario',nome:'Festa de Aniversário',emoji:'🎂',preco:0,bg:'linear-gradient(180deg,#c4b5fd,#f9a8d4,#fde68a)'}];
+{id:'ceu',nome:'Céu de Verão',emoji:'☀️',preco:0,bg:'linear-gradient(180deg,#38bdf8,#e0f2fe,#fef9c3)'},{id:'chuva',nome:'Chuva Suave',emoji:'🌧️',preco:12,bg:'linear-gradient(180deg,#334155,#94a3b8)'},{id:'noite',nome:'Noite Estrelada',emoji:'🌙',preco:20,bg:'radial-gradient(ellipse at 70% 20%,#1e3a8a,#020617)'},{id:'arcoiris',nome:'Arco-Íris',emoji:'🌈',preco:30,bg:'linear-gradient(180deg,#f87171,#fbbf24,#4ade80,#38bdf8,#a78bfa)'},{id:'praia',nome:'Praia Tropical',emoji:'🏖️',preco:25,bg:'linear-gradient(180deg,#7dd3fc,#38bdf8,#fde68a,#fbbf24)'},{id:'floresta',nome:'Floresta Mágica',emoji:'🌲',preco:22,bg:'linear-gradient(180deg,#86efac,#166534)'},{id:'floresta_luminosa',nome:'Floresta Luminosa',emoji:'🍄',preco:0,bg:"url('assets/fundos/floresta_luminosa.webp') center / cover no-repeat"},{id:'reino_submarino',nome:'Reino Submarino',emoji:'🐠',preco:0,bg:"url('assets/fundos/reino_submarino.webp') center / cover no-repeat"},{id:'arena_galactica',nome:'Arena Galáctica',emoji:'🛸',preco:55,bg:"url('assets/fundos/arena_galactica.webp') center / cover no-repeat"},{id:'estadio_lunar',nome:'Estádio Lunar',emoji:'⚽',preco:45,bg:"url('assets/fundos/estadio_lunar.webp') center / cover no-repeat"},{id:'reino_dos_doces',nome:'Reino dos Doces',emoji:'🍭',preco:40,bg:"url('assets/fundos/reino_dos_doces.webp') center / cover no-repeat"},{id:'festa',nome:'Balada Neon',emoji:'🎉',preco:35,bg:'linear-gradient(160deg,#f472b6,#a78bfa,#22d3ee)'},{id:'halloween',nome:'Noite de Halloween',emoji:'🎃',preco:40,bg:'linear-gradient(180deg,#1a1033,#7c2d12)'},{id:'estadio',nome:'Campo de Futebol',emoji:'⚽',preco:45,bg:'linear-gradient(180deg,#0c4a6e,#16a34a,#14532d)'},{id:'quarto',nome:'Quarto Fofo',emoji:'🛏️',preco:35,bg:'linear-gradient(180deg,#faf5ff,#e9d5ff)'},{id:'mario',nome:'Mundo Aventura',emoji:'🍄',preco:50,bg:'linear-gradient(180deg,#67e8f9,#4ade80)'},{id:'dino',nome:'Era dos Dinos',emoji:'🦖',preco:45,bg:'linear-gradient(180deg,#fef3c7,#84cc16,#166534)'},{id:'princesa',nome:'Castelo Real',emoji:'👑',preco:40,bg:'linear-gradient(180deg,#fdf2f8,#f9a8d4)'},{id:'astronauta',nome:'Espaço Sideral',emoji:'🚀',preco:50,bg:'radial-gradient(ellipse at 50% 30%,#312e81,#020617)'},{id:'pirata',nome:'Mar dos Piratas',emoji:'🏴‍☠️',preco:45,bg:'linear-gradient(180deg,#0ea5e9,#78350f,#1c1917)'},{id:'fazenda',nome:'Fazenda Feliz',emoji:'🐄',preco:35,bg:'linear-gradient(180deg,#7dd3fc,#fde68a,#4ade80)'},{id:'neve',nome:'Natal Nevado',emoji:'🎄',preco:40,bg:'linear-gradient(180deg,#e0f2fe,#fff)'},{id:'aniversario',nome:'Festa de Aniversário',emoji:'🎂',preco:0,bg:'linear-gradient(180deg,#c4b5fd,#f9a8d4,#fde68a)'}];
+const TEMAS_INTERFACE=[
+  {id:'classico',nome:'Clássico',emoji:'✨',fundo:null,icons:['🎤','⚡','✦']},
+  {id:'galactico',nome:'Galáctico',emoji:'🛸',fundo:'arena_galactica',icons:['📡','🚀','✧']},
+  {id:'lunar',nome:'Futebol Lunar',emoji:'⚽',fundo:'estadio_lunar',icons:['📣','🏆','⚽']},
+  {id:'doces',nome:'Doces',emoji:'🍭',fundo:'reino_dos_doces',icons:['🎵','🍬','🍭']}
+];
 // Compras antigas permanecem no estado; os acessórios dos combos não são mais exibidos.
 function buscarAcessorioPorId(id){
   return ACESSORIOS.find(a=>a.id===id)||null;
@@ -358,11 +364,11 @@ const hojeLocal=()=>{const d=new Date();return `${d.getFullYear()}-${String(d.ge
 const ontemLocal=()=>{const d=new Date();d.setDate(d.getDate()-1);return `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`};
 // Campos que pertencem a UM filho específico (progresso do pet, tarefas, moedas...).
 // Tudo que NÃO está nessa lista é compartilhado pela família inteira (PIN, e-mails, taxa de câmbio).
-const CAMPOS_CRIANCA=['bauDatasResgatadas','historicoRecompensas','avisosRecompensas','acessorios','conquistas','desafiosMathAcertos','dinheiroAcumulado','fundoAtual','fundosComprados','historicoConclusoes','idadeCrianca','dificuldadeJogos','nomePet','lembreteEnviadoData','metaMoedas','moedas','onboardingVistoCrianca','pausaAte','petAtual','pets','recompensas','registroDiario','solicitacoesPremios','streak','surpresaResgatadaData','tarefas','tarefasHojeCount','timerFim','totalSacado','ultimoDiaAcesso','ultimoDiaConcluido','ultimoStreakPremiado','vozSalva','ultimoAcaoPet','ultimoDecay','desafioDiarioData','desafioDiarioFeitoData','bauDiarioAbertoData','escudosOfensiva','adesivos','eventoSemanalData','missaoFamilia','mensagensPais','historicoEngajamento'];
+const CAMPOS_CRIANCA=['bauDatasResgatadas','historicoRecompensas','avisosRecompensas','acessorios','conquistas','desafiosMathAcertos','dinheiroAcumulado','fundoAtual','fundosComprados','temaInterfaceAtual','historicoConclusoes','idadeCrianca','dificuldadeJogos','nomePet','lembreteEnviadoData','metaMoedas','moedas','onboardingVistoCrianca','pausaAte','petAtual','pets','recompensas','registroDiario','solicitacoesPremios','streak','surpresaResgatadaData','tarefas','tarefasHojeCount','timerFim','totalSacado','ultimoDiaAcesso','ultimoDiaConcluido','ultimoStreakPremiado','vozSalva','ultimoAcaoPet','ultimoDecay','desafioDiarioData','desafioDiarioFeitoData','bauDiarioAbertoData','escudosOfensiva','adesivos','eventoSemanalData','missaoFamilia','mensagensPais','historicoEngajamento'];
 function valoresPadraoCrianca(){
   return {
     petAtual:'gato',moedas:15,dinheiroAcumulado:.15,idadeCrianca:7,dificuldadeJogos:'auto',nomePet:'Pipoca',
-    fundoAtual:'ceu',fundosComprados:['ceu'],metaMoedas:50,totalSacado:0,
+    fundoAtual:'ceu',fundosComprados:['ceu'],temaInterfaceAtual:'classico',metaMoedas:50,totalSacado:0,
     ultimoDiaAcesso:hojeLocal(),ultimoDiaConcluido:null,streak:0,ultimoStreakPremiado:0,
     tarefasHojeCount:0,desafiosMathAcertos:0,timerFim:null,vozSalva:null,
     pets:{gato:{nivel:1,xp:0,felicidade:100,saude:100},cachorra:{nivel:1,xp:0,felicidade:100,saude:100},cabra:{nivel:1,xp:0,felicidade:100,saude:100},frango:{nivel:1,xp:0,felicidade:100,saude:100},unicornio:{nivel:1,xp:0,felicidade:100,saude:100},dinossauro:{nivel:1,xp:0,felicidade:100,saude:100},capivara:{nivel:1,xp:0,felicidade:100,saude:100}},
@@ -421,7 +427,7 @@ function garantirCriancaAtiva(){
 let estado={
   criancaAtivaId:'c1',criancas:{c1:{nome:'Minha Criança',emoji:'🐾'}},criancasDados:{},
   petAtual:'gato',moedas:15,taxaCambio:.01,pinHash:null,dinheiroAcumulado:.15,idadeCrianca:7,dificuldadeJogos:'auto',nomePet:'Pipoca',
-  fundoAtual:'ceu',fundosComprados:['ceu'],metaMoedas:50,totalSacado:0,
+  fundoAtual:'ceu',fundosComprados:['ceu'],temaInterfaceAtual:'classico',metaMoedas:50,totalSacado:0,
   ultimoDiaAcesso:hojeLocal(),ultimoDiaConcluido:null,streak:0,ultimoStreakPremiado:0,
   tarefasHojeCount:0,desafiosMathAcertos:0,timerFim:null,vozSalva:null,
   pets:{gato:{nivel:1,xp:0,felicidade:100,saude:100},cachorra:{nivel:1,xp:0,felicidade:100,saude:100},cabra:{nivel:1,xp:0,felicidade:100,saude:100},frango:{nivel:1,xp:0,felicidade:100,saude:100},unicornio:{nivel:1,xp:0,felicidade:100,saude:100},dinossauro:{nivel:1,xp:0,felicidade:100,saude:100},capivara:{nivel:1,xp:0,felicidade:100,saude:100}},
@@ -979,6 +985,12 @@ function aplicarFundoTela(id){
   ultimoFundoParticulas=null;
   renderizarParticulasCenario(id||'ceu');
 }
+function aplicarTemaInterface(){
+  const tema=TEMAS_INTERFACE.find(t=>t.id===estado.temaInterfaceAtual && (!t.fundo||(estado.fundosComprados||[]).includes(t.fundo)))||TEMAS_INTERFACE[0];
+  document.body.classList.forEach(c=>{if(c.startsWith('tema-'))document.body.classList.remove(c)});
+  document.body.classList.add('tema-'+tema.id);
+  document.querySelectorAll('.bottom-buttons .btn-icon').forEach((el,i)=>{if(tema.icons[i])el.textContent=tema.icons[i]});
+}
 function obterDadosPetAtual(){if(!estado.pets[estado.petAtual])estado.pets[estado.petAtual]={nivel:1,xp:0,felicidade:100,saude:100};return estado.pets[estado.petAtual]}
 function nivelJogador(){return Math.max(...Object.values(estado.pets).map(p=>p.nivel||1))}
 function calcularFase(n){if(estado.petAtual==='gato')return n>=41?3:n>=21?2:1;return n>=81?5:n>=61?4:n>=41?3:n>=21?2:1}
@@ -1049,6 +1061,7 @@ function atualizarTela(){
     if(!ok){const s=document.createElement('span');s.className='lock-mini';s.textContent='🔒';el.appendChild(s)}
   });
   aplicarFundoTela(estado.fundoAtual);
+  aplicarTemaInterface();
   atualizarHumorPet(p);
   renderizarAcessorioNoContainer();
   atualizarBotaoSurpresaDia();
@@ -3807,6 +3820,29 @@ function renderizarGridFundos(){
     d.innerHTML=`<span style="font-size:25px">${f.emoji}</span><b style="font-size:10px;margin-top:3px">${esc(f.nome)}</b><span class="shop-tag">${ativo?'✓ Em uso':f.preco===0?'Grátis · Usar':comprado?'Usar':f.preco+' 🪙'}</span>`;
     d.onclick=()=>selecionarOuComprarFundo(f);
     c.appendChild(d);
+  });
+  renderizarTemasInterface();
+}
+function renderizarTemasInterface(){
+  const grid=document.getElementById('grid-temas');
+  if(!grid)return;
+  grid.replaceChildren();
+  TEMAS_INTERFACE.forEach(tema=>{
+    const liberado=!tema.fundo||(estado.fundosComprados||[]).includes(tema.fundo);
+    const ativo=(estado.temaInterfaceAtual||'classico')===tema.id;
+    const botao=document.createElement('button');
+    botao.type='button';
+    botao.className=`tema-card tema-card-${tema.id}${ativo?' ativo':''}`;
+    botao.innerHTML=`<span class="tema-card-icone">${tema.emoji}</span><b>${esc(tema.nome)}</b><small>${ativo?'✓ Em uso':liberado?'Aplicar':'🔒 Compre o cenário'}</small>`;
+    botao.disabled=!liberado;
+    botao.onclick=()=>{
+      estado.temaInterfaceAtual=tema.id;
+      salvar();
+      aplicarTemaInterface();
+      renderizarTemasInterface();
+      mostrarToast(`🎨 Tema ${tema.nome} aplicado!`);
+    };
+    grid.appendChild(botao);
   });
 }
 function selecionarOuComprarFundo(f){

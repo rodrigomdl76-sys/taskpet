@@ -47,7 +47,7 @@
     area.innerHTML=acoes.filter(a=>(!a.fase || a.fase===f) && arquivos[f][a.id]).map(a=>`<button type="button" onclick="window.acaoGatoLaranja('${a.id}')">${a.nome}</button>`).join('');
     if(perfilAtivo==='pais')area.innerHTML+=[1,2,3].map(n=>`<button type="button" onclick="window.testarFaseGato(${n})" ${n===f?'disabled':''}>Testar fase ${n}</button>`).join('');
     const nomes=['','Ovo-gato','Gato Cavalheiro','Gato Real'];
-    const label=document.getElementById('pet-evol-nome');if(label)label.textContent=`Pipoca • ${nomes[f]}${faseTeste?' (teste)':''}`;
+    const label=document.getElementById('pet-evol-nome');if(label)label.textContent=`${estado.nomePet||'Pipoca'} • ${nomes[f]}${faseTeste?' (teste)':''}`;
   }
   window.testarFaseGato=n=>{if(perfilAtivo!=='pais')return;faseTeste=n;chave='';mostrar()};
   window.acaoGatoLaranja=tocar;
