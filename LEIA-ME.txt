@@ -1,0 +1,7 @@
+RotinaPet — correção de aprovações e reorganização do painel dos pais
+
+Arquivos alterados: index.html, js/02_principal.js e css/01_base.css.
+Base: commit 4b4ff08cd3cc53b38cc086c80677a1d011f9f1c3 (melhorias dos jogos e nome do pet).
+
+Este pacote é uma cópia para revisão; ainda não foi publicado na branch main do GitHub.
+A aprovação automática da atualização da branch foi bloqueada pelo limite de uso da conta.
