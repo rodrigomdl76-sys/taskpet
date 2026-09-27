@@ -97,7 +97,7 @@ button{touch-action:manipulation}
 .evo-name{font-size:9px;font-weight:900;color:#fff;text-shadow:0 1px 3px #0007;margin-top:3px;max-width:260px;text-align:center}
 .floating-text{position:absolute;font-weight:900;font-size:16px;color:#fff;text-shadow:0 2px 5px #0007;pointer-events:none;animation:floatUp .9s forwards;z-index:50}
 @keyframes floatUp{to{transform:translateY(-55px) scale(1.15);opacity:0}}
-.tasks-section{background:rgba(255,255,255,.94);border-radius:18px;padding:8px 10px;flex-shrink:0;max-height:130px;overflow:auto;box-shadow:0 5px 16px #0002;backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);border:1px solid rgba(255,255,255,.55)}
+.tasks-section{background:rgba(255,255,255,.78);border-radius:18px;padding:8px 10px;flex-shrink:0;max-height:130px;overflow:auto;box-shadow:0 5px 16px #0002;backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);border:1px solid rgba(255,255,255,.55)}
 .task-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:5px}
 .task-row{display:grid;grid-template-columns:1fr auto;gap:5px;align-items:center;padding:6px 0;border-bottom:1px solid #eef2f7}
 .task-row:last-child{border:0}

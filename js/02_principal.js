@@ -1026,13 +1026,6 @@ function atualizarTela(){
   document.getElementById('txt-streak').textContent=streakVal;
   const btnStreak=document.getElementById('btn-pill-streak');
   if(btnStreak)btnStreak.classList.toggle('streak-fogo',streakVal>=3);
-  document.getElementById('val-felicidade').textContent=p.felicidade;
-  const barraFel=document.getElementById('barra-felicidade');
-  if(barraFel){
-    barraFel.style.width=p.felicidade+'%';
-    barraFel.classList.toggle('glow-happy',p.felicidade>=80);
-  }
-  document.getElementById('txt-saude').textContent=p.saude+'%';
   document.getElementById('numero-nivel').textContent=p.nivel;
   document.getElementById('texto-xp').textContent=`${p.xp}/100`;
   document.getElementById('barra-xp').style.width=p.xp+'%';
