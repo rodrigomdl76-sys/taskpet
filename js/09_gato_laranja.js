@@ -2,16 +2,15 @@
 (() => {
   const pasta = 'animacoes/';
   const arquivos = {
-    2:{idle:'01_parado.webp'},
+    2:{idle:'01_parado.webp',carinho:'02_carinho.webp',dormir:'03_dormir.webp',comemoracao:'04_comemorar.webp'},
     1:{idle:'01_parado.webp',carinho:'02_carinho.webp',dormir:'03_dormir.webp',comemoracao:'04_comemorar.webp'},
     3:{idle:'01_parado.webp',carinho:'02_carinho.webp',dormir:'03_dormir.webp',comemoracao:'04_comemorar.webp'}
   };
   const acoes = [{id:'carinho',nome:'💛 Carinho'},{id:'comemoracao',nome:'🎉 Comemorar'}];
-  let img, timer, volta, faseVisivel=0, faseTeste=0, acao='', chave='', frame=0, token=0, audioAtivo=0;
+  let img, volta, faseVisivel=0, faseTeste=0, acao='', chave='', token=0, audioAtivo=0;
   const nivel = () => Number(estado?.pets?.gato?.nivel)||1;
   const faseReal = () => nivel()>=41?3:nivel()>=21?2:1;
   const fase = () => perfilAtivo==='pais' && faseTeste ? faseTeste : faseReal();
-  function pararQuadros(){clearInterval(timer);timer=null;}
   function voltar(){clearTimeout(volta);volta=null;acao='';mostrar();}
   function caminho(f,a,n){
     return `${pasta}fase${f}/${arquivos[f][a]}`;
@@ -19,7 +18,7 @@
   function garantirImagem(){
     const pet=document.getElementById('pet-principal');if(!pet)return false;
     if(!img || img.parentNode!==pet){
-      pararQuadros();chave='';img=document.createElement('img');img.className='gato-laranja-img';img.alt='Gato animado';img.draggable=false;
+      chave='';img=document.createElement('img');img.className='gato-laranja-img';img.alt='Gato animado';img.draggable=false;
       img.onerror=()=>{pet.classList.remove('gato-laranja-pronto');img.alt='Imagem do pet indisponível'};
       img.onload=()=>pet.classList.add('gato-laranja-pronto');pet.appendChild(img);
     }
@@ -31,21 +30,21 @@
     const a=arquivos[f][pedido]?pedido:'idle';
     const novaChave=`${f}/${a}`;
     if(chave===novaChave)return;
-    pararQuadros();chave=novaChave;frame=0;faseVisivel=f;
+    chave=novaChave;faseVisivel=f;
     img.src=caminho(f,a);
     atualizarBotoes();
   }
   function tocar(a){
-    if(!['carinho','comemoracao'].includes(a))return;
-    if(fase()===2)return;
+    if(!arquivos[fase()]?.[a] || a==='idle')return;
     clearTimeout(volta);acao=a;chave='';mostrar();
     const atual=++token;
-    volta=setTimeout(()=>{if(token===atual)voltar()},2300);
+    const duracao={carinho:1300,comemoracao:2100,rolar:2200,brincar:2600,explorar:2800}[a]||2300;
+    volta=setTimeout(()=>{if(token===atual)voltar()},fase()===2?duracao:2300);
   }
   function atualizarBotoes(){
     const area=document.getElementById('acoes-gato-laranja');if(!area)return;
     const f=fase();
-    area.innerHTML=(f===2?[]:acoes).map(a=>`<button type="button" onclick="window.acaoGatoLaranja('${a.id}')">${a.nome}</button>`).join('');
+    area.innerHTML=acoes.filter(a=>(!a.fase || a.fase===f) && arquivos[f][a.id]).map(a=>`<button type="button" onclick="window.acaoGatoLaranja('${a.id}')">${a.nome}</button>`).join('');
     if(perfilAtivo==='pais')area.innerHTML+=[1,2,3].map(n=>`<button type="button" onclick="window.testarFaseGato(${n})" ${n===f?'disabled':''}>Testar fase ${n}</button>`).join('');
     const nomes=['','Ovo-gato','Gato Cavalheiro','Gato Real'];
     const label=document.getElementById('pet-evol-nome');if(label)label.textContent=`Pipoca • ${nomes[f]}${faseTeste?' (teste)':''}`;
