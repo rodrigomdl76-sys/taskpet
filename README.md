@@ -1,22 +1,11 @@
-# RotinaPet — código organizado
+# RotinaPet — pet com três evoluções WebP
 
-Abra `index.html` por um servidor local ou hospedagem HTTPS. Mantenha as pastas `css/` e `js/` ao lado do HTML. Para teste local, na pasta do projeto execute `python3 -m http.server 8000` e abra `http://localhost:8000`.
+Abra `index.html` e mantenha as pastas `animacoes/`, `css/` e `js/` ao lado dele, inclusive ao enviar ao GitHub. As imagens do pet já vêm neste pacote.
 
-## Organização
+- Fase 1, Ovo-gato: nível 1; WebP animados em `animacoes/fase1/`.
+- Fase 2, Gato Cavalheiro: nível 21; sequências de quadros WebP em `animacoes/fase2/`, exibidas a 12 quadros por segundo.
+- Fase 3, Gato Real: nível 41; WebP animados em `animacoes/fase3/`.
 
-- `index.html`: estrutura e modais.
-- `css/`: estilos separados em ordem de aplicação. O número no nome mantém a cascata original.
-- `js/02_principal.js`: estado, família, tarefas, pet, áudio, lojas e painel dos pais.
-- `js/`: demais funcionalidades em camadas, com números para manter a ordem de execução.
+Toque no pet para carinho. Os botões oferecem comemoração e, na fase 2, dança. À noite, as fases 1 e 3 exibem dormir; a fase 2 continua com sua animação parada até que exista uma animação própria de sono. No perfil dos pais, os botões «Testar fase» permitem conferir as três fases sem mudar o nível salvo.
 
-Esta reorganização preserva os trechos e a ordem do HTML original; ela não modifica as regras do app. O bloco principal ainda concentra lógica demais. A próxima refatoração deve separar estado/sincronização, tarefas/aprovação, pet/áudio e interface, removendo substituições tardias de funções após testes de regressão.
-
-## Arquivos externos já referenciados
-
-O HTML continua referenciando `manifest.json` e `icon-192.png` e usa bibliotecas externas via CDN. Eles não estavam anexados ao HTML recebido. Para instalação PWA, coloque os arquivos reais ao lado de `index.html` e inclua o service worker usado na sua hospedagem.
-
-## Reações Lottie (teste)
-
-Inclui dois arquivos em `animacoes/`: `gato_carinho.json` para toque no gato e `gato_risada.json` após ganhar um minijogo. O segundo arquivo de risada enviado era uma cópia idêntica, por isso foi omitido. A animação aparece no lugar do SVG durante a reação e o pet atual volta em seguida; se o player ou o JSON não carregar, o pet original continua visível. Esta versão ainda usa o SVG para o estado parado, outros pets e outras ações.
-
-O player é carregado por CDN. O PWA existente deve atualizar o cache do service worker para incluir `css/`, `js/` e `animacoes/` quando estes arquivos forem publicados.
+As compras antigas de acessórios continuam nos dados, mas não são exibidas nem colocadas sobre os novos pets. Os fundos são vendidos separadamente. Os minijogos são liberados quando uma tarefa é enviada para análise.

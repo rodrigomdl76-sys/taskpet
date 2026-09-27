@@ -5,8 +5,8 @@ function tocarTom(f,t,d,delay=0,v=.15){try{const vol=typeof obterVolumeSom==='fu
 function somConquista(){[523.25,659.25,783.99,1046.50].forEach((f,i)=>tocarTom(f,'triangle',.18,i*.08,.2))}
 function somBauLendario(){tocarTom(440,'sine',.08,0);tocarTom(554.37,'sine',.08,.07);tocarTom(659.25,'sine',.12,.14);setTimeout(()=>{tocarTom(587.33,'triangle',.15,0,.25);tocarTom(739.99,'triangle',.15,.12,.25);tocarTom(880,'triangle',.35,.24,.3);tocarTom(1174.66,'sine',.45,.24,.2)},220)}
 const PETS={
-gato:{id:'gato',nome:'Pipoca',emoji:'🐱',desbloqueioNivel:1,som:'https://assets.mixkit.co/sfx/preview/mixkit-cat-meow-14.mp3',evolucoes:[
-{nivel:1,nome:'Gatinho Sombra',desc:'Olhos grandes e fofos'},{nivel:21,nome:'Gato da Lua',desc:'Brilho prateado + mecha branca'},{nivel:41,nome:'Gato Estelar',desc:'Colar de estrelinhas + brilho'},{nivel:61,nome:'Gato Nobre',desc:'Coroa preta + capa de veludo'},{nivel:81,nome:'Lenda Sombria',desc:'Asas de sombra + olhos dourados'}]},
+gato:{id:'gato',nome:'Pipoca',emoji:'🐱',desbloqueioNivel:1,som:'',evolucoes:[
+{nivel:1,nome:'Ovo-gato',desc:'O começo da aventura'},{nivel:21,nome:'Gato Cavalheiro',desc:'Uma nova forma para o pet'},{nivel:41,nome:'Gato Real',desc:'Capa e coroa da última evolução'}]},
 cachorra:{id:'cachorra',nome:'Mel',emoji:'🐶',desbloqueioNivel:5,som:'https://assets.mixkit.co/sfx/preview/mixkit-dog-barking-twice-1.mp3',evolucoes:[
 {nivel:1,nome:'Filhote Caramelo',desc:'Orelhas caídas, super fofinha'},{nivel:21,nome:'Cãozinho Brincalhão',desc:'Bandana colorida'},{nivel:41,nome:'Cão Guia',desc:'Colete brilhante + distintivo'},{nivel:61,nome:'Cão Campeão',desc:'Faixa + medalha dourada'},{nivel:81,nome:'Guardiã Lendária',desc:'Asas de anjo + aurora dourada'}]},
 cabra:{id:'cabra',nome:'Nuvem',emoji:'🐐',desbloqueioNivel:10,som:'https://assets.mixkit.co/sfx/preview/mixkit-goat-bleat-1.mp3',evolucoes:[
@@ -187,90 +187,15 @@ ACESSORIOS.push(...OBJETOS_PET);
 ACESSORIOS.push({id:'unicornio_estelar',nome:'Diadema Estelar da Lumi',emoji:'✨',preco:32,svg:'<svg viewBox="0 0 270 285" xmlns="http://www.w3.org/2000/svg"><path d="M95 62Q135 28 175 62" fill="none" stroke="#c084fc" stroke-width="7"/><circle cx="135" cy="38" r="9" fill="#fde047"/><circle cx="112" cy="49" r="4" fill="#67e8f9"/><circle cx="158" cy="49" r="4" fill="#f472b6"/></svg>'},{id:'dino_crista',nome:'Crista de Explorador Rex',emoji:'🦖',preco:30,svg:'<svg viewBox="0 0 270 285" xmlns="http://www.w3.org/2000/svg"><path d="M95 60l10-25 12 18 12-27 12 27 12-18 10 25z" fill="#f97316" stroke="#9a3412" stroke-width="2"/></svg>'},{id:'capi_lotus',nome:'Coroa de Lótus da Capi',emoji:'🪷',preco:28,svg:'<svg viewBox="0 0 270 285" xmlns="http://www.w3.org/2000/svg"><g fill="#f9a8d4" stroke="#be185d" stroke-width="1"><path d="M135 58Q120 30 135 18Q150 30 135 58Z"/><path d="M135 58Q95 42 105 25Q125 30 135 58Z"/><path d="M135 58Q175 42 165 25Q145 30 135 58Z"/></g><circle cx="135" cy="48" r="6" fill="#fde68a"/></svg>'});
 const BANCO_FUNDOS=[
 {id:'ceu',nome:'Céu de Verão',emoji:'☀️',preco:0,bg:'linear-gradient(180deg,#38bdf8,#e0f2fe,#fef9c3)'},{id:'chuva',nome:'Chuva Suave',emoji:'🌧️',preco:12,bg:'linear-gradient(180deg,#334155,#94a3b8)'},{id:'noite',nome:'Noite Estrelada',emoji:'🌙',preco:20,bg:'radial-gradient(ellipse at 70% 20%,#1e3a8a,#020617)'},{id:'arcoiris',nome:'Arco-Íris',emoji:'🌈',preco:30,bg:'linear-gradient(180deg,#f87171,#fbbf24,#4ade80,#38bdf8,#a78bfa)'},{id:'praia',nome:'Praia Tropical',emoji:'🏖️',preco:25,bg:'linear-gradient(180deg,#7dd3fc,#38bdf8,#fde68a,#fbbf24)'},{id:'floresta',nome:'Floresta Mágica',emoji:'🌲',preco:22,bg:'linear-gradient(180deg,#86efac,#166534)'},{id:'festa',nome:'Balada Neon',emoji:'🎉',preco:35,bg:'linear-gradient(160deg,#f472b6,#a78bfa,#22d3ee)'},{id:'halloween',nome:'Noite de Halloween',emoji:'🎃',preco:40,bg:'linear-gradient(180deg,#1a1033,#7c2d12)'},{id:'estadio',nome:'Campo de Futebol',emoji:'⚽',preco:45,bg:'linear-gradient(180deg,#0c4a6e,#16a34a,#14532d)'},{id:'quarto',nome:'Quarto Fofo',emoji:'🛏️',preco:35,bg:'linear-gradient(180deg,#faf5ff,#e9d5ff)'},{id:'mario',nome:'Mundo Aventura',emoji:'🍄',preco:50,bg:'linear-gradient(180deg,#67e8f9,#4ade80)'},{id:'dino',nome:'Era dos Dinos',emoji:'🦖',preco:45,bg:'linear-gradient(180deg,#fef3c7,#84cc16,#166534)'},{id:'princesa',nome:'Castelo Real',emoji:'👑',preco:40,bg:'linear-gradient(180deg,#fdf2f8,#f9a8d4)'},{id:'astronauta',nome:'Espaço Sideral',emoji:'🚀',preco:50,bg:'radial-gradient(ellipse at 50% 30%,#312e81,#020617)'},{id:'pirata',nome:'Mar dos Piratas',emoji:'🏴‍☠️',preco:45,bg:'linear-gradient(180deg,#0ea5e9,#78350f,#1c1917)'},{id:'fazenda',nome:'Fazenda Feliz',emoji:'🐄',preco:35,bg:'linear-gradient(180deg,#7dd3fc,#fde68a,#4ade80)'},{id:'neve',nome:'Natal Nevado',emoji:'🎄',preco:40,bg:'linear-gradient(180deg,#e0f2fe,#fff)'},{id:'aniversario',nome:'Festa de Aniversário',emoji:'🎂',preco:0,bg:'linear-gradient(180deg,#c4b5fd,#f9a8d4,#fde68a)'}];
-// TEMAS = fundo + acessório combinando, vendidos juntos como um combo.
-// O acessório muda de desenho conforme a espécie do pet ativo (svgPorEspecie).
-const SVG_ABRE='<svg viewBox="0 0 270 285" xmlns="http://www.w3.org/2000/svg">',SVG_FECHA='</svg>';
-const TEMAS=[
-  {id:'halloween',nome:'Halloween Assombrado',emoji:'🎃',preco:55,fundoId:'halloween',
-    acessorio:{id:'tema_halloween',nome:'Chapéu de Bruxa',emoji:'🎃',svgPorEspecie:{
-      gato:SVG_ABRE+'<path d="M106 58 L135 4 L164 58Z" fill="#2e1065"/><ellipse cx="135" cy="58" rx="42" ry="8" fill="#1a1033"/><rect x="107" y="52" width="56" height="9" rx="3" fill="#f97316"/><rect x="127" y="49" width="16" height="11" rx="2" fill="#facc15"/>'+SVG_FECHA,
-      cachorra:SVG_ABRE+'<path d="M104 58 L135 2 L166 58Z" fill="#2e1065"/><ellipse cx="135" cy="58" rx="46" ry="8" fill="#1a1033"/><rect x="103" y="52" width="64" height="9" rx="3" fill="#f97316"/><rect x="127" y="49" width="16" height="11" rx="2" fill="#facc15"/>'+SVG_FECHA,
-      cabra:SVG_ABRE+'<path d="M114 55 L135 18 L156 55Z" fill="#2e1065"/><ellipse cx="135" cy="55" rx="30" ry="6" fill="#1a1033"/><rect x="113" y="51" width="44" height="7" rx="3" fill="#f97316"/>'+SVG_FECHA,
-      frango:SVG_ABRE+'<path d="M85 178Q135 198 185 178v18Q135 216 85 196Z" fill="#2e1065" stroke="#f97316" stroke-width="2"/><circle cx="102" cy="188" r="4" fill="#f97316"/><circle cx="168" cy="188" r="4" fill="#f97316"/><circle cx="135" cy="192" r="4" fill="#f97316"/>'+SVG_FECHA
-    }}},
-  {id:'neve',nome:'Natal Nevado',emoji:'🎄',preco:55,fundoId:'neve',
-    acessorio:{id:'tema_neve',nome:'Gorro de Natal',emoji:'🎄',svgPorEspecie:{
-      gato:SVG_ABRE+'<path d="M100 60Q100 15 150 10Q180 20 175 55Q145 40 100 60Z" fill="#dc2626"/><ellipse cx="176" cy="16" rx="11" ry="11" fill="#fff"/><rect x="96" y="52" width="76" height="13" rx="6" fill="#fff"/>'+SVG_FECHA,
-      cachorra:SVG_ABRE+'<path d="M98 60Q98 12 152 8Q184 18 178 54Q142 38 98 60Z" fill="#dc2626"/><ellipse cx="179" cy="14" rx="12" ry="12" fill="#fff"/><rect x="94" y="52" width="80" height="14" rx="7" fill="#fff"/>'+SVG_FECHA,
-      cabra:SVG_ABRE+'<path d="M112 55Q112 25 145 22Q165 30 160 50Q135 40 112 55Z" fill="#dc2626"/><ellipse cx="161" cy="26" rx="9" ry="9" fill="#fff"/><rect x="109" y="49" width="52" height="10" rx="5" fill="#fff"/>'+SVG_FECHA,
-      frango:SVG_ABRE+'<path d="M85 178Q135 198 185 178v18Q135 216 85 196Z" fill="#dc2626"/><rect x="90" y="182" width="90" height="6" fill="#fff"/><rect x="90" y="196" width="90" height="6" fill="#fff"/>'+SVG_FECHA
-    }}},
-  {id:'praia',nome:'Praia Tropical',emoji:'🏖️',preco:50,fundoId:'praia',
-    acessorio:{id:'tema_praia',nome:'Óculos de Sol',emoji:'🕶️',svgPorEspecie:{
-      gato:SVG_ABRE+'<circle cx="108" cy="118" r="24" fill="#0891b2" opacity=".85" stroke="#111827" stroke-width="4"/><circle cx="162" cy="118" r="24" fill="#0891b2" opacity=".85" stroke="#111827" stroke-width="4"/><path d="M132 116h6" stroke="#111827" stroke-width="4"/><g fill="#f472b6"><circle cx="85" cy="150" r="6"/><circle cx="185" cy="150" r="6"/></g>'+SVG_FECHA,
-      cachorra:SVG_ABRE+'<circle cx="105" cy="112" r="25" fill="#0891b2" opacity=".85" stroke="#111827" stroke-width="4"/><circle cx="165" cy="112" r="25" fill="#0891b2" opacity=".85" stroke="#111827" stroke-width="4"/><path d="M130 110h10" stroke="#111827" stroke-width="4"/>'+SVG_FECHA,
-      cabra:SVG_ABRE+'<circle cx="108" cy="118" r="22" fill="#0891b2" opacity=".85" stroke="#111827" stroke-width="4"/><circle cx="162" cy="118" r="22" fill="#0891b2" opacity=".85" stroke="#111827" stroke-width="4"/><path d="M130 116h10" stroke="#111827" stroke-width="4"/>'+SVG_FECHA,
-      frango:SVG_ABRE+'<g fill="#f472b6"><circle cx="90" cy="182" r="8"/><circle cx="118" cy="196" r="8"/><circle cx="152" cy="196" r="8"/><circle cx="180" cy="182" r="8"/></g><g fill="#facc15"><circle cx="90" cy="182" r="3"/><circle cx="118" cy="196" r="3"/><circle cx="152" cy="196" r="3"/><circle cx="180" cy="182" r="3"/></g>'+SVG_FECHA
-    }}},
-  {id:'astronauta',nome:'Missão Espacial',emoji:'🚀',preco:60,fundoId:'astronauta',
-    acessorio:{id:'tema_astronauta',nome:'Capacete Espacial',emoji:'🚀',svgPorEspecie:{
-      gato:SVG_ABRE+'<circle cx="135" cy="120" r="78" fill="#bae6fd" opacity=".28" stroke="#e2e8f0" stroke-width="5"/><path d="M60 130 Q40 100 55 70" stroke="#e2e8f0" stroke-width="6" fill="none" stroke-linecap="round"/><circle cx="70" cy="150" r="6" fill="#f87171"/>'+SVG_FECHA,
-      cachorra:SVG_ABRE+'<circle cx="135" cy="118" r="80" fill="#bae6fd" opacity=".28" stroke="#e2e8f0" stroke-width="5"/><path d="M58 128 Q38 98 53 68" stroke="#e2e8f0" stroke-width="6" fill="none" stroke-linecap="round"/><circle cx="68" cy="148" r="6" fill="#f87171"/>'+SVG_FECHA,
-      cabra:SVG_ABRE+'<circle cx="135" cy="115" r="82" fill="#bae6fd" opacity=".28" stroke="#e2e8f0" stroke-width="5"/><circle cx="70" cy="145" r="6" fill="#f87171"/>'+SVG_FECHA,
-      frango:SVG_ABRE+'<circle cx="135" cy="128" r="82" fill="#bae6fd" opacity=".28" stroke="#e2e8f0" stroke-width="5"/><circle cx="70" cy="158" r="6" fill="#f87171"/>'+SVG_FECHA
-    }}},
-  {id:'princesa',nome:'Castelo Real',emoji:'👑',preco:60,fundoId:'princesa',
-    acessorio:{id:'tema_princesa',nome:'Coroa Dourada',emoji:'👑',svgPorEspecie:{
-      gato:SVG_ABRE+'<path d="M104 58 L112 30 L128 48 L135 20 L142 48 L158 30 L166 58Z" fill="#facc15" stroke="#b8860b" stroke-width="2"/><rect x="104" y="55" width="62" height="9" rx="2" fill="#facc15" stroke="#b8860b" stroke-width="2"/><circle cx="135" cy="42" r="4" fill="#ef4444"/>'+SVG_FECHA,
-      cachorra:SVG_ABRE+'<path d="M100 58 L109 28 L127 47 L135 16 L143 47 L161 28 L170 58Z" fill="#facc15" stroke="#b8860b" stroke-width="2"/><rect x="100" y="55" width="70" height="9" rx="2" fill="#facc15" stroke="#b8860b" stroke-width="2"/><circle cx="135" cy="40" r="4" fill="#ef4444"/>'+SVG_FECHA,
-      cabra:SVG_ABRE+'<path d="M112 55 L118 35 L128 47 L135 28 L142 47 L152 35 L158 55Z" fill="#facc15" stroke="#b8860b" stroke-width="2"/><rect x="112" y="52" width="46" height="7" rx="2" fill="#facc15" stroke="#b8860b" stroke-width="2"/>'+SVG_FECHA,
-      frango:SVG_ABRE+'<path d="M85 178Q135 202 185 178v20Q135 226 85 198Z" fill="#7c3aed" stroke="#facc15" stroke-width="3"/>'+SVG_FECHA
-    }}},
-  {id:'pirata',nome:'Aventura Pirata',emoji:'🏴‍☠️',preco:55,fundoId:'pirata',
-    acessorio:{id:'tema_pirata',nome:'Chapéu Pirata',emoji:'🏴‍☠️',svgPorEspecie:{
-      gato:SVG_ABRE+'<path d="M95 60Q100 25 135 30Q170 25 175 60Q135 45 95 60Z" fill="#1c1917" stroke="#facc15" stroke-width="2"/><circle cx="135" cy="34" r="5" fill="#f87171"/><ellipse cx="111" cy="123" rx="12" ry="14" fill="#1c1917"/>'+SVG_FECHA,
-      cachorra:SVG_ABRE+'<path d="M92 58Q98 22 135 28Q172 22 178 58Q135 42 92 58Z" fill="#1c1917" stroke="#facc15" stroke-width="2"/><circle cx="135" cy="32" r="5" fill="#f87171"/><ellipse cx="108" cy="117" rx="13" ry="15" fill="#1c1917"/>'+SVG_FECHA,
-      cabra:SVG_ABRE+'<path d="M108 55Q112 30 135 34Q158 30 162 55Q135 44 108 55Z" fill="#1c1917" stroke="#facc15" stroke-width="2"/><ellipse cx="111" cy="123" rx="11" ry="13" fill="#1c1917"/>'+SVG_FECHA,
-      frango:SVG_ABRE+'<path d="M85 178Q135 198 185 178v18Q135 216 85 196Z" fill="#1c1917" stroke="#facc15" stroke-width="2"/><circle cx="135" cy="190" r="7" fill="#fff"/>'+SVG_FECHA
-    }}},
-  {id:'estadio',nome:'Campeonato',emoji:'⚽',preco:58,fundoId:'estadio',
-    acessorio:{id:'tema_estadio',nome:'Faixa de Capitão',emoji:'⚽',svgPorEspecie:{
-      gato:SVG_ABRE+'<path d="M85 175Q135 198 185 175v16Q135 218 85 191Z" fill="#fff" stroke="#16a34a" stroke-width="3"/><text x="118" y="198" font-size="14" font-weight="900" fill="#16a34a">C</text>'+SVG_FECHA,
-      cachorra:SVG_ABRE+'<path d="M82 172Q135 196 188 172v16Q135 216 82 188Z" fill="#fff" stroke="#16a34a" stroke-width="3"/><text x="118" y="195" font-size="14" font-weight="900" fill="#16a34a">C</text>'+SVG_FECHA,
-      cabra:SVG_ABRE+'<path d="M90 175Q135 195 180 175v14Q135 212 90 189Z" fill="#fff" stroke="#16a34a" stroke-width="3"/>'+SVG_FECHA,
-      frango:SVG_ABRE+'<path d="M85 178Q135 200 185 178v16Q135 218 85 194Z" fill="#fff" stroke="#16a34a" stroke-width="3"/>'+SVG_FECHA
-    }}},
-  {id:'aniversario',nome:'Festa de Aniversário',emoji:'🎂',preco:0,fundoId:'aniversario',
-    acessorio:{id:'tema_aniversario',nome:'Chapéu de Festa',emoji:'🎉',svgPorEspecie:{
-      gato:SVG_ABRE+'<defs><linearGradient id="gChapAnivG" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#f472b6"/><stop offset="100%" stop-color="#a78bfa"/></linearGradient></defs><path d="M108 58 L135 6 L162 58Z" fill="url(#gChapAnivG)" stroke="#fff" stroke-width="2"/><circle cx="135" cy="6" r="6" fill="#fde047"/><circle cx="118" cy="40" r="3" fill="#fde047"/><circle cx="150" cy="30" r="3" fill="#38bdf8"/><circle cx="128" cy="20" r="3" fill="#4ade80"/>'+SVG_FECHA,
-      cachorra:SVG_ABRE+'<defs><linearGradient id="gChapAnivC" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#f472b6"/><stop offset="100%" stop-color="#a78bfa"/></linearGradient></defs><path d="M104 58 L135 2 L166 58Z" fill="url(#gChapAnivC)" stroke="#fff" stroke-width="2"/><circle cx="135" cy="2" r="6" fill="#fde047"/><circle cx="115" cy="38" r="3" fill="#fde047"/><circle cx="153" cy="28" r="3" fill="#38bdf8"/><circle cx="127" cy="18" r="3" fill="#4ade80"/>'+SVG_FECHA,
-      cabra:SVG_ABRE+'<defs><linearGradient id="gChapAnivCb" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#f472b6"/><stop offset="100%" stop-color="#a78bfa"/></linearGradient></defs><path d="M114 55 L135 20 L156 55Z" fill="url(#gChapAnivCb)" stroke="#fff" stroke-width="2"/><circle cx="135" cy="20" r="5" fill="#fde047"/><circle cx="123" cy="42" r="2.5" fill="#38bdf8"/><circle cx="147" cy="42" r="2.5" fill="#4ade80"/>'+SVG_FECHA,
-      frango:SVG_ABRE+'<path d="M85 178Q135 200 185 178v18Q135 218 85 196Z" fill="#f472b6" stroke="#fff" stroke-width="2"/><circle cx="102" cy="188" r="4" fill="#fde047"/><circle cx="135" cy="192" r="4" fill="#38bdf8"/><circle cx="168" cy="188" r="4" fill="#4ade80"/>'+SVG_FECHA
-    }}}
-];
-const SVG_HALLOWEEN_ESQUELETO=SVG_ABRE+'<path d="M92 75Q135 42 178 75v72Q135 165 92 147Z" fill="#f8fafc" stroke="#475569" stroke-width="3"/><path d="M110 92h15M145 92h15M116 115h38M120 135h30" stroke="#475569" stroke-width="5" stroke-linecap="round"/><path d="M100 65Q135 42 170 65" stroke="#22d3ee" stroke-width="5" fill="none"/>'+SVG_FECHA;
-const SVG_HALLOWEEN_VAMPIRO=SVG_ABRE+'<path d="M88 75Q135 45 182 75v75Q135 170 88 150Z" fill="#7f1d1d" stroke="#450a0a" stroke-width="3"/><path d="M95 82L78 58L110 68M175 82L192 58L160 68" fill="#1f2937" stroke="#111827" stroke-width="3"/><circle cx="112" cy="105" r="5" fill="#ef4444"/><circle cx="158" cy="105" r="5" fill="#ef4444"/><path d="M120 130Q135 142 150 130" stroke="#fff" stroke-width="4" fill="none"/>'+SVG_FECHA;
-const SVG_HALLOWEEN_ABOBORA=SVG_ABRE+'<path d="M84 105Q95 70 135 78Q175 70 186 105v48Q135 178 84 153Z" fill="#f97316" stroke="#9a3412" stroke-width="3"/><path d="M125 77Q135 55 145 77" stroke="#166534" stroke-width="8" fill="none"/><path d="M105 110h15M150 110h15M115 138Q135 150 155 138" stroke="#431407" stroke-width="5" stroke-linecap="round"/>'+SVG_FECHA;
-const SKINS_HALLOWEEN=[
-{id:'halloween_esqueleto',nome:'Fantasia Esqueleto',emoji:'💀',preco:45,fundoId:'halloween',acessorio:{id:'tema_halloween_esqueleto',nome:'Pet Esqueleto',emoji:'💀',svgPorEspecie:{gato:SVG_HALLOWEEN_ESQUELETO,cachorra:SVG_HALLOWEEN_ESQUELETO,cabra:SVG_HALLOWEEN_ESQUELETO,frango:SVG_HALLOWEEN_ESQUELETO}}},
-{id:'halloween_vampiro',nome:'Fantasia Vampirinho',emoji:'🧛',preco:50,fundoId:'halloween',acessorio:{id:'tema_halloween_vampiro',nome:'Pet Vampirinho',emoji:'🧛',svgPorEspecie:{gato:SVG_HALLOWEEN_VAMPIRO,cachorra:SVG_HALLOWEEN_VAMPIRO,cabra:SVG_HALLOWEEN_VAMPIRO,frango:SVG_HALLOWEEN_VAMPIRO}}},
-{id:'halloween_abobora',nome:'Fantasia Abóbora',emoji:'🎃',preco:40,fundoId:'halloween',acessorio:{id:'tema_halloween_abobora',nome:'Pet Abóbora',emoji:'🎃',svgPorEspecie:{gato:SVG_HALLOWEEN_ABOBORA,cachorra:SVG_HALLOWEEN_ABOBORA,cabra:SVG_HALLOWEEN_ABOBORA,frango:SVG_HALLOWEEN_ABOBORA}}}
-];
-TEMAS.push(...SKINS_HALLOWEEN);
+// Compras antigas permanecem no estado; os acessórios dos combos não são mais exibidos.
 function buscarAcessorioPorId(id){
-  const normal=ACESSORIOS.find(a=>a.id===id);
-  if(normal)return normal;
-  const tema=TEMAS.find(t=>t.acessorio.id===id);
-  return tema?tema.acessorio:null;
+  return ACESSORIOS.find(a=>a.id===id)||null;
 }
 function soprarLinguaDeSogra(el){
   const lingua=el.querySelector&&el.querySelector('.tongue');
   if(!lingua)return;
   lingua.style.transform='scaleY(1.85) rotate(-6deg)';
   setTimeout(()=>{lingua.style.transform='';},380);
-}
-function possuiTema(t){
-  return estado.fundosComprados.includes(t.fundoId)&&estado.acessorios.comprados.includes(t.acessorio.id);
 }
 const firebaseConfig={apiKey:"AIzaSyCiDk3ERIe8_uVqBhRnFRD5Od8nyLNlLVQ",authDomain:"rotinapet-624a9.firebaseapp.com",databaseURL:"https://rotinapet-624a9-default-rtdb.firebaseio.com",projectId:"rotinapet-624a9",storageBucket:"rotinapet-624a9.appspot.com",messagingSenderId:"218579871240",appId:"1:218579871240:web:c681389aacd70f677693bd"};
 let dbFirebase=null,storageFirebase=null,sincronizacaoNuvemAtiva=false,ignorarProximoSyncNuvem=false;
@@ -1056,7 +981,7 @@ function aplicarFundoTela(id){
 }
 function obterDadosPetAtual(){if(!estado.pets[estado.petAtual])estado.pets[estado.petAtual]={nivel:1,xp:0,felicidade:100,saude:100};return estado.pets[estado.petAtual]}
 function nivelJogador(){return Math.max(...Object.values(estado.pets).map(p=>p.nivel||1))}
-function calcularFase(n){return n>=81?5:n>=61?4:n>=41?3:n>=21?2:1}
+function calcularFase(n){if(estado.petAtual==='gato')return n>=41?3:n>=21?2:1;return n>=81?5:n>=61?4:n>=41?3:n>=21?2:1}
 function renderizarProgressoEvolucao(){
   const el=document.getElementById('evo-progresso');
   if(!el)return;
@@ -1064,7 +989,7 @@ function renderizarProgressoEvolucao(){
   const atual=d.evolucoes[fase-1];
   const prox=d.evolucoes[fase];
   if(!prox){
-    el.innerHTML=`<div class="evo-progresso-top"><strong>👑 Evolução máxima</strong><span>Fase ${fase}/5</span></div><div class="evo-progresso-bar"><div class="evo-progresso-fill" style="width:100%"></div></div><small>${esc(atual.desc)} · continue cuidando para manter seu pet brilhando!</small>`;
+    el.innerHTML=`<div class="evo-progresso-top"><strong>👑 Evolução máxima</strong><span>Fase ${fase}/${d.evolucoes.length}</span></div><div class="evo-progresso-bar"><div class="evo-progresso-fill" style="width:100%"></div></div><small>${esc(atual.desc)} · continue cuidando para manter seu pet brilhando!</small>`;
     return;
   }
   const base=atual.nivel,alvo=prox.nivel;
@@ -1220,6 +1145,7 @@ function tocarAudioPet(url){
   if(estado.vozSalva){
     const a=new Audio(estado.vozSalva);
     a.volume=vol;
+    window.gatoLaranjaAudio?.(a);
     a.play().catch(()=>{});
     return;
   }
@@ -1244,7 +1170,6 @@ function interagirComPet(e){
   else mostrarToast(`❤️ ${PETS[estado.petAtual].nome} adorou!`);
   salvar();
   atualizarTela();
-  animarAcessorioTema();
   animarMoedasBump();
 }
 function acaoPet(tipo){
@@ -1365,15 +1290,6 @@ function animarMoedasBump(){
     txt.classList.add('bump');
     setTimeout(()=>txt.classList.remove('bump'),500);
   }
-}
-function animarAcessorioTema(){
-  const ativo=estado.acessorios?.ativo;
-  if(!ativo||!ativo.startsWith('tema_'))return;
-  const c=document.getElementById('camada-acessorio');
-  if(!c)return;
-  c.classList.remove('acessorio-pulo');
-  void c.offsetWidth;
-  c.classList.add('acessorio-pulo');
 }
 function abrirSurpresaDia(){
   const hoje=hojeLocal();
@@ -3392,7 +3308,7 @@ function abrirColecao(){
   abrirModal('modal-colecao');
 }
 function alternarAbaColecao(aba){
-  ['pets','evos','itens','fundos','adesivos'].forEach(id=>{
+  ['pets','evos','fundos','adesivos'].forEach(id=>{
     document.getElementById('painel-col-'+id)?.classList.toggle('hidden',id!==aba);
     document.getElementById('tab-col-'+id)?.classList.toggle('ativa',id===aba);
   });
@@ -3401,15 +3317,11 @@ function renderizarColecao(){
   const nivel=nivelJogador();
   const petsLiberados=Object.keys(PETS).filter(k=>nivel>=PETS[k].desbloqueioNivel).length;
   const totalPets=Object.keys(PETS).length;
-  const itensPossuidos=(estado.acessorios?.comprados||[]).length;
-  // Conta também acessórios de tema
-  const temasAcessorios=TEMAS.filter(t=>(estado.acessorios?.comprados||[]).includes(t.acessorio.id)).length;
-  const totalItens=ACESSORIOS.length+TEMAS.length;
   const fundosPossuidos=(estado.fundosComprados||[]).length;
   const totalFundos=BANCO_FUNDOS.length;
   const conquistasFeitas=CONQUISTAS.filter(x=>estado.conquistas?.[x[0]]).length;
-  const obtidosColecao=petsLiberados+(estado.acessorios?.comprados||[]).filter((id,i,a)=>a.indexOf(id)===i).length+fundosPossuidos;
-  const totalColecao=totalPets+ACESSORIOS.length+TEMAS.length+totalFundos;
+  const obtidosColecao=petsLiberados+fundosPossuidos;
+  const totalColecao=totalPets+totalFundos;
   const percColecao=totalColecao?Math.min(100,Math.round((obtidosColecao/totalColecao)*100)):0;
   const progTxt=document.getElementById('colecao-progresso-txt');
   const progBar=document.getElementById('colecao-progresso-barra');
@@ -3475,61 +3387,6 @@ function renderizarColecao(){
       }
       bloco.innerHTML=html;
       pEvos.appendChild(bloco);
-    });
-  }
-  // Acessórios + temas
-  const pItens=document.getElementById('painel-col-itens');
-  if(pItens){
-    pItens.innerHTML=`<div style="font-size:9px;color:#64748b;margin-bottom:8px">🎀 Acessórios e objetos que você já desbloqueou.</div><div style="font-size:9px;font-weight:900;color:#475569;margin:5px 0">👒 Acessórios e objetos</div><div class="colecao-grid"></div>`;
-    const grid=pItens.querySelector('.colecao-grid');
-    const comprados=estado.acessorios?.comprados||[];
-    ACESSORIOS.forEach(a=>{
-      const tem=comprados.includes(a.id);
-      const ativo=estado.acessorios?.ativo===a.id;
-      const card=document.createElement('div');
-      card.className='colecao-card'+(tem?'':' locked')+(ativo?' ativo-agora':'');
-      card.innerHTML=`
-        <span class="colecao-badge">${tem?(ativo?'✓':'🎀'):'🔒'}</span>
-        <div class="colecao-emoji">${a.emoji}</div>
-        <div class="colecao-nome">${esc(a.nome)}</div>
-        <div class="colecao-sub">${tem?(ativo?'Equipado':'Toque para equipar'):a.preco+' 🪙'}</div>
-      `;
-      if(tem){
-        card.style.cursor='pointer';
-        card.onclick=()=>{
-          estado.acessorios.ativo=estado.acessorios.ativo===a.id?null:a.id;
-          salvar();
-          atualizarTela();
-          renderizarColecao();
-          mostrarToast(estado.acessorios.ativo?`🎀 ${a.nome}`:'Acessório removido');
-        };
-      }
-      grid.appendChild(card);
-    });
-    TEMAS.forEach(t=>{
-      const tem=possuiTema(t);
-      const ativo=estado.fundoAtual===t.fundoId&&estado.acessorios?.ativo===t.acessorio.id;
-      const card=document.createElement('div');
-      card.className='colecao-card'+(tem?'':' locked')+(ativo?' ativo-agora':'');
-      card.innerHTML=`
-        <span class="colecao-badge">${tem?(ativo?'✓':'🎨'):'🔒'}</span>
-        <div class="colecao-emoji">${t.emoji}</div>
-        <div class="colecao-nome">${esc(t.nome)}</div>
-        <div class="colecao-sub">${tem?(ativo?'Em uso':'Combo tema'):t.preco+' 🪙'}</div>
-      `;
-      if(tem){
-        card.style.cursor='pointer';
-        card.onclick=()=>{
-          estado.fundoAtual=t.fundoId;
-          estado.acessorios.ativo=t.acessorio.id;
-          salvar();
-          aplicarFundoTela(t.fundoId);
-          atualizarTela();
-          renderizarColecao();
-          mostrarToast(`🎨 ${t.nome}`);
-        };
-      }
-      grid.appendChild(card);
     });
   }
   // Fundos
@@ -3715,12 +3572,15 @@ function recompensarMiniJogo(moedas,xp,msg){
   marcarConquistas();
 }
 const TIPOS_JOGO_DESAFIO=['matematica','memoria','reacao','estrelas'];
+function jogosLiberadosHoje(){
+  return tarefasDeHoje().some(t=>['aguardando_aprovacao','aprovada'].includes(statusTarefaAtual(t)));
+}
 function abrirDesafio(){
   document.getElementById('area-jogo-matematica').classList.add('hidden');
   document.getElementById('area-jogo-memoria').classList.add('hidden');
   document.getElementById('area-jogo-reacao').classList.add('hidden');
   document.getElementById('area-jogo-estrelas').classList.add('hidden');
-  if(!tarefasDeHoje().some(t=>statusTarefaAtual(t)==='aprovada') && Number(estado.tarefasHojeCount||0)<=0){mostrarToast('🔒 Complete uma missão para liberar o jogo!');return;}
+  if(!jogosLiberadosHoje()){mostrarToast('🔒 Envie uma missão para análise para liberar os jogos!');return;}
   const tipo=TIPOS_JOGO_DESAFIO[Math.floor(Math.random()*TIPOS_JOGO_DESAFIO.length)];
   if(tipo==='matematica'){
     document.getElementById('titulo-desafio').textContent='🧮 Desafio Matemático';
@@ -3873,66 +3733,8 @@ function iniciarJogoEstrelas(){
   const colocar=()=>{if(!document.getElementById('modal-desafio')?.classList.contains('mostrar'))return;const b=document.createElement('button');b.textContent='⭐';b.style.cssText=`position:absolute;left:${8+Math.random()*82}%;top:${8+Math.random()*76}%;font-size:28px;background:none;border:0;cursor:pointer;animation:pulseSurpresa .8s infinite`;b.onclick=()=>{b.remove();estrelasPegas++;status.textContent=`⭐ ${estrelasPegas}/5 estrelas`;if(estrelasPegas>=5){clearTimeout(estrelaTimer);estado.adesivos=Array.isArray(estado.adesivos)?estado.adesivos:[];estado.adesivos.push('estrelas_'+hojeLocal()+'_'+Date.now());fecharModal('modal-desafio');recompensarMiniJogo(3,3,'Caça às estrelas!');renderizarColecao();}else colocar();};area.appendChild(b);};colocar();estrelaTimer=setTimeout(()=>{if(estrelasPegas<5){fecharModal('modal-desafio');mostrarToast('⏰ As estrelas escaparam. Tente novamente!')}},12000);
 }
 function abrirLojaFundos(){
-  renderizarGridTemas();
   renderizarGridFundos();
-  renderizarGridAcessorios();
-  alternarAbaLojaVisual('temas');
   abrirModal('modal-fundos');
-}
-function alternarAbaLojaVisual(aba){
-  document.getElementById('grid-temas').classList.toggle('hidden',aba!=='temas');
-  document.getElementById('grid-fundos').classList.toggle('hidden',aba!=='fundos');
-  document.getElementById('grid-acessorios').classList.toggle('hidden',aba!=='acessorios');
-  document.getElementById('tab-temas').classList.toggle('ativa',aba==='temas');
-  document.getElementById('tab-fundos').classList.toggle('ativa',aba==='fundos');
-  document.getElementById('tab-acessorios').classList.toggle('ativa',aba==='acessorios');
-  const titulos={temas:'🎨 Temas',fundos:'🖼️ Loja de Fundos',acessorios:'🎀 Loja de Acessórios'};
-  const descs={temas:'Combos com fundo + acessório combinando, prontos pra usar.',fundos:'Use suas moedas para personalizar o visual.',acessorios:'Vista seu pet com acessórios!'};
-  document.getElementById('titulo-loja-visual').textContent=titulos[aba];
-  document.getElementById('desc-loja-visual').textContent=descs[aba];
-}
-function renderizarGridTemas(){
-  const c=document.getElementById('grid-temas');
-  if(!c)return;
-  c.innerHTML='';
-  TEMAS.forEach(t=>{
-    const fundo=BANCO_FUNDOS.find(f=>f.id===t.fundoId);
-    const possui=possuiTema(t),ativo=estado.fundoAtual===t.fundoId&&estado.acessorios.ativo===t.acessorio.id,d=document.createElement('div');
-    d.className='fundo-card '+(ativo?'ativo':'');
-    d.style.background=fundo?fundo.bg:'linear-gradient(160deg,#ede9fe,#ddd6fe)';
-    d.innerHTML=`<span style="font-size:25px">${t.emoji}</span><b style="font-size:10px;margin-top:3px">${esc(t.nome)}</b><span class="shop-tag">${ativo?'✓ Em uso':possui?'Usar':t.preco+' 🪙'}</span>`;
-    d.onclick=()=>selecionarOuComprarTema(t);
-    c.appendChild(d);
-  });
-}
-function selecionarOuComprarTema(t){
-  if(possuiTema(t)){
-    estado.fundoAtual=t.fundoId;
-    estado.acessorios.ativo=t.acessorio.id;
-    salvar();
-    aplicarFundoTela(t.fundoId);
-    atualizarTela();
-    renderizarGridTemas();
-    renderizarGridFundos();
-    renderizarGridAcessorios();
-    return mostrarToast(`🎨 Tema ${t.nome} aplicado!`);
-  }
-  if(estado.moedas<t.preco)return mostrarToast(`🪙 Faltam ${t.preco-estado.moedas} moedas.`);
-  mostrarConfirmacao(`Comprar o tema "${t.nome}" (fundo + acessório) por ${t.preco} moedas?`,()=>{
-    estado.moedas-=t.preco;
-    if(!estado.fundosComprados.includes(t.fundoId))estado.fundosComprados.push(t.fundoId);
-    if(!estado.acessorios.comprados.includes(t.acessorio.id))estado.acessorios.comprados.push(t.acessorio.id);
-    estado.fundoAtual=t.fundoId;
-    estado.acessorios.ativo=t.acessorio.id;
-    salvar();
-    aplicarFundoTela(t.fundoId);
-    atualizarTela();
-    renderizarGridTemas();
-    renderizarGridFundos();
-    renderizarGridAcessorios();
-    dispararConfetes();
-    mostrarToast('🎉 Tema desbloqueado!');
-  });
 }
 function renderizarGridFundos(){
   const c=document.getElementById('grid-fundos');
@@ -3966,68 +3768,14 @@ function selecionarOuComprarFundo(f){
     mostrarToast('🎉 Fundo desbloqueado!');
   });
 }
-function renderizarGridAcessorios(){
-  const c=document.getElementById('grid-acessorios');
-  if(!c)return;
-  c.innerHTML='';
-  ACESSORIOS.forEach(a=>{
-    const comprado=estado.acessorios.comprados.includes(a.id),ativo=estado.acessorios.ativo===a.id,d=document.createElement('div');
-    d.className='fundo-card '+(ativo?'ativo':'');
-    d.style.background='linear-gradient(160deg,#ede9fe,#ddd6fe)';
-    d.style.color='#312e81';
-    d.style.textShadow='none';
-    d.innerHTML=`<span style="font-size:25px">${a.emoji}</span><b style="font-size:10px;margin-top:3px">${esc(a.nome)}</b><span class="shop-tag" style="background:#312e81cc;color:#fff">${ativo?'✓ Usando':comprado?'Usar/Tirar':a.preco+' 🪙'}</span>`;
-    d.onclick=()=>selecionarOuComprarAcessorio(a);
-    c.appendChild(d);
-  });
-}
-function selecionarOuComprarAcessorio(a){
-  if(estado.acessorios.comprados.includes(a.id)){
-    estado.acessorios.ativo=estado.acessorios.ativo===a.id?null:a.id;
-    salvar();
-    atualizarTela();
-    renderizarGridAcessorios();
-    return mostrarToast(estado.acessorios.ativo?`🎀 ${a.nome} equipado!`:`Acessório removido.`);
-  }
-  if(estado.moedas<a.preco)return mostrarToast(`🪙 Faltam ${a.preco-estado.moedas} moedas.`);
-  mostrarConfirmacao(`Comprar "${a.nome}" por ${a.preco} moedas?`,()=>{
-    estado.moedas-=a.preco;
-    estado.acessorios.comprados.push(a.id);
-    estado.acessorios.ativo=a.id;
-    salvar();
-    atualizarTela();
-    renderizarGridAcessorios();
-    dispararConfetes();
-    mostrarToast('🎉 Acessório desbloqueado!');
-  });
-}
 function renderizarAcessorioNoContainer(){
-  const c=document.getElementById('camada-acessorio');
+  // Compras antigas ficam salvas, mas as sobreposições não servem aos novos pets.
+  const camada=document.getElementById('camada-acessorio');
   const objetos=document.getElementById('objetos-pet-layer');
+  if(camada)camada.replaceChildren();
+  if(objetos)objetos.replaceChildren();
   const pet=document.getElementById('pet-principal');
-  const stage=document.querySelector('.pet-stage');
-  if(!c)return;
-  const ativo=estado.acessorios?.ativo;
-  const item=buscarAcessorioPorId(ativo);
-
-  if(pet){
-    pet.classList.remove('pet-acessorio-ativo','acessorio-coroa','acessorio-fone','acessorio-grinalda','acessorio-bone','acessorio-chapeu','acessorio-oculos','acessorio-laco','acessorio-cachecol','acessorio-gravata');
-    if(item){
-      pet.classList.add('pet-acessorio-ativo','acessorio-'+item.id);
-    }
-  }
-  if(!item){
-    c.innerHTML='';
-    if(objetos)objetos.innerHTML='';
-    return;
-  }
-  if(objetos)objetos.innerHTML='';
-  if(item.tipo==='objeto'){
-    c.innerHTML='';
-    if(objetos)objetos.innerHTML=`<span class="objeto-pet ${item.classe}" title="${esc(item.nome)}">${item.emoji}</span>`;
-    return;
-  }
-  c.innerHTML=item.svgPorEspecie?(item.svgPorEspecie[estado.petAtual]||item.svgPorEspecie.gato):item.svg;
+  if(pet)pet.classList.remove('pet-acessorio-ativo','acessorio-coroa','acessorio-fone','acessorio-grinalda','acessorio-bone','acessorio-chapeu','acessorio-oculos','acessorio-laco','acessorio-cachecol','acessorio-gravata');
 }
 
 function celebrarNovoAcessorio(){

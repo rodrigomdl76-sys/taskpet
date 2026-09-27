@@ -7,7 +7,6 @@
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <meta name="theme-color" content="#7c3aed">
-<script src="https://cdnjs.cloudflare.com/ajax/libs/lottie-web/5.13.0/lottie.min.js"></script>
 <link rel="manifest" href="manifest.json">
 <link rel="apple-touch-icon" href="icon-192.png">
 <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.9.3/dist/confetti.browser.min.js" defer></script>
@@ -24,7 +23,7 @@
 <link rel="stylesheet" href="css/04_animacoes_pet.css">
 
 <link rel="stylesheet" href="css/05_evolucao_pet.css">
-<link rel="stylesheet" href="css/13_lottie_pet.css">
+<link rel="stylesheet" href="css/13_gato_laranja.css">
 </head>
 <body class="cenario-ceu">
 <!-- Tela Login por E-mail -->
@@ -82,7 +81,7 @@
   <div class="top-row">
     <button class="top-pill" onclick="abrirPainelPais()"><span class="coin-dot"></span><span class="top-pill-text"><span id="txt-moedas">0</span> 🪙</span></button>
     <button class="top-pill" onclick="abrirPainelPais()"><span style="font-size:13px">💰</span><span><span class="top-pill-text">R$ <span id="txt-dinheiro">0,00</span></span><span class="top-pill-sub" id="txt-status-nuvem">🔒 pais</span></span></button>
-    <button class="top-pill" onclick="abrirColecao()" title="Coleção"><span style="font-size:13px">📚</span><span><span class="top-pill-text">Coleção</span><span class="top-pill-sub">pets e itens</span></span></button>
+    <button class="top-pill" onclick="abrirColecao()" title="Coleção"><span style="font-size:13px">📚</span><span><span class="top-pill-text">Coleção</span><span class="top-pill-sub">ações e itens</span></span></button>
     <button class="top-pill" id="btn-pill-streak" onclick="abrirModal('modal-conquistas')" title="Sequência diária"><span style="font-size:13px">🔥</span><span><span class="top-pill-text"><span id="txt-streak">0</span> dias</span><span class="top-pill-sub">sequência</span></span></button>
   </div>
   <div class="pet-selector">
@@ -105,6 +104,7 @@
     <button type="button" class="pet-action-btn" id="btn-brincar" onclick="acaoPet('brincar')" aria-label="Brincar com o pet">🎾 Brincar</button>
     <button type="button" class="pet-action-btn" id="btn-dormir" onclick="acaoPet('dormir')" aria-label="Colocar o pet para dormir">😴 Dormir</button>
   </div>
+  <div id="acoes-gato-laranja" class="acoes-gato-laranja" aria-label="Ações do gato"></div>
   <div class="cat-section" id="pet-section-area">
     <div class="pet-stage">
       <div id="objetos-pet-layer" aria-hidden="true"></div>
@@ -113,7 +113,7 @@
     </div>
     <div class="level-badge">⭐ <span class="level-number">Nível <span id="numero-nivel">1</span></span></div>
     <div class="xp-bar-bg"><div class="xp-bar-fill" id="barra-xp"></div><span class="xp-text">XP <span id="texto-xp">0/100</span></span></div>
-    <div class="evo-name" id="pet-evol-nome">Pipoca • Gatinho Sombra</div>
+    <div class="evo-name" id="pet-evol-nome">Gato laranja • Ações</div>
   <div class="evo-progresso" id="evo-progresso" aria-live="polite"></div>
   </div>
   <!-- Os atalhos secundários agora ficam reunidos no botão Mais da barra inferior. -->
@@ -146,7 +146,7 @@
       <button class="menu-mais-item caixa" onclick="fecharModal('modal-menu-mais');abrirCaixaConquistas()"><span>🎁</span><b>Conquistas</b><small id="menu-caixa-contagem">Ver surpresas</small></button>
       <button class="menu-mais-item album" onclick="fecharModal('modal-menu-mais');abrirAlbumFigurinhas()"><span>📒</span><b>Álbum</b><small>Ver figurinhas</small></button>
       <button class="menu-mais-item mapa" onclick="abrirMapaAventura()"><span>🗺️</span><b>Mapa</b><small>Continuar aventura</small></button>
-      <button class="menu-mais-item visual-pet" onclick="fecharModal('modal-menu-mais');abrirMeuPet()"><span>🐾</span><b>Meu Pet</b><small>Visual e acessórios</small></button>
+      <button class="menu-mais-item visual-pet" onclick="fecharModal('modal-menu-mais');abrirMeuPet()"><span>🐾</span><b>Meu Pet</b><small>Ações e evolução</small></button>
       <button class="menu-mais-item bau" onclick="fecharModal('modal-menu-mais');abrirBauDiario()"><span id="menu-mais-bau-emoji">🎁</span><b>Baú</b><small>Prêmio do dia</small></button>
     </div>
   </div>
@@ -182,7 +182,7 @@
   <div class="stack" style="text-align:left;margin-top:8px">
     <div class="achievement-row"><span style="font-size:20px">👆</span><div><b style="font-size:10px">Toque no seu pet</b><div style="font-size:8px;color:#64748b">Dê carinho e deixe ele feliz!</div></div></div>
     <div class="achievement-row"><span style="font-size:20px">🛡️</span><div><b style="font-size:10px">Complete as tarefas</b><div style="font-size:8px;color:#64748b">Ganhe moedas e XP para seu pet crescer.</div></div></div>
-    <div class="achievement-row"><span style="font-size:20px">🎁</span><div><b style="font-size:10px">Troque moedas por prêmios</b><div style="font-size:8px;color:#64748b">Fundos, acessórios e tempo de tela!</div></div></div>
+    <div class="achievement-row"><span style="font-size:20px">🎁</span><div><b style="font-size:10px">Troque moedas por prêmios</b><div style="font-size:8px;color:#64748b">Fundos e tempo de tela!</div></div></div>
   </div>
   <button class="primary-btn green-btn" style="width:100%;margin-top:12px" onclick="fecharOnboarding(true)">✨ Tour guiado (recomendado)</button>
   <button class="primary-btn" style="width:100%;margin-top:6px;background:#e2e8f0;color:#475569" onclick="fecharOnboarding(false)">Pular e começar</button>
@@ -201,16 +201,9 @@
     <button class="primary-btn" style="width:100%;margin-top:6px;background:#e2e8f0;color:#475569" onclick="fecharOnboardingPais();setTimeout(()=>document.getElementById('input-codigo-familia')?.scrollIntoView({behavior:'smooth',block:'center'}),400)">Ver código da família</button>
   </div>
 </div>
-<div id="modal-fundos" class="modal-overlay"><div class="modal"><div class="modal-title"><h3 id="titulo-loja-visual">🎨 Temas</h3><button class="close-btn" onclick="fecharModal('modal-fundos')">×</button></div>
-  <div class="grid-tabs">
-    <button class="tab-btn ativa" id="tab-temas" onclick="alternarAbaLojaVisual('temas')">🎨 Temas</button>
-    <button class="tab-btn" id="tab-fundos" onclick="alternarAbaLojaVisual('fundos')">🖼️ Fundos</button>
-    <button class="tab-btn" id="tab-acessorios" onclick="alternarAbaLojaVisual('acessorios')">🎀 Acessórios</button>
-  </div>
-  <p style="font-size:9px;color:#64748b;margin-bottom:10px" id="desc-loja-visual">Combos com fundo + acessório combinando, prontos pra usar.</p>
-  <div class="grid-fundos" id="grid-temas"></div>
-  <div class="grid-fundos hidden" id="grid-fundos"></div>
-  <div class="grid-fundos hidden" id="grid-acessorios"></div>
+<div id="modal-fundos" class="modal-overlay"><div class="modal"><div class="modal-title"><h3 id="titulo-loja-visual">🖼️ Loja de Fundos</h3><button class="close-btn" onclick="fecharModal('modal-fundos')">×</button></div>
+  <p style="font-size:9px;color:#64748b;margin-bottom:10px" id="desc-loja-visual">Escolha um cenário para seu pet.</p>
+  <div class="grid-fundos" id="grid-fundos"></div>
 </div></div>
 <div id="modal-timer" class="modal-overlay"><div class="modal" style="text-align:center"><div class="modal-title"><h3>⏳ Tempo de Tela</h3><button class="close-btn" onclick="fecharModal('modal-timer')">×</button></div><p style="font-size:10px;color:#64748b;margin-bottom:10px">Tempo liberado pela recompensa.</p><div id="relogio-timer" class="timer-display">00:00</div><button class="primary-btn red-btn" style="margin-top:10px" onclick="pausarFecharTimer()">Encerrar tempo</button></div></div>
 <div id="modal-pin" class="modal-overlay"><div class="modal" style="text-align:center;max-width:310px"><h3 style="font-size:17px">🔐 Área dos responsáveis</h3><p style="font-size:10px;color:#64748b;margin-top:4px">Digite o PIN de 4 dígitos</p><div class="pin-dots" id="pin-dots"><i class="pin-dot"></i><i class="pin-dot"></i><i class="pin-dot"></i><i class="pin-dot"></i></div><div class="pin-erro" id="pin-erro"></div><div class="pin-pad" id="pin-pad"></div><button class="primary-btn" style="margin-top:9px;background:#e2e8f0;color:#475569" onclick="fecharModal('modal-pin');limparPin()">Cancelar</button><p class="link-recupera" style="font-size:10px;margin-top:10px" onclick="fecharModal('modal-pin');limparPin();abrirRecuperaPin()">❓ Esqueceu seu PIN?</p><p class="link-recupera" style="font-size:10px;margin-top:4px" onclick="fecharModal('modal-pin');limparPin();abrirLoginEmail()">🔑 Entrar com e-mail</p></div></div>
@@ -438,7 +431,7 @@
   <div class="section-card"><b style="font-size:10px">🗓️ Atividade do mês</b><div id="mes-calendario" class="mes-calendario"></div></div>
   <p id="mes-insight" style="font-size:9px;font-weight:800;color:#475569;margin-top:8px;text-align:center;line-height:1.35"></p>
 </div></div>
-<div id="modal-evolucoes" class="modal-overlay"><div class="modal"><div class="modal-title"><h3>⭐ Evoluções — <span id="modal-pet-evol-nome">Pipoca</span></h3><button class="close-btn" onclick="fecharModal('modal-evolucoes')">×</button></div><div class="stack" id="lista-evolucoes"></div></div></div>
+<div id="modal-evolucoes" class="modal-overlay"><div class="modal"><div class="modal-title"><h3>⭐ Ações — <span id="modal-pet-evol-nome">Gato laranja</span></h3><button class="close-btn" onclick="fecharModal('modal-evolucoes')">×</button></div><div class="stack" id="lista-evolucoes"></div></div></div>
 <div id="modal-colecao" class="modal-overlay">
   <div class="modal" style="max-width:380px">
     <div class="modal-title">
@@ -449,18 +442,16 @@
     <div id="colecao-progresso" style="background:#f8fafc;border:1px solid #e2e8f0;border-radius:13px;padding:8px 10px;margin:8px 0 10px">
       <div style="display:flex;justify-content:space-between;gap:8px;font-size:8px;color:#475569;font-weight:900"><span>✨ Progresso da coleção</span><b id="colecao-progresso-txt" style="color:#7c3aed">0%</b></div>
       <div style="height:7px;background:#e2e8f0;border-radius:99px;overflow:hidden;margin-top:5px"><div id="colecao-progresso-barra" style="height:100%;width:0;background:linear-gradient(90deg,#f97316,#facc15,#22c55e);border-radius:99px;transition:width .5s"></div></div>
-      <small id="colecao-progresso-sub" style="display:block;font-size:7px;color:#64748b;margin-top:4px">Desbloqueie pets, itens e fundos para completar.</small>
+      <small id="colecao-progresso-sub" style="display:block;font-size:7px;color:#64748b;margin-top:4px">Desbloqueie pets e fundos para completar.</small>
     </div>
     <div class="grid-tabs" style="grid-template-columns:repeat(4,1fr);margin-bottom:10px">
       <button type="button" class="tab-btn ativa" id="tab-col-pets" onclick="alternarAbaColecao('pets')">🐾 Pets</button>
       <button type="button" class="tab-btn" id="tab-col-evos" onclick="alternarAbaColecao('evos')">⭐ Evos</button>
-      <button type="button" class="tab-btn" id="tab-col-itens" onclick="alternarAbaColecao('itens')">🎀 Itens</button>
       <button type="button" class="tab-btn" id="tab-col-fundos" onclick="alternarAbaColecao('fundos')">🖼️ Fundos</button>
       <button type="button" class="tab-btn" id="tab-col-adesivos" onclick="alternarAbaColecao('adesivos')">📒 Adesivos</button>
     </div>
     <div id="painel-col-pets"></div>
     <div id="painel-col-evos" class="hidden"></div>
-    <div id="painel-col-itens" class="hidden"></div>
     <div id="painel-col-fundos" class="hidden"></div>
     <div id="painel-col-adesivos" class="hidden"></div>
     <button class="primary-btn" style="width:100%;margin-top:10px;background:#e2e8f0;color:#475569" onclick="fecharModal('modal-colecao');abrirModal('modal-evolucoes')">Ver evoluções do pet atual</button>
@@ -559,10 +550,10 @@
       <div class="ajuda-item"><span class="ajuda-ico">🛡️</span><div><b>Tarefas do dia</b><span>Tire foto ou envie para os pais aprovarem. Obrigatórias 🔥 liberam a ofensiva; extras ⭐ dão moedas extras.</span></div></div>
       <div class="ajuda-item"><span class="ajuda-ico">🪙</span><div><b>Moedas e XP</b><span>Ganhe moedas e XP ao completar tarefas e desafios. XP sobe o nível e desbloqueia evoluções e novos pets.</span></div></div>
       <div class="ajuda-item"><span class="ajuda-ico">🎮</span><div><b>Desafio</b><span>Matemática, memória ou reação rápida — acerte e ganhe moedas + XP.</span></div></div>
-      <div class="ajuda-item"><span class="ajuda-ico">🖼️</span><div><b>Fundos e temas</b><span>Personalize o cenário e vista o pet com acessórios e combos de tema.</span></div></div>
+      <div class="ajuda-item"><span class="ajuda-ico">🖼️</span><div><b>Fundos</b><span>Escolha o cenário do pet na loja de fundos.</span></div></div>
       <div class="ajuda-item"><span class="ajuda-ico">🎁</span><div><b>Prêmios</b><span>Peça recompensas com suas moedas. Os pais precisam aprovar o resgate.</span></div></div>
       <div class="ajuda-item"><span class="ajuda-ico">🔥</span><div><b>Ofensiva</b><span>Complete todas as tarefas obrigatórias todos os dias para manter a sequência e ganhar o baú semanal.</span></div></div>
-      <div class="ajuda-item"><span class="ajuda-ico">📚</span><div><b>Coleção</b><span>No topo, toque em Coleção para ver pets, evoluções, acessórios e fundos que você já liberou.</span></div></div>
+      <div class="ajuda-item"><span class="ajuda-ico">📚</span><div><b>Coleção</b><span>No topo, toque em Coleção para ver pets, evoluções e fundos que você já liberou.</span></div></div>
       <div class="ajuda-item"><span class="ajuda-ico">🎁</span><div><b>Surpresa do dia</b><span>Toque no presente no canto do pet (quando aparecer) para ganhar moedas bônus.</span></div></div>
     </div>
     <div id="painel-ajuda-pais" class="hidden">
@@ -612,6 +603,6 @@
      numa função só, sem duplo processamento. Este bloco de estilo continua sendo usado. -->
 
 <link rel="stylesheet" href="css/12_mapa_vivo.css">
-<script src="js/08_meu_pet.js"></script><script src="js/09_lottie_pet.js"></script>
+<script src="js/08_meu_pet.js"></script><script src="js/09_gato_laranja.js"></script>
 </body>
 </html>
