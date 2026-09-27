@@ -271,6 +271,8 @@
     </div>
     <div class="pais-proxima" id="pais-proxima-missao">🎯 Nenhuma missão pendente hoje.</div>
   </div>
+  <div class="section-card" id="card-aprovacoes-pais"><b style="font-size:11px">📋 Aprovações pendentes <span id="contador-aprovacoes-pais" aria-live="polite"></span></b><div class="stack" id="lista-aprovacao-pais" style="margin-top:6px"></div></div>
+<details class="pais-grupo"><summary>👨‍👩‍👧‍👦 Crianças e rotina</summary>
   <div class="section-card">
     <label class="field-label">👨‍👩‍👧‍👦 Filhos</label>
     <div class="stack" id="lista-criancas-pais" style="margin:4px 0"></div>
@@ -279,7 +281,10 @@
   </div>
   <div class="section-card"><div style="display:flex;justify-content:space-between;align-items:center"><b style="font-size:10px">💸 Cofrinho</b><button class="primary-btn green-btn" onclick="sacarDinheiro()">Pagar / sacar</button></div><div style="font-size:9px;color:#64748b;margin-top:5px">Cada moeda vale R$ <span id="texto-taxa-atual">0,01</span>.</div></div>
   <div class="section-card"><label class="field-label">👶 Idade da criança</label><input class="field" id="input-idade-crianca" type="number" min="3" max="15" onchange="atualizarIdadeCrianca(this.value)"></div>
+  <div class="section-card"><label class="field-label">🎮 Dificuldade dos jogos</label><select class="field" id="input-dificuldade-jogos" onchange="atualizarDificuldadeJogos(this.value)"><option value="auto">Automática pela idade</option><option value="facil">Fácil</option><option value="medio">Média</option><option value="dificil">Difícil</option></select><small style="font-size:8px;color:#64748b">A idade também ajusta os jogos quando a opção automática está selecionada.</small></div>
   <div class="section-card"><label class="field-label">💵 Valor por moeda (R$)</label><input class="field" id="input-taxa-cambio" type="number" min="0" step="0.01" onchange="atualizarTaxaCambio(this.value)"></div>
+</details>
+<details class="pais-grupo"><summary>🔒 Conta e segurança</summary>
   <div class="section-card"><label class="field-label">🔑 Alterar PIN</label><div style="display:flex;gap:5px"><input class="field" id="novo-pin-pais" inputmode="numeric" maxlength="4" placeholder="4 dígitos"><button class="primary-btn" onclick="salvarNovoPin()">Salvar</button></div>
     <small style="font-size:8px;color:#64748b;margin-top:4px;display:block" id="txt-status-pin">Use um PIN forte (não use 1234 ou sequências óbvias).</small>
   </div>
@@ -306,6 +311,8 @@
     <button type="button" id="btn-migrar-fotos" class="primary-btn pink-btn botao-secundario" style="width:100%;margin-top:8px" onclick="iniciarMigracaoFotosStorage()">☁️ Migrar fotos antigas para o Storage</button>
     <small id="txt-status-migracao-fotos" style="font-size:8px;color:#64748b;margin-top:3px;display:block">O Base64 só será removido depois que cada foto for confirmada no Storage.</small>
   </div>
+</details>
+<details class="pais-grupo"><summary>📱 Preferências e histórico</summary>
   <div class="section-card">
     <label class="field-label">🔊 Volume dos sons</label>
     <input type="range" id="input-volume-som" min="0" max="100" value="55" style="width:100%" oninput="atualizarVolumeSom(this.value)">
@@ -358,7 +365,8 @@
     </div>
     <small style="font-size:8px;color:#64748b;margin-top:4px;display:block">Durante a pausa, o streak não é perdido mesmo sem tarefas.</small>
   </div>
-  <div class="section-card"><b style="font-size:10px">📋 Aprovações pendentes</b><div class="stack" id="lista-aprovacao-pais" style="margin-top:6px"></div></div>
+</details>
+<details class="pais-grupo"><summary>🎯 Metas, prêmios e tarefas</summary>
   <div class="section-card">
     <div style="display:flex;justify-content:space-between;align-items:center"><b style="font-size:10px">🎯 Metas personalizadas</b><button class="primary-btn pink-btn" onclick="adicionarMetaPersonalizada()">＋ Nova meta</button></div>
     <small style="font-size:8px;color:#64748b;margin-top:4px;display:block">Crie objetivos para motivar a criança durante o mês.</small>
@@ -390,6 +398,7 @@
     <div style="margin-top:6px"><span class="field-label" style="margin-bottom:2px">📅 Repetir em (vazio = todo dia)</span><div class="dias-semana-picker" id="dias-nova-tarefa"></div></div>
   </div>
   <div class="section-card"><div style="display:flex;justify-content:space-between;align-items:center;gap:5px"><b style="font-size:10px">📊 Resumo</b><div style="display:flex;gap:4px"><button class="primary-btn blue-btn" onclick="abrirRelatorioSemanal()">Semanal</button><button class="primary-btn pink-btn" onclick="abrirRelatorioMensal()">Mensal</button></div></div><div class="stat-grid" style="margin-top:6px"><div class="stat">📋 <b id="stat-feitas">0</b><span>tarefas feitas</span></div><div class="stat">🔥 <b id="stat-ofensiva-pais">0</b><span>dias de ofensiva</span></div><div class="stat">🏆 <b id="stat-conquistas">0</b><span>conquistas</span></div></div></div>
+</details>
   <button class="primary-btn" style="width:100%;margin-top:5px;background:#e2e8f0;color:#475569" onclick="fecharModal('modal-pais');alternarPerfil()">🔄 Trocar Perfil de Usuário</button>
 </div></div>
 <div id="modal-relatorio" class="modal-overlay"><div class="modal"><div class="modal-title"><h3>📊 Relatório Semanal</h3><button class="close-btn" onclick="fecharModal('modal-relatorio')">×</button></div>
