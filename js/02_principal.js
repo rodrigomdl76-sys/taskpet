@@ -312,8 +312,23 @@ function sanitizarIdFamilia(id){
     if (limp.length >= 8) return limp;
   return 'fam_' + Math.random().toString(36).substring(2, 10);
 }
+let familiaExplicitaNesteAparelho=!!(urlParams.get('familia')||localStorage.getItem('ROTINAPET_FAMILIA_ID'));
 let codigoFamilia=sanitizarIdFamilia(urlParams.get('familia')||localStorage.getItem('ROTINAPET_FAMILIA_ID'));
 localStorage.setItem('ROTINAPET_FAMILIA_ID',codigoFamilia);
+const PREFIXO_FAMILIA_CONTA='rotinapet-familia:';
+function familiaDaConta(user){
+  const perfil=String(user?.displayName||'');
+  if(!perfil.startsWith(PREFIXO_FAMILIA_CONTA))return null;
+  const codigo=perfil.slice(PREFIXO_FAMILIA_CONTA.length);
+  return /^[a-z0-9_-]{8,}$/.test(codigo)?codigo:null;
+}
+async function vincularFamiliaAConta(user){
+  if(!user||user.isAnonymous)throw new Error('Entre com uma conta de responsável.');
+  const anterior=familiaDaConta(user);
+  if(anterior&&anterior!==codigoFamilia)throw new Error('Este e-mail já está vinculado a outra família. Entre nessa família antes de alterar o vínculo.');
+  if(!anterior)await user.updateProfile({displayName:PREFIXO_FAMILIA_CONTA+codigoFamilia});
+}
+let inicializacaoFirebase=Promise.resolve();
   function obterLinkConvite(){
     // URL pública do deploy (pasta histórica taskpet); marca do produto: RotinaPet
     return 'https://rodrigomdl76-sys.github.io/taskpet/?familia=' + encodeURIComponent(codigoFamilia);
@@ -342,11 +357,25 @@ function abrirQrConvite(){
 try{
   if(window.firebase){
     firebase.initializeApp(firebaseConfig);
-    firebase.auth().signInAnonymously().then(async ()=>{
+    inicializacaoFirebase=new Promise((resolve,reject)=>{
+      const cancelar=firebase.auth().onAuthStateChanged(usuario=>{cancelar();resolve(usuario)},erro=>{cancelar();reject(erro)});
+    }).then(async usuario=>{
+      if(!usuario)usuario=(await firebase.auth().signInAnonymously()).user;
       dbFirebase = firebase.database();
       try{storageFirebase=firebase.storage()}catch(storageError){console.warn('Firebase Storage indisponível:',storageError)}
-      definirIdUsuario(firebase.auth().currentUser.uid);
+      definirIdUsuario(usuario.uid);
       sincronizacaoNuvemAtiva = true;
+      const codigoConta=familiaDaConta(usuario);
+      if(codigoConta&&codigoConta!==codigoFamilia){
+        codigoFamilia=codigoConta;
+        localStorage.setItem('ROTINAPET_FAMILIA_ID',codigoFamilia);
+        estado=JSON.parse(JSON.stringify(estadoInicial));
+        estado.tarefas=[];
+        try{
+          const salvo=localStorage.getItem(`ROTINAPET_SAVE_${codigoFamilia}`);
+          if(salvo)estado={...estado,...JSON.parse(salvo)};
+        }catch(e){console.warn('Cópia local da família indisponível:',e)}
+      }
       await iniciarSincronizacaoNuvem();
     }).catch((error)=>{
       console.error('Firebase indisponível:',error);
@@ -523,6 +552,7 @@ let estado={
   ultimoAcaoPet:{},
   ultimoDecay:null
 };
+const estadoInicial=JSON.parse(JSON.stringify(estado));
 try{
   const salvo=localStorage.getItem(`ROTINAPET_SAVE_${codigoFamilia}`);
   if(salvo){
@@ -687,7 +717,7 @@ async function carregarEstadoNuvem(){
     return true;
   }catch(e){
     console.error('Falha ao carregar família:',e);
-    return false;
+    return null;
   }
 }
 function aplicarTarefasDaCriancaSemPerderCadastro(tarefasBase,tarefasFilha){
@@ -725,7 +755,14 @@ async function iniciarSincronizacaoNuvem(){
   atualizarStatusSyncUI();
   const ref=dbFirebase.ref(getCaminhoFirebase());
   ref.off();
-  await carregarEstadoNuvem();
+  const cargaInicial=await carregarEstadoNuvem();
+  if(cargaInicial===null||(!cargaInicial&&familiaDaConta(obterAuth()?.currentUser)===codigoFamilia)){
+    cargaNuvemPendente=false;
+    statusSyncAtual='erro';
+    marcarFilaSync(true);
+    atualizarStatusSyncUI();
+    return false;
+  }
   try{await carregarTarefasIndividuaisComFallback();}catch(e){console.warn('Tarefas individuais:',e)}
   cargaNuvemPendente=false;
 
@@ -772,6 +809,7 @@ async function iniciarSincronizacaoNuvem(){
       mostrarToast('☁️ Sincronizado');
     }
   });
+  return true;
 }
 const CONFIG_PARTICULAS={
   floresta:{emojis:['🍃','🍂','🌿'],modo:'cair',qtd:14},
@@ -2264,6 +2302,7 @@ async function enviarLinkRedefinir(email){
   }
 }
 function abrirLoginEmail(){
+  fecharModal('modal-selecao-perfil');
   fecharModal('modal-pin');
   document.getElementById('telaLoginEmail').style.display='flex';
 }
@@ -2279,7 +2318,42 @@ async function entrarComEmail(){
   if(!auth)return mostrarErroRecuperacao('O serviço de autenticação está indisponível.');
   if(!validarEmail(email)||senha.length<6)return mostrarErroRecuperacao('Informe um e-mail válido e uma senha com pelo menos 6 caracteres.');
   try{
+    await inicializacaoFirebase;
     await auth.signInWithEmailAndPassword(email,senha);
+    const user=auth.currentUser;
+    const codigoConta=familiaDaConta(user);
+    if(!codigoConta&&!familiaExplicitaNesteAparelho){
+      throw new Error('Esta conta ainda não tem uma família vinculada. Entre usando o convite ou o código da família e faça o vínculo pelo painel dos pais.');
+    }
+    const destino=codigoConta||codigoFamilia;
+    if(!dbFirebase||!sincronizacaoNuvemAtiva)throw new Error('A nuvem está indisponível. Verifique a conexão e tente novamente.');
+    const snap=await dbFirebase.ref(`rotinapet/familias/${destino}/estado`).once('value');
+    if(!snap.exists())throw new Error('Não encontramos os dados desta família na nuvem. Confira o código ou restaure um backup.');
+    if(!codigoConta){
+      const emails=snap.val()?.emailsRecuperacao||[];
+      const antigos=Array.isArray(emails)?emails:[snap.val()?.emailRecuperacao];
+      if(!antigos.some(item=>String(item||'').toLowerCase()===email.toLowerCase())){
+        throw new Error('Esta conta antiga ainda não está vinculada a esta família. Abra o app no aparelho antigo e atualize o e-mail no painel dos pais.');
+      }
+      await vincularFamiliaAConta(user);
+    }
+    if(destino!==codigoFamilia){
+      await filaEscritaNuvem.catch(()=>{});
+      cargaNuvemPendente=true;
+      dbFirebase.ref(getCaminhoFirebase()).off();
+      codigoFamilia=destino;
+      localStorage.setItem('ROTINAPET_FAMILIA_ID',codigoFamilia);
+      estado=JSON.parse(JSON.stringify(estadoInicial));
+      estado.tarefas=[];
+      try{
+        const salvo=localStorage.getItem(`ROTINAPET_SAVE_${codigoFamilia}`);
+        if(salvo)estado={...estado,...JSON.parse(salvo)};
+      }catch(e){console.warn('Cópia local indisponível:',e)}
+      ultimoEstadoSincronizado=null;
+      if(!await iniciarSincronizacaoNuvem())throw new Error('Não foi possível carregar a família. Tente novamente com internet.');
+    }
+    familiaExplicitaNesteAparelho=true;
+    definirIdUsuario(user.uid);
     fecharLoginEmail();
     atualizarTela();
     // Login por e-mail autentica o responsável. Ainda exigimos privacidade e PIN personalizado se faltarem.
@@ -2295,7 +2369,7 @@ async function entrarComEmail(){
     mostrarAviso('✅','Acesso liberado','Bem-vindo(a) de volta! Se quiser, você pode alterar o PIN aqui no painel.');
   }catch(error){
     console.warn('Falha no login por email:',error);
-    mostrarErroRecuperacao('E-mail ou senha incorretos. Se esqueceu a senha, use “Esqueceu seu PIN?” para receber um link.');
+    mostrarErroRecuperacao(error?.message&&!(error.code||'').startsWith('auth/')?error.message:'Não foi possível entrar. Confira e-mail e senha ou redefina sua senha pelo Firebase.');
   }
 }
 function restaurarBackupEstado(arquivo){
@@ -2416,6 +2490,7 @@ async function salvarEmailRecuperacao(){
   const user=auth?.currentUser;
   if(!auth)return mostrarErroRecuperacao('O serviço de autenticação não carregou (Código: auth-indisponivel). Verifique sua conexão e recarregue a página.');
   if(!user)return mostrarErroRecuperacao('Ainda não foi possível confirmar sua sessão neste aparelho (Código: sem-usuario). Aguarde alguns segundos e tente de novo; se persistir, recarregue a página.');
+  if(familiaDaConta(user)&&familiaDaConta(user)!==codigoFamilia)return mostrarErroRecuperacao('Esta conta pertence a outra família. Abra a família vinculada antes de alterar o e-mail.');
   if(!validarEmail(email))return mostrarErroRecuperacao('Digite um e-mail válido.');
   if(email.toLowerCase()!==emailConfirma.toLowerCase())return mostrarErroRecuperacao('Os dois e-mails digitados são diferentes. Confira e tente de novo.');
   if(senha.length<6)return mostrarErroRecuperacao('A senha precisa ter pelo menos 6 caracteres.');
@@ -2423,12 +2498,14 @@ async function salvarEmailRecuperacao(){
     if(user.isAnonymous){
       const cred=firebase.auth.EmailAuthProvider.credential(email,senha);
       await user.linkWithCredential(cred);
+      await vincularFamiliaAConta(auth.currentUser);
     }else if(user.email!==email){
       // Firebase hoje exige confirmar o e-mail novo por link antes de trocar
       // (updateEmail() direto não é mais permitido). Isso envia o link e só
       // atualiza de fato quando a pessoa clicar nele.
       await user.verifyBeforeUpdateEmail(email);
       await user.updatePassword(senha).catch(()=>{});
+      await vincularFamiliaAConta(user);
       normalizarEmailsRecuperacao();
       salvar();
       fecharTelaEmail();
@@ -2437,6 +2514,7 @@ async function salvarEmailRecuperacao(){
     }else{
       await user.updatePassword(senha);
     }
+    await vincularFamiliaAConta(auth.currentUser);
     normalizarEmailsRecuperacao();
     const jaTinha=estado.emailsRecuperacao.some(e=>e.toLowerCase()===email.toLowerCase());
     if(!jaTinha){
@@ -2891,8 +2969,14 @@ async function trocarFamiliaManualmente(){
     mostrarToast('🏠 Você já está nesta família.');
     return;
   }
+  const contaVinculada=familiaDaConta(obterAuth()?.currentUser);
+  if(contaVinculada&&contaVinculada!==novoCodigo){
+    mostrarToast('⚠️ Sua conta já pertence a outra família. Use a conta vinculada ao código desejado.');
+    return;
+  }
   if(dbFirebase)dbFirebase.ref(getCaminhoFirebase()).off();
   codigoFamilia=novoCodigo;
+  familiaExplicitaNesteAparelho=true;
   localStorage.setItem('ROTINAPET_FAMILIA_ID',codigoFamilia);
   // Carrega o backup local específico da nova família antes da sincronização.
   try{

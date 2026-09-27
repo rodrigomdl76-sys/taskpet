@@ -31,7 +31,7 @@
   <div class="caixa-pin">
     <h2>🔑 Entrar com e-mail</h2>
     <p style="color:#64748b;font-size:14px;text-align:center;margin-bottom:16px;">
-      Use o e-mail e a senha vinculados a esta família para entrar — sem precisar do PIN. Útil também para um segundo responsável acessar com a própria conta.
+      Entre com a conta vinculada à família para recuperar tarefas e progresso neste aparelho. Contas antigas podem precisar do código da família uma vez.
     </p>
     <div class="campo-grupo">
       <label>E-mail:</label>
@@ -169,6 +169,7 @@
       <button class="primary-btn blue-btn" style="padding:12px;font-size:12px;display:flex;align-items:center;justify-content:center;gap:8px" onclick="escolherPerfilInicial('pais')">
         <span style="font-size:18px">👨‍👩‍👧</span> Sou o Responsável
       </button>
+      <button type="button" class="primary-btn botao-secundario" style="padding:10px;font-size:11px" onclick="abrirLoginEmail()">🔑 Já tenho conta dos pais</button>
     </div>
   </div>
 </div>
@@ -601,7 +602,7 @@
 <div class="toast" id="toast"></div>
 <div class="banner-offline" id="banner-offline">📡 Sem conexão — as alterações serão sincronizadas quando a internet voltar.</div>
 <div class="banner-evento" id="banner-evento" onclick="abrirModalEventoSazonal()"></div>
-<script src="js/02_principal.js?v=perfil-v1"></script>
+<script src="js/02_principal.js?v=conta-familia-v1"></script>
   <script src="js/03_extras_01.js"></script>
 <div id="modal-central-aventuras" class="modal-overlay"><div class="modal" style="max-width:360px"><div class="modal-title"><h3>🌟 Central de Aventuras</h3><button class="close-btn" onclick="fecharModal('modal-central-aventuras')">×</button></div><div id="central-aventuras-conteudo"></div></div></div>
 <div id="modal-bau-diario" class="modal-overlay"><div class="modal" style="max-width:320px;text-align:center"><div class="modal-title"><h3>🎁 Baú do Dia</h3><button class="close-btn" onclick="fecharModal('modal-bau-diario')">×</button></div><div id="bau-diario-conteudo"></div></div></div>
