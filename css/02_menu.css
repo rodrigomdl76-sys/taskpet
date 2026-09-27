@@ -1,6 +1,6 @@
 
 .atalhos-aventuras{display:none!important}
-.bottom-buttons{grid-template-columns:repeat(5,1fr)!important;gap:6px!important;margin-top:10px}
+.bottom-buttons{grid-template-columns:repeat(3,1fr)!important;gap:6px!important;margin-top:10px}
 .bottom-btn{min-width:0!important;padding:9px 4px!important;border-radius:15px!important;transition:transform .2s,box-shadow .2s,filter .2s!important}
 .bottom-btn:hover{transform:translateY(-2px);filter:saturate(1.08)}
 .bottom-btn:active{transform:translateY(1px) scale(.97)}
@@ -16,3 +16,6 @@
 .menu-mais-item.meta>span{background:#ede9fe}.menu-mais-item.extras>span{background:#fef3c7}.menu-mais-item.hoje>span{background:#e0f2fe}.menu-mais-item.album>span{background:#fce7f3}.menu-mais-item.mapa>span{background:#dcfce7}.menu-mais-item.bau>span{background:#ffedd5}
 @media(max-width:390px){.bottom-buttons{gap:4px!important}.bottom-btn{padding:8px 2px!important;font-size:7px!important}.bottom-btn .btn-icon{font-size:17px}.menu-mais-grid{gap:7px}}
 @media(prefers-reduced-motion:reduce){.bottom-btn,.menu-mais-item{transition:none}}
+
+.top-row{grid-template-columns:repeat(3,1fr)}
+.menu-mais-item.visual>span{background:#dbeafe}.menu-mais-item.loja>span{background:#fef3c7}.menu-mais-item.colecao>span{background:#e0e7ff}
