@@ -683,3 +683,11 @@ button:focus-visible,input:focus-visible,.top-pill:focus-visible{
 .mes-comparacao{display:grid;grid-template-columns:repeat(3,1fr);gap:5px;margin-top:7px}.mes-comp-item{background:#fff7ed;border:1px solid #fed7aa;border-radius:9px;padding:6px 3px;text-align:center;font-size:8px}.mes-comp-item b{display:block;font-size:10px;color:#9a3412}.mes-comp-item small{display:block;color:#64748b;font-size:7px;margin-top:2px}.mes-calendario{display:grid;grid-template-columns:repeat(7,1fr);gap:3px;margin-top:8px}.mes-dia{aspect-ratio:1;border-radius:5px;background:#f1f5f9;display:flex;align-items:center;justify-content:center;font-size:7px;color:#94a3b8;font-weight:800}.mes-dia.ativo{background:#86efac;color:#166534}.mes-dia.hoje{outline:2px solid #7c3aed;outline-offset:1px}
 
 .metas-crianca-card{background:linear-gradient(135deg,#eff6ff,#eef2ff);border:1px solid #bfdbfe;border-radius:16px;padding:9px 10px;margin-top:7px}.metas-crianca-titulo{font-size:10px;font-weight:900;color:#1e40af;margin-bottom:6px}.meta-item{padding:6px 0;border-bottom:1px solid #e0e7ff}.meta-item:last-child{border-bottom:0}.meta-top{display:flex;justify-content:space-between;gap:5px;font-size:8px;font-weight:900;color:#334155}.meta-bar{height:6px;background:#dbeafe;border-radius:99px;overflow:hidden;margin-top:4px}.meta-bar>div{height:100%;background:linear-gradient(90deg,#60a5fa,#7c3aed);border-radius:99px;transition:width .4s}.meta-sub{font-size:7px;color:#64748b;margin-top:3px}.meta-concluida{color:#15803d}.meta-pais-row{padding:7px 0;border-bottom:1px solid #f1f5f9;font-size:8px}.meta-pais-row:last-child{border-bottom:0}.meta-pais-row button{float:right}
+
+.pais-grupo{margin:8px 0;border:1px solid rgba(148,163,184,.3);border-radius:14px;background:rgba(248,250,252,.88);overflow:hidden}
+.pais-grupo>summary{cursor:pointer;list-style:none;padding:12px 13px;font-size:11px;font-weight:900;color:#334155;display:flex;align-items:center;justify-content:space-between}
+.pais-grupo>summary::-webkit-details-marker{display:none}
+.pais-grupo>summary:after{content:'⌄';font-size:15px;color:#64748b;transition:transform .18s}
+.pais-grupo[open]>summary:after{transform:rotate(180deg)}
+.pais-grupo>.section-card{margin:6px 8px 8px}
+#card-aprovacoes-pais{border:1px solid #fbbf24;background:#fffbeb}
