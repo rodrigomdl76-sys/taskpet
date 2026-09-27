@@ -369,6 +369,8 @@ try{
       if(codigoConta&&codigoConta!==codigoFamilia){
         codigoFamilia=codigoConta;
         localStorage.setItem('ROTINAPET_FAMILIA_ID',codigoFamilia);
+        CHAVE_PERFIL_LOCAL='ROTINAPET_PERFIL_'+codigoFamilia;
+        perfilAtivo=localStorage.getItem(CHAVE_PERFIL_LOCAL);
         estado=JSON.parse(JSON.stringify(estadoInicial));
         estado.tarefas=[];
         try{
@@ -2201,7 +2203,7 @@ function renderizarTarefas(){
 // aparelho (localStorage), nunca sincroniza com a família. Assim, cada aparelho
 // lembra sozinho o último perfil usado nele e pula a telinha de escolha da
 // próxima vez — mas o PIN continua sendo pedido sempre que o perfil for "pais".
-const CHAVE_PERFIL_LOCAL='ROTINAPET_PERFIL_'+codigoFamilia;
+let CHAVE_PERFIL_LOCAL='ROTINAPET_PERFIL_'+codigoFamilia;
 let perfilAtivo=(()=>{try{return localStorage.getItem(CHAVE_PERFIL_LOCAL)}catch(e){return null}})();
 function verificarPrimeiroAcesso(){
   if(!perfilAtivo){
@@ -2343,6 +2345,7 @@ async function entrarComEmail(){
       dbFirebase.ref(getCaminhoFirebase()).off();
       codigoFamilia=destino;
       localStorage.setItem('ROTINAPET_FAMILIA_ID',codigoFamilia);
+      CHAVE_PERFIL_LOCAL='ROTINAPET_PERFIL_'+codigoFamilia;
       estado=JSON.parse(JSON.stringify(estadoInicial));
       estado.tarefas=[];
       try{
@@ -2353,6 +2356,8 @@ async function entrarComEmail(){
       if(!await iniciarSincronizacaoNuvem())throw new Error('Não foi possível carregar a família. Tente novamente com internet.');
     }
     familiaExplicitaNesteAparelho=true;
+    perfilAtivo='pais';
+    localStorage.setItem(CHAVE_PERFIL_LOCAL,'pais');
     definirIdUsuario(user.uid);
     fecharLoginEmail();
     atualizarTela();
@@ -2978,6 +2983,7 @@ async function trocarFamiliaManualmente(){
   codigoFamilia=novoCodigo;
   familiaExplicitaNesteAparelho=true;
   localStorage.setItem('ROTINAPET_FAMILIA_ID',codigoFamilia);
+  CHAVE_PERFIL_LOCAL='ROTINAPET_PERFIL_'+codigoFamilia;
   // Carrega o backup local específico da nova família antes da sincronização.
   try{
     const localNovo=localStorage.getItem(`ROTINAPET_SAVE_${codigoFamilia}`);
