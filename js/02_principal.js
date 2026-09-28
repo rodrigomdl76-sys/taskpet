@@ -2,8 +2,31 @@
 let audioCtx=null;
 function obterAudioContext(){if(!audioCtx)audioCtx=new(window.AudioContext||window.webkitAudioContext)();if(audioCtx.state==='suspended')audioCtx.resume();return audioCtx}
 function tocarTom(f,t,d,delay=0,v=.15){try{const vol=typeof obterVolumeSom==='function'?obterVolumeSom():0.55;if(vol<=0.01)return;const ctx=obterAudioContext(),o=ctx.createOscillator(),g=ctx.createGain();o.type=t;o.frequency.setValueAtTime(f,ctx.currentTime+delay);const amp=v*vol;g.gain.setValueAtTime(amp,ctx.currentTime+delay);g.gain.exponentialRampToValueAtTime(.001,ctx.currentTime+delay+d);o.connect(g);g.connect(ctx.destination);o.start(ctx.currentTime+delay);o.stop(ctx.currentTime+delay+d)}catch(e){}}
-function somConquista(){[523.25,659.25,783.99,1046.50].forEach((f,i)=>tocarTom(f,'triangle',.18,i*.08,.2))}
-function somBauLendario(){tocarTom(440,'sine',.08,0);tocarTom(554.37,'sine',.08,.07);tocarTom(659.25,'sine',.12,.14);setTimeout(()=>{tocarTom(587.33,'triangle',.15,0,.25);tocarTom(739.99,'triangle',.15,.12,.25);tocarTom(880,'triangle',.35,.24,.3);tocarTom(1174.66,'sine',.45,.24,.2)},220)}
+const ARQUIVOS_SOM={ui:'toque',tarefa:'missao',moedas:'moedas',nivel:'nivel',pet:'pet'};
+const sonsPrecarregados={};
+const ultimoSomPorTipo={};
+function prepararSons(){
+  Object.entries(ARQUIVOS_SOM).forEach(([tipo,arquivo])=>{
+    try{
+      const audio=new Audio(`assets/sons/${arquivo}.mp3`);
+      audio.preload='auto';audio.load();sonsPrecarregados[tipo]=audio;
+    }catch(e){}
+  });
+}
+function playSound(tipo){
+  if(!ARQUIVOS_SOM[tipo]||obterVolumeSom()<=0.01)return false;
+  const agora=Date.now();
+  if(agora-(ultimoSomPorTipo[tipo]||0)<95)return false;
+  ultimoSomPorTipo[tipo]=agora;
+  try{
+    const audio=sonsPrecarregados[tipo]||(sonsPrecarregados[tipo]=new Audio(`assets/sons/${ARQUIVOS_SOM[tipo]}.mp3`));
+    audio.pause();audio.currentTime=0;audio.volume=obterVolumeSom()*(tipo==='ui'?.32:.70);
+    audio.play().catch(()=>{});
+    return true;
+  }catch(e){return false}
+}
+function somConquista(){playSound('nivel')}
+function somBauLendario(){playSound('nivel')}
 const PETS={
 gato:{id:'gato',nome:'Pipoca',emoji:'🐱',desbloqueioNivel:1,som:'',evolucoes:[
 {nivel:1,nome:'Ovo-gato',desc:'O começo da aventura'},{nivel:21,nome:'Gato Cavalheiro',desc:'Uma nova forma para o pet'},{nivel:41,nome:'Gato Real',desc:'Capa e coroa da última evolução'}]},
@@ -549,7 +572,7 @@ let estado={
   notificacoesAtivas:false,
   surpresaResgatadaData:null,
   metasPersonalizadas:[],
-  volumeSom:0.55,
+  volumeSom:0.55,sonsAtivos:true,
   logAtividades:[],
   ultimoAcaoPet:{},
   ultimoDecay:null
@@ -790,6 +813,8 @@ async function iniciarSincronizacaoNuvem(){
     if(ignorarProximoSyncNuvem){ignorarProximoSyncNuvem=false;return}
     const d=s.val();
     if(d&&typeof d==='object'){
+      const moedasAntes=Number(estado.moedas)||0;
+      const nivelAntes=Number(estado.pets?.[estado.petAtual]?.nivel)||1;
       ultimoEstadoSincronizado=JSON.parse(JSON.stringify(d));
       ultimaSyncOkEm=Date.now();
       statusSyncAtual='online';
@@ -805,6 +830,10 @@ async function iniciarSincronizacaoNuvem(){
         aplicarEstadoRemotoComMerge(d);
       }
       garantirCriancaAtiva();
+      if(perfilAtivo==='crianca'){
+        if((Number(estado.pets?.[estado.petAtual]?.nivel)||1)>nivelAntes)playSound('nivel');
+        else if((Number(estado.moedas)||0)>moedasAntes)playSound('moedas');
+      }
       try{localStorage.setItem(`ROTINAPET_SAVE_${codigoFamilia}`,JSON.stringify(estado))}catch(e){}
       atualizarTela();
       atualizarStatusSyncUI();
@@ -1132,7 +1161,6 @@ function celebrarEvolucaoPet(fase){
   box.classList.remove('show');void box.offsetWidth;box.classList.add('show');
   dispararConfetes(180,CORES_CONFETE_PET[estado.petAtual]);
   navigator.vibrate?.([60,40,100,40,160]);
-  tocarTom?.(659.25,'triangle',.18,0,.22);tocarTom?.(783.99,'triangle',.18,.1,.22);tocarTom?.(1046.5,'sine',.35,.2,.24);
   mostrarToast(`🌟 ${ev.nome} desbloqueado!`);
 }
 function atualizarTela(){
@@ -1258,20 +1286,25 @@ function agendarFalaAleatoria(){
 }
 let debounceAcao=false;
 function obterVolumeSom(){
+  if(estado.sonsAtivos===false)return 0;
   const v=Number(estado.volumeSom);
   return Number.isFinite(v)?Math.max(0,Math.min(1,v)):0.55;
 }
+let audioPetEmReproducao=null;
 function tocarAudioPet(url){
   const vol=obterVolumeSom();
   if(vol<=0.01)return;
+  audioPetEmReproducao?.pause();
   if(estado.vozSalva){
     const a=new Audio(estado.vozSalva);
+    audioPetEmReproducao=a;
     a.volume=vol;
     window.gatoLaranjaAudio?.(a);
     a.play().catch(()=>{});
     return;
   }
-  try{const a=new Audio(url);a.volume=vol;a.play().catch(()=>{})}catch(e){}
+  if(!url){playSound('pet');return}
+  try{const a=new Audio(url);audioPetEmReproducao=a;a.volume=vol;a.play().catch(()=>{})}catch(e){}
 }
 function registrarLogAtividade(texto){
   estado.logAtividades=Array.isArray(estado.logAtividades)?estado.logAtividades:[];
@@ -1755,6 +1788,7 @@ function ganharXP(qtd,e){
     navigator.vibrate?.([70,40,70]);
   }
   if(subiu){
+    playSound('nivel');
     const faseDepois=calcularFase(p.nivel);
     if(faseDepois>faseAntes)setTimeout(()=>celebrarEvolucaoPet(faseDepois),180);
     mostrarToast(`🎉 Nível ${p.nivel}!`);
@@ -2026,6 +2060,7 @@ async function carregarTarefasIndividuaisComFallback(){
 function enviarParaAprovacao(id){
   const t=estado.tarefas.find(t=>String(t.id)===String(id));
   if(!t)return;
+  playSound('tarefa');
   const r=registroTarefaHoje(t);
   copiarFotoParaRegistro(t);
   t.motivoRecusa=null;
@@ -2880,12 +2915,25 @@ function atualizarVolumeSom(val){
   if(txt)txt.textContent=n+'%';
   salvar();
 }
+function atualizarSonsAtivos(ativo){
+  estado.sonsAtivos=!!ativo;
+  if(!ativo){
+    Object.values(sonsPrecarregados).forEach(audio=>{audio.pause();audio.currentTime=0});
+    audioPetEmReproducao?.pause();
+  }
+  renderizarVolumeSomPainel();
+  salvar();
+}
 function renderizarVolumeSomPainel(){
   const input=document.getElementById('input-volume-som');
   const txt=document.getElementById('txt-volume-som');
-  const pct=Math.round(obterVolumeSom()*100);
+  const pct=Math.round(Math.max(0,Math.min(1,Number(estado.volumeSom)||0))*100);
   if(input)input.value=pct;
   if(txt)txt.textContent=pct+'%';
+  const controle=document.getElementById('input-sons-ativos');
+  const estadoEl=document.getElementById('txt-sons-ativos');
+  if(controle)controle.checked=estado.sonsAtivos!==false;
+  if(estadoEl)estadoEl.textContent=estado.sonsAtivos===false?'Desligados':'Ligados';
 }
 function limparTodasFotosTarefas(){
   const fotos=(estado.tarefas||[]).filter(t=>t.foto||t.fotoUrl||t.fotoPath);
@@ -3095,7 +3143,9 @@ async function aprovarTarefaPais(id){
       setTimeout(()=>abrirBauSemanal(s),600);
     }
   }
+  const nivelAntes=obterDadosPetAtual().nivel;
   ganharXP(xp);
+  if(obterDadosPetAtual().nivel===nivelAntes)playSound('moedas');
   ganharFigurinhaPorMissao(t);
   marcarConquistas();
   registrarLogAtividade(`Tarefa aprovada: ${t.texto} (+${recompensa}🪙)`);
@@ -4749,6 +4799,12 @@ setInterval(()=>{
   }
 },1000);
 window.addEventListener('DOMContentLoaded',()=>{
+  prepararSons();
+  document.addEventListener('click',evento=>{
+    const botao=evento.target.closest?.('button');
+    if(!botao||botao.disabled||botao.matches('.btn-ok,[data-aprovacao="aprovar"],#input-sons-ativos'))return;
+    playSound('ui');
+  },true);
   if(typeof estado.volumeSom!=='number')estado.volumeSom=0.55;
   if(!Array.isArray(estado.logAtividades))estado.logAtividades=[];
   if(!estado.ultimoAcaoPet||typeof estado.ultimoAcaoPet!=='object')estado.ultimoAcaoPet={};

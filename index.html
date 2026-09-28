@@ -330,6 +330,7 @@
 <details class="pais-grupo"><summary>📱 Preferências e histórico</summary>
   <div class="section-card">
     <label class="field-label">🔊 Volume dos sons</label>
+    <label style="display:flex;align-items:center;justify-content:space-between;font-size:10px;font-weight:800;margin:7px 0 9px;gap:8px">Efeitos e voz do pet <span><input type="checkbox" id="input-sons-ativos" checked onchange="atualizarSonsAtivos(this.checked)"> <span id="txt-sons-ativos">Ligados</span></span></label>
     <input type="range" id="input-volume-som" min="0" max="100" value="55" style="width:100%" oninput="atualizarVolumeSom(this.value)">
     <div style="display:flex;justify-content:space-between;font-size:8px;color:#64748b;margin-top:2px">
       <span>Mudo</span><span id="txt-volume-som">55%</span><span>Alto</span>
@@ -602,7 +603,7 @@
 <div class="toast" id="toast"></div>
 <div class="banner-offline" id="banner-offline">📡 Sem conexão — as alterações serão sincronizadas quando a internet voltar.</div>
 <div class="banner-evento" id="banner-evento" onclick="abrirModalEventoSazonal()"></div>
-<script src="js/02_principal.js?v=conta-familia-v1"></script>
+<script src="js/02_principal.js?v=sons-v1"></script>
   <script src="js/03_extras_01.js"></script>
 <div id="modal-central-aventuras" class="modal-overlay"><div class="modal" style="max-width:360px"><div class="modal-title"><h3>🌟 Central de Aventuras</h3><button class="close-btn" onclick="fecharModal('modal-central-aventuras')">×</button></div><div id="central-aventuras-conteudo"></div></div></div>
 <div id="modal-bau-diario" class="modal-overlay"><div class="modal" style="max-width:320px;text-align:center"><div class="modal-title"><h3>🎁 Baú do Dia</h3><button class="close-btn" onclick="fecharModal('modal-bau-diario')">×</button></div><div id="bau-diario-conteudo"></div></div></div>
