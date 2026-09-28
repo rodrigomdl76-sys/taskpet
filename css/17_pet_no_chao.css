@@ -1,0 +1,23 @@
+/* Sombra presa ao palco, alinhada com a base do pet. */
+body .pet-stage::after{
+  width:min(110px,48%);height:20px;
+  bottom:calc(50% - 81px);
+  left:50%;transform:translateX(-50%);
+  background:radial-gradient(ellipse,rgba(9,20,29,.48) 0%,rgba(9,20,29,.21) 43%,transparent 76%);
+  border-radius:50%;filter:blur(3px);opacity:1;z-index:1;pointer-events:none;
+}
+@media(max-height:650px){body .pet-stage::after{bottom:calc(50% - 65px);width:90px;height:17px}}
+/* A respiração mantém as patas no mesmo lugar; os saltos das ações continuam próprios. */
+@keyframes petIdleAdvanced{
+  0%,100%{transform:scale(1) rotate(-.4deg)}
+  50%{transform:scale(1.015,1.012) rotate(.4deg)}
+}
+.cat-wrapper{transform-origin:50% 100%}
+.app.passarinho-orbitando .pet-stage::before{
+  content:"";position:absolute;left:50%;top:calc(50% - 24px);
+  width:min(180px,86%);height:34px;transform:translate(-50%,-50%);
+  border:1px solid rgba(255,255,255,.55);border-radius:50%;
+  box-shadow:0 0 6px rgba(255,255,255,.3);z-index:2;pointer-events:none;
+}
+@media(max-height:650px){.app.passarinho-orbitando .pet-stage::before{width:min(146px,86%);top:calc(50% - 18px)}}
+@media(prefers-reduced-motion:reduce){.cat-wrapper{animation:none}}

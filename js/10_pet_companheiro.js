@@ -105,13 +105,32 @@
       x: Math.max(0, app.clientWidth - passarinho.offsetWidth),
       y: Math.max(0, app.clientHeight - passarinho.offsetHeight)
     });
-    function mover(x, y) {
+    function mover(x, y, salvarPosicao = true) {
       const maximo = limites();
       const esquerda = Math.min(maximo.x, Math.max(0, x));
       const topo = Math.min(maximo.y, Math.max(0, y));
       passarinho.style.left = `${esquerda}px`;
       passarinho.style.top = `${topo}px`;
-      posicao = { x: maximo.x ? esquerda / maximo.x : 0, y: maximo.y ? topo / maximo.y : 0 };
+      if (salvarPosicao) {
+        posicao = { x: maximo.x ? esquerda / maximo.x : 0, y: maximo.y ? topo / maximo.y : 0 };
+        app.classList.remove('passarinho-orbitando');
+        passarinho.style.zIndex = '12';
+      }
+    }
+    function posicionarOrbita(tempo) {
+      const ativo = !posicao && !passarinho.hidden && passarinho.dataset.miniPet === 'passarinho';
+      app.classList.toggle('passarinho-orbitando', ativo);
+      if (!ativo || arraste) return;
+      const area = app.getBoundingClientRect();
+      const pet = document.getElementById('pet-principal')?.getBoundingClientRect();
+      if (!pet) return;
+      const reduzido = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+      const angulo = reduzido ? 0 : tempo * .0007;
+      const centroX = pet.left - area.left + pet.width / 2;
+      const centroY = pet.top - area.top + pet.height * .34;
+      mover(centroX + Math.cos(angulo) * pet.width * .57 - passarinho.offsetWidth / 2,
+        centroY + Math.sin(angulo) * 18 - passarinho.offsetHeight / 2, false);
+      passarinho.style.zIndex = Math.sin(angulo) < 0 ? '2' : '12';
     }
     function posicionar() {
       if (arraste) return;
@@ -119,9 +138,12 @@
         const maximo = limites();
         mover(posicao.x * maximo.x, posicao.y * maximo.y);
       } else {
-        const area = app.getBoundingClientRect();
-        const pet = palco.getBoundingClientRect();
-        mover(pet.right - area.left - passarinho.offsetWidth * .55, pet.top - area.top + pet.height * .18);
+        posicionarOrbita(performance.now());
+        if (passarinho.dataset.miniPet !== 'passarinho') {
+          const area = app.getBoundingClientRect();
+          const pet = palco.getBoundingClientRect();
+          mover(pet.right - area.left - passarinho.offsetWidth * .55, pet.top - area.top + pet.height * .18, false);
+        }
       }
     }
     function guardar() {
@@ -132,20 +154,27 @@
       if (evento.pointerType === 'mouse' && evento.button !== 0) return;
       evento.preventDefault();
       const area = passarinho.getBoundingClientRect();
-      arraste = { id: evento.pointerId, offsetX: evento.clientX - area.left, offsetY: evento.clientY - area.top };
+      arraste = { id: evento.pointerId, offsetX: evento.clientX - area.left, offsetY: evento.clientY - area.top, inicioX: evento.clientX, inicioY: evento.clientY, moveu: false };
       passarinho.setPointerCapture(evento.pointerId);
       passarinho.classList.add('arrastando');
     });
     passarinho.addEventListener('pointermove', evento => {
       if (!arraste || evento.pointerId !== arraste.id) return;
+      if (Math.hypot(evento.clientX - arraste.inicioX, evento.clientY - arraste.inicioY) < 6 && !arraste.moveu) return;
+      arraste.moveu = true;
       const area = app.getBoundingClientRect();
       mover(evento.clientX - area.left - arraste.offsetX, evento.clientY - area.top - arraste.offsetY);
     });
     function terminarArraste(evento) {
       if (!arraste || evento.pointerId !== arraste.id) return;
+      const moveu = arraste.moveu;
       arraste = null;
       passarinho.classList.remove('arrastando');
-      guardar();
+      if (moveu) guardar();
+      else if (passarinho.dataset.miniPet === 'passarinho') {
+        posicao = null;
+        try { localStorage.removeItem(storageKey); } catch (_) { /* Sem armazenamento, continua orbitando. */ }
+      }
     }
     passarinho.addEventListener('pointerup', terminarArraste);
     passarinho.addEventListener('pointercancel', terminarArraste);
@@ -160,6 +189,15 @@
     });
     window.addEventListener('resize', posicionar);
     posicionar();
+    let ultimoFrame = 0;
+    function animar(tempo) {
+      if (!posicao && tempo - ultimoFrame > 32) {
+        ultimoFrame = tempo;
+        posicionarOrbita(tempo);
+      }
+      requestAnimationFrame(animar);
+    }
+    requestAnimationFrame(animar);
   }
 
   if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', iniciarPassarinho, { once: true });
