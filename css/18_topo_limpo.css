@@ -1,0 +1,40 @@
+/* Indicadores, perfil e atalhos no mesmo alinhamento em telas pequenas. */
+body .top-row{
+  display:grid;
+  grid-template-columns:minmax(0,1.03fr) minmax(0,1.4fr) minmax(0,1.03fr) minmax(0,1.02fr) 38px 38px;
+  align-items:center;gap:4px;width:100%;
+}
+body.mesada-desativada .top-row{
+  grid-template-columns:minmax(0,1fr) minmax(0,1fr) minmax(0,1fr) 38px 38px;
+}
+body .top-row .top-pill{
+  grid-row:auto;grid-column:auto;min-width:0;width:100%;height:44px;min-height:44px;
+  padding:3px 2px;border:1px solid rgba(255,255,255,.68);border-radius:12px;
+  background:rgba(255,255,255,.74);box-shadow:0 2px 8px rgba(15,23,42,.12);
+}
+body .top-row .top-pill.streak-fogo{background:rgba(255,247,237,.77);animation:none;box-shadow:0 2px 8px rgba(15,23,42,.12)}
+body .top-row .top-pill > span:not(.coin-dot){min-width:0}
+body .top-row .top-pill-text{font-size:8px;line-height:1.1}
+body .top-row .top-pill-sub{font-size:6px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+body .top-row .top-perfil-crianca{grid-row:auto;grid-column:auto}
+body .top-row .perfil-crianca-emoji{font-size:15px}
+body .top-row .perfil-crianca-nome{font-size:8px}
+body .top-row .btn-ajuda-flutuante,body .top-row .btn-pais-flutuante{
+  grid-row:auto;grid-column:auto;width:38px;height:38px;min-width:38px;
+  padding:0;border:2px solid rgba(255,255,255,.85);
+  font-size:16px;box-shadow:0 3px 9px rgba(15,23,42,.22);animation:none;
+}
+body .top-row .btn-ajuda-flutuante{background:rgba(124,58,237,.83)}
+body .top-row .btn-pais-flutuante{background:rgba(5,150,105,.84)}
+body .pet-selector{display:none!important}
+#btn-nivel-evolucao{cursor:pointer;color:#7c3aed;font:inherit}
+#btn-nivel-evolucao .seta-nivel{font-size:15px;line-height:1;transition:transform .18s}
+#btn-nivel-evolucao[aria-expanded="true"] .seta-nivel{transform:rotate(180deg)}
+#evo-progresso[hidden]{display:none!important}
+@media(max-width:360px){
+  body .top-row{grid-template-columns:minmax(0,1fr) minmax(0,1.32fr) minmax(0,1fr) minmax(0,1fr) 35px 35px;gap:3px}
+  body.mesada-desativada .top-row{grid-template-columns:repeat(3,minmax(0,1fr)) 35px 35px}
+  body .top-row .btn-ajuda-flutuante,body .top-row .btn-pais-flutuante{width:35px;height:35px;min-width:35px}
+  body .top-row .top-pill-text{font-size:7px}
+  body .top-row .perfil-crianca-nome{font-size:7px}
+}

@@ -1178,6 +1178,14 @@ function calcularFase(n){
   }
   return n>=81?5:n>=61?4:n>=41?3:n>=21?2:1;
 }
+function alternarDetalhesEvolucao(){
+  const detalhes=document.getElementById('evo-progresso');
+  const botao=document.getElementById('btn-nivel-evolucao');
+  if(!detalhes || !botao)return;
+  detalhes.hidden=!detalhes.hidden;
+  botao.setAttribute('aria-expanded',String(!detalhes.hidden));
+  botao.setAttribute('aria-label',detalhes.hidden?'Mostrar detalhes da próxima evolução':'Ocultar detalhes da próxima evolução');
+}
 function atualizarBotaoEvolucao(){
   const botao=document.getElementById('btn-evoluir-gato');
   if(!botao)return;
