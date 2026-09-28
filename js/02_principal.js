@@ -2265,7 +2265,7 @@ function renderizarTarefas(){
   c.innerHTML='';
   const hojeLista=tarefasDeHoje();
   const o=hojeLista.filter(t=>t.tipo==='obrigatoria'),x=hojeLista.filter(t=>t.tipo!=='obrigatoria');
-  document.getElementById('qtd-tarefas').textContent=`${o.length} fixas · ${x.length} extras`;
+  document.getElementById('qtd-tarefas').textContent=`${o.length} fixas · ${x.length} ${x.length===1?'extra':'extras'}`;
   const pendentes=(estado.tarefas||[]).filter(t=>(!t.dataSugerida||t.dataSugerida===hojeLocal())&&statusTarefaAtual(t)==='aguardando_aprovacao');
   const bannerPend=document.getElementById('banner-aprovacoes-pendentes');
   const txtPend=document.getElementById('txt-aprovacoes-pendentes');
@@ -4735,9 +4735,9 @@ function apontarSpotlight(el){
 async function iniciarTourGuiado(){
   if(tourRodando||demoRodando)return;
   tourRodando=true;
-  fecharModal('modal-ajuda');
-  fecharModal('modal-onboarding');
-  await esperar(300);
+  document.getElementById('modal-ajuda')?.classList.remove('mostrar','modal-top');
+  document.getElementById('modal-onboarding')?.classList.remove('mostrar','modal-top');
+  await esperar(100);
   const passos=[
     {texto:'1/5 · Toque no pet para dar carinho ❤️',alvo:'#pet-principal'},
     {texto:'2/5 · Aqui você brinca, faz carinho e comemora 🎾',alvo:'#pet-actions'},
