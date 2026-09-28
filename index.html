@@ -101,6 +101,8 @@
     <div id="acoes-gato-laranja" class="acoes-gato-laranja" aria-label="Ações do gato"></div>
   </div>
   <div class="cat-section" id="pet-section-area">
+    <div id="decoracao-area" aria-label="Área de decoração"></div>
+    <div id="barra-decoracao" class="barra-decoracao" hidden><span>🎨 Arraste os objetos</span><button type="button" onclick="abrirCatalogoDecoracao()">+ Objetos</button><button type="button" onclick="finalizarDecoracao()">✓ Pronto</button></div>
     <div class="pet-stage">
       <div id="objetos-pet-layer" aria-hidden="true"></div>
       <div class="balao-fala" id="balao-fala" role="status" aria-live="polite"></div>
@@ -163,6 +165,7 @@
       <button class="menu-mais-item album" onclick="fecharModal('modal-menu-mais');abrirAlbumFigurinhas()"><span>📒</span><b>Álbum</b><small>Ver figurinhas</small></button>
       <button class="menu-mais-item mapa" onclick="abrirMapaAventura()"><span>🗺️</span><b>Mapa</b><small>Continuar aventura</small></button>
       <button class="menu-mais-item visual" onclick="fecharModal('modal-menu-mais');abrirLojaFundos()"><span>🎨</span><b>Visual</b><small>Fundos do pet</small></button>
+      <button class="menu-mais-item decorar" onclick="fecharModal('modal-menu-mais');abrirCatalogoDecoracao()"><span>🛋️</span><b>Decorar</b><small>Organizar o cenário</small></button>
       <button class="menu-mais-item mini-pets" onclick="fecharModal('modal-menu-mais');abrirLojaMiniPets()"><span>🐝</span><b>Mini pets</b><small>Escolher companheiro</small></button>
       <button class="menu-mais-item loja" onclick="fecharModal('modal-menu-mais');abrirLojaRecompensas()"><span>🏆</span><b>Loja</b><small>Trocar moedas</small></button>
       <button class="menu-mais-item colecao" onclick="fecharModal('modal-menu-mais');abrirColecao()"><span>📚</span><b>Coleção</b><small>Itens e ações</small></button>
@@ -174,6 +177,7 @@
 <button id="btn-instalar-pwa" class="primary-btn green-btn hidden" style="position:fixed;bottom:14px;left:50%;transform:translateX(-50%);z-index:90;box-shadow:0 8px 24px rgba(0,0,0,.3);padding:10px 18px;font-size:11px;border-radius:99px;display:flex;align-items:center;gap:6px"><span>📲</span> Instalar RotinaPet</button>
 <div id="modal-caixa-conquistas" class="modal-overlay"><div class="modal" style="max-width:370px"><div class="modal-title"><h3>🎁 Caixa de Conquistas</h3><button class="close-btn" onclick="fecharModal('modal-caixa-conquistas')">×</button></div><div id="conteudo-caixa-conquistas"></div></div></div>
 <div id="modal-mini-pets" class="modal-overlay"><div class="modal" style="max-width:390px"><div class="modal-title"><h3>🐾 Mini pets</h3><button class="close-btn" onclick="fecharModal('modal-mini-pets')" aria-label="Fechar">×</button></div><p class="mini-pets-intro">Escolha um companheiro para seu pet. Você pode usar um de cada vez.</p><div id="saldo-mini-pets" class="mini-pets-saldo"></div><div id="grid-mini-pets" class="mini-pets-grid"></div><button type="button" class="primary-btn botao-secundario mini-pets-guardar" onclick="guardarMiniPet()">Guardar meu companheiro</button></div></div>
+<div id="modal-decoracao" class="modal-overlay"><div class="modal" style="max-width:390px"><div class="modal-title"><h3>🛋️ Modo de Decoração</h3><button type="button" class="close-btn" onclick="fecharModal('modal-decoracao')" aria-label="Fechar">×</button></div><p class="decoracao-intro">Adicione objetos e arraste para onde quiser na área do pet. Toque em × para guardar um objeto.</p><div id="catalogo-decoracao" class="catalogo-decoracao"></div><button type="button" class="primary-btn green-btn" style="width:100%;margin-top:11px" onclick="iniciarModoDecoracao()">✋ Organizar posições</button></div></div>
 <div id="modal-selecao-perfil" class="modal-overlay">
   <div class="modal" style="text-align:center;max-width:320px">
     <div style="font-size:38px;margin-bottom:6px">👋</div>
@@ -649,5 +653,7 @@
 <script src="js/08_meu_pet.js"></script><script src="js/09_gato_laranja.js?v=pet-visivel-2"></script>
 <link rel="stylesheet" href="css/14_pet_companheiro.css?v=3">
 <script src="js/10_pet_companheiro.js?v=2" defer></script>
+<link rel="stylesheet" href="css/15_decoracao.css?v=1">
+<script src="js/11_decoracao.js?v=1" defer></script>
 </body>
 </html>

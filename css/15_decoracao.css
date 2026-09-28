@@ -1,0 +1,17 @@
+#decoracao-area { position:absolute; inset:0; z-index:7; pointer-events:none; }
+.decor-item { position:absolute; width:52px; height:52px; display:grid; place-items:center; border-radius:13px; touch-action:none; user-select:none; -webkit-user-select:none; filter:drop-shadow(0 5px 5px #0004); }
+.decor-item .decor-emoji { display:block; font-size:34px; line-height:1; pointer-events:none; }
+.decor-item .decor-remover { display:none; position:absolute; top:-8px; right:-8px; width:23px; height:23px; border:0; border-radius:50%; background:#ef4444; color:white; font-size:17px; line-height:1; font-weight:900; cursor:pointer; }
+.decorando .decor-item { pointer-events:auto; cursor:grab; background:rgba(255,255,255,.28); outline:1px dashed rgba(255,255,255,.85); }
+.decorando .decor-item .decor-remover { display:grid; place-items:center; }
+.decorando .decor-item.arrastando { cursor:grabbing; outline:2px solid #7c3aed; }
+.decor-item:focus-visible { outline:3px solid #7c3aed; }
+.barra-decoracao { position:absolute; left:4px; right:4px; top:0; z-index:22; display:flex; align-items:center; justify-content:center; gap:6px; padding:7px; border-radius:13px; background:rgba(15,23,42,.9); color:white; box-shadow:0 6px 18px #0004; font-size:11px; font-weight:900; }
+.barra-decoracao[hidden] { display:none; }
+.barra-decoracao button { border:0; border-radius:9px; padding:7px 9px; background:#ddd6fe; color:#3b0764; font-size:10px; font-weight:900; white-space:nowrap; cursor:pointer; }
+.barra-decoracao button:last-child { background:#a7f3d0; color:#064e3b; }
+.decoracao-intro { font-size:11px; color:#475569; line-height:1.4; margin-bottom:10px; }
+.catalogo-decoracao { display:grid; grid-template-columns:repeat(3,minmax(0,1fr)); gap:7px; max-height:min(48dvh,330px); overflow:auto; }
+.catalogo-decoracao button { border:1px solid #ddd6fe; background:#f8f6ff; border-radius:12px; padding:8px 4px; display:flex; flex-direction:column; align-items:center; gap:4px; color:#1e293b; font-size:10px; font-weight:900; cursor:pointer; }
+.catalogo-decoracao button span { font-size:26px; }
+.catalogo-decoracao button:disabled { opacity:.45; }
