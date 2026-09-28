@@ -474,11 +474,11 @@ const hojeLocal=()=>{const d=new Date();return `${d.getFullYear()}-${String(d.ge
 const ontemLocal=()=>{const d=new Date();d.setDate(d.getDate()-1);return `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`};
 // Campos que pertencem a UM filho específico (progresso do pet, tarefas, moedas...).
 // Tudo que NÃO está nessa lista é compartilhado pela família inteira (PIN, e-mails, taxa de câmbio).
-const CAMPOS_CRIANCA=['decoracaoItens','extraDiaRemovida','avisosMissao','miniPetsComprados','miniPetAtivo','bauDatasResgatadas','historicoRecompensas','avisosRecompensas','acessorios','conquistas','habilidades','desafiosMathAcertos','dinheiroAcumulado','mesadaAtiva','fundoAtual','fundosComprados','temaInterfaceAtual','historicoConclusoes','idadeCrianca','dificuldadeJogos','nomePet','lembreteEnviadoData','metaMoedas','moedas','onboardingVistoCrianca','pausaAte','petAtual','pets','recompensas','registroDiario','solicitacoesPremios','streak','surpresaResgatadaData','tarefas','tarefasHojeCount','timerFim','totalSacado','ultimoDiaAcesso','ultimoDiaConcluido','ultimoStreakPremiado','vozSalva','ultimoAcaoPet','ultimoDecay','desafioDiarioData','desafioDiarioFeitoData','bauDiarioAbertoData','escudosOfensiva','adesivos','eventoSemanalData','missaoFamilia','mensagensPais','historicoEngajamento'];
+const CAMPOS_CRIANCA=['palcoAtual','palcosComprados','decoracaoItens','extraDiaRemovida','avisosMissao','miniPetsComprados','miniPetAtivo','bauDatasResgatadas','historicoRecompensas','avisosRecompensas','acessorios','conquistas','habilidades','desafiosMathAcertos','dinheiroAcumulado','mesadaAtiva','fundoAtual','fundosComprados','temaInterfaceAtual','historicoConclusoes','idadeCrianca','dificuldadeJogos','nomePet','lembreteEnviadoData','metaMoedas','moedas','onboardingVistoCrianca','pausaAte','petAtual','pets','recompensas','registroDiario','solicitacoesPremios','streak','surpresaResgatadaData','tarefas','tarefasHojeCount','timerFim','totalSacado','ultimoDiaAcesso','ultimoDiaConcluido','ultimoStreakPremiado','vozSalva','ultimoAcaoPet','ultimoDecay','desafioDiarioData','desafioDiarioFeitoData','bauDiarioAbertoData','escudosOfensiva','adesivos','eventoSemanalData','missaoFamilia','mensagensPais','historicoEngajamento'];
 function valoresPadraoCrianca(){
   return {
     decoracaoItens:[],extraDiaRemovida:null,miniPetsComprados:['passarinho'],miniPetAtivo:'passarinho',petAtual:'gato',moedas:15,dinheiroAcumulado:.15,mesadaAtiva:true,idadeCrianca:7,dificuldadeJogos:'auto',nomePet:'Pipoca',
-    fundoAtual:'ceu',fundosComprados:['ceu'],temaInterfaceAtual:'classico',metaMoedas:50,totalSacado:0,
+    palcoAtual:'cristal',palcosComprados:['cristal'],fundoAtual:'ceu',fundosComprados:['ceu'],temaInterfaceAtual:'classico',metaMoedas:50,totalSacado:0,
     ultimoDiaAcesso:hojeLocal(),ultimoDiaConcluido:null,streak:0,ultimoStreakPremiado:0,
     tarefasHojeCount:0,desafiosMathAcertos:0,timerFim:null,vozSalva:null,
     pets:{gato:{nivel:1,xp:0,felicidade:100,saude:100,faseConfirmada:1},cachorra:{nivel:1,xp:0,felicidade:100,saude:100},cabra:{nivel:1,xp:0,felicidade:100,saude:100},frango:{nivel:1,xp:0,felicidade:100,saude:100},unicornio:{nivel:1,xp:0,felicidade:100,saude:100},dinossauro:{nivel:1,xp:0,felicidade:100,saude:100},capivara:{nivel:1,xp:0,felicidade:100,saude:100}},
@@ -582,7 +582,7 @@ function salvarPerfilCrianca(){
 let estado={
   criancaAtivaId:'c1',criancas:{c1:{nome:'Minha Criança',emoji:'🐾'}},criancasDados:{},
   decoracaoItens:[],extraDiaRemovida:null,miniPetsComprados:['passarinho'],miniPetAtivo:'passarinho',petAtual:'gato',moedas:15,taxaCambio:.01,pinHash:null,dinheiroAcumulado:.15,mesadaAtiva:true,idadeCrianca:7,dificuldadeJogos:'auto',nomePet:'Pipoca',
-  fundoAtual:'ceu',fundosComprados:['ceu'],temaInterfaceAtual:'classico',metaMoedas:50,totalSacado:0,
+  palcoAtual:'cristal',palcosComprados:['cristal'],fundoAtual:'ceu',fundosComprados:['ceu'],temaInterfaceAtual:'classico',metaMoedas:50,totalSacado:0,
   ultimoDiaAcesso:hojeLocal(),ultimoDiaConcluido:null,streak:0,ultimoStreakPremiado:0,
   tarefasHojeCount:0,desafiosMathAcertos:0,timerFim:null,vozSalva:null,
   pets:{gato:{nivel:1,xp:0,felicidade:100,saude:100,faseConfirmada:1},cachorra:{nivel:1,xp:0,felicidade:100,saude:100},cabra:{nivel:1,xp:0,felicidade:100,saude:100},frango:{nivel:1,xp:0,felicidade:100,saude:100},unicornio:{nivel:1,xp:0,felicidade:100,saude:100},dinossauro:{nivel:1,xp:0,felicidade:100,saude:100},capivara:{nivel:1,xp:0,felicidade:100,saude:100}},
@@ -1260,6 +1260,7 @@ function celebrarEvolucaoPet(fase){
   mostrarToast(`🌟 ${ev.nome} desbloqueado!`);
 }
 function atualizarTela(){
+  aplicarPalcoPet();
   const def=PETS[estado.petAtual],p=obterDadosPetAtual(),fase=calcularFase(p.nivel);
   window.atualizarMiniPetCompanheiro?.();
   window.renderizarDecoracao?.();
@@ -4248,6 +4249,52 @@ function abrirLojaFundos(){
   renderizarGridFundos();
   abrirModal('modal-fundos');
 }
+const PALCOS_PET=[
+  {id:'cristal',nome:'Cristal',emoji:'💎',preco:0,descricao:'Uma superfície brilhante e delicada.'},
+  {id:'floresta',nome:'Bosque',emoji:'🌿',preco:20,descricao:'Musgo macio para repousar as patinhas.'},
+  {id:'nuvem',nome:'Nuvem',emoji:'☁️',preco:25,descricao:'Uma nuvem fofinha com sombra no chão.'},
+  {id:'estrelas',nome:'Galáxia',emoji:'🌟',preco:35,descricao:'Um pedacinho do céu estrelado.'},
+  {id:'doce',nome:'Doce',emoji:'🍬',preco:30,descricao:'Um palco cor de sobremesa.'},
+  {id:'ouro',nome:'Campeão',emoji:'🏆',preco:40,descricao:'Um brilho de conquista para o pet.'}
+];
+function aplicarPalcoPet(){
+  const palco=PALCOS_PET.find(p=>p.id===estado.palcoAtual && (p.preco===0||(estado.palcosComprados||[]).includes(p.id)))||PALCOS_PET[0];
+  const stage=document.querySelector('.pet-stage');
+  if(stage)stage.dataset.palco=palco.id;
+}
+function renderizarPalcosPet(){
+  const grid=document.getElementById('grid-palcos');
+  if(!grid)return;
+  grid.replaceChildren();
+  PALCOS_PET.forEach(p=>{
+    const comprado=p.preco===0||(estado.palcosComprados||[]).includes(p.id);
+    const ativo=(estado.palcoAtual||'cristal')===p.id;
+    const botao=document.createElement('button');
+    botao.type='button';
+    botao.className='palco-card'+(ativo?' ativo':'');
+    botao.setAttribute('aria-pressed',String(ativo));
+    botao.innerHTML=`<span class="palco-icone">${p.emoji}</span><span class="palco-preview" data-palcopreview="${p.id}"><i></i></span><b>${p.nome}</b><small>${p.descricao}</small><strong>${ativo?'✓ Em uso':comprado?'Usar':p.preco+' 🪙'}</strong>`;
+    botao.onclick=()=>selecionarOuComprarPalco(p);
+    grid.appendChild(botao);
+  });
+}
+function selecionarOuComprarPalco(p){
+  const comprados=Array.isArray(estado.palcosComprados)?estado.palcosComprados:['cristal'];
+  if(p.preco===0||comprados.includes(p.id)){
+    estado.palcoAtual=p.id;
+    salvar();aplicarPalcoPet();renderizarPalcosPet();
+    return mostrarToast(`✨ Palco ${p.nome} aplicado!`);
+  }
+  if(estado.moedas<p.preco)return mostrarToast(`🪙 Faltam ${p.preco-estado.moedas} moedas.`);
+  mostrarConfirmacao(`Comprar o palco ${p.nome} por ${p.preco} moedas?`,()=>{
+    if((estado.palcosComprados||[]).includes(p.id)||estado.moedas<p.preco)return;
+    estado.moedas-=p.preco;
+    estado.palcosComprados=[...comprados,p.id];
+    estado.palcoAtual=p.id;
+    salvar();atualizarTela();renderizarPalcosPet();
+    mostrarToast(`✨ Palco ${p.nome} desbloqueado!`);
+  });
+}
 function renderizarGridFundos(){
   const c=document.getElementById('grid-fundos');
   c.innerHTML='';
@@ -4260,6 +4307,7 @@ function renderizarGridFundos(){
     c.appendChild(d);
   });
   renderizarTemasInterface();
+  renderizarPalcosPet();
 }
 function renderizarTemasInterface(){
   const grid=document.getElementById('grid-temas');

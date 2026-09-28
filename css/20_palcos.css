@@ -1,0 +1,41 @@
+/* A trajetória do companheiro continua ativa, sem o anel desenhado sobre o pet. */
+.app.passarinho-orbitando .pet-stage::before{content:none;display:none}
+
+/* Todos os palcos apoiam o pet na mesma altura, independente do cenário. */
+.pet-stage[data-palco] .plataforma-pet{
+  transition:background .25s,border-color .25s,box-shadow .25s;
+}
+.pet-stage[data-palco="floresta"] .plataforma-pet{
+  background:radial-gradient(ellipse at 50% 20%,#b9e881 0%,#5e9c5e 54%,#204f3e 100%);
+  border-color:#d9f2ad;box-shadow:inset 0 4px 4px #eaffbd8a,inset 0 -8px 8px #173f30a6,0 8px 14px #132c2699;
+}
+.pet-stage[data-palco="nuvem"] .plataforma-pet{
+  background:radial-gradient(ellipse at 50% 15%,#fff 0%,#e6f8ff 42%,#a3c8e7 100%);
+  border-color:#fff;box-shadow:inset 0 4px 8px #fff,inset 0 -6px 9px #93b9df99,0 8px 13px #162e4966;
+}
+.pet-stage[data-palco="estrelas"] .plataforma-pet{
+  background:radial-gradient(ellipse at 50% 15%,#9977e3,#4a398d 54%,#182455 100%);
+  border-color:#c7b5ff;box-shadow:inset 0 3px 8px #eadfff99,inset 0 -7px 10px #161045,0 6px 17px #332367a6;
+}
+.pet-stage[data-palco="doce"] .plataforma-pet{
+  background:linear-gradient(145deg,#ffe9a6,#ff94c4 48%,#ba80e6);
+  border-color:#fff4ce;box-shadow:inset 0 3px 5px #fff9,inset 0 -8px 8px #b84d91aa,0 7px 13px #71435a88;
+}
+.pet-stage[data-palco="ouro"] .plataforma-pet{
+  background:linear-gradient(150deg,#fff8c7,#f9cb4c 45%,#9e5d17);
+  border-color:#fff5b8;box-shadow:inset 0 4px 5px #fff9,inset 0 -9px 10px #965a16aa,0 7px 14px #48311188;
+}
+.grid-palcos{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:9px}
+.palco-card{min-width:0;min-height:140px;display:flex;align-items:center;flex-direction:column;justify-content:center;gap:4px;padding:10px 8px;border:2px solid #dbe5f0;border-radius:16px;background:#f8fbff;color:#243147;font:inherit;cursor:pointer;text-align:center}
+.palco-card.ativo{border-color:#7c3aed;background:#f5f0ff}
+.palco-card:focus-visible{outline:3px solid #6d28d9;outline-offset:2px}
+.palco-icone{font-size:22px;line-height:1}
+.palco-card b{font-size:12px}.palco-card small{min-height:26px;font-size:9px;line-height:1.25;color:#475569}
+.palco-card strong{font-size:10px;color:#6d28d9}
+.palco-preview{width:84px;height:20px;border-radius:50%;display:block;position:relative;border:1px solid #fff9;background:linear-gradient(150deg,#fff9,#a2d6e777);box-shadow:inset 0 -4px 5px #5185a655,0 5px 6px #2237}
+.palco-preview[data-palcopreview="floresta"]{background:linear-gradient(#baeb89,#327047)}
+.palco-preview[data-palcopreview="nuvem"]{background:linear-gradient(#fff,#a3c8e7)}
+.palco-preview[data-palcopreview="estrelas"]{background:linear-gradient(#9977e3,#182455)}
+.palco-preview[data-palcopreview="doce"]{background:linear-gradient(125deg,#ffe9a6,#ff94c4,#ba80e6)}
+.palco-preview[data-palcopreview="ouro"]{background:linear-gradient(125deg,#fff8c7,#f9cb4c,#9e5d17)}
+@media(prefers-reduced-motion:reduce){.pet-stage[data-palco] .plataforma-pet{transition:none}}
