@@ -481,7 +481,7 @@ function valoresPadraoCrianca(){
     fundoAtual:'ceu',fundosComprados:['ceu'],temaInterfaceAtual:'classico',metaMoedas:50,totalSacado:0,
     ultimoDiaAcesso:hojeLocal(),ultimoDiaConcluido:null,streak:0,ultimoStreakPremiado:0,
     tarefasHojeCount:0,desafiosMathAcertos:0,timerFim:null,vozSalva:null,
-    pets:{gato:{nivel:1,xp:0,felicidade:100,saude:100},cachorra:{nivel:1,xp:0,felicidade:100,saude:100},cabra:{nivel:1,xp:0,felicidade:100,saude:100},frango:{nivel:1,xp:0,felicidade:100,saude:100},unicornio:{nivel:1,xp:0,felicidade:100,saude:100},dinossauro:{nivel:1,xp:0,felicidade:100,saude:100},capivara:{nivel:1,xp:0,felicidade:100,saude:100}},
+    pets:{gato:{nivel:1,xp:0,felicidade:100,saude:100,faseConfirmada:1},cachorra:{nivel:1,xp:0,felicidade:100,saude:100},cabra:{nivel:1,xp:0,felicidade:100,saude:100},frango:{nivel:1,xp:0,felicidade:100,saude:100},unicornio:{nivel:1,xp:0,felicidade:100,saude:100},dinossauro:{nivel:1,xp:0,felicidade:100,saude:100},capivara:{nivel:1,xp:0,felicidade:100,saude:100}},
     tarefas:[{id:1,texto:'Escovar os dentes',recompensa:5,xp:20,tipo:'obrigatoria',status:'pendente',foto:null,dias:[]},{id:2,texto:'Arrumar a cama',recompensa:5,xp:20,tipo:'obrigatoria',status:'pendente',foto:null,dias:[]}],
     recompensas:[
       {id:1,texto:'15 min de tela',descricao:'Tempo de tela liberado pelos pais.',custo:10,tipo:'timer',minutos:15,icone:'📱',ativo:true},
@@ -585,7 +585,7 @@ let estado={
   fundoAtual:'ceu',fundosComprados:['ceu'],temaInterfaceAtual:'classico',metaMoedas:50,totalSacado:0,
   ultimoDiaAcesso:hojeLocal(),ultimoDiaConcluido:null,streak:0,ultimoStreakPremiado:0,
   tarefasHojeCount:0,desafiosMathAcertos:0,timerFim:null,vozSalva:null,
-  pets:{gato:{nivel:1,xp:0,felicidade:100,saude:100},cachorra:{nivel:1,xp:0,felicidade:100,saude:100},cabra:{nivel:1,xp:0,felicidade:100,saude:100},frango:{nivel:1,xp:0,felicidade:100,saude:100},unicornio:{nivel:1,xp:0,felicidade:100,saude:100},dinossauro:{nivel:1,xp:0,felicidade:100,saude:100},capivara:{nivel:1,xp:0,felicidade:100,saude:100}},
+  pets:{gato:{nivel:1,xp:0,felicidade:100,saude:100,faseConfirmada:1},cachorra:{nivel:1,xp:0,felicidade:100,saude:100},cabra:{nivel:1,xp:0,felicidade:100,saude:100},frango:{nivel:1,xp:0,felicidade:100,saude:100},unicornio:{nivel:1,xp:0,felicidade:100,saude:100},dinossauro:{nivel:1,xp:0,felicidade:100,saude:100},capivara:{nivel:1,xp:0,felicidade:100,saude:100}},
   tarefas:[{id:1,texto:'Escovar os dentes',recompensa:5,xp:20,tipo:'obrigatoria',status:'pendente',foto:null,dias:[]},{id:2,texto:'Arrumar a cama',recompensa:5,xp:20,tipo:'obrigatoria',status:'pendente',foto:null,dias:[]}],
   recompensas:[
     {id:1,texto:'15 min de tela',descricao:'Tempo de tela liberado pelos pais.',custo:10,tipo:'timer',minutos:15,icone:'📱',ativo:true},
@@ -1162,7 +1162,13 @@ function aplicarTemaInterface(){
   document.body.classList.add('tema-'+tema.id);
   document.querySelectorAll('.bottom-buttons .btn-icon').forEach((el,i)=>{if(tema.icons[i])el.textContent=tema.icons[i]});
 }
-function obterDadosPetAtual(){if(!estado.pets[estado.petAtual])estado.pets[estado.petAtual]={nivel:1,xp:0,felicidade:100,saude:100};return estado.pets[estado.petAtual]}
+function obterDadosPetAtual(){
+  if(!estado.pets[estado.petAtual])estado.pets[estado.petAtual]={nivel:1,xp:0,felicidade:100,saude:100};
+  const dados=estado.pets[estado.petAtual];
+  // Perfis anteriores já exibiam a fase 2 automaticamente. Preserve a forma alcançada.
+  if(estado.petAtual==='gato' && dados.faseConfirmada==null)dados.faseConfirmada=(Number(dados.nivel)||1)>=21?2:1;
+  return dados;
+}
 function nivelJogador(){return Math.max(...Object.values(estado.pets).map(p=>p.nivel||1))}
 function calcularFase(n){
   if(estado.petAtual==='gato'){
