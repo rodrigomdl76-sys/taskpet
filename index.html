@@ -199,8 +199,10 @@
   </div>
 </div>
 <div id="modal-onboarding" class="modal-overlay"><div class="modal" style="text-align:center;max-width:320px">
-  <div style="font-size:40px">🐾</div>
+  <div class="ovo-boas-vindas" aria-hidden="true">🥚<span>✨</span></div>
   <h3 style="font-size:16px;margin:5px 0">Como funciona?</h3>
+  <label class="field-label" for="input-nome-pet-inicial" style="margin-top:12px;text-align:left">Primeiro, como vai se chamar seu pet?</label>
+  <input class="field" id="input-nome-pet-inicial" maxlength="18" autocomplete="off" placeholder="Escolha um nome para seu pet">
   <div class="stack" style="text-align:left;margin-top:8px">
     <div class="achievement-row"><span style="font-size:20px">👆</span><div><b style="font-size:10px">Toque no seu pet</b><div style="font-size:8px;color:#64748b">Dê carinho e deixe ele feliz!</div></div></div>
     <div class="achievement-row"><span style="font-size:20px">🛡️</span><div><b style="font-size:10px">Complete as tarefas</b><div style="font-size:8px;color:#64748b">Ganhe moedas e XP para seu pet crescer.</div></div></div>
@@ -615,16 +617,17 @@
 </div>
 <div class="demo-spotlight" id="demo-spotlight" aria-hidden="true"></div>
 <div class="demo-hud" id="demo-hud" role="status"></div>
+<div id="modal-confirmar-missao" class="modal-overlay"><div class="modal" style="max-width:330px"><div class="modal-title"><h3>✅ Enviar missão</h3><button type="button" class="close-btn" onclick="fecharModal('modal-confirmar-missao')" aria-label="Fechar">×</button></div><p id="texto-confirmar-missao" class="confirmar-missao-texto"></p><p class="confirmar-missao-ajuda">Os pais vão conferir antes de liberar as moedas e o XP.</p><button type="button" class="primary-btn green-btn" style="width:100%;margin-top:10px" onclick="confirmarEnvioMissao()">Enviar para os pais</button><button type="button" class="primary-btn botao-secundario" style="width:100%;margin-top:7px" onclick="adicionarFotoAntesDeEnviar()">📷 Adicionar foto primeiro</button></div></div>
 <div id="modal-qrcode" class="modal-overlay"><div class="modal" style="text-align:center;max-width:280px"><div class="modal-title"><h3>📷 Convite por QR Code</h3><button class="close-btn" onclick="fecharModal('modal-qrcode')">×</button></div><p style="font-size:9px;color:#64748b;margin-bottom:8px">Peça para a outra pessoa escanear com a câmera do celular.</p><img id="img-qr-convite" src="" alt="QR code de convite" style="width:220px;height:220px;border-radius:12px;background:#fff;padding:6px"><p id="txt-link-qr-convite" style="font-size:8px;color:#94a3b8;margin-top:8px;word-break:break-all"></p></div></div>
 <div class="foto-viewer" id="foto-viewer" onclick="fecharVisualizadorFoto()"><img id="foto-viewer-img" src=""></div>
 <div class="toast" id="toast"></div>
 <div class="banner-offline" id="banner-offline">📡 Sem conexão — as alterações serão sincronizadas quando a internet voltar.</div>
 <div class="banner-evento" id="banner-evento" onclick="abrirModalEventoSazonal()"></div>
-<script src="js/02_principal.js?v=mini-pets-v1"></script>
+<script src="js/02_principal.js?v=primeira-experiencia-v1"></script>
   <script src="js/03_extras_01.js"></script>
 <div id="modal-central-aventuras" class="modal-overlay"><div class="modal" style="max-width:360px"><div class="modal-title"><h3>🌟 Central de Aventuras</h3><button class="close-btn" onclick="fecharModal('modal-central-aventuras')">×</button></div><div id="central-aventuras-conteudo"></div></div></div>
 <div id="modal-bau-diario" class="modal-overlay"><div class="modal" style="max-width:320px;text-align:center"><div class="modal-title"><h3>🎁 Baú do Dia</h3><button class="close-btn" onclick="fecharModal('modal-bau-diario')">×</button></div><div id="bau-diario-conteudo"></div></div></div>
-<script src="js/04_engajamento.js"></script><link rel="stylesheet" href="css/06_extras_01.css">
+<script src="js/04_engajamento.js?v=bau-raro-v1"></script><link rel="stylesheet" href="css/06_extras_01.css">
 <div id="modal-resumo-meta" class="modal-overlay"><div class="modal" style="max-width:340px"><div class="modal-title"><h3>🎯 Minha meta</h3><button class="close-btn" onclick="fecharModal('modal-resumo-meta')">×</button></div><div id="resumo-meta-conteudo"></div></div></div>
 <div id="modal-resumo-hoje" class="modal-overlay"><div class="modal" style="max-width:340px"><div class="modal-title"><h3>🗓️ Aventura de hoje</h3><button class="close-btn" onclick="fecharModal('modal-resumo-hoje')">×</button></div><div id="resumo-hoje-conteudo"></div></div></div>
 <script src="js/05_interface.js"></script>
@@ -644,7 +647,7 @@
 
 <link rel="stylesheet" href="css/12_mapa_vivo.css">
 <script src="js/08_meu_pet.js"></script><script src="js/09_gato_laranja.js?v=pet-visivel-2"></script>
-<link rel="stylesheet" href="css/14_pet_companheiro.css?v=2">
+<link rel="stylesheet" href="css/14_pet_companheiro.css?v=3">
 <script src="js/10_pet_companheiro.js?v=2" defer></script>
 </body>
 </html>

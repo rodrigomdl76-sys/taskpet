@@ -474,10 +474,10 @@ const hojeLocal=()=>{const d=new Date();return `${d.getFullYear()}-${String(d.ge
 const ontemLocal=()=>{const d=new Date();d.setDate(d.getDate()-1);return `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`};
 // Campos que pertencem a UM filho específico (progresso do pet, tarefas, moedas...).
 // Tudo que NÃO está nessa lista é compartilhado pela família inteira (PIN, e-mails, taxa de câmbio).
-const CAMPOS_CRIANCA=['miniPetsComprados','miniPetAtivo','bauDatasResgatadas','historicoRecompensas','avisosRecompensas','acessorios','conquistas','habilidades','desafiosMathAcertos','dinheiroAcumulado','mesadaAtiva','fundoAtual','fundosComprados','temaInterfaceAtual','historicoConclusoes','idadeCrianca','dificuldadeJogos','nomePet','lembreteEnviadoData','metaMoedas','moedas','onboardingVistoCrianca','pausaAte','petAtual','pets','recompensas','registroDiario','solicitacoesPremios','streak','surpresaResgatadaData','tarefas','tarefasHojeCount','timerFim','totalSacado','ultimoDiaAcesso','ultimoDiaConcluido','ultimoStreakPremiado','vozSalva','ultimoAcaoPet','ultimoDecay','desafioDiarioData','desafioDiarioFeitoData','bauDiarioAbertoData','escudosOfensiva','adesivos','eventoSemanalData','missaoFamilia','mensagensPais','historicoEngajamento'];
+const CAMPOS_CRIANCA=['extraDiaRemovida','avisosMissao','miniPetsComprados','miniPetAtivo','bauDatasResgatadas','historicoRecompensas','avisosRecompensas','acessorios','conquistas','habilidades','desafiosMathAcertos','dinheiroAcumulado','mesadaAtiva','fundoAtual','fundosComprados','temaInterfaceAtual','historicoConclusoes','idadeCrianca','dificuldadeJogos','nomePet','lembreteEnviadoData','metaMoedas','moedas','onboardingVistoCrianca','pausaAte','petAtual','pets','recompensas','registroDiario','solicitacoesPremios','streak','surpresaResgatadaData','tarefas','tarefasHojeCount','timerFim','totalSacado','ultimoDiaAcesso','ultimoDiaConcluido','ultimoStreakPremiado','vozSalva','ultimoAcaoPet','ultimoDecay','desafioDiarioData','desafioDiarioFeitoData','bauDiarioAbertoData','escudosOfensiva','adesivos','eventoSemanalData','missaoFamilia','mensagensPais','historicoEngajamento'];
 function valoresPadraoCrianca(){
   return {
-    miniPetsComprados:['passarinho'],miniPetAtivo:'passarinho',petAtual:'gato',moedas:15,dinheiroAcumulado:.15,mesadaAtiva:true,idadeCrianca:7,dificuldadeJogos:'auto',nomePet:'Pipoca',
+    extraDiaRemovida:null,miniPetsComprados:['passarinho'],miniPetAtivo:'passarinho',petAtual:'gato',moedas:15,dinheiroAcumulado:.15,mesadaAtiva:true,idadeCrianca:7,dificuldadeJogos:'auto',nomePet:'Pipoca',
     fundoAtual:'ceu',fundosComprados:['ceu'],temaInterfaceAtual:'classico',metaMoedas:50,totalSacado:0,
     ultimoDiaAcesso:hojeLocal(),ultimoDiaConcluido:null,streak:0,ultimoStreakPremiado:0,
     tarefasHojeCount:0,desafiosMathAcertos:0,timerFim:null,vozSalva:null,
@@ -489,7 +489,7 @@ function valoresPadraoCrianca(){
     ],
     solicitacoesPremios:[],conquistas:{},habilidades:{},acessorios:{comprados:[],ativo:null},pausaAte:null,
     historicoConclusoes:{},registroDiario:{},onboardingVistoCrianca:false,lembreteEnviadoData:null,
-    surpresaResgatadaData:null,metasPersonalizadas:[],ultimoAcaoPet:{},ultimoDecay:null,desafioDiarioData:null,desafioDiarioFeitoData:null,bauDiarioAbertoData:null,bauDatasResgatadas:[],avisosRecompensas:[],historicoRecompensas:[],escudosOfensiva:0,adesivos:[],eventoSemanalData:null,missaoFamilia:{alvo:20,progresso:0,inicio:null},mensagensPais:[],historicoEngajamento:[]
+    surpresaResgatadaData:null,metasPersonalizadas:[],ultimoAcaoPet:{},ultimoDecay:null,desafioDiarioData:null,desafioDiarioFeitoData:null,bauDiarioAbertoData:null,bauDatasResgatadas:[],avisosRecompensas:[],historicoRecompensas:[],avisosMissao:[],escudosOfensiva:0,adesivos:[],eventoSemanalData:null,missaoFamilia:{alvo:20,progresso:0,inicio:null},mensagensPais:[],historicoEngajamento:[]
   };
 }
 function capturarDadosCrianca(){
@@ -505,9 +505,9 @@ function trocarCriancaAtiva(novoId){
   if(!estado.criancas[novoId]||novoId===estado.criancaAtivaId)return;
   estado.criancasDados=estado.criancasDados||{};
   estado.criancasDados[estado.criancaAtivaId]=capturarDadosCrianca();
-  const tarefasAntesDaTroca=estado.tarefas;
   aplicarDadosCrianca(estado.criancasDados[novoId]);
-  estado.tarefas=aplicarTarefasDaCriancaSemPerderCadastro(tarefasAntesDaTroca,estado.tarefas);
+  // Na troca de perfil, as tarefas do filho escolhido são a fonte correta.
+  // Comparar apenas a quantidade misturava missões de irmãos diferentes.
   estado.criancaAtivaId=novoId;
   salvar();
   atualizarTela();
@@ -581,7 +581,7 @@ function salvarPerfilCrianca(){
 }
 let estado={
   criancaAtivaId:'c1',criancas:{c1:{nome:'Minha Criança',emoji:'🐾'}},criancasDados:{},
-  miniPetsComprados:['passarinho'],miniPetAtivo:'passarinho',petAtual:'gato',moedas:15,taxaCambio:.01,pinHash:null,dinheiroAcumulado:.15,mesadaAtiva:true,idadeCrianca:7,dificuldadeJogos:'auto',nomePet:'Pipoca',
+  extraDiaRemovida:null,miniPetsComprados:['passarinho'],miniPetAtivo:'passarinho',petAtual:'gato',moedas:15,taxaCambio:.01,pinHash:null,dinheiroAcumulado:.15,mesadaAtiva:true,idadeCrianca:7,dificuldadeJogos:'auto',nomePet:'Pipoca',
   fundoAtual:'ceu',fundosComprados:['ceu'],temaInterfaceAtual:'classico',metaMoedas:50,totalSacado:0,
   ultimoDiaAcesso:hojeLocal(),ultimoDiaConcluido:null,streak:0,ultimoStreakPremiado:0,
   tarefasHojeCount:0,desafiosMathAcertos:0,timerFim:null,vozSalva:null,
@@ -604,7 +604,7 @@ let estado={
   surpresaResgatadaData:null,
   metasPersonalizadas:[],
   volumeSom:0.55,sonsAtivos:true,
-  logAtividades:[],
+  logAtividades:[],avisosMissao:[],
   ultimoAcaoPet:{},
   ultimoDecay:null
 };
@@ -665,6 +665,7 @@ function verificarResetDiario(){
   // NOVO: cada dia recebe um registro próprio. O histórico dos dias anteriores
   // permanece em t.registros, mas o dia atual SEMPRE começa pendente.
   estado.tarefas.forEach(t=>{
+    if(t.extraRotativa&&t.dataSugerida!==hojeStr)return;
     t.registros=t.registros||{};
     t.registros[hojeStr]={
       status:'pendente',
@@ -1244,6 +1245,19 @@ function atualizarTela(){
   renderizarEvolucoes();
   renderizarConquistas();
   atualizarEstatisticas();
+  mostrarAprovacoesParaCrianca();
+}
+function mostrarAprovacoesParaCrianca(){
+  if(perfilAtivo!=='crianca'||!Array.isArray(estado.avisosMissao)||!estado.avisosMissao.length)return;
+  const avisos=estado.avisosMissao.splice(0);
+  salvar();
+  playSound('tarefa');
+  window.acaoGatoLaranja?.('comemoracao');
+  animarPetToque(null);
+  dispararConfetes(100,CORES_CONFETE_PET[estado.petAtual]);
+  const mensagem=avisos.length===1?`${avisos[0]} foi aprovada! Você ganhou sua recompensa!`:`${avisos.length} missões aprovadas! Suas recompensas chegaram!`;
+  mostrarBalaoFala(mensagem,4200);
+  mostrarToast(`🎉 ${mensagem}`);
 }
 function estaDormindoAgora(){
   const h=new Date().getHours();
@@ -1991,6 +2005,7 @@ function mergeTarefasPorVersao(locais,remotas){
   return Array.from(mapa.values()).map(prepararTarefaParaHoje);
 }
 function prepararTarefaParaHoje(t){
+  if(t.extraRotativa&&t.dataSugerida!==hojeLocal())return t;
   const r=t.registros?.[hojeLocal()];
   if(r){
     t.status=r.status||t.status||'pendente';
@@ -2092,7 +2107,7 @@ async function carregarTarefasIndividuaisComFallback(){
 function enviarParaAprovacao(id){
   const t=estado.tarefas.find(t=>String(t.id)===String(id));
   if(!t)return;
-  playSound('tarefa');
+  if(statusTarefaAtual(t)!=='pendente')return;
   const r=registroTarefaHoje(t);
   copiarFotoParaRegistro(t);
   t.motivoRecusa=null;
@@ -2107,6 +2122,27 @@ function enviarParaAprovacao(id){
   registrarLogAtividade(`Pedido de aprovação: ${t.texto}`);
   enviarNotificacaoLocal('📋 Tarefa para aprovar',`${t.texto} — abra o painel dos pais.`,'rotinapet-aprovacao');
   enfileirarPushFamilia('📋 Tarefa para aprovar',t.texto,{tag:'rotinapet-aprovacao',onlyPerfil:'pais'});
+}
+let tarefaParaConfirmarId=null;
+function pedirConfirmacaoMissao(id){
+  const tarefa=estado.tarefas.find(t=>String(t.id)===String(id));
+  if(!tarefa||statusTarefaAtual(tarefa)!=='pendente')return;
+  tarefaParaConfirmarId=id;
+  const temFoto=Boolean(tarefa.foto||tarefa.fotoUrl);
+  document.getElementById('texto-confirmar-missao').textContent=`${tarefa.texto}${temFoto?' · 📸 Foto anexada':''}`;
+  abrirModal('modal-confirmar-missao');
+}
+function confirmarEnvioMissao(){
+  const id=tarefaParaConfirmarId;
+  tarefaParaConfirmarId=null;
+  fecharModal('modal-confirmar-missao');
+  if(id!==null)enviarParaAprovacao(id);
+}
+function adicionarFotoAntesDeEnviar(){
+  const id=tarefaParaConfirmarId;
+  tarefaParaConfirmarId=null;
+  fecharModal('modal-confirmar-missao');
+  if(id!==null)dispararCamera(id);
 }
 const DIAS_LABEL=['Dom','Seg','Ter','Qua','Qui','Sex','Sáb'];
 function diaSemanaHoje(){return new Date().getDay()}
@@ -2125,7 +2161,24 @@ function tarefaEhHoje(t){
   const dias=diasNormalizados(t);
   return dias.length===0||dias.includes(diaSemanaHoje());
 }
-function tarefasDeHoje(){return (Array.isArray(estado.tarefas)?estado.tarefas:[]).filter(t=>t&&t.ativo!==false&&tarefaEhHoje(t))}
+const SUGESTOES_EXTRAS=[
+  'Ler uma história por 10 minutos',
+  'Guardar os brinquedos depois de brincar',
+  'Organizar a mochila para amanhã',
+  'Desenhar uma coisa que aprendeu',
+  'Separar papéis para reciclagem',
+  'Ajudar a dobrar algumas roupas',
+  'Regar uma planta com um responsável'
+];
+function garantirExtraDoDia(){
+  const dia=hojeLocal(),id=`extra-dia-${dia}`;
+  if(estado.extraDiaRemovida===dia||estado.tarefas.some(t=>String(t.id)===id))return;
+  const numero=Math.floor(new Date(`${dia}T12:00:00`).getTime()/86400000);
+  const perfil=String(estado.criancaAtivaId||'').split('').reduce((n,c)=>n+c.charCodeAt(0),0);
+  estado.tarefas.push({id,texto:SUGESTOES_EXTRAS[(numero+perfil)%SUGESTOES_EXTRAS.length],recompensa:3,xp:10,tipo:'extra',status:'pendente',foto:null,dias:[],dataSugerida:dia,extraRotativa:true});
+  salvar();
+}
+function tarefasDeHoje(){return (Array.isArray(estado.tarefas)?estado.tarefas:[]).filter(t=>t&&t.ativo!==false&&(!t.dataSugerida||t.dataSugerida===hojeLocal())&&tarefaEhHoje(t))}
 function emPausaHoje(){return !!(estado.pausaAte&&hojeLocal()<=estado.pausaAte)}
 function todasObrigatoriasConcluidas(){const o=tarefasDeHoje().filter(t=>t.tipo==='obrigatoria');return o.length>0&&o.every(t=>statusTarefaAtual(t)==='aprovada')}
 function atualizarOfensiva(){
@@ -2205,6 +2258,7 @@ function removerMetaPersonalizada(id){
 }
 function renderizarResumoCrianca(){ /* painel grande removido: resumo disponível no ícone Hoje */ }
 function renderizarTarefas(){
+  garantirExtraDoDia();
   renderizarMetas();
   renderizarResumoCrianca();
   const c=document.getElementById('lista-tarefas');
@@ -2212,7 +2266,7 @@ function renderizarTarefas(){
   const hojeLista=tarefasDeHoje();
   const o=hojeLista.filter(t=>t.tipo==='obrigatoria'),x=hojeLista.filter(t=>t.tipo!=='obrigatoria');
   document.getElementById('qtd-tarefas').textContent=`${o.length} fixas · ${x.length} extras`;
-  const pendentes=(estado.tarefas||[]).filter(t=>statusTarefaAtual(t)==='aguardando_aprovacao');
+  const pendentes=(estado.tarefas||[]).filter(t=>(!t.dataSugerida||t.dataSugerida===hojeLocal())&&statusTarefaAtual(t)==='aguardando_aprovacao');
   const bannerPend=document.getElementById('banner-aprovacoes-pendentes');
   const txtPend=document.getElementById('txt-aprovacoes-pendentes');
   if(bannerPend){
@@ -2251,7 +2305,7 @@ function renderizarTarefas(){
         </div>
       `;
       row.querySelector('.btn-photo')?.addEventListener('click',()=>dispararCamera(t.id));
-      row.querySelector('.btn-ok')?.addEventListener('click',()=>enviarParaAprovacao(t.id));
+      row.querySelector('.btn-ok')?.addEventListener('click',()=>pedirConfirmacaoMissao(t.id));
       c.appendChild(row);
     });
   };
@@ -2329,11 +2383,21 @@ function entrarComoCrianca(){
   }
 }
 function fecharOnboarding(iniciarTour){
+  const nome=document.getElementById('input-nome-pet-inicial')?.value.trim().replace(/\s+/g,' ').slice(0,18);
+  if(nome)estado.nomePet=nome;
   estado.onboardingVistoCrianca=true;
   salvar();
+  atualizarTela();
   fecharModal('modal-onboarding');
+  const palco=document.querySelector('.pet-stage');
+  setTimeout(()=>{
+    palco?.classList.add('eclosao-inicial');
+    dispararConfetes(75);
+    mostrarBalaoFala(`Olá! Eu sou ${estado.nomePet||'Pipoca'}!`);
+    setTimeout(()=>palco?.classList.remove('eclosao-inicial'),1600);
+  },300);
   if(iniciarTour){
-    setTimeout(()=>iniciarTourGuiado(),400);
+    setTimeout(()=>iniciarTourGuiado(),1800);
   }
 }
 function alternarPerfil(){
@@ -2882,7 +2946,7 @@ function renderizarPainelPais(){
   renderizarGerenciamentoPremiosPais();
   renderizarSolicitacoesPremiosPais();
   const ap=document.getElementById('lista-aprovacao-pais');
-  const ps=estado.tarefas.filter(t=>statusTarefaAtual(t)==='aguardando_aprovacao');
+  const ps=estado.tarefas.filter(t=>(!t.dataSugerida||t.dataSugerida===hojeLocal())&&statusTarefaAtual(t)==='aguardando_aprovacao');
   const contador=document.getElementById('contador-aprovacoes-pais');
   if(contador)contador.textContent=ps.length?`(${ps.length})`:'';
   ap.innerHTML=ps.length?ps.map(t=>{
@@ -2905,7 +2969,7 @@ function renderizarPainelPais(){
   
   const ed=document.getElementById('lista-edicao-tarefas');
   ed.innerHTML='';
-  estado.tarefas.forEach(t=>{
+  estado.tarefas.filter(t=>!t.extraRotativa||t.dataSugerida===hojeLocal()).forEach(t=>{
     const diasTxt=t.dias&&t.dias.length?t.dias.map(i=>DIAS_LABEL[i]).join(','):'todo dia';
     const row=document.createElement('div');
     row.className='edit-row';
@@ -3179,6 +3243,9 @@ async function aprovarTarefaPais(id){
   ganharXP(xp);
   if(obterDadosPetAtual().nivel===nivelAntes)playSound('moedas');
   ganharFigurinhaPorMissao(t);
+  estado.avisosMissao=Array.isArray(estado.avisosMissao)?estado.avisosMissao:[];
+  estado.avisosMissao.push(t.texto);
+  estado.avisosMissao=estado.avisosMissao.slice(-10);
   marcarConquistas();
   registrarLogAtividade(`Tarefa aprovada: ${t.texto} (+${recompensa}🪙)`);
   mostrarToast('✅ Aprovada! A criança verá suas recompensas ao entrar.');
@@ -3455,6 +3522,8 @@ function editarDiasTarefa(id){
   mostrarToast('📅 Recorrência atualizada.');
 }
 function removerTarefa(id){
+  const removida=estado.tarefas.find(t=>String(t.id)===String(id));
+  if(removida?.extraRotativa)estado.extraDiaRemovida=removida.dataSugerida;
   estado.tarefas=estado.tarefas.filter(t=>String(t.id)!==String(id));
   salvar();
   renderizarPainelPais();
@@ -4670,39 +4739,36 @@ async function iniciarTourGuiado(){
   fecharModal('modal-onboarding');
   await esperar(300);
   const passos=[
-    async()=>{
-      setDemoHud('1/5 · Toque no pet para dar carinho ❤️');
-      apontarSpotlight(document.getElementById('pet-principal'));
-      await esperar(2200);
-    },
-    async()=>{
-      setDemoHud('2/5 · Brincar com o pet');
-      apontarSpotlight(document.getElementById('pet-actions')||document.getElementById('pet-principal'));
-      await esperar(2200);
-    },
-    async()=>{
-      setDemoHud('3/5 · Complete as missões do dia');
-      apontarSpotlight(document.querySelector('.tasks-section'));
-      await esperar(2200);
-    },
-    async()=>{
-      setDemoHud('4/5 · Jogue, personalize e resgate prêmios');
-      apontarSpotlight(document.querySelector('.bottom-buttons'));
-      await esperar(2200);
-    },
-    async()=>{
-      setDemoHud('5/5 · Moedas, ofensiva e evoluções ficam aqui em cima');
-      apontarSpotlight(document.querySelector('.top-row'));
-      await esperar(2200);
-    }
+    {texto:'1/5 · Toque no pet para dar carinho ❤️',alvo:'#pet-principal'},
+    {texto:'2/5 · Aqui você brinca, faz carinho e comemora 🎾',alvo:'#pet-actions'},
+    {texto:'3/5 · Envie uma missão para os pais conferirem ✅',alvo:'.tasks-section'},
+    {texto:'4/5 · Encontre jogos e outras aventuras aqui ⚡',alvo:'.bottom-buttons'},
+    {texto:'5/5 · Acompanhe suas moedas e sua sequência ✨',alvo:'.top-row'}
   ];
+  const hud=document.getElementById('demo-hud');
   try{
-    for(const p of passos)await p();
-    hideDemoHud();
+    hud?.classList.add('tour-interativo');
+    for(let i=0;i<passos.length;i++){
+      const passo=passos[i];
+      apontarSpotlight(document.querySelector(passo.alvo));
+      const escolha=await new Promise(resolve=>{
+        hud.replaceChildren();
+        const texto=document.createElement('div');texto.textContent=passo.texto;
+        const acoes=document.createElement('div');acoes.className='tour-hud-actions';
+        const pular=document.createElement('button');pular.type='button';pular.className='tour-pular';pular.textContent='Pular';pular.onclick=()=>resolve('pular');
+        const proximo=document.createElement('button');proximo.type='button';proximo.className='tour-proximo';proximo.textContent=i===passos.length-1?'Terminar':'Próximo';proximo.onclick=()=>resolve('proximo');
+        acoes.append(pular,proximo);hud.append(texto,acoes);
+        hud.classList.add('mostrar');
+        proximo.focus({preventScroll:true});
+      });
+      if(escolha==='pular')return;
+    }
     mostrarAviso('🚀','Tour concluído!','Agora é com você: complete uma missão e cuide do seu pet.');
   }finally{
     tourRodando=false;
-    setTimeout(hideDemoHud,400);
+    hideDemoHud();
+    hud?.classList.remove('tour-interativo');
+    hud?.replaceChildren();
   }
 }
 async function iniciarDemoAnimacoes(){

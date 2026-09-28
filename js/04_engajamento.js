@@ -63,15 +63,17 @@ function abrirPremioBauDiario(){
   estado.bauDatasResgatadas.push(data);
   estado.bauDatasResgatadas=estado.bauDatasResgatadas.slice(-90);
   if(data===hoje)estado.bauDiarioAbertoData=hoje;
+  const raras=(typeof ALBUM_FIGURINHAS!=='undefined'?ALBUM_FIGURINHAS:[]).filter(f=>['Rara','Épica'].includes(f.raridade)&&!estado.adesivos.includes(f.id));
   const n=Math.random();let texto,valor;
-  if(n<.55){valor=8+Math.floor(Math.random()*8);estado.moedas+=valor;estado.dinheiroAcumulado=(estado.dinheiroAcumulado||0)+valor*(Number(estado.taxaCambio)||.01);texto=`+${valor} moedas`;}
-  else if(n<.9){valor=20;ganharXP(valor);texto=`+${valor} XP`;}
+  if(n<.12&&raras.length){const figurinha=raras[Math.floor(Math.random()*raras.length)];estado.adesivos.push(figurinha.id);texto=`${figurinha.emoji} Figurinha ${figurinha.raridade.toLowerCase()}: ${figurinha.nome}`;}
+  else if(n<.55){valor=8+Math.floor(Math.random()*8);estado.moedas+=valor;creditoMesada(valor);texto=`+${valor} moedas`;}
+  else if(n<.88){valor=20;ganharXP(valor);texto=`+${valor} XP`;}
   else{estado.escudosOfensiva=Math.min(2,(Number(estado.escudosOfensiva)||0)+1);texto='🛡️ Escudo da ofensiva';}
   estado.adesivos.push('bau_'+data);
   const fila=estado.avisosRecompensas||[],indice=fila.findIndex(a=>a.tipo==='bau'&&a.data===data);
   if(indice>=0){const aviso=fila.splice(indice,1)[0];estado.historicoRecompensas=Array.isArray(estado.historicoRecompensas)?estado.historicoRecompensas:[];estado.historicoRecompensas.push({...aviso,abertaEm:Date.now(),premio:texto});estado.historicoRecompensas=estado.historicoRecompensas.slice(-40)}
   bauDataEmAbertura=null;
-  atualizarCaixaConquistas();registrarEngajamento('Baú diário aberto');salvar();fecharModal('modal-bau-diario');dispararConfetes();mostrarAviso('🎁','Baú aberto!',`${texto} e um adesivo de coleção!`);atualizarTela();
+  atualizarCaixaConquistas();registrarEngajamento('Baú diário aberto');salvar();fecharModal('modal-bau-diario');dispararConfetes();mostrarAviso('🎁','Baú aberto!',`${texto} e uma lembrança de coleção!`);atualizarTela();
 }
 function abrirCentralAventuras(){
   garantirEngajamento();const c=document.getElementById('central-aventuras-conteudo');if(!c)return;

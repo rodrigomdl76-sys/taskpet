@@ -45,3 +45,26 @@
 .mini-pet-card small { font-size: 9px; line-height: 1.3; color: #64748b; min-height: 25px; }
 .mini-pet-card strong { font-size: 10px; color: #6d28d9; }
 .mini-pets-guardar { width: 100%; margin-top: 10px; }
+
+/* Leitura da tela inicial e do menu infantil. */
+body .menu-mais-item { min-height: 72px; padding: 10px; gap: 5px; }
+body .menu-mais-item > span { font-size: 25px; }
+body .menu-mais-item b { font-size: 12px; line-height: 1.2; }
+body .menu-mais-item small { font-size: 10px; line-height: 1.3; color: #334155; }
+body .task-name { font-size: 12px; color: #172033; }
+body .task-reward { font-size: 10px; color: #4338ca; }
+body .evo-name { color: #172033; background: rgba(255,255,255,.88); text-shadow: none; border-radius: 10px; padding: 3px 8px; }
+body .xp-text { color: #172033; text-shadow: 0 1px 2px #fff; }
+.ovo-boas-vindas { font-size: 44px; position: relative; display: inline-block; animation: ovoBalanca 1.5s ease-in-out infinite; }
+.ovo-boas-vindas span { position: absolute; right: -18px; top: -9px; font-size: 21px; }
+.pet-stage.eclosao-inicial .cat-wrapper { animation: eclosaoPet 1.5s ease-out both; }
+@keyframes ovoBalanca { 50% { transform: rotate(10deg); } }
+@keyframes eclosaoPet { 0% { transform: translateY(22px) scale(.45); opacity: 0; } 45% { transform: translateY(-18px) scale(1.18); opacity: 1; } 70% { transform: translateY(5px) scale(.92); } 100% { transform: translateY(0) scale(1); } }
+.confirmar-missao-texto { font-size: 14px; font-weight: 900; color: #172033; }
+.confirmar-missao-ajuda { font-size: 11px; color: #475569; line-height: 1.4; margin-top: 8px; }
+.demo-hud.tour-interativo { bottom: max(96px,calc(env(safe-area-inset-bottom) + 88px)); white-space: normal; width: min(345px,92vw); border-radius: 17px; padding: 12px; font-size: 13px; line-height: 1.35; }
+.tour-hud-actions { display: flex; justify-content: flex-end; gap: 8px; margin-top: 10px; }
+.tour-hud-actions button { border: 0; border-radius: 10px; padding: 9px 12px; font-size: 12px; font-weight: 900; cursor: pointer; }
+.tour-hud-actions .tour-proximo { background: #a7f3d0; color: #064e3b; }
+.tour-hud-actions .tour-pular { background: #334155; color: #fff; }
+@media (prefers-reduced-motion: reduce) { .ovo-boas-vindas, .pet-stage.eclosao-inicial .cat-wrapper { animation: none; } }
