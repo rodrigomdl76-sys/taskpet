@@ -9,7 +9,7 @@
   const acoes = [{id:'carinho',nome:'💛 Carinho'},{id:'comemoracao',nome:'🎉 Comemorar'}];
   let img, volta, faseVisivel=0, faseTeste=0, acao='', chave='', token=0, audioAtivo=0;
   const nivel = () => Number(estado?.pets?.gato?.nivel)||1;
-  const faseReal = () => nivel()>=41?3:nivel()>=21?2:1;
+  const faseReal = () => calcularFase(nivel());
   const fase = () => perfilAtivo==='pais' && faseTeste ? faseTeste : faseReal();
   function voltar(){clearTimeout(volta);volta=null;acao='';mostrar();}
   function caminho(f,a,n){

@@ -1164,7 +1164,57 @@ function aplicarTemaInterface(){
 }
 function obterDadosPetAtual(){if(!estado.pets[estado.petAtual])estado.pets[estado.petAtual]={nivel:1,xp:0,felicidade:100,saude:100};return estado.pets[estado.petAtual]}
 function nivelJogador(){return Math.max(...Object.values(estado.pets).map(p=>p.nivel||1))}
-function calcularFase(n){if(estado.petAtual==='gato')return n>=41?3:n>=21?2:1;return n>=81?5:n>=61?4:n>=41?3:n>=21?2:1}
+function calcularFase(n){
+  if(estado.petAtual==='gato'){
+    const confirmou=Number(estado.pets?.gato?.faseConfirmada)||1;
+    if(n<21 || confirmou<2)return 1;
+    return n>=41?3:2;
+  }
+  return n>=81?5:n>=61?4:n>=41?3:n>=21?2:1;
+}
+function atualizarBotaoEvolucao(){
+  const botao=document.getElementById('btn-evoluir-gato');
+  if(!botao)return;
+  botao.hidden=estado.petAtual!=='gato' || (Number(estado.pets?.gato?.nivel)||1)<21 || (Number(estado.pets?.gato?.faseConfirmada)||1)>=2;
+}
+let evolucaoEmAndamento=false;
+function iniciarEvolucaoGato(){
+  if(evolucaoEmAndamento || estado.petAtual!=='gato' || (Number(estado.pets?.gato?.nivel)||1)<21 || (Number(estado.pets?.gato?.faseConfirmada)||1)>=2)return;
+  const overlay=document.getElementById('animacao-evolucao-gato');
+  const imagem=document.getElementById('imagem-evolucao-gato');
+  const botao=document.getElementById('btn-evoluir-gato');
+  if(!overlay || !imagem)return;
+  const criancaId=estado.criancaAtivaId;
+  evolucaoEmAndamento=true;
+  botao.disabled=true;
+  overlay.hidden=false;
+  imagem.hidden=false;
+  imagem.alt='O ovo-gato se transformando no Gato Cavalheiro';
+  let finalizado=false;
+  function concluir(){
+    if(finalizado)return;
+    finalizado=true;
+    overlay.hidden=true;
+    imagem.onload=null;imagem.onerror=null;
+    imagem.removeAttribute('src');
+    evolucaoEmAndamento=false;
+    botao.disabled=false;
+    if(estado.criancaAtivaId!==criancaId || estado.petAtual!=='gato')return;
+    const dados=estado.pets.gato;
+    if((Number(dados.nivel)||1)<21 || (Number(dados.faseConfirmada)||1)>=2)return;
+    dados.faseConfirmada=2;
+    salvar();
+    atualizarTela();
+    celebrarEvolucaoPet(2);
+  }
+  imagem.onload=()=>setTimeout(concluir,4300);
+  imagem.onerror=()=>{
+    imagem.hidden=true;
+    mostrarToast('Animação indisponível; evoluindo o pet.');
+    setTimeout(concluir,1200);
+  };
+  imagem.src='animacoes/evolucao_fase1_fase2.webp?v=1';
+}
 function renderizarProgressoEvolucao(){
   const el=document.getElementById('evo-progresso');
   if(!el)return;
@@ -1225,6 +1275,7 @@ function atualizarTela(){
   
   document.getElementById('pet-evol-nome').textContent=`${def.nome} • ${def.evolucoes[fase-1].nome}`;
   renderizarProgressoEvolucao();
+  atualizarBotaoEvolucao();
   const modalNome=document.getElementById('modal-pet-evol-nome');
   if(modalNome)modalNome.textContent=estado.nomePet||def.nome;
   document.getElementById('input-idade-crianca').value=estado.idadeCrianca||7;
@@ -1838,6 +1889,7 @@ function ganharXP(qtd,e){
     playSound('nivel');
     const faseDepois=calcularFase(p.nivel);
     if(faseDepois>faseAntes)setTimeout(()=>celebrarEvolucaoPet(faseDepois),180);
+    if(estado.petAtual==='gato' && p.nivel>=21 && (Number(p.faseConfirmada)||1)<2)mostrarToast('✨ Evolução disponível! Toque em Evoluir.');
     mostrarToast(`🎉 Nível ${p.nivel}!`);
     const badge=document.querySelector('.level-badge');
     if(badge){

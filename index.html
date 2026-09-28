@@ -112,7 +112,9 @@
     <div class="xp-bar-bg"><div class="xp-bar-fill" id="barra-xp"></div><span class="xp-text">XP <span id="texto-xp">0/100</span></span></div>
     <div class="evo-name" id="pet-evol-nome">Gato laranja • Ações</div>
   <div class="evo-progresso" id="evo-progresso" aria-live="polite"></div>
+  <button type="button" id="btn-evoluir-gato" class="btn-evoluir-gato" onclick="iniciarEvolucaoGato()" hidden>✨ Evoluir para Gato Cavalheiro</button>
   </div>
+  <div id="animacao-evolucao-gato" class="animacao-evolucao-gato" role="dialog" aria-modal="true" aria-label="Evolução do Pipoca" hidden><div class="animacao-evolucao-conteudo"><strong>✨ Seu pet está evoluindo!</strong><img id="imagem-evolucao-gato" alt="" width="480" height="480"><span>Uma nova aventura começa...</span></div></div>
   <button type="button" id="pet-companheiro" class="pet-companheiro" aria-label="Passarinho companheiro. Arraste para mudar de lugar; use as setas do teclado para mover." title="Arraste o passarinho" draggable="false">
     <span class="passarinho-flutua" aria-hidden="true">
       <svg class="passarinho-desenho" viewBox="0 0 48 44" xmlns="http://www.w3.org/2000/svg" focusable="false">
@@ -627,7 +629,7 @@
 <div class="toast" id="toast"></div>
 <div class="banner-offline" id="banner-offline">📡 Sem conexão — as alterações serão sincronizadas quando a internet voltar.</div>
 <div class="banner-evento" id="banner-evento" onclick="abrirModalEventoSazonal()"></div>
-<script src="js/02_principal.js?v=primeira-experiencia-v2"></script>
+<script src="js/02_principal.js?v=evolucao-interativa-v1"></script>
   <script src="js/03_extras_01.js"></script>
 <div id="modal-central-aventuras" class="modal-overlay"><div class="modal" style="max-width:360px"><div class="modal-title"><h3>🌟 Central de Aventuras</h3><button class="close-btn" onclick="fecharModal('modal-central-aventuras')">×</button></div><div id="central-aventuras-conteudo"></div></div></div>
 <div id="modal-bau-diario" class="modal-overlay"><div class="modal" style="max-width:320px;text-align:center"><div class="modal-title"><h3>🎁 Baú do Dia</h3><button class="close-btn" onclick="fecharModal('modal-bau-diario')">×</button></div><div id="bau-diario-conteudo"></div></div></div>
@@ -650,10 +652,11 @@
      numa função só, sem duplo processamento. Este bloco de estilo continua sendo usado. -->
 
 <link rel="stylesheet" href="css/12_mapa_vivo.css">
-<script src="js/08_meu_pet.js"></script><script src="js/09_gato_laranja.js?v=pet-visivel-2"></script>
+<script src="js/08_meu_pet.js"></script><script src="js/09_gato_laranja.js?v=evolucao-interativa-v1"></script>
 <link rel="stylesheet" href="css/14_pet_companheiro.css?v=3">
 <script src="js/10_pet_companheiro.js?v=2" defer></script>
 <link rel="stylesheet" href="css/15_decoracao.css?v=1">
 <script src="js/11_decoracao.js?v=1" defer></script>
+<link rel="stylesheet" href="css/16_evolucao_interativa.css?v=1">
 </body>
 </html>
