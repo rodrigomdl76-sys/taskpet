@@ -1,10 +1,40 @@
 
 let audioCtx=null;
-function obterAudioContext(){if(!audioCtx)audioCtx=new(window.AudioContext||window.webkitAudioContext)();if(audioCtx.state==='suspended')audioCtx.resume();return audioCtx}
+function obterAudioContext(){if(!audioCtx)audioCtx=new(window.AudioContext||window.webkitAudioContext)({latencyHint:'interactive'});if(audioCtx.state==='suspended')audioCtx.resume().catch(()=>{});return audioCtx}
 function tocarTom(f,t,d,delay=0,v=.15){try{const vol=typeof obterVolumeSom==='function'?obterVolumeSom():0.55;if(vol<=0.01)return;const ctx=obterAudioContext(),o=ctx.createOscillator(),g=ctx.createGain();o.type=t;o.frequency.setValueAtTime(f,ctx.currentTime+delay);const amp=v*vol;g.gain.setValueAtTime(amp,ctx.currentTime+delay);g.gain.exponentialRampToValueAtTime(.001,ctx.currentTime+delay+d);o.connect(g);g.connect(ctx.destination);o.start(ctx.currentTime+delay);o.stop(ctx.currentTime+delay+d)}catch(e){}}
-const ARQUIVOS_SOM={ui:'toque',tarefa:'missao',moedas:'moedas',nivel:'nivel',pet:'pet'};
+const ARQUIVOS_SOM={tarefa:'missao',moedas:'moedas',nivel:'nivel',pet:'pet'};
 const sonsPrecarregados={};
 const ultimoSomPorTipo={};
+let bufferClique=null;
+function prepararClique(){
+  try{
+    const ctx=audioCtx||(audioCtx=new(window.AudioContext||window.webkitAudioContext)({latencyHint:'interactive'}));
+    if(!bufferClique){
+      const duracao=.024,n=Math.ceil(ctx.sampleRate*duracao);
+      bufferClique=ctx.createBuffer(1,n,ctx.sampleRate);
+      const dados=bufferClique.getChannelData(0);
+      let anterior=0;
+      for(let i=0;i<n;i++){
+        const ruido=Math.random()*2-1;
+        dados[i]=(ruido-anterior)*Math.exp(-i/(ctx.sampleRate*.0045))*.22;
+        anterior=ruido;
+      }
+    }
+  }catch(e){}
+}
+function tocarClique(){
+  const volume=obterVolumeSom();
+  if(volume<=0.01)return false;
+  try{
+    prepararClique();
+    const ctx=obterAudioContext();
+    if(!bufferClique)return false;
+    const fonte=ctx.createBufferSource(),ganho=ctx.createGain();
+    fonte.buffer=bufferClique;ganho.gain.value=Math.min(.25,volume*.22);
+    fonte.connect(ganho);ganho.connect(ctx.destination);fonte.start();
+    return true;
+  }catch(e){return false}
+}
 function prepararSons(){
   Object.entries(ARQUIVOS_SOM).forEach(([tipo,arquivo])=>{
     try{
@@ -14,6 +44,7 @@ function prepararSons(){
   });
 }
 function playSound(tipo){
+  if(tipo==='ui')return tocarClique();
   if(!ARQUIVOS_SOM[tipo]||obterVolumeSom()<=0.01)return false;
   const agora=Date.now();
   if(agora-(ultimoSomPorTipo[tipo]||0)<95)return false;
@@ -4800,11 +4831,14 @@ setInterval(()=>{
 },1000);
 window.addEventListener('DOMContentLoaded',()=>{
   prepararSons();
-  document.addEventListener('click',evento=>{
+  prepararClique();
+  const tocarNoBotao=evento=>{
     const botao=evento.target.closest?.('button');
     if(!botao||botao.disabled||botao.matches('.btn-ok,[data-aprovacao="aprovar"],#input-sons-ativos'))return;
-    playSound('ui');
-  },true);
+    tocarClique();
+  };
+  document.addEventListener('pointerdown',tocarNoBotao,true);
+  document.addEventListener('click',evento=>{if(evento.detail===0||!window.PointerEvent)tocarNoBotao(evento)},true);
   if(typeof estado.volumeSom!=='number')estado.volumeSom=0.55;
   if(!Array.isArray(estado.logAtividades))estado.logAtividades=[];
   if(!estado.ultimoAcaoPet||typeof estado.ultimoAcaoPet!=='object')estado.ultimoAcaoPet={};

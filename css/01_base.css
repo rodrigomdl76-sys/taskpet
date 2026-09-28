@@ -760,3 +760,31 @@ body.mesada-desativada .top-row{grid-template-columns:repeat(3,minmax(0,1fr))}
 .opcao-icone-crianca{height:42px;border:2px solid #e2e8f0;border-radius:12px;background:#f8fafc;font-size:23px;cursor:pointer}
 .opcao-icone-crianca.selecionado{background:#ecfdf5;border-color:#10b981;box-shadow:0 0 0 2px #10b98133}
 @media(max-width:360px){.top-row .top-pill-text{font-size:7px}.top-row .top-pill-sub{font-size:5.5px}.perfil-crianca-nome{font-size:7px}}
+
+/* Tela inicial inspirada na referência: indicadores em três colunas, perfil abaixo. */
+.app{gap:7px;padding-inline:clamp(10px,3vw,16px)}
+.top-row{grid-template-columns:repeat(3,minmax(0,1fr));gap:6px}
+body.mesada-desativada .top-row{grid-template-columns:repeat(3,minmax(0,1fr))}
+.top-row .top-pill{min-height:42px;border-radius:14px;background:rgba(255,255,255,.92);padding:5px 3px}
+.top-row .top-pill-text{font-size:9px}
+.top-row .top-pill-sub{font-size:7px}
+.top-perfil-crianca{grid-column:1;grid-row:2}
+body.mesada-desativada .top-perfil-crianca{grid-column:3;grid-row:1}
+.perfil-crianca-emoji{font-size:17px}
+.perfil-crianca-nome{font-size:9px}
+.pet-selector{height:48px;gap:14px}
+.pet-actions{flex-wrap:nowrap;gap:6px;margin-top:0;padding:0 2px}
+body .pet-actions .pet-action-btn,body .pet-actions .acoes-gato-laranja button{flex:1 1 0;min-width:0;max-width:126px;min-height:38px;padding:7px 5px;border-radius:13px;font-size:10px;justify-content:center}
+.cat-section{justify-content:space-around}
+body .pet-stage{width:min(235px,68vw);height:min(235px,32dvh);min-height:150px;background:rgba(255,255,255,.045);border:1px solid rgba(255,255,255,.20);backdrop-filter:none;-webkit-backdrop-filter:none;box-shadow:0 8px 20px rgba(0,0,0,.08);animation:none}
+.xp-bar-bg{width:min(270px,78vw)}
+.tasks-section{max-height:clamp(120px,20dvh,166px);background:rgba(255,255,255,.84);border-radius:19px;padding:10px 12px}
+.bottom-buttons{grid-template-columns:repeat(3,minmax(0,1fr));gap:6px}
+.bottom-btn{min-height:clamp(66px,10dvh,86px);border-radius:18px}
+@media(max-height:680px){
+  .top-row .top-pill{min-height:36px}
+  .pet-selector{height:42px}
+  body .pet-stage{height:min(175px,26dvh);min-height:120px}
+  .tasks-section{max-height:112px}
+  .bottom-btn{min-height:58px}
+}
