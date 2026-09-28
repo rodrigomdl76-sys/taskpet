@@ -163,6 +163,7 @@
       <button class="menu-mais-item album" onclick="fecharModal('modal-menu-mais');abrirAlbumFigurinhas()"><span>📒</span><b>Álbum</b><small>Ver figurinhas</small></button>
       <button class="menu-mais-item mapa" onclick="abrirMapaAventura()"><span>🗺️</span><b>Mapa</b><small>Continuar aventura</small></button>
       <button class="menu-mais-item visual" onclick="fecharModal('modal-menu-mais');abrirLojaFundos()"><span>🎨</span><b>Visual</b><small>Fundos do pet</small></button>
+      <button class="menu-mais-item mini-pets" onclick="fecharModal('modal-menu-mais');abrirLojaMiniPets()"><span>🐝</span><b>Mini pets</b><small>Escolher companheiro</small></button>
       <button class="menu-mais-item loja" onclick="fecharModal('modal-menu-mais');abrirLojaRecompensas()"><span>🏆</span><b>Loja</b><small>Trocar moedas</small></button>
       <button class="menu-mais-item colecao" onclick="fecharModal('modal-menu-mais');abrirColecao()"><span>📚</span><b>Coleção</b><small>Itens e ações</small></button>
       <button class="menu-mais-item visual-pet" onclick="fecharModal('modal-menu-mais');abrirMeuPet()"><span>🐾</span><b>Meu Pet</b><small>Ações e evolução</small></button>
@@ -172,6 +173,7 @@
 </div>
 <button id="btn-instalar-pwa" class="primary-btn green-btn hidden" style="position:fixed;bottom:14px;left:50%;transform:translateX(-50%);z-index:90;box-shadow:0 8px 24px rgba(0,0,0,.3);padding:10px 18px;font-size:11px;border-radius:99px;display:flex;align-items:center;gap:6px"><span>📲</span> Instalar RotinaPet</button>
 <div id="modal-caixa-conquistas" class="modal-overlay"><div class="modal" style="max-width:370px"><div class="modal-title"><h3>🎁 Caixa de Conquistas</h3><button class="close-btn" onclick="fecharModal('modal-caixa-conquistas')">×</button></div><div id="conteudo-caixa-conquistas"></div></div></div>
+<div id="modal-mini-pets" class="modal-overlay"><div class="modal" style="max-width:390px"><div class="modal-title"><h3>🐾 Mini pets</h3><button class="close-btn" onclick="fecharModal('modal-mini-pets')" aria-label="Fechar">×</button></div><p class="mini-pets-intro">Escolha um companheiro para seu pet. Você pode usar um de cada vez.</p><div id="saldo-mini-pets" class="mini-pets-saldo"></div><div id="grid-mini-pets" class="mini-pets-grid"></div><button type="button" class="primary-btn botao-secundario mini-pets-guardar" onclick="guardarMiniPet()">Guardar meu companheiro</button></div></div>
 <div id="modal-selecao-perfil" class="modal-overlay">
   <div class="modal" style="text-align:center;max-width:320px">
     <div style="font-size:38px;margin-bottom:6px">👋</div>
@@ -618,7 +620,7 @@
 <div class="toast" id="toast"></div>
 <div class="banner-offline" id="banner-offline">📡 Sem conexão — as alterações serão sincronizadas quando a internet voltar.</div>
 <div class="banner-evento" id="banner-evento" onclick="abrirModalEventoSazonal()"></div>
-<script src="js/02_principal.js?v=clique-v2"></script>
+<script src="js/02_principal.js?v=mini-pets-v1"></script>
   <script src="js/03_extras_01.js"></script>
 <div id="modal-central-aventuras" class="modal-overlay"><div class="modal" style="max-width:360px"><div class="modal-title"><h3>🌟 Central de Aventuras</h3><button class="close-btn" onclick="fecharModal('modal-central-aventuras')">×</button></div><div id="central-aventuras-conteudo"></div></div></div>
 <div id="modal-bau-diario" class="modal-overlay"><div class="modal" style="max-width:320px;text-align:center"><div class="modal-title"><h3>🎁 Baú do Dia</h3><button class="close-btn" onclick="fecharModal('modal-bau-diario')">×</button></div><div id="bau-diario-conteudo"></div></div></div>
@@ -642,7 +644,7 @@
 
 <link rel="stylesheet" href="css/12_mapa_vivo.css">
 <script src="js/08_meu_pet.js"></script><script src="js/09_gato_laranja.js?v=pet-visivel-2"></script>
-<link rel="stylesheet" href="css/14_pet_companheiro.css?v=1">
-<script src="js/10_pet_companheiro.js?v=1" defer></script>
+<link rel="stylesheet" href="css/14_pet_companheiro.css?v=2">
+<script src="js/10_pet_companheiro.js?v=2" defer></script>
 </body>
 </html>
