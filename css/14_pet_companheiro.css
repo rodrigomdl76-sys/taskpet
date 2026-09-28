@@ -1,0 +1,31 @@
+.pet-companheiro {
+  position: absolute;
+  left: 0;
+  top: 0;
+  z-index: 12;
+  display: grid;
+  place-items: center;
+  width: 50px;
+  height: 50px;
+  padding: 0;
+  border: 0;
+  background: transparent;
+  cursor: grab;
+  touch-action: none;
+  user-select: none;
+  -webkit-user-select: none;
+  -webkit-tap-highlight-color: transparent;
+  filter: drop-shadow(0 4px 4px rgba(11, 52, 97, .25));
+}
+.pet-companheiro:focus-visible { outline: 2px solid #fff; outline-offset: 2px; border-radius: 50%; }
+.pet-companheiro.arrastando { cursor: grabbing; }
+.passarinho-flutua { display: block; width: 44px; height: 42px; animation: passarinhoFlutua 3.1s ease-in-out infinite; pointer-events: none; }
+.passarinho-desenho { display: block; width: 100%; height: 100%; overflow: visible; }
+.passarinho-asa { transform-origin: 20px 23px; animation: passarinhoAsa 2.4s ease-in-out infinite; }
+.pet-companheiro.arrastando .passarinho-flutua { animation-play-state: paused; }
+.pet-companheiro.arrastando .passarinho-asa { animation-duration: .32s; }
+@keyframes passarinhoFlutua { 0%,100% { transform: translateY(0) rotate(-2deg); } 50% { transform: translateY(-5px) rotate(2deg); } }
+@keyframes passarinhoAsa { 0%,84%,100% { transform: rotate(0); } 90% { transform: rotate(-17deg); } 95% { transform: rotate(9deg); } }
+@media (prefers-reduced-motion: reduce) {
+  .passarinho-flutua, .passarinho-asa { animation: none; }
+}
