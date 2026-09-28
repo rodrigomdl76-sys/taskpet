@@ -32,8 +32,8 @@
     if (botao.hidden || botao.dataset.miniPet === id) return;
     botao.dataset.miniPet = id;
     botao.querySelector('.passarinho-flutua').innerHTML = desenhos[id] || desenhoPassarinho;
-    botao.setAttribute('aria-label', `${item.nome} companheiro. Arraste para mudar de lugar; use as setas do teclado para mover.`);
-    botao.title = `Arraste: ${item.nome}`;
+    botao.setAttribute('aria-label', `${item.nome} companheiro. Arraste para mudar de lugar; use as setas do teclado para mover.${id === 'passarinho' ? ' Toque para voltar à órbita.' : ''}`);
+    botao.title = id === 'passarinho' ? 'Arraste ou toque para orbitar' : `Arraste: ${item.nome}`;
   }
   function renderizarLoja() {
     const grid = document.getElementById('grid-mini-pets');
