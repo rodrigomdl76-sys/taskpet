@@ -10,11 +10,11 @@ body .app .pet-selector{display:none}
 
 /* HUD */
 body .app .top-row{
-  display:grid;grid-template-columns:minmax(0,1fr) minmax(116px,39%);
-  gap:clamp(5px,1.2vw,10px);align-items:start;flex:0 0 auto;width:100%;
+  display:grid;grid-template-columns:minmax(0,40%) minmax(0,1fr);
+  gap:clamp(5px,1.2vw,10px);align-items:stretch;flex:0 0 auto;width:100%;
 }
 .home-profile-card{
-  min-width:0;padding:clamp(7px,1.6vw,10px);border:1px solid rgba(255,255,255,.72);
+  min-width:0;display:flex;flex-direction:column;justify-content:center;padding:clamp(6px,1.5vw,10px);border:1px solid rgba(255,255,255,.72);
   border-radius:clamp(15px,3.8vw,20px);background:rgba(11,37,67,.74);
   backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);
   box-shadow:inset 0 1px 0 rgba(255,255,255,.28),0 6px 18px rgba(3,27,51,.28);
@@ -33,26 +33,16 @@ body .app .perfil-crianca-emoji{
 body .app .perfil-crianca-nome{flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;font-size:clamp(13px,3.45vw,17px);font-weight:900;color:#fff;text-align:left}
 .profile-edit{margin-left:auto;flex:0 0 auto;font-size:13px;opacity:.95}
 body .app .home-profile-card .evo-name{
-  margin:0 0 2px clamp(35px,9vw,44px);padding:0;max-width:none;text-align:left;background:none;border:0;
+  margin:0 0 0 clamp(35px,9vw,44px);padding:0;max-width:none;text-align:left;background:none;border:0;
   color:#e5f6ff;font-size:clamp(10px,2.6vw,12px);font-weight:800;
   overflow:hidden;text-overflow:ellipsis;white-space:nowrap;
 }
 body .app .home-profile-card .evo-name::before{content:'🐾';display:inline-block;margin-right:5px;text-shadow:none}
-.home-wallet{display:flex;margin-left:clamp(35px,9vw,44px);padding-top:2px}
-body.mesada-desativada .app .home-wallet{display:none}
-body .app .home-wallet .top-pill{
-  display:flex;align-items:center;justify-content:flex-start;gap:5px;min-width:0;width:100%;height:auto;min-height:27px;
-  padding:0;background:transparent;border:0;border-radius:0;box-shadow:none;color:#fff;text-align:left;
-}
-.home-wallet .top-pill[hidden]{display:none}
-body .app .top-row .home-wallet .top-pill > .money-icon{font-size:clamp(19px,5.2vw,25px)!important;line-height:1;flex-shrink:0}
-.home-wallet .top-pill > span:last-child{min-width:0;display:flex;flex-direction:column}
-body .app .home-wallet .top-pill-text{font-size:clamp(12px,3vw,15px);font-weight:900;color:#fff;white-space:nowrap}
-body .app .home-wallet .top-pill-sub{font-size:clamp(9px,2.3vw,11px);color:#d9f1ff;white-space:nowrap}
 .sr-only{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0}
-.home-hud-actions{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:clamp(4px,1.2vw,7px);min-width:0}
+.home-hud-actions{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:clamp(4px,1.2vw,7px);min-width:0}
+body.mesada-desativada .app .home-hud-actions{grid-template-columns:repeat(2,minmax(0,1fr));width:min(100%,160px);justify-self:end}
 body .app .hud-tile{
-  width:100%;min-width:0;min-height:clamp(58px,14vw,75px);height:auto;padding:5px 2px;
+  width:100%;min-width:0;aspect-ratio:1;min-height:0;height:auto;padding:3px 1px;
   display:flex;flex-direction:column;align-items:center;justify-content:center;gap:1px;
   border:1px solid rgba(255,255,255,.62);border-radius:clamp(12px,3vw,19px);
   background:linear-gradient(165deg,rgba(15,96,170,.89),rgba(6,47,109,.93));
@@ -60,10 +50,12 @@ body .app .hud-tile{
   text-shadow:0 1px 2px #092b4e;font:inherit;cursor:pointer;
 }
 body .app .top-row .hud-tile.streak-fogo{background:linear-gradient(165deg,rgba(142,66,13,.95),rgba(105,36,7,.96));color:#fff}
-body .app .top-row .hud-tile > span:first-child{font-size:clamp(20px,5.4vw,27px)!important;line-height:1}
-body .app .hud-tile strong{font-size:clamp(12px,3vw,16px);line-height:1.05;color:#fff;white-space:nowrap}
-body .app .hud-tile small{font-size:clamp(9px,2.4vw,11px);line-height:1.05;color:#e5f5ff}
-body .app .hud-coins small{font-size:clamp(8px,2.1vw,10px)}
+body .app .top-row .hud-tile > span:first-child{font-size:clamp(18px,4.6vw,25px)!important;line-height:1}
+body .app .hud-tile strong{font-size:clamp(10px,2.8vw,15px);line-height:1.05;color:#fff;white-space:nowrap}
+body .app .hud-tile small{font-size:clamp(8px,2.1vw,10px);line-height:1.05;color:#e5f5ff}
+body .app .hud-wallet{background:linear-gradient(165deg,rgba(16,132,102,.91),rgba(5,74,78,.94))}
+body .app .hud-wallet .top-pill-text{font-size:clamp(9px,2.45vw,13px);letter-spacing:-.02em}
+body .app #topo-mesada[hidden]{display:none}
 
 /* PET */
 body .app .cat-section{flex:1 1 auto;min-height:0;justify-content:center;gap:clamp(3px,.55dvh,7px);overflow:visible}
@@ -185,15 +177,16 @@ body .app :is(.home-nav-btn,.hud-tile,.pet-action-btn,.task-header):focus-visibl
 
 /* RESPONSIVE */
 @media(max-width:360px){
-  body .app .top-row{grid-template-columns:minmax(0,1fr) minmax(116px,39%)}
-  body .app .home-profile-card{padding:7px}
-  body .app .home-profile-card .evo-name,body .app .home-wallet{margin-left:35px}
+  body .app .home-profile-card{padding:6px}
+  body .app .perfil-crianca-emoji{flex-basis:28px;width:28px;height:28px;font-size:17px}
+  body .app .perfil-crianca-nome{font-size:12px}
+  body .app .home-profile-card .evo-name{margin-left:33px;font-size:9px}
+  body .app .hud-tile{border-radius:12px}
   body .app .pet-actions .pet-action-btn,body .app .pet-actions .acoes-gato-laranja button{font-size:9px}
 }
 @media(max-height:700px){
   body .app{gap:4px}
   body .app .home-profile-card .evo-name{margin-bottom:3px}
-  body .app .home-wallet{padding-top:4px}
   body .app .pet-stage{--pet-tamanho:clamp(112px,24dvh,165px);height:clamp(125px,30dvh,190px)}
   body .app .pet-actions .pet-action-btn,body .app .pet-actions .acoes-gato-laranja button{min-height:55px}
   body .app .tasks-section{padding:7px}
