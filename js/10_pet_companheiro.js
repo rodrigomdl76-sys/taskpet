@@ -32,8 +32,8 @@
     if (botao.hidden || botao.dataset.miniPet === id) return;
     botao.dataset.miniPet = id;
     botao.querySelector('.passarinho-flutua').innerHTML = desenhos[id] || desenhoPassarinho;
-    botao.setAttribute('aria-label', `${item.nome} companheiro. Arraste para mudar de lugar; use as setas do teclado para mover.${id === 'passarinho' ? ' Toque para voltar à órbita.' : ''}`);
-    botao.title = id === 'passarinho' ? 'Arraste ou toque para orbitar' : `Arraste: ${item.nome}`;
+    botao.setAttribute('aria-label', `${item.nome} companheiro. Arraste para mudar de lugar; use as setas do teclado para mover.${id === 'passarinho' ? ' Toque para ver notas musicais e voltar à órbita.' : ''}`);
+    botao.title = id === 'passarinho' ? 'Toque para ver notas musicais ou arraste' : `Arraste: ${item.nome}`;
   }
   function renderizarLoja() {
     const grid = document.getElementById('grid-mini-pets');
@@ -150,6 +150,23 @@
       try { localStorage.setItem(storageKey, JSON.stringify(posicao)); } catch (_) { /* Sem armazenamento, mantém a posição durante a sessão. */ }
     }
 
+    function mostrarNotasPassarinho(){
+      const area=app.getBoundingClientRect();
+      const centro=passarinho.getBoundingClientRect();
+      ['♪','♫','♬'].forEach((nota,i)=>{
+        const el=document.createElement('span');
+        el.className='nota-passaro';
+        el.textContent=nota;
+        el.setAttribute('aria-hidden','true');
+        el.style.left=`${centro.left-area.left+centro.width/2+(i-1)*16}px`;
+        el.style.top=`${centro.top-area.top+(i%2)*7-10}px`;
+        el.style.setProperty('--nota-desvio',`${(i-1)*20}px`);
+        el.style.animationDelay=`${i*75}ms`;
+        el.addEventListener('animationend',()=>el.remove(),{once:true});
+        app.appendChild(el);
+      });
+    }
+
     passarinho.addEventListener('pointerdown', evento => {
       if (evento.pointerType === 'mouse' && evento.button !== 0) return;
       evento.preventDefault();
@@ -171,7 +188,8 @@
       arraste = null;
       passarinho.classList.remove('arrastando');
       if (moveu) guardar();
-      else if (passarinho.dataset.miniPet === 'passarinho') {
+      else if (evento.type==='pointerup' && passarinho.dataset.miniPet === 'passarinho') {
+        mostrarNotasPassarinho();
         posicao = null;
         try { localStorage.removeItem(storageKey); } catch (_) { /* Sem armazenamento, continua orbitando. */ }
       }
@@ -180,6 +198,13 @@
     passarinho.addEventListener('pointercancel', terminarArraste);
     passarinho.addEventListener('lostpointercapture', terminarArraste);
     passarinho.addEventListener('keydown', evento => {
+      if ((evento.key==='Enter'||evento.key===' ') && passarinho.dataset.miniPet==='passarinho'){
+        evento.preventDefault();
+        mostrarNotasPassarinho();
+        posicao=null;
+        try { localStorage.removeItem(storageKey); } catch (_) {}
+        return;
+      }
       const direcoes = { ArrowLeft: [-12, 0], ArrowRight: [12, 0], ArrowUp: [0, -12], ArrowDown: [0, 12] };
       const passo = direcoes[evento.key];
       if (!passo) return;

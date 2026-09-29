@@ -37,6 +37,7 @@ body .app .home-profile-card .evo-name{
   color:#fff;font-size:clamp(9px,2.6vw,12px);font-weight:800;
   overflow:hidden;text-overflow:ellipsis;white-space:nowrap;
 }
+body .app .home-profile-card .evo-name::before{content:'🐾';display:inline-block;margin-right:5px;text-shadow:none}
 .home-wallet{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));border-top:1px solid rgba(255,255,255,.28);padding-top:7px}
 body .app .home-wallet .top-pill{
   display:flex;align-items:center;justify-content:flex-start;gap:5px;min-width:0;width:100%;height:auto;min-height:32px;
@@ -45,7 +46,7 @@ body .app .home-wallet .top-pill{
 .home-wallet .top-pill + .top-pill{border-left:1px solid rgba(255,255,255,.28);padding-left:7px}
 .home-wallet .top-pill[hidden]{display:none}
 .home-wallet .coin-dot{width:clamp(19px,5vw,26px);height:clamp(19px,5vw,26px);border-color:#fff8}
-.home-wallet .money-icon{font-size:clamp(17px,5vw,25px);line-height:1}
+.home-wallet .money-icon{font-size:clamp(22px,6.5vw,32px);line-height:1;flex-shrink:0}
 .home-wallet .top-pill > span:last-child{min-width:0;display:flex;flex-direction:column}
 body .app .home-wallet .top-pill-text{font-size:clamp(10px,2.8vw,14px);font-weight:900;white-space:nowrap}
 body .app .home-wallet .top-pill-sub{font-size:clamp(8px,2.2vw,10px);color:#e5f6ff;white-space:nowrap}
@@ -83,6 +84,16 @@ body .app .pet-stage::after{opacity:.65}
 body .app .pet-stage.stage-react{animation:none;box-shadow:none}
 .app .floating-text,.app .heart-burst,.app .zzz-flutuante{pointer-events:none}
 .app .pet-companheiro{z-index:12}
+.app .nota-passaro{
+  position:absolute;z-index:13;pointer-events:none;color:#f9ec61;
+  font:900 22px/1 'Nunito',sans-serif;text-shadow:0 2px 4px #1167a3,0 0 8px #fff;
+  opacity:0;animation:notaPassaro 850ms ease-out forwards;
+}
+@keyframes notaPassaro{
+  0%{opacity:0;transform:translate(-50%,3px) scale(.65)}
+  18%{opacity:1}
+  100%{opacity:0;transform:translate(calc(-50% + var(--nota-desvio)),-42px) scale(1.15)}
+}
 
 /* XP */
 body .app #btn-nivel-evolucao{
@@ -165,7 +176,7 @@ body .app.nav-tarefas .tasks-section{flex:1 1 auto;max-height:none;min-height:0}
 /* ANIMATIONS */
 body .app .pet-stage,body .app .home-nav-btn,body .app .task-header{contain:layout}
 body .app :is(.home-nav-btn,.hud-tile,.pet-action-btn,.task-header):focus-visible{outline:2px solid #fff;outline-offset:2px}
-@media(prefers-reduced-motion:reduce){body .app .pet-actions button,body .app .xp-bar-fill{transition:none}}
+@media(prefers-reduced-motion:reduce){body .app .pet-actions button,body .app .xp-bar-fill{transition:none}.app .nota-passaro{animation-duration:250ms}}
 
 /* RESPONSIVE */
 @media(max-width:360px){
