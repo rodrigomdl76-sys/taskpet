@@ -89,7 +89,6 @@
     <div class="home-hud-actions">
       <button class="top-pill hud-tile" id="btn-pill-streak" onclick="abrirModal('modal-conquistas')" title="Sequência diária"><span aria-hidden="true">🔥</span><strong id="txt-streak">0</strong><small>Ofensiva</small></button>
       <button type="button" class="hud-tile hud-coins" onclick="abrirPainelPais()" aria-label="PetCoins e painel dos pais"><span aria-hidden="true">🪙</span><strong id="txt-moedas">0</strong><small>PetCoins</small></button>
-      <button type="button" class="hud-tile hud-menu" onclick="abrirMenuMais()" aria-label="Abrir menu">☰<small>Menu</small></button>
     </div>
   </header>
   <div class="pet-selector">
@@ -144,14 +143,18 @@
   <button type="button" id="atalho-caixa-conquistas" class="caixa-conquistas-atalho" onclick="abrirCaixaConquistas()" style="display:none">🎁 <span id="texto-caixa-conquistas">Caixa de Conquistas</span> <b id="contador-caixa-conquistas">0</b></button>
   <div class="tasks-section recolhida" id="secao-missoes">
     <button type="button" class="task-header task-header-expansivel" onclick="alternarMissoes()" aria-expanded="false"><b>📋 Missões de hoje</b><span class="task-header-count"><span id="qtd-tarefas">2 missões</span><span id="seta-missoes">⌃</span></span></button>
-    <div id="missoes-preview" class="missoes-preview" aria-label="Prévia das missões"></div>
+    <div class="missoes-carrossel" aria-label="Missões de hoje, deslize para ver mais">
+      <button type="button" class="missoes-seta" onclick="moverCarrosselMissoes(-1)" aria-label="Ver missões anteriores">‹</button>
+      <div id="missoes-preview" class="missoes-preview" role="region" tabindex="0" aria-label="Missões de hoje, deslize horizontalmente"></div>
+      <button type="button" class="missoes-seta" onclick="moverCarrosselMissoes(1)" aria-label="Ver próximas missões">›</button>
+    </div>
     <div id="banner-aprovacoes-pendentes" class="hidden" style="margin-bottom:6px;padding:7px 9px;border-radius:12px;background:#fffbeb;border:1px solid #fcd34d;font-size:9px;font-weight:900;color:#92400e;display:none;align-items:center;gap:6px">⏳ <span id="txt-aprovacoes-pendentes">Há tarefas aguardando os pais</span></div>
     <div id="lista-tarefas"></div>
     <div id="status-ofensiva" style="margin-top:7px;padding:7px 9px;border-radius:12px;background:#fff7ed;border:1px solid #fed7aa;font-size:9px;font-weight:900;color:#9a3412">🔥 Complete as missões fixas para manter a sequência</div>
   </div>
   <nav class="bottom-buttons" aria-label="Navegação principal">
     <button type="button" class="home-nav-btn ativa" data-home-tab="inicio" onclick="navegarHome('inicio')" aria-current="page"><span class="nav-icon">🏠</span>Início</button>
-    <button type="button" class="home-nav-btn" data-home-tab="tarefas" onclick="navegarHome('tarefas')"><span class="nav-icon">📋</span>Tarefas</button>
+    <button type="button" class="home-nav-btn" data-home-tab="menu" onclick="abrirMenuMais()" aria-label="Abrir menu"><span class="nav-icon">☰</span>Menu</button>
     <button type="button" class="home-nav-btn" data-home-tab="jogar" onclick="navegarHome('jogar')"><span class="nav-icon">🎮</span>Jogar</button>
     <button type="button" class="home-nav-btn" data-home-tab="loja" onclick="navegarHome('loja')"><span class="nav-icon">🏪</span>Loja</button>
     <button type="button" class="home-nav-btn" data-home-tab="voz" onclick="navegarHome('voz')"><span class="nav-icon">🎙️</span>Voz</button>
@@ -643,7 +646,7 @@
 <div class="toast" id="toast"></div>
 <div class="banner-offline" id="banner-offline">📡 Sem conexão — as alterações serão sincronizadas quando a internet voltar.</div>
 <div class="banner-evento" id="banner-evento" onclick="abrirModalEventoSazonal()"></div>
-<script src="js/02_principal.js?v=security-perf-1" defer></script>
+<script src="js/02_principal.js?v=missoes-carrossel-1" defer></script>
   <script src="js/03_extras_01.js" defer></script>
 <div id="modal-central-aventuras" class="modal-overlay"><div class="modal" style="max-width:360px"><div class="modal-title"><h3>🌟 Central de Aventuras</h3><button class="close-btn" onclick="fecharModal('modal-central-aventuras')">×</button></div><div id="central-aventuras-conteudo"></div></div></div>
 <div id="modal-bau-diario" class="modal-overlay"><div class="modal" style="max-width:320px;text-align:center"><div class="modal-title"><h3>🎁 Baú do Dia</h3><button class="close-btn" onclick="fecharModal('modal-bau-diario')">×</button></div><div id="bau-diario-conteudo"></div></div></div>
@@ -676,7 +679,7 @@
 <script src="js/11_decoracao.js?v=1" defer></script>
 <link rel="stylesheet" href="css/16_evolucao_interativa.css?v=1">
 <link rel="stylesheet" href="css/20_palcos.css?v=2">
-<link rel="stylesheet" href="css/21_home_v2.css?v=6">
-<script src="js/12_home_nav.js?v=1" defer></script>
+<link rel="stylesheet" href="css/21_home_v2.css?v=7">
+<script src="js/12_home_nav.js?v=2" defer></script>
 </body>
 </html>

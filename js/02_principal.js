@@ -2327,6 +2327,9 @@ function removerMetaPersonalizada(id){
   salvar();renderizarPainelPais();atualizarTela();mostrarToast('🗑️ Meta removida.');
 }
 function renderizarResumoCrianca(){ /* painel grande removido: resumo disponível no ícone Hoje */ }
+function textoTarefaExibido(texto){
+  return String(texto||'').replace(/arrumar a ꞩama/gi,'Arrumar a cama');
+}
 function renderizarTarefas(){
   garantirExtraDoDia();
   renderizarMetas();
@@ -2366,7 +2369,7 @@ function renderizarTarefas(){
       row.className=`task-row${animar}`;
       row.innerHTML=`
         <div>
-          <div class="task-name" style="${apr?'text-decoration:line-through;color:#94a3b8':''}">${esc(t.texto)}<span style="font-size:7px;color:#7c3aed;font-weight:900">${esc(badgeDias)}</span></div>
+          <div class="task-name" style="${apr?'text-decoration:line-through;color:#94a3b8':''}">${esc(textoTarefaExibido(t.texto))}<span style="font-size:7px;color:#7c3aed;font-weight:900">${esc(badgeDias)}</span></div>
           <span class="task-reward">+${Number(t.xp)||20} XP • +${Number(t.recompensa)||5} 🪙 ${(t.fotoUrl||t.foto)?'• 📸':''}</span>
           ${t.motivoRecusa?`<div class="motivo-recusa">↩️ ${esc(t.motivoRecusa)}</div>`:''}
         </div>
@@ -2383,11 +2386,10 @@ function renderizarTarefas(){
   bloco('Extras — não afetam a ofensiva',x,'⭐');
   const preview=document.getElementById('missoes-preview');
   if(preview){
-    const primeiras=hojeLista.slice(0,3);
-    preview.innerHTML=primeiras.length?primeiras.map(t=>{
+    preview.innerHTML=hojeLista.length?hojeLista.map(t=>{
       const status=statusTarefaAtual(t);
       const icone=status==='aprovada'?'✅':status==='aguardando_aprovacao'?'⏳':'○';
-      return `<div class="missao-mini ${status==='aprovada'?'concluida':''}"><span class="missao-mini-estado" aria-hidden="true">${icone}</span><span class="missao-mini-nome">${esc(t.texto)}</span><span class="missao-mini-moedas">🪙 ${Number(t.recompensa)||5}</span></div>`;
+      return `<div class="missao-mini ${status==='aprovada'?'concluida':''}"><span class="missao-mini-estado" aria-hidden="true">${icone}</span><span class="missao-mini-nome">${esc(textoTarefaExibido(t.texto))}</span><span class="missao-mini-moedas">🪙 ${Number(t.recompensa)||5}</span></div>`;
     }).join(''):'<div class="missao-mini vazia">Nenhuma missão para hoje</div>';
   }
   if(!hojeLista.length){

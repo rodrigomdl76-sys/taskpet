@@ -10,7 +10,7 @@ body .app .pet-selector{display:none}
 
 /* HUD */
 body .app .top-row{
-  display:grid;grid-template-columns:minmax(0,1fr) minmax(128px,43%);
+  display:grid;grid-template-columns:minmax(0,1fr) minmax(116px,39%);
   gap:clamp(5px,1.2vw,10px);align-items:start;flex:0 0 auto;width:100%;
 }
 .home-profile-card{
@@ -33,24 +33,24 @@ body .app .perfil-crianca-emoji{
 body .app .perfil-crianca-nome{flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;font-size:clamp(13px,3.45vw,17px);font-weight:900;color:#fff;text-align:left}
 .profile-edit{margin-left:auto;flex:0 0 auto;font-size:13px;opacity:.95}
 body .app .home-profile-card .evo-name{
-  margin:0 0 5px clamp(35px,9vw,44px);padding:0;max-width:none;text-align:left;background:none;border:0;
+  margin:0 0 2px clamp(35px,9vw,44px);padding:0;max-width:none;text-align:left;background:none;border:0;
   color:#e5f6ff;font-size:clamp(10px,2.6vw,12px);font-weight:800;
   overflow:hidden;text-overflow:ellipsis;white-space:nowrap;
 }
 body .app .home-profile-card .evo-name::before{content:'🐾';display:inline-block;margin-right:5px;text-shadow:none}
-.home-wallet{display:flex;border-top:1px solid rgba(255,255,255,.42);padding-top:5px}
+.home-wallet{display:flex;margin-left:clamp(35px,9vw,44px);padding-top:2px}
 body.mesada-desativada .app .home-wallet{display:none}
 body .app .home-wallet .top-pill{
-  display:flex;align-items:center;justify-content:flex-start;gap:7px;min-width:0;width:100%;height:auto;min-height:30px;
-  padding:0 3px;background:none;border:0;border-radius:0;box-shadow:none;color:#fff;text-align:left;
+  display:flex;align-items:center;justify-content:flex-start;gap:5px;min-width:0;width:100%;height:auto;min-height:27px;
+  padding:0;background:transparent;border:0;border-radius:0;box-shadow:none;color:#fff;text-align:left;
 }
 .home-wallet .top-pill[hidden]{display:none}
-body .app .top-row .home-wallet .top-pill > .money-icon{font-size:clamp(22px,6.5vw,32px)!important;line-height:1;flex-shrink:0}
+body .app .top-row .home-wallet .top-pill > .money-icon{font-size:clamp(19px,5.2vw,25px)!important;line-height:1;flex-shrink:0}
 .home-wallet .top-pill > span:last-child{min-width:0;display:flex;flex-direction:column}
 body .app .home-wallet .top-pill-text{font-size:clamp(12px,3vw,15px);font-weight:900;color:#fff;white-space:nowrap}
 body .app .home-wallet .top-pill-sub{font-size:clamp(9px,2.3vw,11px);color:#d9f1ff;white-space:nowrap}
 .sr-only{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0}
-.home-hud-actions{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:clamp(3px,1vw,6px);min-width:0}
+.home-hud-actions{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:clamp(4px,1.2vw,7px);min-width:0}
 body .app .hud-tile{
   width:100%;min-width:0;min-height:clamp(58px,14vw,75px);height:auto;padding:5px 2px;
   display:flex;flex-direction:column;align-items:center;justify-content:center;gap:1px;
@@ -62,9 +62,8 @@ body .app .hud-tile{
 body .app .top-row .hud-tile.streak-fogo{background:linear-gradient(165deg,rgba(142,66,13,.95),rgba(105,36,7,.96));color:#fff}
 body .app .top-row .hud-tile > span:first-child{font-size:clamp(20px,5.4vw,27px)!important;line-height:1}
 body .app .hud-tile strong{font-size:clamp(12px,3vw,16px);line-height:1.05;color:#fff;white-space:nowrap}
-body .app .hud-tile small{font-size:clamp(8px,2vw,10px);line-height:1.05;color:#e5f5ff}
-body .app .hud-coins small{font-size:clamp(7px,1.8vw,10px)}
-body .app .hud-menu{font-size:clamp(20px,5.4vw,29px)}
+body .app .hud-tile small{font-size:clamp(9px,2.4vw,11px);line-height:1.05;color:#e5f5ff}
+body .app .hud-coins small{font-size:clamp(8px,2.1vw,10px)}
 
 /* PET */
 body .app .cat-section{flex:1 1 auto;min-height:0;justify-content:center;gap:clamp(3px,.55dvh,7px);overflow:visible}
@@ -145,13 +144,18 @@ body .app .task-header{width:100%;display:flex;align-items:center;gap:7px;margin
 body .app .task-header b{font-size:clamp(11px,3vw,15px);white-space:nowrap}
 .task-header-count{display:flex;gap:5px;align-items:center;justify-content:flex-end;min-width:0;margin-left:auto;font-size:clamp(8px,2.2vw,11px);font-weight:900;color:#126395;white-space:nowrap}
 .task-header-count #seta-missoes{font-size:17px;color:#14374e}
-.missoes-preview{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:clamp(4px,1.2vw,8px);margin-top:8px}
-.missao-mini{min-width:0;min-height:clamp(54px,8.3dvh,79px);padding:5px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px;border:1px solid #e1e9e7;border-radius:15px;background:#eef5f2;text-align:center}
+.missoes-carrossel{display:flex;align-items:center;gap:3px;margin-top:8px;min-width:0}
+.missoes-preview{display:flex;gap:clamp(4px,1.2vw,8px);min-width:0;flex:1;overflow-x:auto;overflow-y:hidden;scroll-snap-type:x mandatory;scroll-behavior:smooth;overscroll-behavior-x:contain;scrollbar-width:none;-webkit-overflow-scrolling:touch}
+.missoes-preview::-webkit-scrollbar{display:none}
+.missoes-seta{flex:0 0 20px;align-self:stretch;padding:0;border:0;border-radius:10px;background:rgba(19,99,149,.1);color:#126395;font:900 23px/1 'Nunito',sans-serif;cursor:pointer}
+.missoes-seta:active{background:rgba(19,99,149,.2)}
+.missoes-seta:focus-visible,.missoes-preview:focus-visible{outline:2px solid #126395;outline-offset:1px}
+.missao-mini{flex:0 0 clamp(108px,30vw,132px);min-width:0;min-height:clamp(59px,8.3dvh,79px);padding:5px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px;border:1px solid #e1e9e7;border-radius:15px;background:#eef5f2;text-align:center;scroll-snap-align:start}
 .missao-mini-estado{font-size:clamp(17px,4.5vw,25px);line-height:1;color:#829a9e}
-.missao-mini-nome{width:100%;font-size:clamp(8px,2.1vw,10px);font-weight:900;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.missao-mini-nome{width:100%;font-size:clamp(9px,2.3vw,11px);font-weight:900;line-height:1.15;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
 .missao-mini-moedas{font-size:clamp(8px,2vw,10px);font-weight:900;color:#6f581a}
-.missao-mini.concluida{background:#e0f7e9}.missao-mini.vazia{grid-column:1/-1}
-.tasks-section:not(.recolhida) .missoes-preview{display:none}
+.missao-mini.concluida{background:#e0f7e9}.missao-mini.vazia{flex:1 0 100%}
+.tasks-section:not(.recolhida) .missoes-carrossel{display:none}
 body .app .tasks-section:not(.recolhida) #lista-tarefas{margin-top:8px}
 body .app .task-row{gap:4px}
 body .app .task-actions{flex-shrink:0}
@@ -181,9 +185,9 @@ body .app :is(.home-nav-btn,.hud-tile,.pet-action-btn,.task-header):focus-visibl
 
 /* RESPONSIVE */
 @media(max-width:360px){
-  body .app .top-row{grid-template-columns:minmax(0,1fr) minmax(128px,43%)}
+  body .app .top-row{grid-template-columns:minmax(0,1fr) minmax(116px,39%)}
   body .app .home-profile-card{padding:7px}
-  body .app .home-profile-card .evo-name{margin-left:35px}
+  body .app .home-profile-card .evo-name,body .app .home-wallet{margin-left:35px}
   body .app .pet-actions .pet-action-btn,body .app .pet-actions .acoes-gato-laranja button{font-size:9px}
 }
 @media(max-height:700px){

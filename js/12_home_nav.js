@@ -16,3 +16,11 @@ function navegarHome(destino){
   if(destino==='loja')abrirLojaFundos();
   if(destino==='voz')alternarGravador();
 }
+
+function moverCarrosselMissoes(direcao){
+  const lista=document.getElementById('missoes-preview');
+  const item=lista?.firstElementChild;
+  if(!item)return;
+  const passo=item.getBoundingClientRect().width+(parseFloat(getComputedStyle(lista).columnGap)||0);
+  lista.scrollBy({left:Math.sign(direcao)*passo,behavior:'smooth'});
+}
