@@ -83,13 +83,12 @@
       <button type="button" class="top-pill top-perfil-crianca" id="btn-perfil-crianca" onclick="abrirPerfilCrianca()" aria-label="Escolher ícone e apelido do perfil"><span class="perfil-crianca-emoji" id="perfil-crianca-emoji">🐾</span><span class="perfil-crianca-nome" id="perfil-crianca-nome">Meu perfil</span><span class="profile-edit" aria-hidden="true">✎</span></button>
       <div class="evo-name" id="pet-evol-nome">Pipoca • Ovo-gato</div>
       <div class="home-wallet">
-        <button class="top-pill" onclick="abrirPainelPais()" aria-label="PetCoins e painel dos pais"><span class="coin-dot" aria-hidden="true"></span><span><span class="top-pill-text" id="txt-moedas">0</span><span class="top-pill-sub">PetCoins</span></span></button>
         <button class="top-pill" id="topo-mesada" onclick="abrirPainelPais()"><span class="money-icon" aria-hidden="true">💵</span><span><span class="top-pill-text">R$ <span id="txt-dinheiro">0,00</span></span><span class="top-pill-sub">Mesada</span><span id="txt-status-nuvem" class="sr-only">🔒 pais</span></span></button>
       </div>
     </div>
     <div class="home-hud-actions">
       <button class="top-pill hud-tile" id="btn-pill-streak" onclick="abrirModal('modal-conquistas')" title="Sequência diária"><span aria-hidden="true">🔥</span><strong id="txt-streak">0</strong><small>Ofensiva</small></button>
-      <button type="button" class="hud-tile hud-level" onclick="alternarDetalhesEvolucao()" aria-label="Ver nível e evolução"><span aria-hidden="true">⭐</span><strong>Nv. <span id="hud-nivel">1</span></strong><small>Nível</small></button>
+      <button type="button" class="hud-tile hud-coins" onclick="abrirPainelPais()" aria-label="PetCoins e painel dos pais"><span aria-hidden="true">🪙</span><strong id="txt-moedas">0</strong><small>PetCoins</small></button>
       <button type="button" class="hud-tile hud-menu" onclick="abrirMenuMais()" aria-label="Abrir menu">☰<small>Menu</small></button>
     </div>
   </header>
@@ -677,7 +676,7 @@
 <script src="js/11_decoracao.js?v=1" defer></script>
 <link rel="stylesheet" href="css/16_evolucao_interativa.css?v=1">
 <link rel="stylesheet" href="css/20_palcos.css?v=2">
-<link rel="stylesheet" href="css/21_home_v2.css?v=5">
+<link rel="stylesheet" href="css/21_home_v2.css?v=6">
 <script src="js/12_home_nav.js?v=1" defer></script>
 </body>
 </html>
