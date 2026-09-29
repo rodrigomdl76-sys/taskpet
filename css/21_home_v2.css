@@ -30,10 +30,10 @@ body .app .perfil-crianca-emoji{
   font-size:clamp(18px,4.8vw,23px);border-radius:50%;background:rgba(255,255,255,.9);
   border:2px solid rgba(255,255,255,.8);text-shadow:none;
 }
-body .app .perfil-crianca-nome{flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;font-size:clamp(13px,3.45vw,17px);font-weight:900;color:#fff;text-align:left}
+body .app .perfil-crianca-nome{flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;font-size:clamp(12px,2.9vw,14px);font-weight:900;color:#fff;text-align:left}
 .profile-edit{margin-left:auto;flex:0 0 auto;font-size:13px;opacity:.95}
 body .app .home-profile-card .evo-name{
-  margin:0 0 0 clamp(35px,9vw,44px);padding:0;max-width:none;text-align:left;background:none;border:0;
+  margin:0;padding:0;max-width:none;text-align:left;background:none;border:0;
   color:#e5f6ff;font-size:clamp(10px,2.6vw,12px);font-weight:800;
   overflow:hidden;text-overflow:ellipsis;white-space:nowrap;
 }
@@ -51,6 +51,7 @@ body .app .hud-tile{
 }
 body .app .top-row .hud-tile.streak-fogo{background:linear-gradient(165deg,rgba(142,66,13,.95),rgba(105,36,7,.96));color:#fff}
 body .app .top-row .hud-tile > span:first-child{font-size:clamp(18px,4.6vw,25px)!important;line-height:1}
+body .app .top-row #topo-mesada .money-icon{font-size:clamp(18px,4.6vw,25px)!important;line-height:1}
 body .app .hud-tile strong{font-size:clamp(10px,2.8vw,15px);line-height:1.05;color:#fff;white-space:nowrap}
 body .app .hud-tile small{font-size:clamp(8px,2.1vw,10px);line-height:1.05;color:#e5f5ff}
 body .app .hud-wallet{background:linear-gradient(165deg,rgba(16,132,102,.91),rgba(5,74,78,.94))}
@@ -180,7 +181,7 @@ body .app :is(.home-nav-btn,.hud-tile,.pet-action-btn,.task-header):focus-visibl
   body .app .home-profile-card{padding:6px}
   body .app .perfil-crianca-emoji{flex-basis:28px;width:28px;height:28px;font-size:17px}
   body .app .perfil-crianca-nome{font-size:12px}
-  body .app .home-profile-card .evo-name{margin-left:33px;font-size:9px}
+  body .app .home-profile-card .evo-name{font-size:9px}
   body .app .hud-tile{border-radius:12px}
   body .app .pet-actions .pet-action-btn,body .app .pet-actions .acoes-gato-laranja button{font-size:9px}
 }
