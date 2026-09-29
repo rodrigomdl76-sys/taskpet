@@ -78,14 +78,21 @@
 <div class="particulas-cenario" id="particulas-cenario"></div>
 <input type="file" id="camera-input" accept="image/*" capture="environment" class="hidden">
 <div class="app">
-  <div class="top-row">
-    <button class="top-pill" onclick="abrirPainelPais()"><span class="coin-dot"></span><span class="top-pill-text"><span id="txt-moedas">0</span> 🪙</span></button>
-    <button class="top-pill" id="topo-mesada" onclick="abrirPainelPais()"><span style="font-size:13px">💰</span><span><span class="top-pill-text">R$ <span id="txt-dinheiro">0,00</span></span><span class="top-pill-sub" id="txt-status-nuvem">🔒 pais</span></span></button>
-    <button class="top-pill" id="btn-pill-streak" onclick="abrirModal('modal-conquistas')" title="Sequência diária"><span style="font-size:13px">🔥</span><span><span class="top-pill-text"><span id="txt-streak">0</span> dias</span><span class="top-pill-sub">sequência</span></span></button>
-    <button type="button" class="top-pill top-perfil-crianca" id="btn-perfil-crianca" onclick="abrirPerfilCrianca()" aria-label="Escolher ícone e apelido do perfil"><span class="perfil-crianca-emoji" id="perfil-crianca-emoji">🐾</span><span class="perfil-crianca-nome" id="perfil-crianca-nome">Meu perfil</span></button>
-    <button type="button" class="btn-ajuda-flutuante" id="btn-ajuda" onclick="abrirModalAjuda()" title="Ajuda" aria-label="Abrir ajuda">❓</button>
-    <button type="button" class="btn-pais-flutuante" id="btn-pais" onclick="abrirPainelPais()" title="Painel dos pais" aria-label="Abrir painel dos pais">🔐</button>
-  </div>
+  <header class="top-row" aria-label="Resumo da criança">
+    <div class="home-profile-card">
+      <button type="button" class="top-pill top-perfil-crianca" id="btn-perfil-crianca" onclick="abrirPerfilCrianca()" aria-label="Escolher ícone e apelido do perfil"><span class="perfil-crianca-emoji" id="perfil-crianca-emoji">🐾</span><span class="perfil-crianca-nome" id="perfil-crianca-nome">Meu perfil</span><span class="profile-edit" aria-hidden="true">✎</span></button>
+      <div class="evo-name" id="pet-evol-nome">Pipoca • Ovo-gato</div>
+      <div class="home-wallet">
+        <button class="top-pill" onclick="abrirPainelPais()" aria-label="PetCoins e painel dos pais"><span class="coin-dot" aria-hidden="true"></span><span><span class="top-pill-text" id="txt-moedas">0</span><span class="top-pill-sub">PetCoins</span></span></button>
+        <button class="top-pill" id="topo-mesada" onclick="abrirPainelPais()"><span class="money-icon" aria-hidden="true">💵</span><span><span class="top-pill-text">R$ <span id="txt-dinheiro">0,00</span></span><span class="top-pill-sub">Mesada</span><span id="txt-status-nuvem" class="sr-only">🔒 pais</span></span></button>
+      </div>
+    </div>
+    <div class="home-hud-actions">
+      <button class="top-pill hud-tile" id="btn-pill-streak" onclick="abrirModal('modal-conquistas')" title="Sequência diária"><span aria-hidden="true">🔥</span><strong id="txt-streak">0</strong><small>Ofensiva</small></button>
+      <button type="button" class="hud-tile hud-level" onclick="alternarDetalhesEvolucao()" aria-label="Ver nível e evolução"><span aria-hidden="true">⭐</span><strong>Nv. <span id="hud-nivel">1</span></strong><small>Nível</small></button>
+      <button type="button" class="hud-tile hud-menu" onclick="abrirMenuMais()" aria-label="Abrir menu">☰<small>Menu</small></button>
+    </div>
+  </header>
   <div class="pet-selector">
     <button class="pet-unico-btn" id="btn-pet-atual" onclick="alternarListaPets(event)">🐱</button>
     <div class="lista-pet-dropdown" id="lista-pets">
@@ -95,10 +102,6 @@
       <div class="opcao-pet" data-pet="frango" onclick="escolherPet('frango')">🐔</div>
       <div class="opcao-pet" data-pet="unicornio" onclick="escolherPet('unicornio')">🦄</div><div class="opcao-pet" data-pet="dinossauro" onclick="escolherPet('dinossauro')">🦖</div><div class="opcao-pet" data-pet="capivara" onclick="escolherPet('capivara')">🦫</div>
     </div>
-  </div>
-  <div class="pet-actions" id="pet-actions">
-    <button type="button" class="pet-action-btn" id="btn-brincar" onclick="acaoPet('brincar')" aria-label="Brincar com o pet">🎾 Brincar</button>
-    <div id="acoes-gato-laranja" class="acoes-gato-laranja" aria-label="Ações do gato"></div>
   </div>
   <div class="cat-section" id="pet-section-area">
     <div id="decoracao-area" aria-label="Área de decoração"></div>
@@ -111,7 +114,6 @@
     </div>
     <button type="button" class="level-badge" id="btn-nivel-evolucao" onclick="alternarDetalhesEvolucao()" aria-expanded="false" aria-controls="evo-progresso" aria-label="Mostrar detalhes da próxima evolução">⭐ <span class="level-number">Nível <span id="numero-nivel">1</span></span><span class="seta-nivel" aria-hidden="true">⌄</span></button>
     <div class="xp-bar-bg"><div class="xp-bar-fill" id="barra-xp"></div><span class="xp-text">XP <span id="texto-xp">0/100</span></span></div>
-    <div class="evo-name" id="pet-evol-nome">Gato laranja • Ações</div>
   <div class="evo-progresso" id="evo-progresso" aria-live="polite" hidden></div>
   <button type="button" id="btn-evoluir-gato" class="btn-evoluir-gato" onclick="iniciarEvolucaoGato()" hidden>✨ Evoluir para Gato Cavalheiro</button>
   </div>
@@ -131,23 +133,30 @@
       </svg>
     </span>
   </button>
+  <div class="pet-actions" id="pet-actions" aria-label="Ações com o pet">
+    <button type="button" class="pet-action-btn" id="btn-brincar" onclick="acaoPet('brincar')" aria-label="Brincar com o pet">⚽ Brincar</button>
+    <div id="acoes-gato-laranja" class="acoes-gato-laranja" aria-label="Ações do gato"></div>
+  </div>
   <!-- Os atalhos secundários agora ficam reunidos no botão Mais da barra inferior. -->
   <div class="metas-crianca-card" id="metas-crianca-card" style="display:none"><div class="metas-crianca-titulo">🎯 Minhas metas</div><div id="lista-metas-crianca"></div></div>
   <div id="engajamento-card" style="display:none">
     <span id="engajamento-streak"></span><div id="engajamento-desafio"></div><button id="btn-bau-diario">🎁 Baú do dia</button>
   </div>
   <button type="button" id="atalho-caixa-conquistas" class="caixa-conquistas-atalho" onclick="abrirCaixaConquistas()" style="display:none">🎁 <span id="texto-caixa-conquistas">Caixa de Conquistas</span> <b id="contador-caixa-conquistas">0</b></button>
-  <div class="tasks-section" id="secao-missoes">
-    <button type="button" class="task-header task-header-expansivel" onclick="alternarMissoes()" aria-expanded="true"><b style="font-size:10px">✨ Missões de hoje</b><span style="display:flex;align-items:center;gap:6px"><span style="font-size:8px;font-weight:900;color:#0284c7" id="qtd-tarefas">2 missões</span><span id="seta-missoes">⌃</span></span></button>
+  <div class="tasks-section recolhida" id="secao-missoes">
+    <button type="button" class="task-header task-header-expansivel" onclick="alternarMissoes()" aria-expanded="false"><b>📋 Missões de hoje</b><span class="task-header-count"><span id="qtd-tarefas">2 missões</span><span id="seta-missoes">⌃</span></span></button>
+    <div id="missoes-preview" class="missoes-preview" aria-label="Prévia das missões"></div>
     <div id="banner-aprovacoes-pendentes" class="hidden" style="margin-bottom:6px;padding:7px 9px;border-radius:12px;background:#fffbeb;border:1px solid #fcd34d;font-size:9px;font-weight:900;color:#92400e;display:none;align-items:center;gap:6px">⏳ <span id="txt-aprovacoes-pendentes">Há tarefas aguardando os pais</span></div>
     <div id="lista-tarefas"></div>
     <div id="status-ofensiva" style="margin-top:7px;padding:7px 9px;border-radius:12px;background:#fff7ed;border:1px solid #fed7aa;font-size:9px;font-weight:900;color:#9a3412">🔥 Complete as missões fixas para manter a sequência</div>
   </div>
-  <div class="bottom-buttons">
-    <button class="bottom-btn btn-voice" onclick="alternarGravador()"><span class="btn-icon">🎤</span>Voz</button>
-    <button class="bottom-btn btn-game" onclick="abrirDesafio()"><span class="btn-icon">⚡</span>Jogar</button>
-    <button class="bottom-btn btn-mais-aventuras" onclick="abrirMenuMais()" aria-label="Abrir mais opções"><span class="btn-icon">✦</span>Mais</button>
-  </div>
+  <nav class="bottom-buttons" aria-label="Navegação principal">
+    <button type="button" class="home-nav-btn ativa" data-home-tab="inicio" onclick="navegarHome('inicio')" aria-current="page"><span class="nav-icon">🏠</span>Início</button>
+    <button type="button" class="home-nav-btn" data-home-tab="tarefas" onclick="navegarHome('tarefas')"><span class="nav-icon">📋</span>Tarefas</button>
+    <button type="button" class="home-nav-btn" data-home-tab="jogar" onclick="navegarHome('jogar')"><span class="nav-icon">🎮</span>Jogar</button>
+    <button type="button" class="home-nav-btn" data-home-tab="loja" onclick="navegarHome('loja')"><span class="nav-icon">🏪</span>Loja</button>
+    <button type="button" class="home-nav-btn" data-home-tab="voz" onclick="navegarHome('voz')"><span class="nav-icon">🎙️</span>Voz</button>
+  </nav>
 </div>
 <div id="modal-perfil-crianca" class="modal-overlay"><div class="modal" style="max-width:330px">
   <div class="modal-title"><h3>🌟 Meu perfil</h3><button type="button" class="close-btn" onclick="fecharModal('modal-perfil-crianca')" aria-label="Fechar">×</button></div>
@@ -161,6 +170,8 @@
   <div class="modal menu-mais-modal" style="max-width:360px">
     <div class="modal-title"><div><h3 style="margin:0">✦ Mais aventuras</h3><small style="font-size:8px;color:#64748b;font-weight:800">Seus atalhos em um só lugar</small></div><button class="close-btn" onclick="fecharModal('modal-menu-mais')">×</button></div>
     <div class="menu-mais-grid">
+      <button class="menu-mais-item" id="btn-ajuda" onclick="fecharModal('modal-menu-mais');abrirModalAjuda()" aria-label="Abrir ajuda"><span>❓</span><b>Ajuda</b><small>Como funciona</small></button>
+      <button class="menu-mais-item" id="btn-pais" onclick="fecharModal('modal-menu-mais');abrirPainelPais()" aria-label="Abrir painel dos pais"><span>🔐</span><b>Pais</b><small>Configurações e aprovação</small></button>
       <button class="menu-mais-item meta" onclick="fecharModal('modal-menu-mais');abrirResumoMeta()"><span>🎯</span><b>Meta</b><small>Acompanhar objetivos</small></button>
       <button class="menu-mais-item extras" onclick="fecharModal('modal-menu-mais');abrirCentralAventuras()"><span>🌟</span><b>Extras</b><small>Desafios e eventos</small></button>
       <button class="menu-mais-item hoje" onclick="fecharModal('modal-menu-mais');abrirResumoHoje()"><span>🗓️</span><b>Hoje</b><small>Progresso do dia</small></button>
@@ -633,7 +644,7 @@
 <div class="toast" id="toast"></div>
 <div class="banner-offline" id="banner-offline">📡 Sem conexão — as alterações serão sincronizadas quando a internet voltar.</div>
 <div class="banner-evento" id="banner-evento" onclick="abrirModalEventoSazonal()"></div>
-<script src="js/02_principal.js?v=palcos-v1"></script>
+<script src="js/02_principal.js?v=home-v2"></script>
   <script src="js/03_extras_01.js"></script>
 <div id="modal-central-aventuras" class="modal-overlay"><div class="modal" style="max-width:360px"><div class="modal-title"><h3>🌟 Central de Aventuras</h3><button class="close-btn" onclick="fecharModal('modal-central-aventuras')">×</button></div><div id="central-aventuras-conteudo"></div></div></div>
 <div id="modal-bau-diario" class="modal-overlay"><div class="modal" style="max-width:320px;text-align:center"><div class="modal-title"><h3>🎁 Baú do Dia</h3><button class="close-btn" onclick="fecharModal('modal-bau-diario')">×</button></div><div id="bau-diario-conteudo"></div></div></div>
@@ -656,7 +667,7 @@
      numa função só, sem duplo processamento. Este bloco de estilo continua sendo usado. -->
 
 <link rel="stylesheet" href="css/12_mapa_vivo.css">
-<script src="js/08_meu_pet.js"></script><script src="js/09_gato_laranja.js?v=evolucao-interativa-v1"></script>
+<script src="js/08_meu_pet.js"></script><script src="js/09_gato_laranja.js?v=home-v2"></script>
 <link rel="stylesheet" href="css/14_pet_companheiro.css?v=3">
 <script src="js/10_pet_companheiro.js?v=4" defer></script>
 <link rel="stylesheet" href="css/17_pet_no_chao.css?v=2">
@@ -666,5 +677,7 @@
 <script src="js/11_decoracao.js?v=1" defer></script>
 <link rel="stylesheet" href="css/16_evolucao_interativa.css?v=1">
 <link rel="stylesheet" href="css/20_palcos.css?v=2">
+<link rel="stylesheet" href="css/21_home_v2.css?v=1">
+<script src="js/12_home_nav.js?v=1" defer></script>
 </body>
 </html>

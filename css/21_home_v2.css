@@ -1,0 +1,183 @@
+/* HOME */
+html,body{width:100%;max-width:100%;overflow-x:hidden}
+body .app{
+  width:100%;max-width:480px;height:100dvh;min-height:0;
+  padding:calc(env(safe-area-inset-top) + 8px) clamp(8px,2.4vw,16px) calc(env(safe-area-inset-bottom) + 8px);
+  gap:clamp(5px,.85dvh,10px);overflow:hidden;isolation:isolate;
+}
+body .app .pet-selector{display:none}
+.app .top-row{order:0}.app .cat-section{order:1}.app .pet-actions{order:2}.app .tasks-section{order:3}.app .bottom-buttons{order:4}
+
+/* HUD */
+body .app .top-row{
+  display:grid;grid-template-columns:minmax(0,1fr) minmax(112px,39%);
+  gap:clamp(5px,1.2vw,10px);align-items:start;flex:0 0 auto;width:100%;
+}
+.home-profile-card{
+  min-width:0;padding:clamp(8px,1.7vw,12px);border:1px solid rgba(255,255,255,.65);
+  border-radius:clamp(16px,4vw,22px);background:rgba(22,55,81,.49);
+  backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.38),0 8px 24px rgba(3,27,51,.2);
+  color:#fff;text-shadow:0 1px 2px rgba(7,24,47,.72);
+}
+body .app .home-profile-card .top-perfil-crianca{
+  display:flex;align-items:center;gap:7px;width:100%;height:auto;min-height:32px;padding:0;
+  border:0;border-radius:0;background:none;box-shadow:none;color:#fff;text-align:left;
+}
+body .app .perfil-crianca-emoji{
+  display:grid;place-items:center;flex:0 0 clamp(32px,9vw,42px);
+  width:clamp(32px,9vw,42px);height:clamp(32px,9vw,42px);
+  font-size:clamp(19px,5vw,25px);border-radius:50%;background:rgba(255,255,255,.78);
+  border:2px solid rgba(255,255,255,.8);text-shadow:none;
+}
+body .app .perfil-crianca-nome{min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;font-size:clamp(12px,3.2vw,17px);font-weight:900}
+.profile-edit{margin-left:auto;font-size:13px;opacity:.9}
+body .app .home-profile-card .evo-name{
+  margin:0 0 7px clamp(37px,10vw,49px);max-width:none;text-align:left;
+  color:#fff;font-size:clamp(9px,2.6vw,12px);font-weight:800;
+  overflow:hidden;text-overflow:ellipsis;white-space:nowrap;
+}
+.home-wallet{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));border-top:1px solid rgba(255,255,255,.28);padding-top:7px}
+body .app .home-wallet .top-pill{
+  display:flex;align-items:center;justify-content:flex-start;gap:5px;min-width:0;width:100%;height:auto;min-height:32px;
+  padding:0 3px;background:none;border:0;border-radius:0;box-shadow:none;color:#fff;text-align:left;
+}
+.home-wallet .top-pill + .top-pill{border-left:1px solid rgba(255,255,255,.28);padding-left:7px}
+.home-wallet .top-pill[hidden]{display:none}
+.home-wallet .coin-dot{width:clamp(19px,5vw,26px);height:clamp(19px,5vw,26px);border-color:#fff8}
+.home-wallet .money-icon{font-size:clamp(17px,5vw,25px);line-height:1}
+.home-wallet .top-pill > span:last-child{min-width:0;display:flex;flex-direction:column}
+body .app .home-wallet .top-pill-text{font-size:clamp(10px,2.8vw,14px);font-weight:900;white-space:nowrap}
+body .app .home-wallet .top-pill-sub{font-size:clamp(8px,2.2vw,10px);color:#e5f6ff;white-space:nowrap}
+.sr-only{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0}
+.home-hud-actions{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:clamp(3px,1vw,6px);min-width:0}
+body .app .hud-tile{
+  width:100%;min-width:0;min-height:clamp(56px,14vw,78px);height:auto;padding:5px 2px;
+  display:flex;flex-direction:column;align-items:center;justify-content:center;gap:1px;
+  border:1px solid rgba(255,255,255,.62);border-radius:clamp(12px,3vw,19px);
+  background:linear-gradient(165deg,rgba(19,134,221,.75),rgba(7,75,165,.82));
+  color:#fff;box-shadow:inset 0 1px 0 #fff6,0 5px 15px #062f5880;
+  text-shadow:0 1px 2px #063963;font:inherit;cursor:pointer;
+}
+.hud-tile > span{font-size:clamp(19px,5.4vw,28px);line-height:1}
+.hud-tile strong{font-size:clamp(10px,2.6vw,14px);line-height:1.05;white-space:nowrap}
+.hud-tile small{font-size:clamp(7px,1.9vw,10px);line-height:1.05}
+body .app .hud-menu{font-size:clamp(20px,5.4vw,29px)}
+
+/* PET */
+body .app .cat-section{flex:1 1 auto;min-height:0;justify-content:center;gap:clamp(3px,.55dvh,7px);overflow:visible}
+body .app .pet-stage{
+  --pet-tamanho:clamp(130px,26dvh,228px);
+  flex:0 1 auto;width:min(300px,78vw);height:clamp(142px,32dvh,300px);min-height:0;
+  display:flex;align-items:center;justify-content:center;border:0;border-radius:0;
+  background:transparent;box-shadow:none;backdrop-filter:none;-webkit-backdrop-filter:none;
+}
+body .app #pet-principal{
+  width:var(--pet-tamanho);height:var(--pet-tamanho);flex:0 0 var(--pet-tamanho);
+  transform-origin:50% 100%;filter:drop-shadow(0 8px 5px rgba(20,42,33,.28));
+}
+body .app #pet-svg-container{width:100%;height:100%}
+body .app .plataforma-pet{opacity:.62}
+body .app .pet-stage::after{opacity:.65}
+body .app .pet-stage.stage-react{animation:none;box-shadow:none}
+.app .floating-text,.app .heart-burst,.app .zzz-flutuante{pointer-events:none}
+.app .pet-companheiro{z-index:12}
+
+/* XP */
+body .app #btn-nivel-evolucao{
+  margin:0;padding:5px clamp(11px,3vw,16px);min-height:30px;
+  border:1px solid #fff8;border-radius:99px;background:rgba(255,255,255,.94);
+  box-shadow:0 4px 13px rgba(30,34,73,.25);font-size:clamp(14px,3.8vw,19px);line-height:1;
+}
+body .app .level-number{font-size:inherit}
+body .app .xp-bar-bg{
+  width:min(88%,420px);height:clamp(15px,2.5dvh,23px);margin:0;border:2px solid #fff;
+  background:rgba(255,255,255,.58);box-shadow:0 3px 9px #17365d66;
+}
+body .app .xp-bar-fill{background:linear-gradient(90deg,#a530ff,#f155ac 55%,#7d34d5);transition:width .45s ease}
+body .app .xp-text{font-size:clamp(9px,2.5vw,12px);line-height:clamp(11px,2dvh,19px);color:#fff;text-shadow:0 1px 2px #481570}
+body .app .evo-progresso{max-width:min(90%,380px)}
+
+/* ACTIONS */
+body .app .pet-actions{
+  display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:clamp(6px,2vw,11px);
+  width:100%;flex:0 0 auto;padding:0 clamp(3px,1vw,7px);margin:0;
+}
+body .app .acoes-gato-laranja{display:contents}
+body .app .pet-actions .pet-action-btn,body .app .pet-actions .acoes-gato-laranja button{
+  display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px;
+  width:100%;max-width:none;min-width:0;min-height:clamp(58px,10dvh,88px);
+  padding:6px 3px;border:1.5px solid #fffa;border-radius:clamp(16px,4.3vw,25px);
+  background:linear-gradient(145deg,#ffdf75,#ffa443);color:#fff;
+  font-size:clamp(9px,2.6vw,12px);line-height:1.15;font-weight:900;text-align:center;
+  white-space:normal;text-shadow:0 1px 3px #8c441baa;
+  box-shadow:inset 0 2px 8px #fff8,inset 0 -5px 12px #d0764480,0 6px 14px #593c4555;
+  transition:transform .14s ease,filter .14s ease;cursor:pointer;
+}
+body .app .pet-actions .pet-action-btn{grid-column:2;background:linear-gradient(145deg,#42d5ff,#0078e5);box-shadow:inset 0 2px 8px #fff8,inset 0 -5px 12px #0754af88,0 6px 14px #18467777}
+body .app .acoes-gato-laranja button:first-child{grid-column:1;grid-row:1}
+body .app .acoes-gato-laranja button:nth-child(2){grid-column:3;grid-row:1;background:linear-gradient(145deg,#c380ff,#842ee9);box-shadow:inset 0 2px 8px #fff8,inset 0 -5px 12px #5c2eaa88,0 6px 14px #50327777}
+body .app .pet-actions button:active{transform:scale(.975);filter:brightness(1.05)}
+body .app .acoes-gato-laranja button[onclick^="window.testarFaseGato"]{min-height:30px;grid-column:auto;grid-row:auto;background:#fff;color:#634090;font-size:9px;text-shadow:none}
+
+/* MISSIONS */
+body .app .tasks-section{
+  width:100%;flex:0 0 auto;max-height:min(40dvh,360px);padding:clamp(8px,2vw,13px);
+  overflow:auto;border:1px solid #fff;border-radius:clamp(17px,4vw,24px);
+  background:rgba(250,254,247,.95);backdrop-filter:blur(7px);-webkit-backdrop-filter:blur(7px);
+  box-shadow:0 8px 22px rgba(12,43,56,.23);color:#193650;
+}
+body .app .task-header{width:100%;display:flex;align-items:center;gap:7px;margin:0;padding:0;border:0;background:none;color:#16334b;text-align:left;cursor:pointer}
+body .app .task-header b{font-size:clamp(11px,3vw,15px);white-space:nowrap}
+.task-header-count{display:flex;gap:5px;align-items:center;justify-content:flex-end;min-width:0;margin-left:auto;font-size:clamp(8px,2.2vw,11px);font-weight:900;color:#126395;white-space:nowrap}
+.task-header-count #seta-missoes{font-size:17px;color:#14374e}
+.missoes-preview{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:clamp(4px,1.2vw,8px);margin-top:8px}
+.missao-mini{min-width:0;min-height:clamp(54px,8.3dvh,79px);padding:5px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px;border:1px solid #e1e9e7;border-radius:15px;background:#eef5f2;text-align:center}
+.missao-mini-estado{font-size:clamp(17px,4.5vw,25px);line-height:1;color:#829a9e}
+.missao-mini-nome{width:100%;font-size:clamp(8px,2.1vw,10px);font-weight:900;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.missao-mini-moedas{font-size:clamp(8px,2vw,10px);font-weight:900;color:#6f581a}
+.missao-mini.concluida{background:#e0f7e9}.missao-mini.vazia{grid-column:1/-1}
+.tasks-section:not(.recolhida) .missoes-preview{display:none}
+body .app .tasks-section:not(.recolhida) #lista-tarefas{margin-top:8px}
+body .app .task-row{gap:4px}
+body .app .task-actions{flex-shrink:0}
+
+/* BOTTOM NAV */
+body .app .bottom-buttons{
+  display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:2px;
+  width:100%;flex:0 0 auto;padding:5px;border:1px solid #ffffff88;border-radius:clamp(17px,4vw,23px);
+  background:rgba(19,72,101,.84);backdrop-filter:blur(13px);-webkit-backdrop-filter:blur(13px);
+  box-shadow:inset 0 1px 0 #fff7,0 7px 20px #103a5299;
+}
+body .app .home-nav-btn{
+  min-width:0;min-height:clamp(51px,8.2dvh,72px);padding:3px 1px;border:0;border-radius:15px;
+  background:none;color:#e4f4ff;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:1px;
+  font:900 clamp(8px,2.2vw,11px)/1.1 'Nunito',sans-serif;text-shadow:0 1px 2px #002941;cursor:pointer;
+}
+.home-nav-btn .nav-icon{font-size:clamp(20px,5.8vw,30px);line-height:1.15}
+body .app .home-nav-btn.ativa{background:linear-gradient(145deg,#12b78d,#007e73);box-shadow:inset 0 1px 3px #fff9,0 3px 11px #004f56aa;color:#fff}
+body .app .home-nav-btn:active{transform:scale(.975)}
+body .app.nav-tarefas .cat-section,body .app.nav-tarefas .pet-actions{display:none}
+body .app.nav-tarefas .tasks-section{flex:1 1 auto;max-height:none;min-height:0}
+
+/* ANIMATIONS */
+body .app .pet-stage,body .app .home-nav-btn,body .app .task-header{contain:layout}
+body .app :is(.home-nav-btn,.hud-tile,.pet-action-btn,.task-header):focus-visible{outline:2px solid #fff;outline-offset:2px}
+@media(prefers-reduced-motion:reduce){body .app .pet-actions button,body .app .xp-bar-fill{transition:none}}
+
+/* RESPONSIVE */
+@media(max-width:360px){
+  body .app .top-row{grid-template-columns:minmax(0,1fr) minmax(104px,37%)}
+  body .app .home-profile-card{padding:7px}
+  body .app .home-profile-card .evo-name{margin-left:36px}
+  body .app .pet-actions .pet-action-btn,body .app .pet-actions .acoes-gato-laranja button{font-size:9px}
+}
+@media(max-height:700px){
+  body .app{gap:4px}
+  body .app .home-profile-card .evo-name{margin-bottom:3px}
+  body .app .home-wallet{padding-top:4px}
+  body .app .pet-stage{--pet-tamanho:clamp(112px,24dvh,165px);height:clamp(125px,30dvh,190px)}
+  body .app .pet-actions .pet-action-btn,body .app .pet-actions .acoes-gato-laranja button{min-height:55px}
+  body .app .tasks-section{padding:7px}
+  .missao-mini{min-height:48px}
+}

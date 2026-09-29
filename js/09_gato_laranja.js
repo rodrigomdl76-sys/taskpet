@@ -6,7 +6,7 @@
     1:{idle:'01_parado.webp',carinho:'02_carinho.webp',dormir:'03_dormir.webp',comemoracao:'04_comemorar.webp'},
     3:{idle:'01_parado.webp',carinho:'02_carinho.webp',dormir:'03_dormir.webp',comemoracao:'04_comemorar.webp'}
   };
-  const acoes = [{id:'carinho',nome:'💛 Carinho'},{id:'comemoracao',nome:'🎉 Comemorar'}];
+  const acoes = [{id:'carinho',nome:'💖 Dar Carinho'},{id:'comemoracao',nome:'🎉 Comemorar'}];
   let img, volta, faseVisivel=0, faseTeste=0, acao='', chave='', token=0, audioAtivo=0;
   const nivel = () => Number(estado?.pets?.gato?.nivel)||1;
   const faseReal = () => calcularFase(nivel());

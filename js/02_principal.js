@@ -1281,6 +1281,8 @@ function atualizarTela(){
   const btnStreak=document.getElementById('btn-pill-streak');
   if(btnStreak)btnStreak.classList.toggle('streak-fogo',streakVal>=3);
   document.getElementById('numero-nivel').textContent=p.nivel;
+  const nivelHud=document.getElementById('hud-nivel');
+  if(nivelHud)nivelHud.textContent=p.nivel;
   document.getElementById('texto-xp').textContent=`${p.xp}/100`;
   document.getElementById('barra-xp').style.width=p.xp+'%';
   document.getElementById('btn-pet-atual').textContent=def.emoji;
@@ -2379,6 +2381,15 @@ function renderizarTarefas(){
   };
   bloco('Obrigatórias — liberam a ofensiva',o,'🔥');
   bloco('Extras — não afetam a ofensiva',x,'⭐');
+  const preview=document.getElementById('missoes-preview');
+  if(preview){
+    const primeiras=hojeLista.slice(0,3);
+    preview.innerHTML=primeiras.length?primeiras.map(t=>{
+      const status=statusTarefaAtual(t);
+      const icone=status==='aprovada'?'✅':status==='aguardando_aprovacao'?'⏳':'○';
+      return `<div class="missao-mini ${status==='aprovada'?'concluida':''}"><span class="missao-mini-estado" aria-hidden="true">${icone}</span><span class="missao-mini-nome">${esc(t.texto)}</span><span class="missao-mini-moedas">🪙 ${Number(t.recompensa)||5}</span></div>`;
+    }).join(''):'<div class="missao-mini vazia">Nenhuma missão para hoje</div>';
+  }
   if(!hojeLista.length){
     const aviso=document.createElement('div');
     aviso.style.cssText='padding:12px 10px;margin-top:8px;border-radius:12px;background:#eff6ff;border:1px solid #bfdbfe;color:#1e40af;font-size:9px;font-weight:800;text-align:center;line-height:1.4';
