@@ -1,7 +1,5 @@
-RotinaPet — correção de aprovações e reorganização do painel dos pais
+RotinaPet — instruções rápidas
 
-Arquivos alterados: index.html, js/02_principal.js e css/01_base.css.
-Base: commit 4b4ff08cd3cc53b38cc086c80677a1d011f9f1c3 (melhorias dos jogos e nome do pet).
+O projeto está publicado na branch main do GitHub. Abra o index.html com as pastas js, css, animacoes e assets no mesmo diretório. O README.md descreve as três fases do gato, as ações existentes e as limitações atuais.
 
-Este pacote é uma cópia para revisão; ainda não foi publicado na branch main do GitHub.
-A aprovação automática da atualização da branch foi bloqueada pelo limite de uso da conta.
+A interface do painel dos pais usa um PIN local de quatro dígitos. Para validar a proteção dos dados da família e das fotos, confira as regras ativas do Realtime Database e do Storage no console do Firebase. Essas regras não estão incluídas no repositório.
