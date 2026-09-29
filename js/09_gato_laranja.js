@@ -8,19 +8,36 @@
   };
   const acoes = [{id:'carinho',icone:'💖',nome:'Dar Carinho'},{id:'comemoracao',icone:'🎉',nome:'Comemorar'}];
   let img, volta, faseVisivel=0, faseTeste=0, acao='', chave='', token=0, audioAtivo=0;
+  let fasePrecarregada=0, imagensPrecarregadas=[];
   const nivel = () => Number(estado?.pets?.gato?.nivel)||1;
   const faseReal = () => calcularFase(nivel());
   const fase = () => perfilAtivo==='pais' && faseTeste ? faseTeste : faseReal();
   function voltar(){clearTimeout(volta);volta=null;acao='';mostrar();}
-  function caminho(f,a,n){
+  function caminho(f,a){
     return `${pasta}fase${f}/${arquivos[f][a]}`;
+  }
+  function precarregarFase(f){
+    if(fasePrecarregada===f || !arquivos[f])return;
+    const carregar=()=>{
+      if(fase()!==f || fasePrecarregada===f)return;
+      fasePrecarregada=f;
+      imagensPrecarregadas=[];
+      for(const acao of Object.keys(arquivos[f])){
+        const imagem=new Image();
+        imagem.decoding='async';
+        imagem.src=caminho(f,acao);
+        imagensPrecarregadas.push(imagem);
+      }
+    };
+    if('requestIdleCallback' in window)requestIdleCallback(carregar,{timeout:1200});
+    else setTimeout(carregar,150);
   }
   function garantirImagem(){
     const pet=document.getElementById('pet-principal');if(!pet)return false;
     if(!img || img.parentNode!==pet){
       chave='';img=document.createElement('img');img.className='gato-laranja-img';img.alt='Gato animado';img.draggable=false;
       img.onerror=()=>{pet.classList.remove('gato-laranja-pronto');img.style.display='none';img.alt='Imagem do pet indisponível'};
-      img.onload=()=>{img.style.display='';pet.classList.add('gato-laranja-pronto')};pet.appendChild(img);
+      img.onload=()=>{img.style.display='';pet.classList.add('gato-laranja-pronto');precarregarFase(faseVisivel)};pet.appendChild(img);
     }
     return true;
   }
@@ -38,14 +55,35 @@
     if(!arquivos[fase()]?.[a] || a==='idle')return;
     clearTimeout(volta);acao=a;chave='';mostrar();
     const atual=++token;
-    const duracao={carinho:1300,comemoracao:2100,rolar:2200,brincar:2600,explorar:2800}[a]||2300;
+    const duracao={carinho:1300,comemoracao:2100}[a]||2300;
     volta=setTimeout(()=>{if(token===atual)voltar()},fase()===2?duracao:2300);
   }
   function atualizarBotoes(){
     const area=document.getElementById('acoes-gato-laranja');if(!area)return;
     const f=fase();
-    area.innerHTML=acoes.filter(a=>(!a.fase || a.fase===f) && arquivos[f][a.id]).map(a=>`<button type="button" onclick="window.acaoGatoLaranja('${a.id}')"><span class="action-icon" aria-hidden="true">${a.icone}</span><span>${a.nome}</span></button>`).join('');
-    if(perfilAtivo==='pais')area.innerHTML+=[1,2,3].map(n=>`<button type="button" onclick="window.testarFaseGato(${n})" ${n===f?'disabled':''}>Testar fase ${n}</button>`).join('');
+    const acoesVisiveis=acoes.filter(a=>arquivos[f][a.id]);
+    const modo=`${perfilAtivo==='pais'?'pais':'crianca'}:${acoesVisiveis.map(a=>a.id).join(',')}`;
+    if(area.dataset.modoBotoes!==modo){
+      area.replaceChildren();
+      for(const a of acoesVisiveis){
+        const botao=document.createElement('button');
+        botao.type='button';
+        const icone=document.createElement('span');
+        icone.className='action-icon';icone.setAttribute('aria-hidden','true');icone.textContent=a.icone;
+        const nome=document.createElement('span');nome.textContent=a.nome;
+        botao.append(icone,nome);
+        botao.addEventListener('click',()=>tocar(a.id));
+        area.appendChild(botao);
+      }
+      if(perfilAtivo==='pais')for(const n of [1,2,3]){
+        const botao=document.createElement('button');
+        botao.type='button';botao.dataset.faseTeste=String(n);botao.textContent=`Testar fase ${n}`;
+        botao.addEventListener('click',()=>window.testarFaseGato(n));
+        area.appendChild(botao);
+      }
+      area.dataset.modoBotoes=modo;
+    }
+    area.querySelectorAll('[data-fase-teste]').forEach(botao=>{botao.disabled=Number(botao.dataset.faseTeste)===f});
     const nomes=['','Ovo-gato','Gato Cavalheiro','Gato Real'];
     const label=document.getElementById('pet-evol-nome');if(label)label.textContent=`${estado.nomePet||'Pipoca'} • ${nomes[f]}${faseTeste?' (teste)':''}`;
   }

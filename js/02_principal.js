@@ -2443,7 +2443,10 @@ function abrirSelecaoCrianca(){
       const btn=document.createElement('button');
       btn.className='primary-btn green-btn';
       btn.style.cssText='padding:12px;font-size:13px;display:flex;align-items:center;justify-content:center;gap:8px';
-      btn.innerHTML=`<span style="font-size:20px">${info.emoji||'🐾'}</span> ${info.nome}`;
+      const icone=document.createElement('span');
+      icone.style.fontSize='20px';
+      icone.textContent=info.emoji||'🐾';
+      btn.append(icone,document.createTextNode(' '+(info.nome||'')));
       btn.onclick=()=>{
         fecharModal('modal-selecao-crianca');
         trocarCriancaAtiva(id);
@@ -2910,7 +2913,13 @@ function renderizarListaCriancasPais(){
     const ativa=id===estado.criancaAtivaId;
     const row=document.createElement('div');
     row.style.cssText='display:flex;align-items:center;gap:6px;padding:6px;border-radius:10px;'+(ativa?'background:#ede9fe;border:1px solid #a78bfa':'background:#fff;border:1px solid #e5e7eb');
-    row.innerHTML=`<span style="font-size:18px">${info.emoji||'🐾'}</span><span style="flex:1;font-size:11px;font-weight:${ativa?'800':'600'}">${info.nome}${ativa?' (ativo agora)':''}</span>`;
+    const icone=document.createElement('span');
+    icone.style.fontSize='18px';
+    icone.textContent=info.emoji||'🐾';
+    const nome=document.createElement('span');
+    nome.style.cssText=`flex:1;font-size:11px;font-weight:${ativa?'800':'600'}`;
+    nome.textContent=(info.nome||'')+(ativa?' (ativo agora)':'');
+    row.append(icone,nome);
     if(!ativa){
       const btnTrocar=document.createElement('button');
       btnTrocar.className='primary-btn blue-btn';
