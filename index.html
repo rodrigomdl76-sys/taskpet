@@ -134,7 +134,7 @@
     </span>
   </button>
   <div class="pet-actions" id="pet-actions" aria-label="Ações com o pet">
-    <button type="button" class="pet-action-btn" id="btn-brincar" onclick="acaoPet('brincar')" aria-label="Brincar com o pet">⚽ Brincar</button>
+    <button type="button" class="pet-action-btn" id="btn-brincar" onclick="acaoPet('brincar')" aria-label="Brincar com o pet"><span class="action-icon" aria-hidden="true">⚽</span><span>Brincar</span></button>
     <div id="acoes-gato-laranja" class="acoes-gato-laranja" aria-label="Ações do gato"></div>
   </div>
   <!-- Os atalhos secundários agora ficam reunidos no botão Mais da barra inferior. -->
@@ -185,10 +185,10 @@
       <button class="menu-mais-item colecao" onclick="fecharModal('modal-menu-mais');abrirColecao()"><span>📚</span><b>Coleção</b><small>Itens e ações</small></button>
       <button class="menu-mais-item visual-pet" onclick="fecharModal('modal-menu-mais');abrirMeuPet()"><span>🐾</span><b>Meu Pet</b><small>Ações e evolução</small></button>
       <button class="menu-mais-item bau" onclick="fecharModal('modal-menu-mais');abrirBauDiario()"><span id="menu-mais-bau-emoji">🎁</span><b>Baú</b><small>Prêmio do dia</small></button>
+      <button id="btn-instalar-pwa" type="button" class="menu-mais-item hidden"><span>📲</span><b>Instalar RotinaPet</b><small>Usar como aplicativo</small></button>
     </div>
   </div>
 </div>
-<button id="btn-instalar-pwa" class="primary-btn green-btn hidden" style="position:fixed;bottom:14px;left:50%;transform:translateX(-50%);z-index:90;box-shadow:0 8px 24px rgba(0,0,0,.3);padding:10px 18px;font-size:11px;border-radius:99px;display:flex;align-items:center;gap:6px"><span>📲</span> Instalar RotinaPet</button>
 <div id="modal-caixa-conquistas" class="modal-overlay"><div class="modal" style="max-width:370px"><div class="modal-title"><h3>🎁 Caixa de Conquistas</h3><button class="close-btn" onclick="fecharModal('modal-caixa-conquistas')">×</button></div><div id="conteudo-caixa-conquistas"></div></div></div>
 <div id="modal-mini-pets" class="modal-overlay"><div class="modal" style="max-width:390px"><div class="modal-title"><h3>🐾 Mini pets</h3><button class="close-btn" onclick="fecharModal('modal-mini-pets')" aria-label="Fechar">×</button></div><p class="mini-pets-intro">Escolha um companheiro para seu pet. Você pode usar um de cada vez.</p><div id="saldo-mini-pets" class="mini-pets-saldo"></div><div id="grid-mini-pets" class="mini-pets-grid"></div><button type="button" class="primary-btn botao-secundario mini-pets-guardar" onclick="guardarMiniPet()">Guardar meu companheiro</button></div></div>
 <div id="modal-decoracao" class="modal-overlay"><div class="modal" style="max-width:390px"><div class="modal-title"><h3>🛋️ Modo de Decoração</h3><button type="button" class="close-btn" onclick="fecharModal('modal-decoracao')" aria-label="Fechar">×</button></div><p class="decoracao-intro">Adicione objetos e arraste para onde quiser na área do pet. Toque em × para guardar um objeto.</p><div id="catalogo-decoracao" class="catalogo-decoracao"></div><button type="button" class="primary-btn green-btn" style="width:100%;margin-top:11px" onclick="iniciarModoDecoracao()">✋ Organizar posições</button></div></div>
@@ -667,7 +667,7 @@
      numa função só, sem duplo processamento. Este bloco de estilo continua sendo usado. -->
 
 <link rel="stylesheet" href="css/12_mapa_vivo.css">
-<script src="js/08_meu_pet.js"></script><script src="js/09_gato_laranja.js?v=home-v2"></script>
+<script src="js/08_meu_pet.js"></script><script src="js/09_gato_laranja.js?v=home-v3"></script>
 <link rel="stylesheet" href="css/14_pet_companheiro.css?v=3">
 <script src="js/10_pet_companheiro.js?v=4" defer></script>
 <link rel="stylesheet" href="css/17_pet_no_chao.css?v=2">
@@ -677,7 +677,7 @@
 <script src="js/11_decoracao.js?v=1" defer></script>
 <link rel="stylesheet" href="css/16_evolucao_interativa.css?v=1">
 <link rel="stylesheet" href="css/20_palcos.css?v=2">
-<link rel="stylesheet" href="css/21_home_v2.css?v=1">
+<link rel="stylesheet" href="css/21_home_v2.css?v=2">
 <script src="js/12_home_nav.js?v=1" defer></script>
 </body>
 </html>

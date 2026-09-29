@@ -21,7 +21,7 @@ body .app .top-row{
   color:#fff;text-shadow:0 1px 2px rgba(7,24,47,.72);
 }
 body .app .home-profile-card .top-perfil-crianca{
-  display:flex;align-items:center;gap:7px;width:100%;height:auto;min-height:32px;padding:0;
+  display:flex;flex-direction:row;align-items:center;justify-content:flex-start;gap:7px;width:100%;height:auto;min-height:32px;padding:0;
   border:0;border-radius:0;background:none;box-shadow:none;color:#fff;text-align:left;
 }
 body .app .perfil-crianca-emoji{
@@ -30,10 +30,10 @@ body .app .perfil-crianca-emoji{
   font-size:clamp(19px,5vw,25px);border-radius:50%;background:rgba(255,255,255,.78);
   border:2px solid rgba(255,255,255,.8);text-shadow:none;
 }
-body .app .perfil-crianca-nome{min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;font-size:clamp(12px,3.2vw,17px);font-weight:900}
+body .app .perfil-crianca-nome{width:auto;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;font-size:clamp(12px,3.2vw,17px);font-weight:900;color:#fff;text-align:left}
 .profile-edit{margin-left:auto;font-size:13px;opacity:.9}
 body .app .home-profile-card .evo-name{
-  margin:0 0 7px clamp(37px,10vw,49px);max-width:none;text-align:left;
+  margin:0 0 7px clamp(37px,10vw,49px);padding:0;max-width:none;text-align:left;background:none;border:0;
   color:#fff;font-size:clamp(9px,2.6vw,12px);font-weight:800;
   overflow:hidden;text-overflow:ellipsis;white-space:nowrap;
 }
@@ -115,6 +115,7 @@ body .app .pet-actions .pet-action-btn,body .app .pet-actions .acoes-gato-laranj
   transition:transform .14s ease,filter .14s ease;cursor:pointer;
 }
 body .app .pet-actions .pet-action-btn{grid-column:2;background:linear-gradient(145deg,#42d5ff,#0078e5);box-shadow:inset 0 2px 8px #fff8,inset 0 -5px 12px #0754af88,0 6px 14px #18467777}
+.pet-actions .action-icon{display:block;font-size:clamp(24px,7vw,38px);line-height:1}
 body .app .acoes-gato-laranja button:first-child{grid-column:1;grid-row:1}
 body .app .acoes-gato-laranja button:nth-child(2){grid-column:3;grid-row:1;background:linear-gradient(145deg,#c380ff,#842ee9);box-shadow:inset 0 2px 8px #fff8,inset 0 -5px 12px #5c2eaa88,0 6px 14px #50327777}
 body .app .pet-actions button:active{transform:scale(.975);filter:brightness(1.05)}
@@ -144,8 +145,8 @@ body .app .task-actions{flex-shrink:0}
 
 /* BOTTOM NAV */
 body .app .bottom-buttons{
-  display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:2px;
-  width:100%;flex:0 0 auto;padding:5px;border:1px solid #ffffff88;border-radius:clamp(17px,4vw,23px);
+  display:grid;grid-template-columns:repeat(5,minmax(0,1fr))!important;gap:2px!important;
+  width:100%;flex:0 0 auto;margin-top:0!important;padding:5px;border:1px solid #ffffff88;border-radius:clamp(17px,4vw,23px);
   background:rgba(19,72,101,.84);backdrop-filter:blur(13px);-webkit-backdrop-filter:blur(13px);
   box-shadow:inset 0 1px 0 #fff7,0 7px 20px #103a5299;
 }
