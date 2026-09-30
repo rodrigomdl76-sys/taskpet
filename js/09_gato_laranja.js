@@ -44,7 +44,9 @@
     return true;
   }
   function mostrar(){
+    if(estado?.petAtual!=='gato'){if(img)img.style.display='none';chave='';return}
     if(!garantirImagem())return;
+    img.style.display='';
     const f=fase();const pedido=acao || ((new Date().getHours()>=21 || new Date().getHours()<7)?'dormir':'idle');
     const a=(arquivos[f][pedido]||gestos[f]?.[pedido])?pedido:'idle';
     const novaChave=`${f}/${a}`;
@@ -86,6 +88,12 @@
   }
   function atualizarBotoes(){
     const area=document.getElementById('acoes-gato-laranja');if(!area)return;
+    if(estado?.petAtual!=='gato'){
+      const faixa=document.getElementById('pet-actions'),brincar=document.getElementById('btn-brincar');
+      if(faixa&&brincar&&brincar.parentNode!==faixa)faixa.insertBefore(brincar,area);
+      area.replaceChildren();area.hidden=true;area.dataset.modoBotoes='';return;
+    }
+    area.hidden=false;
     const f=fase();
     const acoesVisiveis=acoes.filter(a=>arquivos[f][a.id]);
     const extras=window.obterGestosPet?.()||[];
@@ -133,11 +141,11 @@
     const label=document.getElementById('pet-evol-nome');if(label)label.textContent=`${estado.nomePet||'Pipoca'} • ${nomes[f]}${faseTeste?' (teste)':''}`;
   }
   window.testarFaseGato=n=>{if(perfilAtivo!=='pais')return;faseTeste=n;chave='';mostrar()};
-  window.acaoGatoLaranja=tocar;
+  window.acaoGatoLaranja=a=>{if(estado?.petAtual==='gato')tocar(a)};
   window.atualizarAcoesGato=atualizarBotoes;
   window.gatoLaranjaAudio=audio=>{
     if(!audio?.addEventListener)return;
-    audio.addEventListener('playing',()=>{audioAtivo++;tocar('comemoracao')});
+    audio.addEventListener('playing',()=>{audioAtivo++;if(estado?.petAtual==='gato')tocar('comemoracao')});
     for(const evento of ['ended','pause'])audio.addEventListener(evento,()=>{if(audioAtivo){audioAtivo=0;voltar()}});
   };
   const anterior=window.atualizarTela;
@@ -148,7 +156,7 @@
   };
   const interagir=window.interagirComPet;
   if(typeof interagir==='function')window.interagirComPet=function(){
-    const resultado=interagir.apply(this,arguments);tocar('carinho');return resultado;
+    const resultado=interagir.apply(this,arguments);if(estado?.petAtual==='gato')tocar('carinho');return resultado;
   };
   const renderEvolucoes=window.renderizarEvolucoes;
   if(typeof renderEvolucoes==='function')window.renderizarEvolucoes=function(){
