@@ -36,9 +36,9 @@ function enfileirarRecompensaCrianca(aviso){
 function atualizarCaixaConquistas(){
   const n=Array.isArray(estado.avisosRecompensas)?estado.avisosRecompensas.length:0;
   const botao=document.getElementById('atalho-caixa-conquistas');
-  if(botao)botao.style.display=perfilAtivo==='crianca'&&n?'flex':'none';
+  if(botao){botao.style.display=perfilAtivo==='crianca'&&n?'grid':'none';botao.setAttribute('aria-label',n===1?'1 conquista para descobrir':'Caixa de Conquistas');}
   const contador=document.getElementById('contador-caixa-conquistas');if(contador)contador.textContent=n;
-  const txt=document.getElementById('texto-caixa-conquistas');if(txt)txt.textContent=n===1?'Você tem 1 conquista para descobrir':`Você tem ${n} conquistas para descobrir`;
+  const txt=document.getElementById('texto-caixa-conquistas');if(txt){txt.textContent=n===1?'1 conquista para descobrir':`${n} conquistas para descobrir`;txt.hidden=true;}
   const menu=document.getElementById('menu-caixa-contagem');if(menu)menu.textContent=n?`${n} para descobrir`:'Ver histórico';
 }
 function descricaoConquista(a){
