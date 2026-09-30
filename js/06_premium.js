@@ -52,6 +52,7 @@ const ALBUM_FIGURINHAS=[
 {id:'arte_cinza_08',emoji:'🐾',nome:'Gato rei comemorando',raridade:'Épica',grupo:'Heróis',imagem:window.ROTINAPET_FIGURINHAS_ARTES['arte_cinza_08']},
 {id:'arte_cinza_09',emoji:'🐾',nome:'Gato rei com estrela',raridade:'Épica',grupo:'Heróis',imagem:window.ROTINAPET_FIGURINHAS_ARTES['arte_cinza_09']}
 ];
+window.ALBUM_FIGURINHAS=ALBUM_FIGURINHAS;
 
 function enfileirarRecompensaCrianca(aviso){
   estado.avisosRecompensas=Array.isArray(estado.avisosRecompensas)?estado.avisosRecompensas:[];
@@ -129,7 +130,7 @@ function renderizarAlbumFigurinhas(novo){
    <p>Complete missões, descubra novas raridades e monte sua coleção. Cada figurinha registra uma conquista. ✨</p>
  </div>
  <div class="album-filters">${grupos.map(g=>`<button class="album-filter ${albumFiltroAtual===g?'ativo':''}" onclick="albumFiltroAtual='${g}';renderizarAlbumFigurinhas()">${g}</button>`).join('')}</div>
- <div class="album-grid premium-grid">${lista.map((f)=>{const ok=found.has(f.id),fresh=novo&&ok&&f.id===ALBUM_FIGURINHAS[ultima]?.id;return `<button class="sticker-card ${ok?'unlocked':'locked'} rar-${f.raridade.toLowerCase()} ${fresh?'new':''}" onclick="mostrarDetalheFigurinha('${f.id}')" title="${ok?f.nome:'Figurinha secreta'}"><span class="sticker-emoji">${ok?f.emoji:'?'}</span><span class="sticker-name">${ok?esc(f.nome):'Figurinha secreta'}</span><span class="sticker-rarity">${ok?f.raridade:'???'}</span></button>`}).join('')}</div>
+ <div class="album-grid premium-grid">${lista.map((f)=>{const ok=found.has(f.id),fresh=novo&&ok&&f.id===ALBUM_FIGURINHAS[ultima]?.id;return `<button class="sticker-card ${ok?'unlocked':'locked'} rar-${f.raridade.toLowerCase()} ${fresh?'new':''}" onclick="mostrarDetalheFigurinha('${f.id}')" title="${ok?f.nome:'Figurinha secreta'}"><span class="sticker-art">${ok?(f.imagem?`<img src="${f.imagem}" alt="${f.nome}" loading="lazy">`:f.emoji):'?'}</span><span class="sticker-name">${ok?esc(f.nome):'Figurinha secreta'}</span><span class="sticker-rarity">${ok?f.raridade:'???'}</span></button>`}).join('')}</div>
  <div class="album-footer">${n===ALBUM_FIGURINHAS.length?'🌟 Você completou o álbum!':'💡 Dica: missões concluídas desbloqueiam novas figurinhas.'}</div>`;
 }
 function mostrarDetalheFigurinha(id){const f=ALBUM_FIGURINHAS.find(x=>x.id===id),ok=(estado.adesivos||[]).includes(id);if(!f)return;mostrarAviso(ok?f.emoji:'🔒',ok?f.nome:'Figurinha secreta',ok?`${f.raridade} · ${f.grupo}`:'Continue completando missões para descobrir esta figurinha.');}
