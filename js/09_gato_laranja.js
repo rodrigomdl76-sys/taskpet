@@ -91,8 +91,10 @@
     const extras=window.obterGestosPet?.()||[];
     const modo=`${perfilAtivo==='pais'?'pais':'crianca'}:${[...acoesVisiveis,...extras].map(a=>a.id).join(',')}`;
     if(area.dataset.modoBotoes!==modo){
+      const brincar=document.getElementById('btn-brincar');
       area.replaceChildren();
       for(const a of [...acoesVisiveis,...extras]){
+        if(a.id==='comemoracao'&&brincar)area.appendChild(brincar);
         const botao=document.createElement('button');
         botao.type='button';botao.dataset.acaoPet=a.id;
         if(extras.includes(a))botao.classList.add('gesto-acao-btn');

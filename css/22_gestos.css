@@ -32,11 +32,14 @@ body .app .pet-actions .pet-action-btn,body .app .pet-actions .acoes-gato-laranj
   flex:0 0 calc((100% - 2*clamp(6px,2vw,11px) - 4px)/3);
   width:auto;scroll-snap-align:start;
 }
-body .app .pet-actions .pet-action-btn{order:2}
-body .app .acoes-gato-laranja [data-acao-pet="carinho"]{order:1}
-body .app .acoes-gato-laranja [data-acao-pet="comemoracao"]{order:3}
-body .app .acoes-gato-laranja [data-acao-pet="pulinho"]{order:4}
-body .app .acoes-gato-laranja [data-acao-pet="giro"]{order:5}
+body .app .pet-actions .acoes-gato-laranja #btn-brincar{
+  background:linear-gradient(145deg,#42d5ff,#0078e5);
+  box-shadow:inset 0 2px 8px #fff8,inset 0 -5px 12px #0754af88,0 6px 14px #18467777;
+}
+body .app .pet-actions .acoes-gato-laranja [data-acao-pet="comemoracao"]{
+  background:linear-gradient(145deg,#c380ff,#842ee9);
+  box-shadow:inset 0 2px 8px #fff8,inset 0 -5px 12px #5c2eaa88,0 6px 14px #50327777;
+}
 body .app .acoes-gato-laranja .gesto-acao-btn{
   background:linear-gradient(145deg,#78d9fa,#5269db);color:#fff;
   box-shadow:inset 0 2px 8px #fff8,inset 0 -5px 12px #3a439488,0 6px 14px #213a6955;

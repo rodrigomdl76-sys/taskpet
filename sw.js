@@ -1,8 +1,8 @@
-const CACHE_NAME = 'rotinapet-cache-v8';
+const CACHE_NAME = 'rotinapet-cache-v9';
 const ASSETS = [
   './index.html',
   './manifest.json',
-  './css/22_gestos.css?v=3',
+  './css/22_gestos.css?v=4',
   './js/13_gestos.js?v=4',
   './animacoes/gestos/ovo_gato_pulinho.webp',
   './animacoes/gestos/ovo_gato_giro_final.webp'
