@@ -2462,7 +2462,7 @@ function abrirSelecaoCrianca(){
 }
 function entrarComoCrianca(){
   mostrarToast('🐾 Bem-vindo ao seu Pet!');
-  setTimeout(()=>{atualizarCaixaConquistas();if((estado.avisosRecompensas||[]).length)mostrarToast('🎁 Suas conquistas estão na Caixa!')},850);
+  setTimeout(()=>{atualizarCaixaConquistas()},850);
   if(!estado.onboardingVistoCrianca){
     setTimeout(()=>abrirModal('modal-onboarding'),450);
   }
