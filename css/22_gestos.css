@@ -18,3 +18,71 @@
 .gesto-previa-modal img{display:block;width:min(100%,260px);aspect-ratio:1;object-fit:contain;margin:auto;background:linear-gradient(#8bd8fc,#d5f9ff);border-radius:14px}
 .gesto-previa-modal p{font-size:10px;color:#526175;margin:7px 0 0}
 @media(max-width:360px){.gestos-grid{grid-template-columns:1fr}.gesto-card small{min-height:0}}
+
+/* HOME — ações em uma faixa, com três botões visíveis e gesto por swipe. */
+body .app .pet-actions-shell{order:2;position:relative;flex:0 0 auto;width:100%;min-width:0}
+body .app .pet-actions{
+  display:flex;align-items:stretch;gap:clamp(6px,2vw,11px);width:100%;
+  overflow-x:auto;overflow-y:hidden;overscroll-behavior-x:contain;
+  scroll-snap-type:x mandatory;scrollbar-width:none;-webkit-overflow-scrolling:touch;
+  padding:1px 2px 8px;margin:0;
+}
+body .app .pet-actions::-webkit-scrollbar{display:none}
+body .app .pet-actions .pet-action-btn,body .app .pet-actions .acoes-gato-laranja button{
+  flex:0 0 calc((100% - 2*clamp(6px,2vw,11px) - 4px)/3);
+  width:auto;scroll-snap-align:start;
+}
+body .app .pet-actions .pet-action-btn{order:2}
+body .app .acoes-gato-laranja [data-acao-pet="carinho"]{order:1}
+body .app .acoes-gato-laranja [data-acao-pet="comemoracao"]{order:3}
+body .app .acoes-gato-laranja [data-acao-pet="pulinho"]{order:4}
+body .app .acoes-gato-laranja [data-acao-pet="giro"]{order:5}
+body .app .acoes-gato-laranja .gesto-acao-btn{
+  background:linear-gradient(145deg,#78d9fa,#5269db);color:#fff;
+  box-shadow:inset 0 2px 8px #fff8,inset 0 -5px 12px #3a439488,0 6px 14px #213a6955;
+}
+body .app .acoes-gato-laranja .gesto-acao-btn.gesto-bloqueado{
+  filter:grayscale(.65);opacity:.58;box-shadow:0 2px 6px #142b3855;
+}
+body .app .acoes-gato-laranja .gesto-acao-btn.gesto-bloqueado .action-icon::after{
+  content:'🔒';font-size:13px;vertical-align:top;margin-left:-5px;
+}
+.pet-actions-seta{
+  position:absolute;z-index:2;top:50%;transform:translateY(-50%);
+  width:24px;height:30px;border:1px solid #fffc;border-radius:12px;
+  background:#15365fc9;color:#fff;font-size:24px;line-height:1;cursor:pointer;
+  box-shadow:0 2px 6px #0a203b88;
+}
+.pet-actions-anterior{left:0}.pet-actions-proximo{right:0}
+.pet-actions-seta:disabled{opacity:0;pointer-events:none}
+.pet-actions-seta:focus-visible,body .app .gesto-acao-btn:focus-visible{outline:2px solid #fff;outline-offset:2px}
+body .app.nav-tarefas .pet-actions-shell{display:none}
+
+/* PET — as fases avançadas conservam seu próprio sprite durante os gestos. */
+#pet-principal .gato-laranja-img.gesto-css-pulinho{
+  transform-origin:50% 88%;animation:gesto-pulinho-fases 3s ease-in-out both;
+}
+#pet-principal .gato-laranja-img.gesto-css-giro{
+  transform-origin:50% 80%;animation:gesto-giro-fases 8.6s ease-in-out both;
+}
+@keyframes gesto-pulinho-fases{
+  0%,100%{transform:translateY(0) scale(1)}
+  12%,46%{transform:translateY(3%) scale(1.04,.96)}
+  27%,65%{transform:translateY(-13%) rotate(-5deg)}
+  77%{transform:translateY(-8%) rotate(4deg)}
+}
+@keyframes gesto-giro-fases{
+  0%,100%{transform:translateY(0) rotate(0)}
+  8%{transform:translateY(-4%) rotate(-12deg)}
+  23%{transform:translateY(-8%) rotate(180deg)}
+  34%{transform:translateY(0) rotate(360deg)}
+  48%{transform:translateX(9%) rotate(15deg)}
+  58%{transform:translateX(-9%) rotate(-17deg)}
+  69%{transform:translateX(6%) rotate(12deg)}
+  80%{transform:translateX(-3%) rotate(-5deg)}
+  90%{transform:translateX(1%) rotate(2deg)}
+}
+@media(prefers-reduced-motion:reduce){
+  #pet-principal .gato-laranja-img.gesto-css-pulinho,
+  #pet-principal .gato-laranja-img.gesto-css-giro{animation-duration:.3s}
+}

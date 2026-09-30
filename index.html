@@ -129,9 +129,13 @@
       </svg>
     </span>
   </button>
-  <div class="pet-actions" id="pet-actions" aria-label="Ações com o pet">
-    <button type="button" class="pet-action-btn" id="btn-brincar" onclick="acaoPet('brincar')" aria-label="Brincar com o pet"><span class="action-icon" aria-hidden="true">⚽</span><span>Brincar</span></button>
-    <div id="acoes-gato-laranja" class="acoes-gato-laranja" aria-label="Ações do gato"></div>
+  <div class="pet-actions-shell">
+    <button type="button" class="pet-actions-seta pet-actions-anterior" id="acoes-anterior" aria-label="Ver ações anteriores" disabled>‹</button>
+    <div class="pet-actions" id="pet-actions" aria-label="Ações com o pet. Deslize para ver mais" tabindex="0">
+      <button type="button" class="pet-action-btn" id="btn-brincar" onclick="acaoPet('brincar')" aria-label="Brincar com o pet"><span class="action-icon" aria-hidden="true">⚽</span><span>Brincar</span></button>
+      <div id="acoes-gato-laranja" class="acoes-gato-laranja" aria-label="Ações do gato"></div>
+    </div>
+    <button type="button" class="pet-actions-seta pet-actions-proximo" id="acoes-proximo" aria-label="Ver mais ações">›</button>
   </div>
   <!-- Os atalhos secundários agora ficam reunidos no botão Mais da barra inferior. -->
   <div class="metas-crianca-card" id="metas-crianca-card" style="display:none"><div class="metas-crianca-titulo">🎯 Minhas metas</div><div id="lista-metas-crianca"></div></div>
@@ -668,7 +672,7 @@
      numa função só, sem duplo processamento. Este bloco de estilo continua sendo usado. -->
 
 <link rel="stylesheet" href="css/12_mapa_vivo.css">
-<script src="js/08_meu_pet.js?v=gestos-1" defer></script><script src="js/09_gato_laranja.js?v=gestos-3" defer></script>
+<script src="js/08_meu_pet.js?v=gestos-1" defer></script><script src="js/09_gato_laranja.js?v=gestos-4" defer></script>
 <link rel="stylesheet" href="css/14_pet_companheiro.css?v=3">
 <script src="js/10_pet_companheiro.js?v=5" defer></script>
 <link rel="stylesheet" href="css/17_pet_no_chao.css?v=2">
@@ -680,7 +684,7 @@
 <link rel="stylesheet" href="css/20_palcos.css?v=2">
 <link rel="stylesheet" href="css/21_home_v2.css?v=9">
 <script src="js/12_home_nav.js?v=2" defer></script>
-<link rel="stylesheet" href="css/22_gestos.css?v=1">
-<script src="js/13_gestos.js?v=3" defer></script>
+<link rel="stylesheet" href="css/22_gestos.css?v=2">
+<script src="js/13_gestos.js?v=4" defer></script>
 </body>
 </html>

@@ -13,7 +13,7 @@
   const nivel = () => Number(estado?.pets?.gato?.nivel)||1;
   const faseReal = () => calcularFase(nivel());
   const fase = () => perfilAtivo==='pais' && faseTeste ? faseTeste : faseReal();
-  function voltar(){clearTimeout(volta);volta=null;acao='';mostrar();}
+  function voltar(){clearTimeout(volta);volta=null;img?.classList.remove('gesto-css-pulinho','gesto-css-giro');acao='';mostrar();}
   function caminho(f,a){
     return gestos[f]?.[a] ? `${pasta}${gestos[f][a]}` : `${pasta}fase${f}/${arquivos[f][a]}`;
   }
@@ -54,27 +54,56 @@
     atualizarBotoes();
   }
   function tocar(a){
-    if(a==='idle'||(!arquivos[fase()]?.[a]&&!(gestos[fase()]?.[a]&&window.gestoPetLiberado?.(a))))return;
-    clearTimeout(volta);acao=a;chave='';mostrar();
+    const f=fase();
+    const gestoLiberado=window.gestoPetLiberado?.(a) && (a==='pulinho'||a==='giro');
+    if(a==='idle'||(!arquivos[f]?.[a]&&!gestoLiberado))return;
+    clearTimeout(volta);
+    img?.classList.remove('gesto-css-pulinho','gesto-css-giro');
+    const gestoPorCss=gestoLiberado&&!gestos[f]?.[a];
+    if(gestoPorCss){
+      acao='';mostrar();
+      if(img){void img.offsetWidth;img.classList.add(`gesto-css-${a}`)}
+    }else{acao=a;chave='';mostrar()}
     const atual=++token;
     const duracao={carinho:1300,comemoracao:2100,pulinho:3000,giro:8600}[a]||2300;
-    volta=setTimeout(()=>{if(token===atual)voltar()},gestos[fase()]?.[a]?duracao:(fase()===2?duracao:2300));
+    volta=setTimeout(()=>{if(token===atual)voltar()},gestoLiberado?duracao:(f===2?duracao:2300));
+  }
+  function atualizarRolagem(){
+    const faixa=document.getElementById('pet-actions');if(!faixa)return;
+    const anterior=document.getElementById('acoes-anterior');
+    const proximo=document.getElementById('acoes-proximo');
+    if(anterior)anterior.disabled=faixa.scrollLeft<4;
+    if(proximo)proximo.disabled=faixa.scrollLeft+faixa.clientWidth>=faixa.scrollWidth-4;
+  }
+  function instalarRolagem(){
+    const faixa=document.getElementById('pet-actions');if(!faixa||faixa.dataset.rolagemInstalada)return;
+    faixa.dataset.rolagemInstalada='1';
+    faixa.addEventListener('scroll',atualizarRolagem,{passive:true});
+    for(const [id,direcao] of [['acoes-anterior',-1],['acoes-proximo',1]]){
+      document.getElementById(id)?.addEventListener('click',()=>faixa.scrollBy({left:direcao*faixa.clientWidth*.86,behavior:'smooth'}));
+    }
+    window.addEventListener('resize',atualizarRolagem,{passive:true});
   }
   function atualizarBotoes(){
     const area=document.getElementById('acoes-gato-laranja');if(!area)return;
     const f=fase();
     const acoesVisiveis=acoes.filter(a=>arquivos[f][a.id]);
-    const modo=`${perfilAtivo==='pais'?'pais':'crianca'}:${acoesVisiveis.map(a=>a.id).join(',')}`;
+    const extras=window.obterGestosPet?.()||[];
+    const modo=`${perfilAtivo==='pais'?'pais':'crianca'}:${[...acoesVisiveis,...extras].map(a=>a.id).join(',')}`;
     if(area.dataset.modoBotoes!==modo){
       area.replaceChildren();
-      for(const a of acoesVisiveis){
+      for(const a of [...acoesVisiveis,...extras]){
         const botao=document.createElement('button');
-        botao.type='button';
+        botao.type='button';botao.dataset.acaoPet=a.id;
+        if(extras.includes(a))botao.classList.add('gesto-acao-btn');
         const icone=document.createElement('span');
         icone.className='action-icon';icone.setAttribute('aria-hidden','true');icone.textContent=a.icone;
         const nome=document.createElement('span');nome.textContent=a.nome;
         botao.append(icone,nome);
-        botao.addEventListener('click',()=>tocar(a.id));
+        botao.addEventListener('click',()=>{
+          if(extras.includes(a)&&!window.gestoPetLiberado?.(a.id)){window.abrirLojaFundos?.();return}
+          tocar(a.id);
+        });
         area.appendChild(botao);
       }
       if(perfilAtivo==='pais')for(const n of [1,2,3]){
@@ -85,12 +114,21 @@
       }
       area.dataset.modoBotoes=modo;
     }
+    for(const a of extras){
+      const botao=area.querySelector(`[data-acao-pet="${a.id}"]`);if(!botao)continue;
+      const liberado=!!window.gestoPetLiberado?.(a.id);
+      botao.classList.toggle('gesto-bloqueado',!liberado);
+      botao.setAttribute('aria-label',liberado?`${a.nome}. Ativar gesto`:`${a.nome} bloqueado. Abrir loja`);
+      botao.title=liberado?`Ativar ${a.nome}`:`Desbloqueie ${a.nome} na loja ou pela ofensiva`;
+    }
+    instalarRolagem();requestAnimationFrame(atualizarRolagem);
     area.querySelectorAll('[data-fase-teste]').forEach(botao=>{botao.disabled=Number(botao.dataset.faseTeste)===f});
     const nomes=['','Ovo-gato','Gato Cavalheiro','Gato Real'];
     const label=document.getElementById('pet-evol-nome');if(label)label.textContent=`${estado.nomePet||'Pipoca'} • ${nomes[f]}${faseTeste?' (teste)':''}`;
   }
   window.testarFaseGato=n=>{if(perfilAtivo!=='pais')return;faseTeste=n;chave='';mostrar()};
   window.acaoGatoLaranja=tocar;
+  window.atualizarAcoesGato=atualizarBotoes;
   window.gatoLaranjaAudio=audio=>{
     if(!audio?.addEventListener)return;
     audio.addEventListener('playing',()=>{audioAtivo++;tocar('comemoracao')});
