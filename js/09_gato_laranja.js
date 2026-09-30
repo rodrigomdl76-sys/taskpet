@@ -90,7 +90,8 @@
     const acoesVisiveis=acoes.filter(a=>arquivos[f][a.id]);
     const extras=window.obterGestosPet?.()||[];
     const modo=`${perfilAtivo==='pais'?'pais':'crianca'}:${[...acoesVisiveis,...extras].map(a=>a.id).join(',')}`;
-    if(area.dataset.modoBotoes!==modo){
+    const recriou=area.dataset.modoBotoes!==modo;
+    if(recriou){
       const brincar=document.getElementById('btn-brincar');
       area.replaceChildren();
       for(const a of [...acoesVisiveis,...extras]){
@@ -123,7 +124,10 @@
       botao.setAttribute('aria-label',liberado?`${a.nome}. Ativar gesto`:`${a.nome} bloqueado. Abrir loja`);
       botao.title=liberado?`Ativar ${a.nome}`:`Desbloqueie ${a.nome} na loja ou pela ofensiva`;
     }
-    instalarRolagem();requestAnimationFrame(atualizarRolagem);
+    instalarRolagem();requestAnimationFrame(()=>{
+      if(recriou)document.getElementById('pet-actions').scrollLeft=0;
+      atualizarRolagem();
+    });
     area.querySelectorAll('[data-fase-teste]').forEach(botao=>{botao.disabled=Number(botao.dataset.faseTeste)===f});
     const nomes=['','Ovo-gato','Gato Cavalheiro','Gato Real'];
     const label=document.getElementById('pet-evol-nome');if(label)label.textContent=`${estado.nomePet||'Pipoca'} • ${nomes[f]}${faseTeste?' (teste)':''}`;
