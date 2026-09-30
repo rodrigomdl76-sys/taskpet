@@ -2,7 +2,7 @@
 (() => {
   const catalogo = [
     {id:'pulinho',nome:'Pulinho',icone:'🐾',preco:45,marco:7,arquivo:'animacoes/gestos/ovo_gato_pulinho.webp'},
-    {id:'giro',nome:'Giro divertido',icone:'🌀',preco:75,marco:14,arquivo:'animacoes/gestos/ovo_gato_giro.webp'}
+    {id:'giro',nome:'Giro divertido',icone:'🌀',preco:75,marco:14,arquivo:'animacoes/gestos/ovo_gato_giro_completo.webp'}
   ];
   const preloads=new Map();
   function aquecerImagem(g){

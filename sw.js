@@ -1,11 +1,11 @@
-const CACHE_NAME = 'rotinapet-cache-v4';
+const CACHE_NAME = 'rotinapet-cache-v5';
 const ASSETS = [
   './index.html',
   './manifest.json',
   './css/22_gestos.css?v=1',
-  './js/13_gestos.js?v=1',
+  './js/13_gestos.js?v=2',
   './animacoes/gestos/ovo_gato_pulinho.webp',
-  './animacoes/gestos/ovo_gato_giro.webp'
+  './animacoes/gestos/ovo_gato_giro_completo.webp'
 ];
 
 self.addEventListener('install', event => {

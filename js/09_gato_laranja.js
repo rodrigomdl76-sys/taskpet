@@ -6,7 +6,7 @@
     1:{idle:'01_parado.webp',carinho:'02_carinho.webp',dormir:'03_dormir.webp',comemoracao:'04_comemorar.webp'},
     3:{idle:'01_parado.webp',carinho:'02_carinho.webp',dormir:'03_dormir.webp',comemoracao:'04_comemorar.webp'}
   };
-  const gestos = {1:{pulinho:'gestos/ovo_gato_pulinho.webp',giro:'gestos/ovo_gato_giro.webp'}};
+  const gestos = {1:{pulinho:'gestos/ovo_gato_pulinho.webp',giro:'gestos/ovo_gato_giro_completo.webp'}};
   const acoes = [{id:'carinho',icone:'💖',nome:'Dar Carinho'},{id:'comemoracao',icone:'🎉',nome:'Comemorar'}];
   let img, volta, faseVisivel=0, faseTeste=0, acao='', chave='', token=0, audioAtivo=0;
   let fasePrecarregada=0, imagensPrecarregadas=[];
@@ -57,7 +57,7 @@
     if(a==='idle'||(!arquivos[fase()]?.[a]&&!(gestos[fase()]?.[a]&&window.gestoPetLiberado?.(a))))return;
     clearTimeout(volta);acao=a;chave='';mostrar();
     const atual=++token;
-    const duracao={carinho:1300,comemoracao:2100,pulinho:3000,giro:2250}[a]||2300;
+    const duracao={carinho:1300,comemoracao:2100,pulinho:3000,giro:8600}[a]||2300;
     volta=setTimeout(()=>{if(token===atual)voltar()},gestos[fase()]?.[a]?duracao:(fase()===2?duracao:2300));
   }
   function atualizarBotoes(){
