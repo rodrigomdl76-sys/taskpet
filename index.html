@@ -142,7 +142,7 @@
   <div id="engajamento-card" style="display:none">
     <span id="engajamento-streak"></span><div id="engajamento-desafio"></div><button id="btn-bau-diario">🎁 Baú do dia</button>
   </div>
-  <button type="button" id="atalho-caixa-conquistas" class="caixa-conquistas-atalho" onclick="abrirCaixaConquistas()" style="display:none">🎁 <span id="texto-caixa-conquistas">Caixa de Conquistas</span> <b id="contador-caixa-conquistas">0</b></button>
+  <button type="button" id="atalho-caixa-conquistas" class="caixa-conquistas-atalho" onclick="abrirCaixaConquistas()" aria-label="Caixa de Conquistas" title="Caixa de Conquistas" style="display:none"><span class="caixa-conquistas-icone" aria-hidden="true">🎁</span><span id="texto-caixa-conquistas" class="sr-only" hidden>Caixa de Conquistas</span><b id="contador-caixa-conquistas" aria-hidden="true">0</b></button>
   <div class="tasks-section recolhida" id="secao-missoes">
     <button type="button" class="task-header task-header-expansivel" onclick="alternarMissoes()" aria-expanded="false"><b>📋 Missões de hoje</b><span class="task-header-count"><span id="qtd-tarefas">2 missões</span><span id="seta-missoes">⌃</span></span></button>
     <div class="missoes-carrossel" aria-label="Missões de hoje, deslize para ver mais">
@@ -649,7 +649,7 @@
 <div class="toast" id="toast"></div>
 <div class="banner-offline" id="banner-offline">📡 Sem conexão — as alterações serão sincronizadas quando a internet voltar.</div>
 <div class="banner-evento" id="banner-evento" onclick="abrirModalEventoSazonal()"></div>
-<script src="js/02_principal.js?v=gestos-1" defer></script>
+<script src="js/02_principal.js?v=caixa-discreta-v1" defer></script>
   <script src="js/03_extras_01.js" defer></script>
 <div id="modal-central-aventuras" class="modal-overlay"><div class="modal" style="max-width:360px"><div class="modal-title"><h3>🌟 Central de Aventuras</h3><button class="close-btn" onclick="fecharModal('modal-central-aventuras')">×</button></div><div id="central-aventuras-conteudo"></div></div></div>
 <div id="modal-bau-diario" class="modal-overlay"><div class="modal" style="max-width:320px;text-align:center"><div class="modal-title"><h3>🎁 Baú do Dia</h3><button class="close-btn" onclick="fecharModal('modal-bau-diario')">×</button></div><div id="bau-diario-conteudo"></div></div></div>
@@ -660,7 +660,7 @@
 <link rel="stylesheet" href="css/07_extras_02.css"><link rel="stylesheet" href="css/08_interface.css">
 <link rel="stylesheet" href="css/09_album.css">
 <div id="sticker-toast" class="sticker-toast" aria-live="polite"><b>🎉 Nova figurinha!</b><span id="sticker-toast-text">Você ganhou uma nova lembrança.</span></div>
-<script src="js/06_premium.js" defer></script>
+<script src="js/06_premium.js?v=caixa-mini-v1" defer></script>
 
 
 <link rel="stylesheet" href="css/10_premium_62.css">
@@ -673,8 +673,8 @@
 
 <link rel="stylesheet" href="css/12_mapa_vivo.css">
 <script src="js/08_meu_pet.js?v=gestos-1" defer></script><script src="js/09_gato_laranja.js?v=gestos-6" defer></script>
-<link rel="stylesheet" href="css/14_pet_companheiro.css?v=3">
-<script src="js/10_pet_companheiro.js?v=5" defer></script>
+<link rel="stylesheet" href="css/14_pet_companheiro.css?v=4">
+<script src="js/10_pet_companheiro.js?v=6" defer></script>
 <link rel="stylesheet" href="css/17_pet_no_chao.css?v=2">
 <link rel="stylesheet" href="css/18_topo_limpo.css?v=2">
 <link rel="stylesheet" href="css/19_plataforma_pet.css?v=1">
@@ -682,7 +682,7 @@
 <script src="js/11_decoracao.js?v=1" defer></script>
 <link rel="stylesheet" href="css/16_evolucao_interativa.css?v=1">
 <link rel="stylesheet" href="css/20_palcos.css?v=2">
-<link rel="stylesheet" href="css/21_home_v2.css?v=9">
+<link rel="stylesheet" href="css/21_home_v2.css?v=10">
 <script src="js/12_home_nav.js?v=2" defer></script>
 <link rel="stylesheet" href="css/22_gestos.css?v=5">
 <script src="js/13_gestos.js?v=4" defer></script>
