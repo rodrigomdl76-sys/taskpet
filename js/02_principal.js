@@ -478,7 +478,7 @@ const hojeLocal=()=>{const d=new Date();return `${d.getFullYear()}-${String(d.ge
 const ontemLocal=()=>{const d=new Date();d.setDate(d.getDate()-1);return `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`};
 // Campos que pertencem a UM filho específico (progresso do pet, tarefas, moedas...).
 // Tudo que NÃO está nessa lista é compartilhado pela família inteira (PIN, e-mails, taxa de câmbio).
-const CAMPOS_CRIANCA=['gestosDesbloqueados','palcoAtual','palcosComprados','decoracaoItens','extraDiaRemovida','avisosMissao','miniPetsComprados','miniPetAtivo','bauDatasResgatadas','historicoRecompensas','avisosRecompensas','acessorios','conquistas','habilidades','desafiosMathAcertos','dinheiroAcumulado','mesadaAtiva','fundoAtual','fundosComprados','temaInterfaceAtual','historicoConclusoes','idadeCrianca','dificuldadeJogos','nomePet','lembreteEnviadoData','metaMoedas','moedas','onboardingVistoCrianca','pausaAte','petAtual','pets','recompensas','registroDiario','solicitacoesPremios','streak','surpresaResgatadaData','tarefas','tarefasHojeCount','timerFim','totalSacado','ultimoDiaAcesso','ultimoDiaConcluido','ultimoStreakPremiado','vozSalva','ultimoAcaoPet','ultimoDecay','desafioDiarioData','desafioDiarioFeitoData','bauDiarioAbertoData','escudosOfensiva','adesivos','eventoSemanalData','missaoFamilia','mensagensPais','historicoEngajamento'];
+const CAMPOS_CRIANCA=['gestosDesbloqueados','palcoAtual','palcosComprados','decoracaoItens','extraDiaRemovida','avisosMissao','miniPetsComprados','miniPetAtivo','bauDatasResgatadas','historicoRecompensas','avisosRecompensas','acessorios','conquistas','habilidades','desafiosMathAcertos','dinheiroAcumulado','mesadaAtiva','fundoAtual','fundosComprados','temaInterfaceAtual','historicoConclusoes','idadeCrianca','dificuldadeJogos','nomePet','lembreteEnviadoData','metaMoedas','moedas','onboardingVistoCrianca','pausaAte','petAtual','pets','recompensas','sonhos','registroDiario','solicitacoesPremios','streak','surpresaResgatadaData','tarefas','tarefasHojeCount','timerFim','totalSacado','ultimoDiaAcesso','ultimoDiaConcluido','ultimoStreakPremiado','vozSalva','ultimoAcaoPet','ultimoDecay','desafioDiarioData','desafioDiarioFeitoData','bauDiarioAbertoData','escudosOfensiva','adesivos','eventoSemanalData','missaoFamilia','mensagensPais','historicoEngajamento'];
 function valoresPadraoCrianca(){
   return {
     gestosDesbloqueados:[],decoracaoItens:[],extraDiaRemovida:null,miniPetsComprados:['passarinho'],miniPetAtivo:'passarinho',petAtual:'gato',moedas:15,dinheiroAcumulado:.15,mesadaAtiva:true,idadeCrianca:7,dificuldadeJogos:'auto',nomePet:'Pipoca',
@@ -487,10 +487,7 @@ function valoresPadraoCrianca(){
     tarefasHojeCount:0,desafiosMathAcertos:0,timerFim:null,vozSalva:null,
     pets:{gato:{nivel:1,xp:0,felicidade:100,saude:100,faseConfirmada:1},cachorra:{nivel:1,xp:0,felicidade:100,saude:100},cabra:{nivel:1,xp:0,felicidade:100,saude:100},frango:{nivel:1,xp:0,felicidade:100,saude:100},unicornio:{nivel:1,xp:0,felicidade:100,saude:100},dinossauro:{nivel:1,xp:0,felicidade:100,saude:100},capivara:{nivel:1,xp:0,felicidade:100,saude:100}},
     tarefas:[{id:1,texto:'Escovar os dentes',recompensa:5,xp:20,tipo:'obrigatoria',status:'pendente',foto:null,dias:[]},{id:2,texto:'Arrumar a cama',recompensa:5,xp:20,tipo:'obrigatoria',status:'pendente',foto:null,dias:[]}],
-    recompensas:[
-      {id:1,texto:'15 min de tela',descricao:'Tempo de tela liberado pelos pais.',custo:10,tipo:'timer',minutos:15,icone:'📱',ativo:true},
-      {id:2,texto:'30 min de tela',descricao:'Tempo de tela liberado pelos pais.',custo:18,tipo:'timer',minutos:30,icone:'🎮',ativo:true}
-    ],
+    recompensas:[],sonhos:[],
     solicitacoesPremios:[],conquistas:{},habilidades:{},acessorios:{comprados:[],ativo:null},pausaAte:null,
     historicoConclusoes:{},registroDiario:{},onboardingVistoCrianca:false,lembreteEnviadoData:null,
     surpresaResgatadaData:null,metasPersonalizadas:[],ultimoAcaoPet:{},ultimoDecay:null,desafioDiarioData:null,desafioDiarioFeitoData:null,bauDiarioAbertoData:null,bauDatasResgatadas:[],avisosRecompensas:[],historicoRecompensas:[],avisosMissao:[],escudosOfensiva:0,adesivos:[],eventoSemanalData:null,missaoFamilia:{alvo:20,progresso:0,inicio:null},mensagensPais:[],historicoEngajamento:[]
@@ -4409,131 +4406,94 @@ function premioTemSolicitacaoPendente(id){
 function renderizarLojaRecompensas(){
   const c=document.getElementById('lista-itens-loja');
   if(!c)return;
-  const metaTotal=estado.metaMoedas||50;
-  const percMeta=Math.min(100,Math.round((estado.moedas/metaTotal)*100));
+  estado.sonhos=Array.isArray(estado.sonhos)?estado.sonhos:[];
+  estado.solicitacoesPremios=Array.isArray(estado.solicitacoesPremios)?estado.solicitacoesPremios:[];
+  const metaTotal=Math.max(1,Number(estado.metaMoedas)||50);
+  const moedas=Math.max(0,Number(estado.moedas)||0);
+  const percMeta=Math.min(100,Math.round((moedas/metaTotal)*100));
   const metaTxt=document.getElementById('texto-meta-progresso');
   const metaBar=document.getElementById('barra-meta-progresso');
-  if(metaTxt)metaTxt.textContent=`${estado.moedas} / ${metaTotal} 🪙`;
+  if(metaTxt)metaTxt.textContent=`${moedas} 🪙`;
   if(metaBar)metaBar.style.width=`${percMeta}%`;
-  const premiosAtivos=(estado.recompensas||[]).filter(r=>r.ativo!==false);
+  const sonhosAtivos=estado.sonhos.filter(s=>s.status==='precificado');
+  const sonhosPendentes=estado.sonhos.filter(s=>s.status==='aguardando_preco');
+  const sonhosRecusados=estado.sonhos.filter(s=>s.status==='recusado').slice(-1);
   c.innerHTML=`
-    <div class="rp-shop-head">
-      <div>
-        <div class="rp-shop-title">🎁 Loja de Prêmios</div>
-        <div class="rp-shop-sub">Junte moedas e peça recompensas combinadas com os pais.</div>
-      </div>
-      <div class="rp-wallet">🪙 <b>${estado.moedas}</b></div>
+    <div class="rp-shop-head"><div><div class="rp-shop-title">✨ Meu sonho</div><div class="rp-shop-sub">Conte aos seus pais o que você gostaria muito de ganhar ou fazer.</div></div><div class="rp-wallet">🪙 <b>${moedas}</b></div></div>
+    <div class="rp-shop-progress"><div class="rp-progress-top"><span>Suas PetCoins</span><b>${moedas} 🪙</b></div><div class="rp-progress-track"><div style="width:${percMeta}%"></div></div><small>Complete missões para juntar PetCoins para o seu sonho.</small></div>
+    <div class="section-card" style="margin:8px 0">
+      <label for="input-sonho-novo" style="display:block;font-size:9px;font-weight:900;margin-bottom:5px">O que você gostaria muito?</label>
+      <textarea class="field" id="input-sonho-novo" maxlength="120" rows="2" placeholder="Ex.: passear no zoológico ou ganhar um brinquedo"></textarea>
+      <button class="primary-btn pink-btn" style="width:100%;margin-top:6px" onclick="criarSonhoCrianca()">💭 Enviar meu sonho aos pais</button>
     </div>
-    <div class="rp-shop-progress">
-      <div class="rp-progress-top"><span>Seu saldo</span><b>${estado.moedas} 🪙</b></div>
-      <div class="rp-progress-track"><div style="width:${percMeta}%"></div></div>
-      <small>${percMeta>=100?'🎉 Meta alcançada!':`Faça mais tarefas para juntar moedas.`}</small>
-    </div>
-    <div class="rp-shop-section-title">✨ Recompensas disponíveis</div>
+    ${sonhosPendentes.length?`<div class="rp-empty" style="margin:7px 0">⏳ Seus pais ainda vão escolher quantas PetCoins seu sonho vai custar.</div>`:''}
+    ${sonhosRecusados.length?`<div class="rp-empty" style="margin:7px 0">💬 Seus pais responderam sobre “${esc(sonhosRecusados[0].texto)}”. Converse com eles para pensar em outro sonho.</div>`:''}
+    ${sonhosAtivos.length?`<div class="rp-shop-section-title">🌟 Meus sonhos</div>`:''}
   `;
-  if(!premiosAtivos.length){
-    c.innerHTML+=`<div class="rp-empty">🎁<br><b>Nenhum prêmio disponível.</b><small>Os pais podem cadastrar no painel.</small></div>`;
-    return;
-  }
-  const grid=document.createElement('div');
-  grid.className='rp-prize-grid';
-  premiosAtivos.forEach(r=>{
-    const pode=estado.moedas>=r.custo;
-    const pendente=premioTemSolicitacaoPendente(r.id);
-    const faltam=Math.max(0,r.custo-estado.moedas);
-    const pct=Math.min(100,Math.round((estado.moedas/r.custo)*100));
-    const card=document.createElement('div');
-    card.className='rp-prize-card'+(pode?' ready':'');
-    card.innerHTML=`
-      <div class="rp-prize-icon">${esc(r.icone||'🎁')}</div>
-      <div class="rp-prize-name">${esc(r.texto)}</div>
-      <div class="rp-prize-desc">${esc(r.descricao||'Recompensa especial.')}</div>
-      <div style="font-size:7px;color:#7c3aed;font-weight:900;margin-bottom:4px">${r.tipo==='timer'?`⏱️ ${Number(r.minutos)||0} minutos de tela`:'🎁 Recompensa combinada com os pais'}</div>
-      <div class="rp-prize-cost">🪙 ${Number(r.custo)||0}</div>
-      ${pode ? `
-        <div class="rp-can-get">✨ Pode pedir!</div>
-        <button class="rp-prize-btn" ${pendente?'disabled':''} onclick="resgatarRecompensa(${r.id})">${pendente?'⏳ Pedido enviado':'🎟️ Solicitar prêmio'}</button>
-      ` : `
-        <div class="rp-missing">Faltam <b>${faltam} 🪙</b></div>
-        <div class="rp-mini-track"><div style="width:${pct}%"></div></div>
-        <button class="rp-prize-btn disabled" disabled>🔒 Bloqueado</button>
-      `}
-    `;
-    grid.appendChild(card);
+  sonhosAtivos.forEach(s=>{
+    const custo=Math.max(1,Number(s.custo)||0),pode=moedas>=custo,pendente=sonhoTemSolicitacaoPendente(s.id);
+    const pct=Math.min(100,Math.round((moedas/custo)*100)),faltam=Math.max(0,custo-moedas);
+    const card=document.createElement('div');card.className='rp-prize-card'+(pode?' ready':'');
+    card.innerHTML=`<div class="rp-prize-icon">💭</div><div class="rp-prize-name">${esc(s.texto)}</div><div class="rp-prize-desc">Um sonho escolhido por você e combinado com seus pais.</div><div class="rp-prize-cost">🪙 ${custo}</div>${pode?`<div class="rp-can-get">✨ Você já juntou o suficiente!</div><button class="rp-prize-btn" ${pendente?'disabled':''} onclick="solicitarRealizacaoSonho(${Number(s.id)})">${pendente?'⏳ Pedido enviado':'🎁 Pedir para realizar'}</button>`:`<div class="rp-missing">Faltam <b>${faltam} 🪙</b></div><div class="rp-mini-track"><div style="width:${pct}%"></div></div><button class="rp-prize-btn disabled" disabled>🔒 Continue juntando</button>`}`;
+    c.appendChild(card);
   });
-  c.appendChild(grid);
-  const meusPedidos=(estado.solicitacoesPremios||[]).slice().reverse().slice(0,5);
+  if(!sonhosAtivos.length&&!sonhosPendentes.length)c.insertAdjacentHTML('beforeend','<div class="rp-empty">🌈<br><b>Seu próximo sonho começa aqui!</b><small>Escreva sua ideia e peça aos seus pais para colocar um valor em PetCoins.</small></div>');
+  const meusPedidos=estado.solicitacoesPremios.slice().reverse().slice(0,5);
   if(meusPedidos.length){
-    const ultimo=meusPedidos[0];
-    if(ultimo&&ultimo.status!=='pendente'){
-      const aviso=document.createElement('div');
-      aviso.style.cssText='margin-top:9px;padding:8px 9px;border-radius:12px;background:'+(ultimo.status==='aprovado'?'#ecfdf5':'#fff7ed')+';border:1px solid '+(ultimo.status==='aprovado'?'#bbf7d0':'#fed7aa')+';font-size:8px;font-weight:900;color:'+(ultimo.status==='aprovado'?'#047857':'#9a3412');
-      aviso.textContent=ultimo.status==='aprovado'?`🎉 ${ultimo.texto} foi aprovado pelos pais!`:`💬 ${ultimo.texto} não foi aprovado desta vez. Converse com os pais.`;
-      c.appendChild(aviso);
-    }
-    const history=document.createElement('div');
-    history.className='rp-my-orders';
-    history.innerHTML=`<div class="rp-shop-section-title">🎟️ Meus pedidos recentes</div>`;
-    meusPedidos.forEach(s=>{
-      const cls=s.status==='aprovado'?'ok':s.status==='recusado'?'no':'wait';
-      const label=s.status==='aprovado'?'Aprovado':s.status==='recusado'?'Recusado':'Aguardando';
-      history.innerHTML+=`
-        <div class="rp-order ${cls}">
-          <span>${esc(s.texto)}</span>
-          <span><b>${Number(s.custo)||0} 🪙</b> · ${s.tipo==='timer'?'⏱️ Tempo de tela':'🎁 Prêmio'} · ${label}</span>
-        </div>`;
-    });
+    const history=document.createElement('div');history.className='rp-my-orders';history.innerHTML='<div class="rp-shop-section-title">🎟️ Pedidos recentes</div>';
+    meusPedidos.forEach(s=>{const cls=s.status==='aprovado'?'ok':s.status==='recusado'?'no':'wait',label=s.status==='aprovado'?'Aprovado':s.status==='recusado'?'Converse com os pais':'Aguardando';history.innerHTML+=`<div class="rp-order ${cls}"><span>${esc(s.texto)}</span><span><b>${Number(s.custo)||0} 🪙</b> · ${label}</span></div>`;});
     c.appendChild(history);
   }
 }
+function sonhoTemSolicitacaoPendente(id){
+  return (estado.solicitacoesPremios||[]).some(s=>String(s.sonhoId)===String(id)&&s.status==='pendente');
+}
+function criarSonhoCrianca(){
+  if(perfilAtivo!=='crianca')return;
+  estado.sonhos=Array.isArray(estado.sonhos)?estado.sonhos:[];
+  if(estado.sonhos.some(s=>s.status==='aguardando_preco'))return mostrarToast('⏳ Espere seus pais responderem ao sonho que você já enviou.');
+  const input=document.getElementById('input-sonho-novo'),texto=String(input?.value||'').trim().replace(/\s+/g,' ').slice(0,120);
+  if(texto.length<3)return mostrarToast('Escreva um pouco mais sobre o seu sonho.');
+  const sonho={id:Date.now()+Math.floor(Math.random()*1000),texto,status:'aguardando_preco',criadoEm:Date.now(),data:hojeLocal()};
+  estado.sonhos.push(sonho);salvar();renderizarLojaRecompensas();renderizarSolicitacoesPremiosPais();
+  mostrarToast('💭 Sonho enviado! Seus pais vão escolher o valor em PetCoins.');
+  registrarLogAtividade(`Novo sonho enviado: ${texto}`);
+  enviarNotificacaoLocal('💭 Novo sonho',texto,'rotinapet-sonho');
+  enfileirarPushFamilia('💭 Novo sonho',texto,{tag:'rotinapet-sonho',onlyPerfil:'pais'});
+}
+function solicitarRealizacaoSonho(id){
+  if(perfilAtivo!=='crianca')return;
+  const s=(estado.sonhos||[]).find(x=>String(x.id)===String(id));
+  if(!s||s.status!=='precificado'||sonhoTemSolicitacaoPendente(id))return;
+  const custo=Math.max(1,Number(s.custo)||0);
+  if((Number(estado.moedas)||0)<custo)return mostrarToast(`🔒 Junte mais ${custo-(Number(estado.moedas)||0)} PetCoins para pedir esse sonho.`);
+  const solicitacao={id:Date.now()+Math.floor(Math.random()*1000),sonhoId:s.id,texto:s.texto,custo,tipo:'sonho',status:'pendente',data:hojeLocal(),dataHora:Date.now()};
+  estado.solicitacoesPremios.push(solicitacao);salvar();atualizarTela();renderizarLojaRecompensas();renderizarSolicitacoesPremiosPais();
+  mostrarToast('🎟️ Pedido enviado aos seus pais!');
+  registrarLogAtividade(`Pedido para realizar sonho: ${s.texto}`);
+  enviarNotificacaoLocal('🎟️ Pedido de sonho',`${s.texto} — ${custo}🪙`,'rotinapet-premio');
+  enfileirarPushFamilia('🎟️ Pedido de sonho',`${s.texto} (${custo}🪙)`,{tag:'rotinapet-premio',onlyPerfil:'pais'});
+}
 function resgatarRecompensa(id){
-  const r=estado.recompensas.find(x=>x.id===id);
-  if(!r||r.ativo===false||estado.moedas<r.custo||premioTemSolicitacaoPendente(id))return;
-  const solicitacao={
-    id:Date.now()+Math.floor(Math.random()*1000),
-    recompensaId:r.id,
-    texto:r.texto,
-    custo:Number(r.custo)||0,
-    tipo:r.tipo||'premio',
-    minutos:Number(r.minutos)||0,
-    status:'pendente',
-    data:hojeLocal(),
-    dataHora:Date.now()
-  };
-  estado.solicitacoesPremios=estado.solicitacoesPremios||[];
-  estado.solicitacoesPremios.push(solicitacao);
-  salvar();
-  atualizarTela();
-  renderizarLojaRecompensas();
-  mostrarToast('🎟️ Pedido enviado! Os pais vão conferir.');
-  registrarLogAtividade(`Pedido de prêmio: ${r.texto}`);
-  enviarNotificacaoLocal('🎟️ Pedido de prêmio',`${r.texto} — ${r.custo}🪙`,'rotinapet-premio');
-  enfileirarPushFamilia('🎟️ Pedido de prêmio',`${r.texto} (${r.custo}🪙)`,{tag:'rotinapet-premio',onlyPerfil:'pais'});
+  // Mantida apenas para compatibilidade com links de versões antigas.
+  const r=(estado.recompensas||[]).find(x=>x.id===id);
+  if(!r||r.ativo===false||Number(estado.moedas)<Number(r.custo)||premioTemSolicitacaoPendente(id))return;
+  const solicitacao={id:Date.now()+Math.floor(Math.random()*1000),recompensaId:r.id,texto:r.texto,custo:Number(r.custo)||0,tipo:r.tipo||'premio',minutos:Number(r.minutos)||0,status:'pendente',data:hojeLocal(),dataHora:Date.now()};
+  estado.solicitacoesPremios.push(solicitacao);salvar();atualizarTela();renderizarSolicitacoesPremiosPais();
 }
 function aprovarSolicitacaoPremio(id){
   const s=(estado.solicitacoesPremios||[]).find(x=>x.id===id);
   if(!s||s.status!=='pendente')return;
-  if(estado.moedas<s.custo){
-    mostrarToast('⚠️ Saldo insuficiente.');
-    return;
-  }
-  estado.moedas-=s.custo;
-  s.status='aprovado';
-  s.aprovadoEm=Date.now();
-  s.mensagem='Prêmio aprovado pelos pais.';
-  registrarLogAtividade(`Prêmio aprovado: ${s.texto} (−${Number(s.custo)||0}🪙)`);
-  salvar();
-  atualizarTela();
-  renderizarPainelPais();
-  renderizarLojaRecompensas();
-  const r=estado.recompensas.find(x=>x.id===s.recompensaId);
-  if((s.tipo==='timer'||r?.tipo==='timer')&&s.minutos){
-    iniciarTimerTela(s.minutos);
-  }else{
-    dispararConfetes();
-    somConquista();
-    mostrarAviso('🎁','Prêmio aprovado!',`Liberado: ${s.texto}`);
-  }
+  const sonho=s.sonhoId?(estado.sonhos||[]).find(x=>String(x.id)===String(s.sonhoId)):null;
+  if(s.sonhoId&&(!sonho||sonho.status!=='precificado'))return mostrarToast('⚠️ Este sonho não está mais disponível.');
+  if((Number(estado.moedas)||0)<(Number(s.custo)||0)){mostrarToast('⚠️ Saldo insuficiente.');return;}
+  estado.moedas-=Number(s.custo)||0;s.status='aprovado';s.aprovadoEm=Date.now();s.mensagem='Pedido aprovado pelos pais.';
+  if(sonho){sonho.status='realizado';sonho.realizadoEm=Date.now();}
+  registrarLogAtividade(`Pedido aprovado: ${s.texto} (−${Number(s.custo)||0}🪙)`);
+  salvar();atualizarTela();renderizarPainelPais();renderizarLojaRecompensas();
+  const r=(estado.recompensas||[]).find(x=>x.id===s.recompensaId);
+  if((s.tipo==='timer'||r?.tipo==='timer')&&s.minutos){iniciarTimerTela(s.minutos);}
+  else{dispararConfetes();somConquista();mostrarAviso(sonho?'💭':'🎁',sonho?'Sonho realizado!':'Prêmio aprovado!',sonho?`Combinado realizado: ${s.texto}`:`Liberado: ${s.texto}`);}
 }
 function recusarSolicitacaoPremio(id){
   const s=(estado.solicitacoesPremios||[]).find(x=>x.id===id);
@@ -4547,26 +4507,7 @@ function recusarSolicitacaoPremio(id){
   renderizarLojaRecompensas();
   mostrarToast('💬 Solicitação recusada. Converse com a criança.');
 }
-function adicionarPremioPais(){
-  const texto=window.prompt('Nome do prêmio:');
-  if(!texto||!texto.trim())return;
-  const custo=Number(window.prompt('Moedas necessárias:', '50'));
-  if(!Number.isFinite(custo)||custo<1)return mostrarToast('⚠️ Quantidade inválida.');
-  const descricao=window.prompt('Descrição (opcional):','')??'';
-  const icone=window.prompt('Emoji (opcional):','🎁')||'🎁';
-  const tipo=window.confirm('Libera tempo de tela?')?'timer':'premio';
-  let minutos=0;
-  if(tipo==='timer'){
-    minutos=Number(window.prompt('Quantos minutos?', '20'));
-    if(!Number.isFinite(minutos)||minutos<1)return mostrarToast('⚠️ Minutos inválidos.');
-  }
-  const id=Date.now()+Math.floor(Math.random()*1000);
-  estado.recompensas.push({id,texto:texto.trim(),descricao:descricao.trim(),custo,tipo,minutos,icone:icone.trim()||'🎁',ativo:true});
-  salvar();
-  renderizarPainelPais();
-  renderizarLojaRecompensas();
-  mostrarToast('🎁 Prêmio criado!');
-}
+function adicionarPremioPais(){mostrarToast('💭 Agora a criança cria um sonho e os pais definem o valor em PetCoins.');}
 function editarPremioPais(id){
   const r=estado.recompensas.find(x=>x.id===id);
   if(!r)return;
@@ -4612,58 +4553,50 @@ function excluirPremioPais(id){
   });
 }
 function renderizarGerenciamentoPremiosPais(){
-  const c=document.getElementById('lista-gerenciar-premios');
-  if(!c)return;
-  c.innerHTML='';
-  if(!estado.recompensas.length){
-    c.innerHTML='<span style="font-size:9px;color:#94a3b8">Nenhum prêmio cadastrado.</span>';
-    return;
-  }
-  estado.recompensas.forEach(r=>{
-    const status=r.ativo===false?'🙈 oculto':'✅ ativo';
-    c.innerHTML+=`
-      <div class="edit-row" style="gap:5px;align-items:center;flex-wrap:wrap">
-        <span style="font-size:20px">${esc(r.icone||'🎁')}</span>
-        <span style="flex:1;min-width:120px">
-          <b>${esc(r.texto)}</b> • ${Number(r.custo)||0}🪙
-          <small style="display:block;color:#94a3b8">${esc(r.descricao||'Sem descrição')} • ${status}</small>
-        </span>
-        <button class="primary-btn blue-btn" onclick="editarPremioPais(${r.id})">✏️</button>
-        <button class="primary-btn" onclick="alternarPremioPais(${r.id})">${r.ativo===false?'👁️':'🙈'}</button>
-        <button class="primary-btn red-btn" onclick="excluirPremioPais(${r.id})">🗑️</button>
-      </div>`;
-  });
+  const c=document.getElementById('lista-gerenciar-premios');if(!c)return;
+  estado.sonhos=Array.isArray(estado.sonhos)?estado.sonhos:[];
+  const ativos=estado.sonhos.filter(s=>s.status==='precificado');
+  c.innerHTML=ativos.length?ativos.map(s=>`<div class="edit-row" style="gap:5px;align-items:center;flex-wrap:wrap"><span style="font-size:20px">💭</span><span style="flex:1;min-width:120px"><b>${esc(s.texto)}</b> • ${Number(s.custo)||0}🪙<small style="display:block;color:#64748b">Sonho ativo da criança</small></span><button class="primary-btn red-btn" onclick="removerSonhoPais(${Number(s.id)})">🗑️</button></div>`).join(''):'<span style="font-size:9px;color:#94a3b8">Ainda não há sonhos com preço definido.</span>';
+}
+function definirPrecoSonho(id,valor){
+  if(perfilAtivo!=='pais')return;
+  const s=(estado.sonhos||[]).find(x=>String(x.id)===String(id));
+  const custo=Number(valor);
+  if(!s||s.status!=='aguardando_preco')return;
+  if(!Number.isInteger(custo)||custo<1||custo>100000)return mostrarToast('Informe um valor inteiro de 1 a 100.000 PetCoins.');
+  s.custo=custo;s.status='precificado';s.precificadoEm=Date.now();
+  salvar();renderizarPainelPais();renderizarLojaRecompensas();
+  mostrarToast('✅ Valor definido. O sonho já está disponível para a criança.');
+}
+function recusarSonhoCrianca(id){
+  if(perfilAtivo!=='pais')return;
+  const s=(estado.sonhos||[]).find(x=>String(x.id)===String(id));
+  if(!s||s.status!=='aguardando_preco')return;
+  s.status='recusado';s.respondidoEm=Date.now();salvar();renderizarPainelPais();renderizarLojaRecompensas();
+  mostrarToast('Sonho recusado. A criança pode enviar outra ideia.');
+}
+function removerSonhoPais(id){
+  if(perfilAtivo!=='pais')return;
+  const s=(estado.sonhos||[]).find(x=>String(x.id)===String(id));
+  if(!s||s.status!=='precificado')return;
+  mostrarConfirmacao(`Remover o sonho “${s.texto}” da loja?`,()=>{estado.sonhos=estado.sonhos.filter(x=>String(x.id)!==String(id));salvar();renderizarPainelPais();renderizarLojaRecompensas();});
 }
 function renderizarSolicitacoesPremiosPais(){
-  const c=document.getElementById('lista-solicitacoes-premios');
-  if(!c)return;
-  c.innerHTML='';
+  const c=document.getElementById('lista-solicitacoes-premios');if(!c)return;
+  estado.sonhos=Array.isArray(estado.sonhos)?estado.sonhos:[];
   const todos=(estado.solicitacoesPremios||[]).slice().sort((a,b)=>(Number(b.dataHora)||Number(b.id)||0)-(Number(a.dataHora)||Number(a.id)||0));
+  const ideias=estado.sonhos.filter(s=>s.status==='aguardando_preco').sort((a,b)=>(Number(a.criadoEm)||0)-(Number(b.criadoEm)||0));
+  c.innerHTML='';
+  if(ideias.length){
+    c.innerHTML+='<div style="font-size:9px;font-weight:900;color:#7c3aed;margin-bottom:5px">💭 Sonhos aguardando seu valor</div>';
+    ideias.forEach(s=>{c.innerHTML+=`<div class="approval-row"><div class="approval-top"><span>💭 <b>${esc(s.texto)}</b></span><small>${esc(s.data||'')}</small></div><div style="display:flex;gap:5px;align-items:center;margin-top:6px"><label for="preco-sonho-${Number(s.id)}" style="font-size:8px">PetCoins</label><input class="field" id="preco-sonho-${Number(s.id)}" type="number" min="1" max="100000" step="1" value="50" style="width:85px"><button class="primary-btn green-btn" onclick="definirPrecoSonho(${Number(s.id)},document.getElementById('preco-sonho-${Number(s.id)}').value)">Definir valor</button><button class="primary-btn red-btn" onclick="recusarSonhoCrianca(${Number(s.id)})">Recusar</button></div></div>`;});
+  }
   const pendentes=todos.filter(s=>s.status==='pendente');
-  if(!pendentes.length){
-    c.innerHTML='<span style="font-size:9px;color:#94a3b8">Nenhuma solicitação pendente.</span>';
-  }
-  pendentes.forEach(s=>{
-    c.innerHTML+=`
-      <div class="approval-row">
-        <div class="approval-top">
-          <span>${s.tipo==='timer'?'⏱️':'🎁'} <b>${esc(s.texto)}</b> • ${Number(s.custo)||0}🪙</span>
-          <div style="display:flex;gap:4px">
-            <button class="primary-btn red-btn" onclick="recusarSolicitacaoPremio(${s.id})">Recusar</button>
-            <button class="primary-btn green-btn" onclick="aprovarSolicitacaoPremio(${s.id})">Aprovar</button>
-          </div>
-        </div>
-        <small style="display:block;color:#64748b;margin-top:4px">${s.tipo==='timer'?`Libera ${Number(s.minutos)||0} minutos de tela`:'Recompensa combinada com a criança'} · pedido em ${esc(s.data||hojeLocal())}</small>
-      </div>`;
-  });
+  if(pendentes.length)c.innerHTML+='<div style="font-size:9px;font-weight:900;color:#7c3aed;margin:10px 0 5px">🎟️ Pedidos para realizar</div>';
+  if(!ideias.length&&!pendentes.length)c.innerHTML='<span style="font-size:9px;color:#94a3b8">Nenhum sonho ou resgate aguardando.</span>';
+  pendentes.forEach(s=>{c.innerHTML+=`<div class="approval-row"><div class="approval-top"><span>${s.sonhoId?'💭':'🎁'} <b>${esc(s.texto)}</b> • ${Number(s.custo)||0}🪙</span><div style="display:flex;gap:4px"><button class="primary-btn red-btn" onclick="recusarSolicitacaoPremio(${Number(s.id)})">Recusar</button><button class="primary-btn green-btn" onclick="aprovarSolicitacaoPremio(${Number(s.id)})">Aprovar</button></div></div><small style="display:block;color:#64748b;margin-top:4px">Pedido em ${esc(s.data||hojeLocal())} · as PetCoins são descontadas na aprovação</small></div>`;});
   const historico=todos.filter(s=>s.status!=='pendente').slice(0,5);
-  if(historico.length){
-    c.innerHTML+=`<div style="font-size:9px;font-weight:900;color:#475569;margin:10px 0 5px">🗂️ Histórico recente</div>`;
-    historico.forEach(s=>{
-      const ok=s.status==='aprovado';
-      c.innerHTML+=`<div style="font-size:8px;padding:6px 8px;margin-bottom:4px;border-radius:9px;background:${ok?'#f0fdf4':'#fef2f2'};color:${ok?'#166534':'#991b1b'}">${ok?'✅':'❌'} ${esc(s.texto)} · ${ok?'aprovado':'recusado'} · ${esc(s.data||'')}</div>`;
-    });
-  }
+  if(historico.length){c.innerHTML+='<div style="font-size:9px;font-weight:900;color:#475569;margin:10px 0 5px">🗂️ Histórico recente</div>';historico.forEach(s=>{const ok=s.status==='aprovado';c.innerHTML+=`<div style="font-size:8px;padding:6px 8px;margin-bottom:4px;border-radius:9px;background:${ok?'#f0fdf4':'#fef2f2'};color:${ok?'#166534':'#991b1b'}">${ok?'✅':'❌'} ${esc(s.texto)} · ${ok?'aprovado':'recusado'} · ${esc(s.data||'')}</div>`;});}
 }
 let intervaloTimer=null;
 function iniciarTimerTela(minutos){

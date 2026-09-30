@@ -185,7 +185,7 @@
       <button class="menu-mais-item visual" onclick="fecharModal('modal-menu-mais');abrirLojaFundos()"><span>🎨</span><b>Visual</b><small>Fundos do pet</small></button>
       <button class="menu-mais-item decorar" onclick="fecharModal('modal-menu-mais');abrirCatalogoDecoracao()"><span>🛋️</span><b>Decorar</b><small>Organizar o cenário</small></button>
       <button class="menu-mais-item mini-pets" onclick="fecharModal('modal-menu-mais');abrirLojaMiniPets()"><span>🐝</span><b>Mini pets</b><small>Escolher companheiro</small></button>
-      <button class="menu-mais-item loja" onclick="fecharModal('modal-menu-mais');abrirLojaRecompensas()"><span>🏆</span><b>Loja</b><small>Trocar moedas</small></button>
+      <button class="menu-mais-item loja" onclick="fecharModal('modal-menu-mais');abrirLojaRecompensas()"><span>🏆</span><b>Sonhos</b><small>PetCoins e desejos</small></button>
       <button class="menu-mais-item colecao" onclick="fecharModal('modal-menu-mais');abrirColecao()"><span>📚</span><b>Coleção</b><small>Itens e ações</small></button>
       <button class="menu-mais-item visual-pet" onclick="fecharModal('modal-menu-mais');abrirMeuPet()"><span>🐾</span><b>Meu Pet</b><small>Ações e evolução</small></button>
       <button class="menu-mais-item bau" onclick="fecharModal('modal-menu-mais');abrirBauDiario()"><span id="menu-mais-bau-emoji">🎁</span><b>Baú</b><small>Prêmio do dia</small></button>
@@ -240,7 +240,7 @@
     <p style="font-size:10px;color:#64748b;margin-bottom:12px;line-height:1.4">3 passos para deixar o RotinaPet redondo em casa:</p>
     <div class="stack" style="text-align:left">
       <div class="achievement-row"><span style="font-size:20px">1️⃣</span><div><b style="font-size:10px">PIN e privacidade</b><div style="font-size:8px;color:#64748b">Você já configurou. Guarde o PIN e, se puder, cadastre e-mail de recuperação.</div></div></div>
-      <div class="achievement-row"><span style="font-size:20px">2️⃣</span><div><b style="font-size:10px">Tarefas e prêmios</b><div style="font-size:8px;color:#64748b">Ajuste as tarefas do dia e cadastre prêmios que façam sentido para sua família.</div></div></div>
+      <div class="achievement-row"><span style="font-size:20px">2️⃣</span><div><b style="font-size:10px">Tarefas e sonhos</b><div style="font-size:8px;color:#64748b">Ajuste as tarefas do dia e combine os sonhos da criança em PetCoins.</div></div></div>
       <div class="achievement-row"><span style="font-size:20px">3️⃣</span><div><b style="font-size:10px">Código da família</b><div style="font-size:8px;color:#64748b">Convide a criança (WhatsApp ou QR) com o mesmo código para sincronizar os aparelhos.</div></div></div>
     </div>
     <button class="primary-btn green-btn" style="width:100%;margin-top:12px" onclick="fecharOnboardingPais()">Abrir o painel 🚀</button>
@@ -434,11 +434,8 @@
     <div class="stack" id="lista-metas-pais" style="margin-top:7px"></div>
   </div>
   <div class="section-card">
-    <div style="display:flex;justify-content:space-between;align-items:center">
-      <b style="font-size:10px">🎁 Gerenciar Prêmios</b>
-      <button class="primary-btn pink-btn" onclick="adicionarPremioPais()">＋ Novo prêmio</button>
-    </div>
-    <div style="font-size:8px;color:#64748b;margin-top:4px">Cadastre recompensas reais ou tempo de tela combinado com a criança.</div>
+    <b style="font-size:10px">💭 Sonhos combinados</b>
+    <div style="font-size:8px;color:#64748b;margin-top:4px">Ajuste ou remova sonhos que já receberam valor em PetCoins.</div>
     <div class="stack" id="lista-gerenciar-premios" style="margin-top:7px"></div>
   </div>
   <div class="section-card" id="card-mensagens-pais">
@@ -451,7 +448,7 @@
     </div>
   </div>
   <div class="section-card">
-    <b style="font-size:10px">🎟️ Solicitações de prêmios</b>
+    <b style="font-size:10px">🎟️ Sonhos e resgates</b>
     <div style="font-size:8px;color:#64748b;margin-top:4px">As moedas só são descontadas depois da aprovação. A criança pode acompanhar o histórico.</div>
     <div class="stack" id="lista-solicitacoes-premios" style="margin-top:7px"></div>
   </div>
@@ -586,7 +583,7 @@
   <div id="area-jogo-reacao" class="hidden"><div style="font-size:11px;font-weight:900;margin-bottom:10px;color:#475569">Toque no <span id="reacao-alvo-nome" style="font-size:20px"></span> antes do tempo acabar!</div><div id="reacao-grid" style="display:grid;grid-template-columns:repeat(3,1fr);gap:8px"></div></div>
   <div id="area-jogo-estrelas" class="hidden"><div id="estrelas-status" style="font-size:11px;font-weight:900;margin-bottom:8px;color:#475569">Pegue 5 estrelas!</div><div id="estrelas-area" style="position:relative;height:190px;border-radius:16px;background:linear-gradient(135deg,#172554,#4c1d95);overflow:hidden;border:2px solid #a78bfa"></div></div>
 </div></div>
-<div id="modal-recompensas" class="modal-overlay"><div class="modal"><div class="modal-title"><h3>🎁 Resgatar Prêmios</h3><button class="close-btn" onclick="fecharModal('modal-recompensas')">×</button></div><div class="section-card"><div style="display:flex;justify-content:space-between;font-size:9px;font-weight:900"><span>🎯 Meta: Passeio Especial</span><span id="texto-meta-progresso">0 / 50 🪙</span></div><div class="progress" style="margin-top:5px"><div id="barra-meta-progresso" style="width:0"></div></div></div><div class="stack" id="lista-itens-loja"></div></div></div>
+<div id="modal-recompensas" class="modal-overlay"><div class="modal"><div class="modal-title"><h3>💭 Criar meu sonho</h3><button class="close-btn" onclick="fecharModal('modal-recompensas')">×</button></div><p style="font-size:9px;color:#64748b;margin:0 0 8px">Conte aos seus pais o que você quer muito. Eles vão definir o valor em PetCoins.</p><div id="lista-itens-loja"></div></div></div>
 <div id="modal-aviso" class="modal-overlay"><div class="modal" style="text-align:center;max-width:320px"><div id="aviso-emoji" style="font-size:35px">🎉</div><h3 id="aviso-titulo" style="font-size:16px;margin:5px 0">Tudo certo!</h3><p id="aviso-texto" style="font-size:10px;color:#64748b"></p><button class="primary-btn" style="margin-top:10px" onclick="fecharModal('modal-aviso')">OK</button></div></div>
 <div id="modal-evento" class="modal-overlay">
   <div class="modal" style="text-align:center;max-width:340px">
@@ -619,7 +616,7 @@
       <div class="ajuda-item"><span class="ajuda-ico">🪙</span><div><b>Moedas e XP</b><span>Ganhe moedas e XP ao completar tarefas e desafios. XP sobe o nível e desbloqueia evoluções e novos pets.</span></div></div>
       <div class="ajuda-item"><span class="ajuda-ico">🎮</span><div><b>Desafio</b><span>Matemática, memória ou reação rápida — acerte e ganhe moedas + XP.</span></div></div>
       <div class="ajuda-item"><span class="ajuda-ico">🖼️</span><div><b>Fundos</b><span>Escolha o cenário do pet na loja de fundos.</span></div></div>
-      <div class="ajuda-item"><span class="ajuda-ico">🎁</span><div><b>Prêmios</b><span>Peça recompensas com suas moedas. Os pais precisam aprovar o resgate.</span></div></div>
+      <div class="ajuda-item"><span class="ajuda-ico">🎁</span><div><b>Sonhos</b><span>Conte o que você quer muito. Seus pais definem o valor em PetCoins e aprovam quando você pedir para realizar.</span></div></div>
       <div class="ajuda-item"><span class="ajuda-ico">🔥</span><div><b>Ofensiva</b><span>Complete todas as tarefas obrigatórias todos os dias para manter a sequência e ganhar o baú semanal.</span></div></div>
       <div class="ajuda-item"><span class="ajuda-ico">📚</span><div><b>Coleção</b><span>No topo, toque em Coleção para ver pets, evoluções e fundos que você já liberou.</span></div></div>
       <div class="ajuda-item"><span class="ajuda-ico">🎁</span><div><b>Surpresa do dia</b><span>Toque no presente no canto do pet (quando aparecer) para ganhar moedas bônus.</span></div></div>
