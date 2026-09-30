@@ -1,0 +1,15 @@
+#pet-principal.axolote-ativo{position:relative}
+#pet-principal.axolote-ativo #pet-svg-container,#pet-principal.axolote-ativo .gato-laranja-img{display:none!important}
+#pet-principal .axolote-img{position:absolute;inset:0;width:100%;height:100%;object-fit:contain;pointer-events:none;z-index:4}
+#pet-principal.axolote-ativo .axolote-img{display:block}
+#acoes-gato-laranja[hidden]{display:none!important}
+#acoes-gato-laranja[data-modo-botoes="axolote"]{gap:6px;align-items:center}
+.axolote-acao-btn{position:relative;flex:0 0 auto;min-width:82px;min-height:38px;padding:7px 9px;border:1px solid #ffffffb8;border-radius:13px;background:linear-gradient(145deg,#38bdf8,#2563eb);color:#fff;display:flex;align-items:center;justify-content:center;gap:4px;font:900 10px/1.1 'Nunito',sans-serif;text-shadow:0 1px 2px #164e63;box-shadow:inset 0 1px 0 #ffffff77,0 4px 9px #0f274233;cursor:pointer}
+.axolote-acao-btn .action-icon{font-size:16px}
+.axolote-acao-btn.axo-bloqueada{filter:saturate(.65);opacity:.82}
+.axolote-comprar-btn{width:100%;margin-top:5px;padding:7px 8px;border:0;border-radius:10px;background:linear-gradient(135deg,#fbbf24,#f97316);color:#fff;font-size:9px;font-weight:900;cursor:pointer}
+.axolote-comprar-btn:disabled{background:#dcfce7;color:#166534;cursor:default}
+.axolote-reacao-card img{width:64px;height:72px;object-fit:contain;border-radius:10px;background:linear-gradient(145deg,#eff6ff,#fdf2f8)}
+.axolote-reacao-card{align-items:center;text-align:center}
+.axolote-loja p{font-size:9px;color:#64748b}
+@media(max-width:380px){.axolote-acao-btn{min-width:74px;padding:6px 7px;font-size:9px}}

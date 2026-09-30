@@ -72,7 +72,8 @@ unicornio:{id:'unicornio',nome:'Lumi',emoji:'🦄',desbloqueioNivel:20,som:'',ev
 dinossauro:{id:'dinossauro',nome:'Rex',emoji:'🦖',desbloqueioNivel:25,som:'',evolucoes:[
 {nivel:1,nome:'Filhote Jurássico',desc:'Escamas fofas e cauda forte'},{nivel:21,nome:'Rex Explorador',desc:'Cristas maiores e mochila aventureira'},{nivel:41,nome:'Rex Vulcânico',desc:'Placas incandescentes e magma'},{nivel:61,nome:'Rei Jurássico',desc:'Coroa fóssil e armadura pré-histórica'},{nivel:81,nome:'Titã Primordial',desc:'Aura ancestral, placas douradas e energia sísmica'}]},
 capivara:{id:'capivara',nome:'Capi',emoji:'🦫',desbloqueioNivel:30,som:'',evolucoes:[
-{nivel:1,nome:'Capivara Tranquila',desc:'Pelagem macia e expressão serena'},{nivel:21,nome:'Capi de Banho',desc:'Toalha macia e vapor relaxante'},{nivel:41,nome:'Capi Tropical',desc:'Coroa de folhas e flores'},{nivel:61,nome:'Capi Zen',desc:'Kimono confortável e aura calma'},{nivel:81,nome:'Mestre das Águas',desc:'Coroa de lótus, água brilhante e aura dourada'}]}
+{nivel:1,nome:'Capivara Tranquila',desc:'Pelagem macia e expressão serena'},{nivel:21,nome:'Capi de Banho',desc:'Toalha macia e vapor relaxante'},{nivel:41,nome:'Capi Tropical',desc:'Coroa de folhas e flores'},{nivel:61,nome:'Capi Zen',desc:'Kimono confortável e aura calma'},{nivel:81,nome:'Mestre das Águas',desc:'Coroa de lótus, água brilhante e aura dourada'}]},
+axolote:{id:'axolote',nome:'Axolote',emoji:'🥚',desbloqueioNivel:10,som:'',evolucoes:[{nivel:1,nome:'Axolote no Ovo',desc:'Fase 1 · dentro do ovo'}]}
 };
 function ajustarCor(hex,amt){
   hex=String(hex).replace('#','');
@@ -83,6 +84,7 @@ function ajustarCor(hex,amt){
   return '#'+((1<<24)+(r<<16)+(g<<8)+b).toString(16).slice(1);
 }
 function petSVG(tipo,fase){
+if(tipo==='axolote')return '';
 const colors={gato:'#33333d',cachorra:'#F4A261',cabra:'#F5E6D3',frango:'#FFF9C4',unicornio:'#f8d7ff',dinossauro:'#79c267',capivara:'#b98258'};
 const c=colors[tipo],dark=tipo==='gato'?'#111827':tipo==='cachorra'?'#2D1B10':tipo==='cabra'?'#8B5A2B':'#552200';
 const acento={gato:c,cachorra:'#E76F51',cabra:'#8B5A2B',frango:'#ff3344'}[tipo];
