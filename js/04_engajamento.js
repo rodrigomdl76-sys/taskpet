@@ -63,9 +63,9 @@ function abrirPremioBauDiario(){
   estado.bauDatasResgatadas.push(data);
   estado.bauDatasResgatadas=estado.bauDatasResgatadas.slice(-90);
   if(data===hoje)estado.bauDiarioAbertoData=hoje;
-  const raras=(typeof ALBUM_FIGURINHAS!=='undefined'?ALBUM_FIGURINHAS:[]).filter(f=>['Rara','Épica'].includes(f.raridade)&&!estado.adesivos.includes(f.id));
+  const figurinhasIlustradas=(typeof ALBUM_FIGURINHAS!=='undefined'?ALBUM_FIGURINHAS:[]).filter(f=>f.imagem&&!estado.adesivos.includes(f.id));
   const n=Math.random();let texto,valor;
-  if(n<.12&&raras.length){const figurinha=raras[Math.floor(Math.random()*raras.length)];estado.adesivos.push(figurinha.id);texto=`${figurinha.emoji} Figurinha ${figurinha.raridade.toLowerCase()}: ${figurinha.nome}`;}
+  if(n<.12&&figurinhasIlustradas.length){const figurinha=figurinhasIlustradas[Math.floor(Math.random()*figurinhasIlustradas.length)];estado.adesivos.push(figurinha.id);texto=`${figurinha.emoji} Figurinha: ${figurinha.nome}`;}
   else if(n<.55){valor=8+Math.floor(Math.random()*8);estado.moedas+=valor;creditoMesada(valor);texto=`+${valor} moedas`;}
   else if(n<.88){valor=20;ganharXP(valor);texto=`+${valor} XP`;}
   else{estado.escudosOfensiva=Math.min(2,(Number(estado.escudosOfensiva)||0)+1);texto='🛡️ Escudo da ofensiva';}
