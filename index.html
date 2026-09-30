@@ -82,7 +82,6 @@
     <div class="home-profile-card">
       <button type="button" class="top-pill top-perfil-crianca" id="btn-perfil-crianca" onclick="abrirPerfilCrianca()" aria-label="Escolher ícone e apelido do perfil"><span class="perfil-crianca-emoji" id="perfil-crianca-emoji">🐾</span><span class="perfil-crianca-nome" id="perfil-crianca-nome">Meu perfil</span><span class="profile-edit" aria-hidden="true">✎</span></button>
       <div class="evo-name" id="pet-evol-nome">Pipoca • Ovo-gato</div>
-
     </div>
     <div class="home-hud-actions">
       <button class="top-pill hud-tile" id="btn-pill-streak" onclick="abrirModal('modal-conquistas')" title="Sequência diária"><span aria-hidden="true">🔥</span><strong id="txt-streak">0</strong><small>Ofensiva</small></button>
@@ -246,6 +245,7 @@
 </div>
 <div id="modal-fundos" class="modal-overlay"><div class="modal"><div class="modal-title"><h3 id="titulo-loja-visual">🖼️ Loja de Fundos</h3><button class="close-btn" onclick="fecharModal('modal-fundos')">×</button></div>
   <p style="font-size:9px;color:#64748b;margin-bottom:10px" id="desc-loja-visual">Escolha um cenário para seu pet.</p>
+  <section class="gestos-loja" aria-labelledby="titulo-gestos-loja"><h4 id="titulo-gestos-loja">✨ Gestos do Ovo-gato</h4><p>Compre com PetCoins ou conquiste pela ofensiva. Cada gesto fica disponível uma única vez.</p><div id="grid-gestos-loja" class="gestos-grid"></div></section>
   <div class="grid-fundos" id="grid-fundos"></div>
   <h4 class="titulo-temas-loja">✨ Palcos do pet</h4>
   <p class="descricao-temas-loja">Escolha onde o pet fica apoiado. Combine o palco com qualquer fundo.</p>
@@ -645,7 +645,7 @@
 <div class="toast" id="toast"></div>
 <div class="banner-offline" id="banner-offline">📡 Sem conexão — as alterações serão sincronizadas quando a internet voltar.</div>
 <div class="banner-evento" id="banner-evento" onclick="abrirModalEventoSazonal()"></div>
-<script src="js/02_principal.js?v=missoes-carrossel-1" defer></script>
+<script src="js/02_principal.js?v=gestos-1" defer></script>
   <script src="js/03_extras_01.js" defer></script>
 <div id="modal-central-aventuras" class="modal-overlay"><div class="modal" style="max-width:360px"><div class="modal-title"><h3>🌟 Central de Aventuras</h3><button class="close-btn" onclick="fecharModal('modal-central-aventuras')">×</button></div><div id="central-aventuras-conteudo"></div></div></div>
 <div id="modal-bau-diario" class="modal-overlay"><div class="modal" style="max-width:320px;text-align:center"><div class="modal-title"><h3>🎁 Baú do Dia</h3><button class="close-btn" onclick="fecharModal('modal-bau-diario')">×</button></div><div id="bau-diario-conteudo"></div></div></div>
@@ -668,7 +668,7 @@
      numa função só, sem duplo processamento. Este bloco de estilo continua sendo usado. -->
 
 <link rel="stylesheet" href="css/12_mapa_vivo.css">
-<script src="js/08_meu_pet.js" defer></script><script src="js/09_gato_laranja.js?v=security-perf-1" defer></script>
+<script src="js/08_meu_pet.js?v=gestos-1" defer></script><script src="js/09_gato_laranja.js?v=gestos-1" defer></script>
 <link rel="stylesheet" href="css/14_pet_companheiro.css?v=3">
 <script src="js/10_pet_companheiro.js?v=5" defer></script>
 <link rel="stylesheet" href="css/17_pet_no_chao.css?v=2">
@@ -680,5 +680,7 @@
 <link rel="stylesheet" href="css/20_palcos.css?v=2">
 <link rel="stylesheet" href="css/21_home_v2.css?v=9">
 <script src="js/12_home_nav.js?v=2" defer></script>
+<link rel="stylesheet" href="css/22_gestos.css?v=1">
+<script src="js/13_gestos.js?v=1" defer></script>
 </body>
 </html>

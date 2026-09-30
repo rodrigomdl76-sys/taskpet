@@ -25,6 +25,8 @@
       document.body.appendChild(modal);
     }
     document.getElementById('meupet-conteudo').innerHTML = `<div class="meupet-hero"><div class="meupet-avatar">🐾</div><div class="meupet-title">${esc(nome)}</div><div class="meupet-sub">Nível ${nivel} · ${aprovadas} tarefas aprovadas</div></div>${perfilAtivo==='crianca'?'<label class="field-label" for="input-nome-pet" style="display:block;margin-top:12px">Dê um nome ao seu pet</label><div style="display:flex;gap:6px"><input class="field" id="input-nome-pet" maxlength="18" autocomplete="off" placeholder="Nome do pet"><button type="button" class="primary-btn" onclick="salvarNomePet()">Salvar</button></div>':''}<button class="primary-btn" style="width:100%;margin-top:10px" onclick="fecharModal('modal-meu-pet');abrirColecao()">Ver evoluções e fundos</button>`;
+    window.verificarMarcosGestos?.();
+    window.renderizarGestosMeuPet?.(document.getElementById('meupet-conteudo'));
     const input=document.getElementById('input-nome-pet');if(input)input.value=nome;
     abrirModal('modal-meu-pet');
   };

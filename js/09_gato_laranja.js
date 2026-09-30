@@ -6,6 +6,7 @@
     1:{idle:'01_parado.webp',carinho:'02_carinho.webp',dormir:'03_dormir.webp',comemoracao:'04_comemorar.webp'},
     3:{idle:'01_parado.webp',carinho:'02_carinho.webp',dormir:'03_dormir.webp',comemoracao:'04_comemorar.webp'}
   };
+  const gestos = {1:{pulinho:'gestos/ovo_gato_pulinho.webp',giro:'gestos/ovo_gato_giro.webp'}};
   const acoes = [{id:'carinho',icone:'💖',nome:'Dar Carinho'},{id:'comemoracao',icone:'🎉',nome:'Comemorar'}];
   let img, volta, faseVisivel=0, faseTeste=0, acao='', chave='', token=0, audioAtivo=0;
   let fasePrecarregada=0, imagensPrecarregadas=[];
@@ -14,7 +15,7 @@
   const fase = () => perfilAtivo==='pais' && faseTeste ? faseTeste : faseReal();
   function voltar(){clearTimeout(volta);volta=null;acao='';mostrar();}
   function caminho(f,a){
-    return `${pasta}fase${f}/${arquivos[f][a]}`;
+    return gestos[f]?.[a] ? `${pasta}${gestos[f][a]}` : `${pasta}fase${f}/${arquivos[f][a]}`;
   }
   function precarregarFase(f){
     if(fasePrecarregada===f || !arquivos[f])return;
@@ -22,7 +23,8 @@
       if(fase()!==f || fasePrecarregada===f)return;
       fasePrecarregada=f;
       imagensPrecarregadas=[];
-      for(const acao of Object.keys(arquivos[f])){
+      const disponiveis=[...Object.keys(arquivos[f]),...Object.keys(gestos[f]||{}).filter(id=>window.gestoPetLiberado?.(id))];
+      for(const acao of disponiveis){
         const imagem=new Image();
         imagem.decoding='async';
         imagem.src=caminho(f,acao);
@@ -44,7 +46,7 @@
   function mostrar(){
     if(!garantirImagem())return;
     const f=fase();const pedido=acao || ((new Date().getHours()>=21 || new Date().getHours()<7)?'dormir':'idle');
-    const a=arquivos[f][pedido]?pedido:'idle';
+    const a=(arquivos[f][pedido]||gestos[f]?.[pedido])?pedido:'idle';
     const novaChave=`${f}/${a}`;
     if(chave===novaChave)return;
     chave=novaChave;faseVisivel=f;
@@ -52,11 +54,11 @@
     atualizarBotoes();
   }
   function tocar(a){
-    if(!arquivos[fase()]?.[a] || a==='idle')return;
+    if(a==='idle'||(!arquivos[fase()]?.[a]&&!(gestos[fase()]?.[a]&&window.gestoPetLiberado?.(a))))return;
     clearTimeout(volta);acao=a;chave='';mostrar();
     const atual=++token;
-    const duracao={carinho:1300,comemoracao:2100}[a]||2300;
-    volta=setTimeout(()=>{if(token===atual)voltar()},fase()===2?duracao:2300);
+    const duracao={carinho:1300,comemoracao:2100,pulinho:3000,giro:2250}[a]||2300;
+    volta=setTimeout(()=>{if(token===atual)voltar()},gestos[fase()]?.[a]?duracao:(fase()===2?duracao:2300));
   }
   function atualizarBotoes(){
     const area=document.getElementById('acoes-gato-laranja');if(!area)return;
