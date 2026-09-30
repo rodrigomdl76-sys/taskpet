@@ -193,3 +193,45 @@ body .app :is(.home-nav-btn,.hud-tile,.pet-action-btn,.task-header):focus-visibl
   body .app .tasks-section{padding:7px}
   .missao-mini{min-height:48px}
 }
+
+/* Atalho discreto para as recompensas pendentes. */
+#atalho-caixa-conquistas.caixa-conquistas-atalho {
+  position: fixed;
+  z-index: 60;
+  top: max(210px, calc(env(safe-area-inset-top) + 172px));
+  right: max(14px, env(safe-area-inset-right));
+  width: 46px;
+  height: 46px;
+  min-width: 46px;
+  padding: 0;
+  display: none;
+  place-items: center;
+  border: 2px solid rgba(255,255,255,.92);
+  border-radius: 50%;
+  background: linear-gradient(145deg,#ffd878,#f3a52d);
+  color: #583b12;
+  box-shadow: 0 3px 11px rgba(39,25,10,.34);
+  font-size: 22px;
+  line-height: 1;
+}
+#atalho-caixa-conquistas .caixa-conquistas-icone { display:block; transform:translateY(-1px); }
+#atalho-caixa-conquistas #contador-caixa-conquistas {
+  position:absolute;
+  top:-5px;
+  right:-5px;
+  min-width:19px;
+  height:19px;
+  display:grid;
+  place-items:center;
+  padding:0 4px;
+  border:2px solid #fff;
+  border-radius:12px;
+  background:#db2777;
+  color:#fff;
+  font-size:10px;
+  font-weight:900;
+  line-height:1;
+}
+@media (max-width:600px) {
+  #atalho-caixa-conquistas.caixa-conquistas-atalho { top: max(210px, calc(env(safe-area-inset-top) + 172px)); }
+}
