@@ -68,3 +68,28 @@ body .xp-text { color: #172033; text-shadow: 0 1px 2px #fff; }
 .tour-hud-actions .tour-proximo { background: #a7f3d0; color: #064e3b; }
 .tour-hud-actions .tour-pular { background: #334155; color: #fff; }
 @media (prefers-reduced-motion: reduce) { .ovo-boas-vindas, .pet-stage.eclosao-inicial .cat-wrapper { animation: none; } }
+
+/* Animações dos novos companheiros da loja de mini pets. */
+.pet-companheiro[data-mini-pet="sapo"] .passarinho-flutua { animation: miniSapoPula 1.8s ease-in-out infinite; }
+.pet-companheiro[data-mini-pet="pato"] .passarinho-flutua { animation: miniPatoBoia 2.8s ease-in-out infinite; }
+.pet-companheiro[data-mini-pet="tartaruga"] .passarinho-flutua { animation: miniTartarugaPasseia 5.2s ease-in-out infinite; }
+.pet-companheiro[data-mini-pet="vagalumes"] .passarinho-flutua { animation: miniVagalumesVoam 4.8s ease-in-out infinite; }
+.pet-companheiro[data-mini-pet="coelho"] .passarinho-flutua { animation: miniCoelhoSalta 1.55s ease-in-out infinite; }
+.mini-vagalume { filter: drop-shadow(0 0 4px #ffeb69); animation: miniVagalumeBrilha 1.3s ease-in-out infinite alternate; transform-box: fill-box; transform-origin: center; }
+.mini-vagalume:nth-child(2) { animation-delay: -.7s; }
+.mini-vagalume:nth-child(3) { animation-delay: -.35s; }
+.mini-vagalume:nth-child(4) { animation-delay: -.9s; }
+@keyframes miniSapoPula { 0%,100%{transform:translate(0,0)} 24%{transform:translate(9px,-12px)} 50%{transform:translate(19px,0)} 74%{transform:translate(9px,-9px)} }
+@keyframes miniPatoBoia { 0%,100%{transform:translateY(0) rotate(-3deg)} 50%{transform:translateY(-4px) rotate(3deg)} }
+@keyframes miniTartarugaPasseia { 0%,100%{transform:translateX(0)} 50%{transform:translateX(8px)} }
+@keyframes miniVagalumesVoam { 0%,100%{transform:translate(0,0)} 50%{transform:translate(3px,-4px)} }
+@keyframes miniVagalumeBrilha { from{opacity:.28;transform:scale(.72)} to{opacity:1;transform:scale(1.18)} }
+@keyframes miniCoelhoSalta { 0%,100%{transform:translate(0,0)} 22%{transform:translate(11px,-15px)} 48%{transform:translate(22px,0)} 74%{transform:translate(10px,-12px)} }
+@media (prefers-reduced-motion: reduce) {
+  .pet-companheiro[data-mini-pet="sapo"] .passarinho-flutua,
+  .pet-companheiro[data-mini-pet="pato"] .passarinho-flutua,
+  .pet-companheiro[data-mini-pet="tartaruga"] .passarinho-flutua,
+  .pet-companheiro[data-mini-pet="vagalumes"] .passarinho-flutua,
+  .pet-companheiro[data-mini-pet="coelho"] .passarinho-flutua,
+  .mini-vagalume { animation: none; }
+}
