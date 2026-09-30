@@ -22,7 +22,7 @@
 /* HOME — ações em uma faixa, com três botões visíveis e gesto por swipe. */
 body .app .pet-actions-shell{order:2;position:relative;flex:0 0 auto;width:100%;min-width:0}
 body .app .pet-actions{
-  display:flex;align-items:stretch;gap:clamp(6px,2vw,11px);width:100%;
+  display:flex;flex-wrap:nowrap;align-items:stretch;gap:clamp(6px,2vw,11px);width:100%;
   overflow-x:auto;overflow-y:hidden;overscroll-behavior-x:contain;
   scroll-snap-type:x mandatory;scrollbar-width:none;-webkit-overflow-scrolling:touch;
   padding:1px 2px 8px;margin:0;
