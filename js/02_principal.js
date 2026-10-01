@@ -449,6 +449,7 @@ try{
   sincronizacaoNuvemAtiva=false;
   statusSyncAtual='local';
 }
+window.__rotinapetInitialSync=inicializacaoFirebase.catch(()=>undefined);
 function definirIdUsuario(uid){
   if(uid) localStorage.setItem('ROTINAPET_UID', uid);
   statusSyncAtual='online';

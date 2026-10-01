@@ -7,6 +7,22 @@
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <meta name="theme-color" content="#7c3aed">
+<style id="rotinapet-startup-critical">
+  html.rp-starting,html.rp-starting body{min-height:100%;background:#101932}
+  html.rp-starting body>*:not(#rp-startup-screen){visibility:hidden!important}
+  #rp-startup-screen{position:fixed;inset:0;z-index:2147483000;display:none;place-items:center;overflow:hidden;background:radial-gradient(ellipse at 50% 42%,#2d5d91 0%,#172c52 48%,#101932 100%);color:#fff;font-family:system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;opacity:0;transition:opacity .24s ease}
+  html.rp-starting #rp-startup-screen{display:grid;opacity:1}
+  #rp-startup-screen .rp-startup-card{display:grid;justify-items:center;gap:14px;padding:28px;text-align:center}
+  #rp-startup-screen .rp-startup-mascot{display:grid;place-items:center;width:88px;height:88px;border:1px solid #ffffff42;border-radius:28px;background:#ffffff16;box-shadow:0 16px 50px #02081755;font-size:48px;animation:rpStartupBob 1.5s ease-in-out infinite}
+  #rp-startup-screen .rp-startup-spinner{width:34px;height:34px;border:3px solid #ffffff42;border-top-color:#f9c74f;border-right-color:#a78bfa;border-radius:50%;animation:rpStartupSpin .8s linear infinite}
+  #rp-startup-screen .rp-startup-title{font-size:17px;font-weight:900;letter-spacing:.01em}
+  #rp-startup-screen .rp-startup-caption{max-width:255px;color:#d9e8ff;font-size:12px;line-height:1.5}
+  @keyframes rpStartupSpin{to{transform:rotate(360deg)}}
+  @keyframes rpStartupBob{0%,100%{transform:translateY(0)}50%{transform:translateY(-5px)}}
+  @media(prefers-reduced-motion:reduce){#rp-startup-screen .rp-startup-spinner,#rp-startup-screen .rp-startup-mascot{animation:none}}
+</style>
+<script>document.documentElement.classList.add('rp-starting')</script>
+<link rel="stylesheet" href="css/14_pet_companheiro.css?v=5">
 <link rel="manifest" href="manifest.json">
 <link rel="apple-touch-icon" href="icon-192.png">
 <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.9.3/dist/confetti.browser.min.js" defer></script>
@@ -25,7 +41,7 @@
 <link rel="stylesheet" href="css/05_evolucao_pet.css">
 <link rel="stylesheet" href="css/13_gato_laranja.css?v=pet-visivel-2">
 </head>
-<body class="cenario-ceu">
+<body class="cenario-ceu">\n<div id="rp-startup-screen" role="status" aria-live="polite"><div class="rp-startup-card"><div class="rp-startup-mascot" aria-hidden="true">🐾</div><div class="rp-startup-spinner" aria-hidden="true"></div><strong class="rp-startup-title">Preparando seu cantinho…</strong><span class="rp-startup-caption">Carregando o pet, os cenários e suas aventuras.</span></div></div>
 <!-- Tela Login por E-mail -->
 <div class="tela-pin" id="telaLoginEmail" style="display:none;">
   <div class="caixa-pin">
@@ -672,7 +688,7 @@
 
 <link rel="stylesheet" href="css/12_mapa_vivo.css">
 <script src="js/08_meu_pet.js?v=gestos-1" defer></script><script src="js/09_gato_laranja.js?v=gestos-6" defer></script>
-<link rel="stylesheet" href="css/14_pet_companheiro.css?v=4">
+
 <script src="js/10_pet_companheiro.js?v=6" defer></script>
 <link rel="stylesheet" href="css/17_pet_no_chao.css?v=2">
 <link rel="stylesheet" href="css/18_topo_limpo.css?v=2">
@@ -687,5 +703,29 @@
 <link rel="stylesheet" href="css/22_gestos.css?v=5">
 <script src="js/13_gestos.js?v=4" defer></script>
 <script src="js/16_axolote.js?v=1" defer></script>
+<script>
+(() => {
+  let finalizando = false;
+  async function liberarApp() {
+    if (finalizando) return;
+    finalizando = true;
+    const limite = new Promise(resolve => setTimeout(resolve, 12000));
+    const sincronizacao = window.__rotinapetInitialSync || Promise.resolve();
+    const fontes = document.fonts?.ready || Promise.resolve();
+    const imagens = Array.from(document.images, imagem =>
+      typeof imagem.decode === 'function' ? imagem.decode().catch(() => undefined) : Promise.resolve()
+    );
+    await Promise.race([Promise.allSettled([sincronizacao, fontes, ...imagens]), limite]);
+    requestAnimationFrame(() => requestAnimationFrame(() => {
+      document.documentElement.classList.remove('rp-starting');
+      const tela = document.getElementById('rp-startup-screen');
+      tela?.setAttribute('aria-hidden', 'true');
+      setTimeout(() => tela?.remove(), 280);
+    }));
+  }
+  window.addEventListener('load', liberarApp, { once: true });
+  setTimeout(() => { if (document.readyState === 'complete') liberarApp(); }, 13000);
+})();
+</script>
 </body>
 </html>
