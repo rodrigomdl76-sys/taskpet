@@ -55,6 +55,9 @@
       if(r.acaoDireta){window.abrirLojaFundos?.();mostrarToast('🔒 Compre “'+r.nome+'” na loja para usar esta reação.')}
       return;
     }
+    if(id==='brilho')window.dispararEfeitoPet?.('brilho');
+    else if(id==='giro')window.dispararEfeitoPet?.('giro');
+    else if(id==='espiar')window.dispararEfeitoPet?.('espiar');
     clearTimeout(timer);acao=r.sprite;const meuToken=++token;
     exibir(r.sprite,true);
     timer=setTimeout(()=>{if(token===meuToken){acao='idle';exibir('idle',true)}},r.duracao);
