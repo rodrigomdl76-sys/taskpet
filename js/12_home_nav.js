@@ -1,3 +1,4 @@
+function abrirLojaPrincipal(){abrirModal('modal-loja-principal')}
 /* A navegação usa as telas e funções existentes; só Tarefas muda a composição da Home. */
 function navegarHome(destino){
   const app=document.querySelector('.app');
@@ -13,7 +14,7 @@ function navegarHome(destino){
     if(ativo)botao.setAttribute('aria-current','page');else botao.removeAttribute('aria-current');
   });
   if(destino==='jogar')abrirDesafio();
-  if(destino==='loja')abrirLojaFundos();
+  if(destino==='loja')abrirLojaPrincipal();
   if(destino==='voz')alternarGravador();
 }
 
