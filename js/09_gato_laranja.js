@@ -56,6 +56,9 @@
     atualizarBotoes();
   }
   function tocar(a){
+    if(a==='comemoracao')window.dispararEfeitoPet?.('comemoracao');
+    else if(a==='pulinho')window.dispararEfeitoPet?.('brincar');
+    else if(a==='giro')window.dispararEfeitoPet?.('giro');
     const f=fase();
     const gestoLiberado=window.gestoPetLiberado?.(a) && (a==='pulinho'||a==='giro');
     if(a==='idle'||(!arquivos[f]?.[a]&&!gestoLiberado))return;
