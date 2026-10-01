@@ -21,3 +21,191 @@ body:before{content:"";position:fixed;inset:-15%;z-index:-1;pointer-events:none;
 @media(max-width:390px){.sticker-card{min-height:84px}.atalho-aventura small{font-size:7px}}@media(prefers-reduced-motion:reduce){body:before,.pet-stage:before{display:none}.bg-layer,.cenario-detalhes,.particulas-cenario{transform:none!important}.sticker-card.new,.album-hero:after{animation:none!important}}
 
 .sticker-art{width:58px;height:58px;display:grid;place-items:center;font-size:29px;filter:drop-shadow(0 4px 5px rgba(15,23,42,.14))}.sticker-art img{width:100%;height:100%;object-fit:contain;display:block}
+
+
+/* Álbum em páginas: navegação numerada e figurinhas com proporção estável no celular. */
+#modal-album-figurinhas .album-modal{
+  width:min(460px,calc(100vw - 24px))!important;
+  max-width:460px!important;
+  max-height:88dvh;
+  overflow-x:hidden;
+  overflow-y:auto;
+  overscroll-behavior:contain;
+  padding:16px;
+}
+#modal-album-figurinhas .album-pages-wrap{margin-top:10px;min-width:0}
+#modal-album-figurinhas .album-page-tabs{
+  display:flex!important;
+  flex-wrap:nowrap;
+  justify-content:center;
+  gap:7px;
+  overflow:hidden!important;
+  padding:4px 2px 12px;
+  counter-reset:album-page-number;
+}
+#modal-album-figurinhas .album-page-tab{
+  position:relative;
+  display:grid!important;
+  place-items:center;
+  flex:0 0 29px!important;
+  width:29px!important;
+  min-width:29px;
+  height:29px!important;
+  padding:0!important;
+  border:1px solid #d9d2e8;
+  border-radius:50%!important;
+  background:#f7f5fb!important;
+  color:transparent!important;
+  font-size:0!important;
+  box-shadow:0 2px 5px #312e8110;
+  counter-increment:album-page-number;
+}
+#modal-album-figurinhas .album-page-tab::after{
+  content:counter(album-page-number);
+  color:#64748b;
+  font-size:11px;
+  font-weight:900;
+}
+#modal-album-figurinhas .album-page-tab.active{
+  border-color:#7c3aed!important;
+  background:#7c3aed!important;
+  box-shadow:0 0 0 4px #7c3aed20,0 5px 12px #7c3aed30!important;
+}
+#modal-album-figurinhas .album-page-tab.active::after{color:#fff}
+#modal-album-figurinhas .album-page-tab.complete::before{
+  content:"";
+  position:absolute;
+  top:-2px;
+  right:-2px;
+  width:8px;
+  height:8px;
+  border:2px solid #fff;
+  border-radius:50%;
+  background:#f4b942;
+}
+#modal-album-figurinhas .album-page{
+  position:relative;
+  overflow:hidden;
+  padding:14px;
+  border:1px solid #eadfca;
+  border-radius:18px;
+  background:linear-gradient(145deg,#fffefa,#fffaf0);
+  color:#263248;
+  box-shadow:0 8px 22px #654b1a14,inset 0 1px #fff;
+}
+#modal-album-figurinhas .album-page::before{
+  content:"";
+  position:absolute;
+  inset:0 auto 0 0;
+  width:5px;
+  background:linear-gradient(#c4b5fd,#f4c95d);
+  opacity:.75;
+}
+#modal-album-figurinhas .album-page-head{
+  align-items:flex-start;
+  gap:8px;
+  margin:0 0 11px;
+  padding:0 0 10px 4px;
+  border-bottom:1px dashed #e6dcc9;
+}
+#modal-album-figurinhas .album-section-label{
+  display:block;
+  margin-bottom:3px;
+  color:#8b6b37;
+  font-size:8px;
+  font-weight:1000;
+  letter-spacing:.9px;
+}
+#modal-album-figurinhas .album-page-title{
+  color:#263248;
+  font-size:15px;
+  line-height:1.2;
+  overflow-wrap:anywhere;
+}
+#modal-album-figurinhas .album-page-count{
+  display:block;
+  margin-top:4px;
+  color:#64748b;
+  font-size:9px;
+  font-weight:800;
+}
+#modal-album-figurinhas .album-page-reward{
+  flex:0 0 auto;
+  max-width:120px;
+  padding:7px 8px;
+  border:1px solid #ead7a4;
+  border-radius:11px;
+  background:#fff7df;
+  color:#76571b;
+  font-size:8px;
+  line-height:1.3;
+}
+#modal-album-figurinhas .album-page-reward small{display:block;font-size:7px;font-weight:900;letter-spacing:.5px}
+#modal-album-figurinhas .album-page-reward b{display:block;margin-top:2px}
+#modal-album-figurinhas .adesivos-grade{
+  display:grid!important;
+  grid-template-columns:repeat(2,minmax(0,1fr))!important;
+  gap:10px;
+  width:100%;
+  margin:0;
+}
+#modal-album-figurinhas .sticker-card{
+  box-sizing:border-box;
+  width:100%;
+  min-width:0;
+  min-height:138px;
+  padding:9px 7px;
+  border-radius:13px;
+}
+#modal-album-figurinhas .sticker-card.locked{
+  border:1px dashed #c9bd9f;
+  background:linear-gradient(145deg,#faf8f1,#f3eee3);
+  filter:none;
+  opacity:.88;
+}
+#modal-album-figurinhas .sticker-card.unlocked{border-width:1px;background:linear-gradient(145deg,#fff,#fff8df)}
+#modal-album-figurinhas .sticker-art{
+  width:76px;
+  height:76px;
+  max-width:100%;
+  font-size:48px;
+}
+#modal-album-figurinhas .sticker-card strong{
+  display:-webkit-box;
+  max-width:100%;
+  overflow:hidden;
+  color:#334155;
+  font-size:10px;
+  line-height:1.2;
+  text-align:center;
+  overflow-wrap:anywhere;
+  -webkit-box-orient:vertical;
+  -webkit-line-clamp:2;
+}
+#modal-album-figurinhas .sticker-card small{
+  max-width:100%;
+  color:#64748b;
+  font-size:8px;
+  line-height:1.2;
+  text-align:center;
+}
+#modal-album-figurinhas .album-page-complete{color:#76571b}
+#modal-album-figurinhas .album-global-progress{
+  display:flex;
+  justify-content:space-between;
+  gap:8px;
+  margin:10px 2px 0;
+  color:#64748b;
+  font-size:9px;
+}
+#modal-album-figurinhas .album-global-progress b{color:#6d28d9;text-align:right}
+@media(max-width:380px){
+  #modal-album-figurinhas .album-modal{width:calc(100vw - 18px)!important;padding:12px}
+  #modal-album-figurinhas .album-page{padding:12px 10px}
+  #modal-album-figurinhas .adesivos-grade{gap:7px}
+  #modal-album-figurinhas .sticker-card{min-height:126px}
+  #modal-album-figurinhas .sticker-art{width:66px;height:66px}
+}
+@media(prefers-reduced-motion:reduce){
+  #modal-album-figurinhas .album-page{animation:none!important}
+}
