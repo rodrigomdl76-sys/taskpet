@@ -1486,7 +1486,7 @@ function acaoPet(tipo){
   }
   tocarAudioPet(PETS[estado.petAtual].som);
   navigator.vibrate?.(30);
-  animarPetToque(null);
+  animarPetToque(null,tipo);
   salvar();
   atualizarTela();
 }
@@ -1506,7 +1506,61 @@ function aplicarDecayPet(){
   salvar();
   atualizarTela();
 }
-function animarPetToque(e){
+function animarPetToque(e,tipo='carinho'){
+  const wrap=document.getElementById('pet-principal');
+  const stage=document.querySelector('.pet-stage');
+  if(wrap){
+    wrap.classList.remove('pet-bounce');
+    void wrap.offsetWidth;
+    wrap.classList.add('pet-bounce');
+    setTimeout(()=>wrap.classList.remove('pet-bounce'),600);
+  }
+  if(stage){
+    stage.classList.remove('stage-react');
+    void stage.offsetWidth;
+    stage.classList.add('stage-react');
+    setTimeout(()=>stage.classList.remove('stage-react'),750);
+  }
+  if(tipo==='carinho')dispararHeartsBurst(e);
+  else dispararEfeitoPet(tipo);
+}
+function dispararEfeitoPet(tipo){
+  const area=document.getElementById('pet-section-area');
+  if(!area)return;
+  const simbolos={
+    brincar:['🎾','🐾','⭐','✨','🎾','🐾'],
+    alimentar:['🍎','🍓','🍪','✨','🍏','💛'],
+    dormir:['🌙','⭐','💤','✨','🌙','⭐'],
+    comemoracao:['🎉','✨','⭐','🎊','💫','🎉'],
+    giro:['🌀','✨','⭐','💫','🌀','✨'],
+    espiar:['👀','❔','💭','✨','👀','❔'],
+    brilho:['✨','💫','⭐','✨','🌟','💫'],
+    risada:['😄','✨','💛','😄','⭐','✨']
+  }[tipo];
+  if(!simbolos)return;
+  const host=document.createElement('div');
+  host.className='pet-reaction-burst pet-reaction-'+tipo;
+  host.setAttribute('aria-hidden','true');
+  for(let i=0;i<simbolos.length;i++){
+    const el=document.createElement('i');
+    const ang=(-155+Math.random()*130)*Math.PI/180;
+    const dist=38+Math.random()*58;
+    el.textContent=simbolos[i];
+    el.style.setProperty('--dx',Math.cos(ang)*dist+'px');
+    el.style.setProperty('--dy',(-Math.abs(Math.sin(ang))*dist-12)+'px');
+    el.style.setProperty('--rot',(-25+Math.random()*50)+'deg');
+    el.style.setProperty('--delay',(Math.random()*.12)+'s');
+    host.appendChild(el);
+  }
+  area.appendChild(host);
+  setTimeout(()=>host.remove(),1250);
+  if(tipo==='comemoracao'||tipo==='brilho'){
+    const wrap=document.getElementById('pet-principal');
+    if(wrap){wrap.classList.remove('pet-reacao-pulinho');void wrap.offsetWidth;wrap.classList.add('pet-reacao-pulinho');setTimeout(()=>wrap.classList.remove('pet-reacao-pulinho'),700)}
+    dispararConfetes(48,CORES_CONFETE_PET[estado.petAtual]);
+  }
+}
+function dispararHeartsBurst(e){
   const wrap=document.getElementById('pet-principal');
   const stage=document.querySelector('.pet-stage');
   if(wrap){
