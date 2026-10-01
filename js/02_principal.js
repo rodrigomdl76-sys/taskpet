@@ -73,7 +73,7 @@ dinossauro:{id:'dinossauro',nome:'Rex',emoji:'🦖',desbloqueioNivel:25,som:'',e
 {nivel:1,nome:'Filhote Jurássico',desc:'Escamas fofas e cauda forte'},{nivel:21,nome:'Rex Explorador',desc:'Cristas maiores e mochila aventureira'},{nivel:41,nome:'Rex Vulcânico',desc:'Placas incandescentes e magma'},{nivel:61,nome:'Rei Jurássico',desc:'Coroa fóssil e armadura pré-histórica'},{nivel:81,nome:'Titã Primordial',desc:'Aura ancestral, placas douradas e energia sísmica'}]},
 capivara:{id:'capivara',nome:'Capi',emoji:'🦫',desbloqueioNivel:30,som:'',evolucoes:[
 {nivel:1,nome:'Capivara Tranquila',desc:'Pelagem macia e expressão serena'},{nivel:21,nome:'Capi de Banho',desc:'Toalha macia e vapor relaxante'},{nivel:41,nome:'Capi Tropical',desc:'Coroa de folhas e flores'},{nivel:61,nome:'Capi Zen',desc:'Kimono confortável e aura calma'},{nivel:81,nome:'Mestre das Águas',desc:'Coroa de lótus, água brilhante e aura dourada'}]},
-axolote:{id:'axolote',nome:'Axolote',emoji:'🥚',desbloqueioNivel:10,som:'',evolucoes:[{nivel:1,nome:'Axolote no Ovo',desc:'Fase 1 · dentro do ovo'}]}
+axolote:{id:'axolote',nome:'Axolote',emoji:'🥚',desbloqueioNivel:10,som:'',evolucoes:[{nivel:1,nome:'Axolote no Ovo',desc:'Fase 1 · dentro do ovo'},{nivel:21,nome:'Axolote Desabrochado',desc:'Saiu do ovo e começou uma nova aventura'}]}
 };
 function ajustarCor(hex,amt){
   hex=String(hex).replace('#','');
@@ -1173,6 +1173,7 @@ function obterDadosPetAtual(){
 }
 function nivelJogador(){return Math.max(...Object.values(estado.pets).map(p=>p.nivel||1))}
 function calcularFase(n){
+  if(estado.petAtual==='axolote')return n>=21?2:1;
   if(estado.petAtual==='gato'){
     const confirmou=Number(estado.pets?.gato?.faseConfirmada)||1;
     if(n<21 || confirmou<2)return 1;
@@ -1891,7 +1892,7 @@ function darRemedio(){
   registrarLogAtividade('Remédio dado ao pet');
 }
 function criarTextoFlutuante(txt,e){const area=document.getElementById('pet-section-area'),s=document.createElement('div');s.className='floating-text';s.textContent=txt;const r=area.getBoundingClientRect();s.style.left=(e?.clientX?r.left<e.clientX?e.clientX-r.left:80:90)+'px';s.style.top='35%';area.appendChild(s);setTimeout(()=>s.remove(),900)}
-const CORES_CONFETE_PET={gato:['#a78bfa','#1e293b','#f8fafc'],cachorra:['#f4a261','#e76f51','#fff7ed'],cabra:['#f5e6d3','#a0522d','#fefce8'],frango:['#fff9c4','#ff6b6b','#ffcc00'],unicornio:['#f9a8d4','#a78bfa','#67e8f9'],dinossauro:['#84cc16','#166534','#f59e0b'],capivara:['#c08457','#92400e','#fde68a']};
+const CORES_CONFETE_PET={gato:['#a78bfa','#1e293b','#f8fafc'],cachorra:['#f4a261','#e76f51','#fff7ed'],cabra:['#f5e6d3','#a0522d','#fefce8'],frango:['#fff9c4','#ff6b6b','#ffcc00'],unicornio:['#f9a8d4','#a78bfa','#67e8f9'],dinossauro:['#84cc16','#166534','#f59e0b'],capivara:['#c08457','#92400e','#fde68a'],axolote:['#f5a7c7','#7dd3d7','#e8faff']};
 function ganharXP(qtd,e){
   const p=obterDadosPetAtual();
   const faseAntes=calcularFase(p.nivel);
@@ -1908,7 +1909,10 @@ function ganharXP(qtd,e){
   if(subiu){
     playSound('nivel');
     const faseDepois=calcularFase(p.nivel);
-    if(faseDepois>faseAntes)setTimeout(()=>celebrarEvolucaoPet(faseDepois),180);
+    if(faseDepois>faseAntes){
+      if(estado.petAtual==='axolote' && faseDepois===2 && typeof window.iniciarEvolucaoAxolote==='function')setTimeout(()=>window.iniciarEvolucaoAxolote(),180);
+      else setTimeout(()=>celebrarEvolucaoPet(faseDepois),180);
+    }
     if(estado.petAtual==='gato' && p.nivel>=21 && (Number(p.faseConfirmada)||1)<2)mostrarToast('✨ Evolução disponível! Toque em Evoluir.');
     mostrarToast(`🎉 Nível ${p.nivel}!`);
     const badge=document.querySelector('.level-badge');

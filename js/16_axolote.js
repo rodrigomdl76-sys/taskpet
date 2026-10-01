@@ -9,7 +9,9 @@
     {id:'espiar',sprite:'espiar',nome:'Espiar / virar',icone:'👀',preco:25,duracao:1450,acaoDireta:true}
   ];
   const pasta='animacoes/axolote/fase1/';
-  let img=null,acao='idle',timer=null,token=0,srcAtual='';
+  const pastaFase2='animacoes/axolote/fase2/';
+  const faseAtual=()=>Number(estado.pets?.axolote?.nivel||1)>=21?2:1;
+  let img=null,acao='idle',timer=null,token=0,srcAtual='',timerDesbloqueio=null,animandoDesbloqueio=false;
   const ativa=()=>estado?.petAtual==='axolote';
   function compras(){
     if(!Array.isArray(estado.axoloteReacoesCompradas))estado.axoloteReacoesCompradas=[];
@@ -32,7 +34,7 @@
     }
     pet.classList.add('axolote-ativo');
     if(!img||img.parentNode!==pet){
-      img=document.createElement('img');img.className='axolote-img';img.alt='Axolote dentro do ovo';img.draggable=false;
+      img=document.createElement('img');img.className='axolote-img';img.alt=faseAtual()===1?'Axolote dentro do ovo':'Axolote fora do ovo, fase 2';img.draggable=false;
       img.onload=()=>pet.classList.add('axolote-pronto');
       img.onerror=()=>{pet.classList.remove('axolote-pronto');img.alt='Animação da Axolote indisponível'};
       pet.appendChild(img);
@@ -41,7 +43,9 @@
   }
   function exibir(id='idle',reiniciar=false){
     if(!garantirImagem())return;
-    const nome=sprites[id]?id:'idle',src=pasta+sprites[nome];
+    const nome=sprites[id]?id:'idle';
+    img.alt=faseAtual()===1?'Axolote dentro do ovo':'Axolote fora do ovo, fase 2';
+    const src=faseAtual()>=2&&nome==='idle'?pastaFase2+'01_parado.webp':pasta+sprites[nome];
     if(reiniciar||src!==srcAtual){srcAtual=src;img.src=src}
   }
   function tocar(id){
@@ -54,6 +58,30 @@
     clearTimeout(timer);acao=r.sprite;const meuToken=++token;
     exibir(r.sprite,true);
     timer=setTimeout(()=>{if(token===meuToken){acao='idle';exibir('idle',true)}},r.duracao);
+  }
+  function iniciarEvolucao(){
+    if(!ativa()||faseAtual()<2||!garantirImagem())return;
+    clearTimeout(timer);clearTimeout(timerDesbloqueio);
+    const meuToken=++token;
+    acao='unlock';animandoDesbloqueio=true;
+    const intro=new Image();
+    const concluir=()=>{
+      if(meuToken!==token)return;
+      animandoDesbloqueio=false;acao='idle';exibir('idle',true);
+      window.celebrarEvolucaoPet?.(2);
+    };
+    intro.onload=()=>{
+      if(meuToken!==token||!ativa())return;
+      srcAtual=pastaFase2+'00_desbloqueio.webp';img.src=srcAtual;
+      timerDesbloqueio=setTimeout(concluir,5250);
+    };
+    intro.onerror=()=>{
+      if(meuToken!==token)return;
+      animandoDesbloqueio=false;acao='idle';exibir('idle',true);
+      mostrarToast('A Axolote evoluiu! A animação de abertura do ovo não carregou.');
+      window.celebrarEvolucaoPet?.(2);
+    };
+    intro.src=pastaFase2+'00_desbloqueio.webp';
   }
   function criarBotao(r,label){
     const b=document.createElement('button');b.type='button';b.className='axolote-acao-btn';
@@ -90,10 +118,11 @@
       if(!acao||acao==='idle')exibir('idle');
       desenharBotoes();return;
     }
-    clearTimeout(timer);acao='idle';token++;
+    clearTimeout(timer);clearTimeout(timerDesbloqueio);animandoDesbloqueio=false;acao='idle';token++;
     garantirImagem();window.atualizarAcoesGato?.();
   }
   window.acaoAxolote=tocar;
+  window.iniciarEvolucaoAxolote=iniciarEvolucao;
   window.renderizarLojaAxolote=()=>{
     const grid=document.getElementById('grid-reacoes-axolote');if(!grid)return;
     grid.replaceChildren();
