@@ -1,0 +1,67 @@
+/* Ateliê do Pet — aparência, falas, reações e pequenos itens de cenário. */
+#modal-atelie-pet .atelier-modal{
+  width:min(520px,calc(100vw - 24px));
+  max-width:520px!important;
+  max-height:88dvh;
+  overflow:auto;
+  padding:15px;
+  background:linear-gradient(180deg,#fff,#fbfaff);
+}
+.atelier-intro{
+  display:flex;align-items:center;justify-content:space-between;gap:10px;
+  margin:0 0 10px;padding:10px 12px;border:1px solid #e9ddff;border-radius:16px;
+  background:linear-gradient(135deg,#f5f3ff,#fff7ed);color:#475569;font-size:10px;
+}
+.atelier-intro strong{display:block;color:#312e81;font-size:12px}
+.atelier-balance{flex:none;border-radius:999px;background:#fff;padding:7px 10px;color:#6d28d9;font-weight:1000;box-shadow:0 3px 10px #312e8114}
+.atelier-tabs{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:5px;margin:8px 0 11px}
+.atelier-tab{min-width:0;border:1px solid #e2e8f0;border-radius:12px;padding:8px 3px;background:#fff;color:#64748b;font-size:8px;font-weight:900;line-height:1.15}
+.atelier-tab span{display:block;font-size:16px;margin-bottom:3px}
+.atelier-tab.ativo{color:#6d28d9;border-color:#c4b5fd;background:#f5f3ff;box-shadow:0 3px 10px #7c3aed18}
+.atelier-section-title{margin:4px 2px 8px;color:#334155;font-size:11px;font-weight:1000}
+.atelier-items{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}
+.atelier-card{min-width:0;display:flex;flex-direction:column;align-items:center;text-align:center;padding:10px 8px;border:1px solid #e5e7eb;border-radius:15px;background:linear-gradient(145deg,#fff,#f8fafc);box-shadow:0 4px 12px #0f172a0b}
+.atelier-card.ativo{border-color:#a78bfa;background:linear-gradient(145deg,#faf5ff,#fff);box-shadow:0 0 0 2px #a78bfa25}
+.atelier-card-emoji{display:grid;place-items:center;width:48px;height:48px;margin-bottom:5px;border-radius:14px;background:#f5f3ff;font-size:27px}
+.atelier-card strong{font-size:10px;color:#334155}
+.atelier-card small{min-height:28px;margin-top:3px;color:#64748b;font-size:8px;line-height:1.3}
+.atelier-card button{width:100%;margin-top:7px;border:0;border-radius:10px;padding:8px 5px;background:linear-gradient(135deg,#7c3aed,#8b5cf6);color:#fff;font-size:9px;font-weight:1000}
+.atelier-card button.secundario{background:#ede9fe;color:#6d28d9}
+.atelier-card button:disabled{background:#f1f5f9;color:#94a3b8}
+.atelier-empty{grid-column:1/-1;padding:18px 10px;text-align:center;border:1px dashed #cbd5e1;border-radius:14px;color:#64748b;font-size:10px}
+.loja-hub-grid .atelier-hub-card{grid-column:1/-1}
+.atelier-hub-card{border-color:#c4b5fd!important;background:linear-gradient(135deg,#f5f3ff,#fff)!important}
+.atelier-hub-card span{background:#ede9fe!important}
+.cat-wrapper{position:relative}
+.rp-pet-cosmetic-layer{position:absolute;inset:0;z-index:9;pointer-events:none}
+.rp-pet-accessory{position:absolute;display:block;transform:translate(-50%,-50%);font-size:27px;line-height:1;filter:drop-shadow(0 2px 2px #17203350);white-space:nowrap}
+.rp-pet-accessory.eyes{font-size:29px}
+.rp-pet-accessory.crown{font-size:25px}
+.rp-pet-accessory.neck{font-size:22px}
+#balao-fala.atelier-bubble-comic{border:2px solid #172033;border-radius:8px;background:#fff7ce;box-shadow:3px 4px 0 #17203335;transform:rotate(-2deg)}
+#balao-fala.atelier-bubble-comic:after{border-top-color:#fff7ce}
+#balao-fala.atelier-bubble-cloud{border:1px solid #bfdbfe;border-radius:24px;background:linear-gradient(145deg,#fff,#eff6ff);box-shadow:0 7px 20px #2563eb24}
+#balao-fala.atelier-bubble-cloud:after{border-top-color:#eff6ff}
+#balao-fala[data-atelier-reaction]:before{content:attr(data-atelier-reaction);position:absolute;right:-7px;top:-13px;font-size:17px;filter:drop-shadow(0 2px 2px #fff)}
+#atelier-scene-layer{position:absolute;inset:0;z-index:2;pointer-events:none}
+.atelier-rug{position:absolute;left:50%;bottom:9%;width:128px;height:25px;transform:translateX(-50%);border:2px solid #ffffffb0;border-radius:50%;background:linear-gradient(90deg,#a78bfa,#f9a8d4,#fbbf24);box-shadow:0 7px 14px #312e8140}
+.atelier-scene-prop{position:absolute;bottom:17%;display:grid;place-items:center;width:42px;height:42px;padding:0;border:0;border-radius:50%;background:#ffffffca;box-shadow:0 5px 12px #17203330;font-size:25px;pointer-events:auto;cursor:pointer;animation:atelierPropFloat 2.6s ease-in-out infinite}
+.atelier-scene-prop.ball{left:5%}
+.atelier-scene-prop.teddy{right:5%;animation-delay:-1.1s}
+.atelier-scene-prop:active{transform:scale(.85)}
+.atelier-scene-prop.jumpy{animation:atelierPropJump .55s ease}
+@keyframes atelierPropFloat{0%,100%{translate:0 0}50%{translate:0 -4px}}
+@keyframes atelierPropJump{50%{translate:0 -18px;rotate:12deg}}
+.rp-tap-fx{position:absolute;inset:0;z-index:30;pointer-events:none;overflow:visible}
+.rp-tap-fx i{position:absolute;left:var(--x);top:var(--y);font-size:var(--size);font-style:normal;animation:atelierTapRise .95s cubic-bezier(.16,.75,.25,1) var(--delay) both}
+@keyframes atelierTapRise{0%{opacity:0;transform:translate(-50%,0) scale(.45)}20%{opacity:1}100%{opacity:0;transform:translate(calc(-50% + var(--dx)),var(--dy)) rotate(var(--rot)) scale(1.25)}}
+#btn-perfil-crianca.atelier-frame-gold .perfil-crianca-emoji{outline:2px solid #f5b942;outline-offset:2px;border-radius:50%;box-shadow:0 0 0 4px #f5b94245,0 0 13px #f59e0b70}
+@media(max-width:380px){
+ .atelier-modal{padding:11px!important}
+ .atelier-tabs{gap:3px}
+ .atelier-tab{font-size:7px;padding:7px 2px}
+ .atelier-card{padding:8px 5px}
+}
+@media(prefers-reduced-motion:reduce){
+ .atelier-scene-prop,.atelier-card button,.rp-tap-fx i{animation:none!important}
+}
