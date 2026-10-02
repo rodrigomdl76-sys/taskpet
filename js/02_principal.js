@@ -383,7 +383,7 @@ function familiaDaConta(user){
   const perfil=String(user?.displayName||'');
   if(!perfil.startsWith(PREFIXO_FAMILIA_CONTA))return null;
   const codigo=perfil.slice(PREFIXO_FAMILIA_CONTA.length);
-  return /^[a-z0-9_-]{8,}$/.test(codigo)?codigo:null;
+  return /^[a-z0-9_-]{1,64}$/.test(codigo)?codigo:null;
 }
 async function vincularFamiliaAConta(user){
   if(!user||user.isAnonymous)throw new Error('Entre com uma conta de responsável.');
