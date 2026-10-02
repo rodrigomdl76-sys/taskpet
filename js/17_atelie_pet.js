@@ -64,7 +64,15 @@
     }
   }
   function salvarEstado() {
-    try { if (typeof window.salvar === 'function') window.salvar(); } catch (e) { console.warn('Ateliê: não foi possível salvar agora.', e); }
+    try {
+      const atual = obterEstado();
+      if (atual && atual.criancaAtivaId) {
+        atual.criancasDados = atual.criancasDados || {};
+        const dados = atual.criancasDados[atual.criancaAtivaId] || (atual.criancasDados[atual.criancaAtivaId] = {});
+        dados.personalizacao = JSON.parse(JSON.stringify(personalizacao()));
+      }
+      if (typeof window.salvar === 'function') window.salvar();
+    } catch (e) { console.warn('Ateliê: não foi possível salvar agora.', e); }
   }
   function atualizar() {
     renderizar();
@@ -251,6 +259,16 @@
   }
 
   function instalarIntegracoes() {
+    if (typeof window.atualizarTela === 'function' && !window.atualizarTela.__atelierWrapped) {
+      const originalAtualizar = window.atualizarTela;
+      const atualizarComAtelie = function(...args) {
+        const resultado = originalAtualizar.apply(this, args);
+        renderizarVisuais();
+        return resultado;
+      };
+      atualizarComAtelie.__atelierWrapped = true;
+      window.atualizarTela = atualizarComAtelie;
+    }
     const hub = document.querySelector('.loja-hub-grid');
     if (hub && !document.getElementById('btn-abrir-atelie')) {
       const btn = document.createElement('button');
