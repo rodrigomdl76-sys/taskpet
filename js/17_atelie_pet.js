@@ -13,7 +13,24 @@
     {id:'tapete-arcoiris',aba:'cenario',slot:'cenario:chao',nome:'Tapete arco-íris',emoji:'🌈',preco:45,desc:'Um cantinho macio para o pet descansar.'},
     {id:'bola-cenario',aba:'cenario',slot:'cenario:esquerda',nome:'Bola saltitante',emoji:'⚽',preco:25,desc:'Toque na bola para ela dar um pulinho.'},
     {id:'ursinho-cenario',aba:'cenario',slot:'cenario:direita',nome:'Ursinho de pelúcia',emoji:'🧸',preco:35,desc:'Um amiguinho para enfeitar o palco.'},
-    {id:'moldura-dourada',aba:'perfil',slot:'perfil:moldura',nome:'Moldura dourada',emoji:'🌟',preco:40,desc:'Um brilho especial no ícone do perfil.'}
+    {id:'moldura-dourada',aba:'perfil',slot:'perfil:moldura',nome:'Moldura dourada',emoji:'🌟',preco:40,desc:'Um brilho especial no ícone do perfil.'},
+    {id:'tiara-flores',aba:'pet',slot:'pet:crown',nome:'Tiara de flores',emoji:'🌼',preco:45,desc:'Flores delicadas para enfeitar a cabeça.'},
+    {id:'curativo-estrelas',aba:'pet',slot:'pet:face',nome:'Curativo de estrela',emoji:'🩹',preco:30,desc:'Um adesivo fofo para o rostinho.'},
+    {id:'bochechas-rosadas',aba:'pet',slot:'pet:cheeks',nome:'Bochechas rosadas',emoji:'🌸',preco:35,desc:'Um toque corado e divertido no rosto.'},
+    {id:'fala-neon',aba:'falas',slot:'fala:balao',nome:'Balão neon',emoji:'💜',preco:40,desc:'Uma borda brilhante para as conversas.'},
+    {id:'fala-pixel',aba:'falas',slot:'fala:balao',nome:'Balão gamer',emoji:'👾',preco:40,desc:'Balão em estilo pixel para fãs de jogos.'},
+    {id:'fonte-redonda',aba:'falas',slot:'fala:fonte',nome:'Fonte redondinha',emoji:'🔤',preco:30,desc:'Letras suaves e arredondadas nas falas.'},
+    {id:'fonte-pixel',aba:'falas',slot:'fala:fonte',nome:'Fonte pixel',emoji:'🕹️',preco:35,desc:'Letras com clima de videogame retrô.'},
+    {id:'toque-arcoiris',aba:'toques',slot:'toque:efeito',nome:'Arco-íris',emoji:'🌈',preco:40,desc:'Um arco-íris aparece quando você toca no pet.'},
+    {id:'toque-confetes',aba:'toques',slot:'toque:efeito',nome:'Confetes',emoji:'🎊',preco:45,desc:'Uma chuva de confetes acompanha o carinho.'},
+    {id:'clima-manha',aba:'cenario',slot:'cenario:clima',nome:'Sol da manhã',emoji:'🌤️',preco:45,desc:'Uma luz dourada e tranquila no palco.'},
+    {id:'clima-entardecer',aba:'cenario',slot:'cenario:clima',nome:'Luz de entardecer',emoji:'🌇',preco:45,desc:'Tons quentinhos para o fim do dia.'},
+    {id:'clima-vagalumes',aba:'cenario',slot:'cenario:clima',nome:'Vaga-lumes',emoji:'🌟',preco:50,desc:'Pontinhos de luz brilham ao redor do pet.'},
+    {id:'clima-neve',aba:'cenario',slot:'cenario:clima',nome:'Neve suave',emoji:'❄️',preco:50,desc:'Flocos leves caem pelo cenário.'},
+    {id:'planta-cenario',aba:'cenario',slot:'cenario:centro',nome:'Plantinha',emoji:'🪴',preco:30,desc:'Uma planta alegre para decorar o palco.'},
+    {id:'almofada-cenario',aba:'cenario',slot:'cenario:frente',nome:'Almofada macia',emoji:'🛋️',preco:35,desc:'Um lugar fofinho para o pet descansar.'},
+    {id:'moldura-prateada',aba:'perfil',slot:'perfil:moldura',nome:'Moldura prateada',emoji:'❄️',preco:40,desc:'Um contorno brilhante em tom prateado.'},
+    {id:'moldura-arcoiris',aba:'perfil',slot:'perfil:moldura',nome:'Moldura arco-íris',emoji:'🌈',preco:50,desc:'Cores alegres em volta do ícone do perfil.'}
   ];
   const abas = [
     {id:'pet',emoji:'🐾',nome:'Pet'},
@@ -26,7 +43,7 @@
 
   function obterEstado() {
     if (typeof estado !== 'undefined' && estado) return estado;
-    return obterEstado() || null;
+    return null;
   }
   function personalizacao() {
     const atual = obterEstado();
@@ -140,7 +157,7 @@
   }
 
   const posicoes = {
-    crown:{top:'12%',left:'50%'}, eyes:{top:'41%',left:'50%'}, neck:{top:'68%',left:'50%'}
+    crown:{top:'12%',left:'50%'}, eyes:{top:'41%',left:'50%'}, neck:{top:'68%',left:'50%'}, face:{top:'55%',left:'63%'}
   };
   function renderizarVisuais() {
     const pet = document.querySelector('.cat-wrapper');
@@ -152,20 +169,38 @@
         layer.setAttribute('aria-hidden', 'true');
         pet.appendChild(layer);
       }
-      layer.innerHTML = ['crown','eyes','neck'].map(tipo => {
+      const partes = ['crown','eyes','neck','face'].map(tipo => {
         const x = item(equip('pet:' + tipo));
         if (!x) return '';
         const pos = posicoes[tipo];
         return '<span class="rp-pet-accessory ' + tipo + '" style="top:' + pos.top + ';left:' + pos.left + '">' + x.emoji + '</span>';
-      }).join('');
+      });
+      const bochechas = item(equip('pet:cheeks'));
+      if (bochechas) {
+        partes.push('<span class="rp-pet-accessory cheek left" aria-hidden="true">' + bochechas.emoji + '</span>');
+        partes.push('<span class="rp-pet-accessory cheek right" aria-hidden="true">' + bochechas.emoji + '</span>');
+      }
+      layer.innerHTML = partes.join('');
     }
     const fala = document.getElementById('balao-fala');
     if (fala) {
-      fala.classList.toggle('atelier-bubble-comic', equip('fala:balao') === 'fala-quadrinhos');
-      fala.classList.toggle('atelier-bubble-cloud', equip('fala:balao') === 'fala-nuvem');
+      ['atelier-bubble-comic','atelier-bubble-cloud','atelier-bubble-neon','atelier-bubble-pixel'].forEach(c => fala.classList.remove(c));
+      const skin = equip('fala:balao');
+      if (skin === 'fala-quadrinhos') fala.classList.add('atelier-bubble-comic');
+      if (skin === 'fala-nuvem') fala.classList.add('atelier-bubble-cloud');
+      if (skin === 'fala-neon') fala.classList.add('atelier-bubble-neon');
+      if (skin === 'fala-pixel') fala.classList.add('atelier-bubble-pixel');
+      fala.classList.toggle('atelier-font-round', equip('fala:fonte') === 'fonte-redonda');
+      fala.classList.toggle('atelier-font-pixel', equip('fala:fonte') === 'fonte-pixel');
     }
     const botaoPerfil = document.getElementById('btn-perfil-crianca');
-    if (botaoPerfil) botaoPerfil.classList.toggle('atelier-frame-gold', equip('perfil:moldura') === 'moldura-dourada');
+    if (botaoPerfil) {
+      ['atelier-frame-gold','atelier-frame-silver','atelier-frame-rainbow'].forEach(c => botaoPerfil.classList.remove(c));
+      const moldura = equip('perfil:moldura');
+      if (moldura === 'moldura-dourada') botaoPerfil.classList.add('atelier-frame-gold');
+      if (moldura === 'moldura-prateada') botaoPerfil.classList.add('atelier-frame-silver');
+      if (moldura === 'moldura-arcoiris') botaoPerfil.classList.add('atelier-frame-rainbow');
+    }
     renderizarCenario();
   }
   function renderizarCenario() {
@@ -183,20 +218,34 @@
         prop.classList.remove('jumpy');
         void prop.offsetWidth;
         prop.classList.add('jumpy');
-        avisar(prop.dataset.atelierProp === 'bola' ? 'A bola deu um pulinho! ⚽' : 'O ursinho acenou para você! 🧸');
+        const mensagens = {bola:'A bola deu um pulinho! ⚽',ursinho:'O ursinho acenou para você! 🧸',planta:'A plantinha balançou! 🪴',almofada:'Uma almofada bem macia! 🛋️'};
+        avisar(mensagens[prop.dataset.atelierProp] || 'Que cantinho aconchegante! ✨');
       });
     }
+    const clima = equip('cenario:clima');
+    const climas = {'clima-manha':'morning','clima-entardecer':'sunset','clima-vagalumes':'fireflies','clima-neve':'snow'};
+    const overlay = climas[clima] ? '<div class="atelier-weather weather-' + climas[clima] + '" aria-hidden="true"></div>' : '';
     const tapete = equip('cenario:chao') === 'tapete-arcoiris' ? '<div class="atelier-rug" aria-hidden="true"></div>' : '';
-    const bola = equip('cenario:esquerda') === 'bola-cenario' ? '<button type="button" class="atelier-scene-prop ball" data-atelier-prop="bola" aria-label="Brincar com a bola">⚽</button>' : '';
-    const ursinho = equip('cenario:direita') === 'ursinho-cenario' ? '<button type="button" class="atelier-scene-prop teddy" data-atelier-prop="ursinho" aria-label="Brincar com o ursinho">🧸</button>' : '';
-    layer.innerHTML = tapete + bola + ursinho;
+    const props = [
+      ['cenario:esquerda','bola-cenario','ball','⚽','bola','Brincar com a bola'],
+      ['cenario:direita','ursinho-cenario','teddy','🧸','ursinho','Brincar com o ursinho'],
+      ['cenario:centro','planta-cenario','plant','🪴','planta','Olhar a plantinha'],
+      ['cenario:frente','almofada-cenario','pillow','🛋️','almofada','Tocar na almofada']
+    ].map(([slot,id,classe,emoji,nome,aria]) => equip(slot) === id
+      ? '<button type="button" class="atelier-scene-prop ' + classe + '" data-atelier-prop="' + nome + '" aria-label="' + aria + '">' + emoji + '</button>' : '').join('');
+    layer.innerHTML = overlay + tapete + props;
   }
   function mostrarEfeitoToque(tipo) {
     const root = document.getElementById('pet-section-area');
     if (!root) return;
     let fx = root.querySelector('.rp-tap-fx');
     if (!fx) { fx = document.createElement('div'); fx.className = 'rp-tap-fx'; root.appendChild(fx); }
-    const emoji = tipo === 'toque-bolhas' ? ['🫧','🫧','💙'] : ['✨','⭐','🌟'];
+    const efeitos = {
+      'toque-bolhas':['🫧','🫧','💙'],
+      'toque-arcoiris':['🌈','✨','💖'],
+      'toque-confetes':['🎊','🎉','⭐']
+    };
+    const emoji = efeitos[tipo] || ['✨','⭐','🌟'];
     fx.innerHTML = emoji.map((e,i) => '<i style="--x:' + (35+i*15) + '%;--y:56%;--size:' + (18+i*3) + 'px;--delay:' + (i*.06) + 's;--dx:' + ((i-1)*24) + 'px;--dy:-62px;--rot:' + ((i-1)*24) + 'deg">' + e + '</i>').join('');
     setTimeout(() => { if (fx.isConnected) fx.innerHTML = ''; }, 1200);
   }
