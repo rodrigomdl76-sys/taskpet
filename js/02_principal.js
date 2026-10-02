@@ -364,11 +364,16 @@ function calcularDiffParaNuvem(base,atual){
   return mudancas;
 }
 const urlParams=new URLSearchParams(window.location.search);
-// Família agora exige ID com entropia adequada (mínimo 8 caracteres)
+// IDs antigos continuam válidos; novos IDs usam 128 bits aleatórios via Web Crypto.
+function gerarCodigoFamiliaNovo(){
+  const bytes=new Uint8Array(16);
+  crypto.getRandomValues(bytes);
+  return 'fam_'+Array.from(bytes,b=>b.toString(16).padStart(2,'0')).join('');
+}
 function sanitizarIdFamilia(id){
   const limp=(id||'').trim().toLowerCase().replace(/[^a-z0-9_-]/g,'');
     if (limp.length >= 8) return limp;
-  return 'fam_' + Math.random().toString(36).substring(2, 10);
+  return gerarCodigoFamiliaNovo();
 }
 let familiaExplicitaNesteAparelho=!!(urlParams.get('familia')||localStorage.getItem('ROTINAPET_FAMILIA_ID'));
 let codigoFamilia=sanitizarIdFamilia(urlParams.get('familia')||localStorage.getItem('ROTINAPET_FAMILIA_ID'));
@@ -408,7 +413,17 @@ function abrirQrConvite(){
   const link=obterLinkConvite();
   const img=document.getElementById('img-qr-convite');
   const txt=document.getElementById('txt-link-qr-convite');
-  if(img)img.src='https://api.qrserver.com/v1/create-qr-code/?size=220x220&data='+encodeURIComponent(link);
+  if(img){
+    try{
+      const qr=qrcode(0,'M');
+      qr.addData(link,'Byte');
+      qr.make();
+      img.src='data:image/svg+xml;charset=utf-8,'+encodeURIComponent(qr.createSvgTag(4,4,'QR do convite RotinaPet'));
+    }catch(error){
+      img.removeAttribute('src');
+      mostrarToast('Não foi possível gerar o QR Code neste aparelho.');
+    }
+  }
   if(txt)txt.textContent=link;
   abrirModal('modal-qrcode');
 }
