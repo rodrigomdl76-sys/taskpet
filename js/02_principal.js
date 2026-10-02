@@ -3360,7 +3360,7 @@ function registrarNoRelatorioDiario(tarefasSomar,moedasSomar){
   const chaves=Object.keys(estado.registroDiario).sort();
   if(chaves.length>60)delete estado.registroDiario[chaves[0]];
 }
-async async function apagarFotoDepoisDaAprovacao(t,registro){
+async function apagarFotoDepoisDaAprovacao(t,registro){
   const registrosAprovados=Object.values(t?.registros||{}).filter(r=>r&&r.status==='aprovada');
   if(registro&&!registrosAprovados.includes(registro))registrosAprovados.push(registro);
   const caminhos=new Set([t?.fotoPath,...registrosAprovados.map(r=>r.fotoPath)].filter(Boolean));
