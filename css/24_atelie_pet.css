@@ -65,3 +65,67 @@
 @media(prefers-reduced-motion:reduce){
  .atelier-scene-prop,.atelier-card button,.rp-tap-fx i{animation:none!important}
 }
+
+/* Segunda rodada: detalhes, temas e atmosfera. */
+.rp-pet-accessory.face{font-size:18px;transform:translate(-50%,-50%) rotate(-12deg)}
+.rp-pet-accessory.cheek{top:55%;font-size:17px;opacity:.82}
+.rp-pet-accessory.cheek.left{left:29%}
+.rp-pet-accessory.cheek.right{left:71%}
+#balao-fala.atelier-bubble-neon{
+  border:2px solid #c084fc;border-radius:18px;
+  background:linear-gradient(140deg,#241044,#4c1d95);color:#fff;
+  box-shadow:0 0 0 2px #e879f933,0 0 20px #a855f766;
+}
+#balao-fala.atelier-bubble-neon:after{border-top-color:#4c1d95}
+#balao-fala.atelier-bubble-pixel{
+  border:3px solid #172033;border-radius:4px;
+  background:#d9f99d;color:#1f2937;
+  box-shadow:4px 4px 0 #17203355;
+}
+#balao-fala.atelier-bubble-pixel:after{border-top-color:#d9f99d}
+#balao-fala.atelier-font-round{font-family:"Trebuchet MS",system-ui,sans-serif;letter-spacing:.015em}
+#balao-fala.atelier-font-pixel{font-family:"Courier New",monospace;font-weight:800;letter-spacing:-.04em}
+#btn-perfil-crianca.atelier-frame-silver .perfil-crianca-emoji{
+  outline:2px solid #cbd5e1;outline-offset:2px;border-radius:50%;
+  box-shadow:0 0 0 4px #e2e8f0a6,0 0 13px #94a3b870;
+}
+#btn-perfil-crianca.atelier-frame-rainbow .perfil-crianca-emoji{
+  outline:3px solid transparent;outline-offset:2px;border-radius:50%;
+  background:linear-gradient(#fff,#fff) padding-box,linear-gradient(135deg,#fb7185,#fbbf24,#34d399,#60a5fa,#c084fc) border-box;
+  box-shadow:0 0 0 4px #c084fc33,0 0 14px #a78bfa70;
+}
+#atelier-scene-layer .atelier-weather{
+  position:absolute;inset:0;z-index:0;pointer-events:none;overflow:hidden;
+}
+#atelier-scene-layer .weather-morning{
+  background:radial-gradient(ellipse at 88% 8%,#fff5b766 0,transparent 52%);
+}
+#atelier-scene-layer .weather-sunset{
+  background:linear-gradient(180deg,#fb923c24 0%,#f9731620 48%,transparent 100%);
+}
+#atelier-scene-layer .weather-fireflies{
+  background:
+    radial-gradient(circle at 18% 32%,#fef08a 0 1px,transparent 3px),
+    radial-gradient(circle at 78% 24%,#fde68a 0 1px,transparent 4px),
+    radial-gradient(circle at 87% 68%,#fef08a 0 1px,transparent 4px),
+    radial-gradient(circle at 27% 76%,#fde68a 0 1px,transparent 4px);
+  animation:atelierFireflyGlow 2.8s ease-in-out infinite alternate;
+}
+#atelier-scene-layer .weather-snow{
+  background-image:
+    radial-gradient(circle,#fff 0 1px,transparent 2px),
+    radial-gradient(circle,#dbeafe 0 1.5px,transparent 2.5px),
+    radial-gradient(circle,#fff 0 1px,transparent 2px);
+  background-size:47px 53px,71px 79px,93px 67px;
+  background-position:0 0,20px 15px,44px 31px;
+  animation:atelierSnowFall 5s linear infinite;
+}
+#atelier-scene-layer .atelier-rug,
+#atelier-scene-layer .atelier-scene-prop{z-index:2}
+.atelier-scene-prop.plant{left:16%;bottom:18%;animation-delay:-.5s}
+.atelier-scene-prop.pillow{right:16%;bottom:12%;width:48px;height:34px;border-radius:15px;font-size:24px;animation-delay:-1.7s}
+@keyframes atelierFireflyGlow{from{opacity:.35}to{opacity:1}}
+@keyframes atelierSnowFall{to{background-position:0 53px,20px 94px,44px 98px}}
+@media(prefers-reduced-motion:reduce){
+  #atelier-scene-layer .weather-fireflies,#atelier-scene-layer .weather-snow{animation:none!important}
+}
