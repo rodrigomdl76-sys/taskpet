@@ -1,12 +1,13 @@
 /* Reações animadas da Axolote fase 1: compradas na loja e ativas apenas com o pet selecionado. */
 (() => {
   const sprites={idle:'01_ocioso.webp',giro:'02_giro_ovo.webp',brilho:'03_brilho_magico.webp',risada:'04_risada.webp',espiar:'05_espiar.webp',carinho:'06_coracoes.webp'};
+  const spritesFase2={idle:'01_parado.webp',giro:'02_giro.webp',carinho:'03_carinho.webp',risada:'04_brincar.webp',brilho:'05_comemorar.webp',espiar:'06_pulinho.webp'};
   const reacoes=[
-    {id:'giro',sprite:'giro',nome:'Giro',icone:'🌀',preco:30,duracao:1500,acaoDireta:true},
-    {id:'carinho',sprite:'carinho',nome:'Carinho',icone:'💖',preco:25,duracao:1500},
-    {id:'risada',sprite:'risada',nome:'Risada feliz',icone:'😂',preco:25,duracao:1250},
-    {id:'brilho',sprite:'brilho',nome:'Brilho mágico',icone:'✨',preco:30,duracao:1750,acaoDireta:true},
-    {id:'espiar',sprite:'espiar',nome:'Espiar / virar',icone:'👀',preco:25,duracao:1450,acaoDireta:true}
+    {id:'giro',sprite:'giro',nome:'Giro',icone:'🌀',preco:30,duracao:1500,duracaoFase2:1720,acaoDireta:true},
+    {id:'carinho',sprite:'carinho',nome:'Carinho',icone:'💖',preco:25,duracao:1500,duracaoFase2:1140},
+    {id:'risada',sprite:'risada',nome:'Risada feliz',icone:'😂',preco:25,duracao:1250,duracaoFase2:1400},
+    {id:'brilho',sprite:'brilho',nome:'Brilho mágico',icone:'✨',preco:30,duracao:1750,duracaoFase2:900,acaoDireta:true},
+    {id:'espiar',sprite:'espiar',nome:'Espiar / virar',icone:'👀',preco:25,duracao:1450,duracaoFase2:640,acaoDireta:true}
   ];
   const pasta='animacoes/axolote/fase1/';
   const pastaFase2='animacoes/axolote/fase2/';
@@ -45,7 +46,7 @@
     if(!garantirImagem())return;
     const nome=sprites[id]?id:'idle';
     img.alt=faseAtual()===1?'Axolote dentro do ovo':'Axolote fora do ovo, fase 2';
-    const src=faseAtual()>=2&&nome==='idle'?pastaFase2+'01_parado.webp':pasta+sprites[nome];
+    const src=faseAtual()>=2?pastaFase2+spritesFase2[nome]:pasta+sprites[nome];
     if(reiniciar||src!==srcAtual){srcAtual=src;img.src=src}
   }
   function tocar(id){
@@ -60,7 +61,7 @@
     else if(id==='espiar')window.dispararEfeitoPet?.('espiar');
     clearTimeout(timer);acao=r.sprite;const meuToken=++token;
     exibir(r.sprite,true);
-    timer=setTimeout(()=>{if(token===meuToken){acao='idle';exibir('idle',true)}},r.duracao);
+    timer=setTimeout(()=>{if(token===meuToken){acao='idle';exibir('idle',true)}},faseAtual()>=2?r.duracaoFase2:r.duracao);
   }
   function iniciarEvolucao(){
     if(!ativa()||faseAtual()<2||!garantirImagem())return;
@@ -131,7 +132,7 @@
     grid.replaceChildren();
     for(const r of reacoes){
       const card=document.createElement('article');card.className='gesto-card axolote-reacao-card';
-      const imgPrev=document.createElement('img');imgPrev.src=pasta+sprites[r.sprite];imgPrev.alt='';imgPrev.loading='lazy';
+      const imgPrev=document.createElement('img');imgPrev.src=faseAtual()>=2?pastaFase2+spritesFase2[r.sprite]:pasta+sprites[r.sprite];imgPrev.alt='';imgPrev.loading='lazy';
       const title=document.createElement('strong');title.textContent=r.icone+' '+r.nome;
       const desc=document.createElement('small');desc.textContent=comprado(r.id)?'✓ Comprado':'Reação da Axolote · '+r.preco+' PetCoins';
       const button=document.createElement('button');button.type='button';button.className='axolote-comprar-btn';
