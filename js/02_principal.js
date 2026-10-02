@@ -3360,15 +3360,24 @@ function registrarNoRelatorioDiario(tarefasSomar,moedasSomar){
   const chaves=Object.keys(estado.registroDiario).sort();
   if(chaves.length>60)delete estado.registroDiario[chaves[0]];
 }
-async function apagarFotoDepoisDaAprovacao(t,registro){
-  const caminho=t?.fotoPath||registro?.fotoPath;
-  if(caminho&&storageFirebase){
-    try{await storageFirebase.ref(caminho).delete()}
-    catch(error){console.warn('Foto aprovada não pôde ser apagada do Storage:',error);registrarLogAtividade(`Aviso: falha ao apagar foto da tarefa ${t.texto}`)}
+async async function apagarFotoDepoisDaAprovacao(t,registro){
+  const registrosAprovados=Object.values(t?.registros||{}).filter(r=>r&&r.status==='aprovada');
+  if(registro&&!registrosAprovados.includes(registro))registrosAprovados.push(registro);
+  const caminhos=new Set([t?.fotoPath,...registrosAprovados.map(r=>r.fotoPath)].filter(Boolean));
+  if(storageFirebase&&caminhos.size){
+    const resultados=await Promise.allSettled([...caminhos].map(caminho=>storageFirebase.ref(caminho).delete()));
+    const falhas=resultados.filter(r=>r.status==='rejected');
+    if(falhas.length){
+      falhas.forEach(r=>console.warn('Foto aprovada não pôde ser apagada do Storage:',r.reason));
+      registrarLogAtividade(`Aviso: ${falhas.length} foto(s) aprovada(s) não puderam ser apagadas do Storage para a tarefa ${t.texto}`);
+    }
   }
-  // Remove referências locais e do registro diário, mesmo no plano Spark.
+  // Remove a foto atual e as cópias dos registros já aprovados. Fotos de
+  // registros ainda pendentes ou recusados continuam disponíveis aos pais.
   t.foto=null;t.fotoUrl=null;t.fotoPath=null;
-  if(registro){registro.foto=null;registro.fotoUrl=null;registro.fotoPath=null;registro.fotoApagadaEm=Date.now()}
+  registrosAprovados.forEach(r=>{
+    r.foto=null;r.fotoUrl=null;r.fotoPath=null;r.fotoApagadaEm=Date.now();
+  });
 }
 async function aprovarTarefaPais(id){
   const t=estado.tarefas.find(x=>String(x.id)===String(id));
