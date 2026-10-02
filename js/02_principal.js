@@ -370,9 +370,12 @@ function gerarCodigoFamiliaNovo(){
   crypto.getRandomValues(bytes);
   return 'fam_'+Array.from(bytes,b=>b.toString(16).padStart(2,'0')).join('');
 }
+function codigoFamiliaValido(codigo){
+  return /^[a-z0-9_-]{8,64}$/.test(codigo)||codigo==='vitor';
+}
 function sanitizarIdFamilia(id){
   const limp=(id||'').trim().toLowerCase().replace(/[^a-z0-9_-]/g,'');
-    if (limp.length >= 8) return limp;
+  if(codigoFamiliaValido(limp))return limp;
   return gerarCodigoFamiliaNovo();
 }
 let familiaExplicitaNesteAparelho=!!(urlParams.get('familia')||localStorage.getItem('ROTINAPET_FAMILIA_ID'));
@@ -383,7 +386,7 @@ function familiaDaConta(user){
   const perfil=String(user?.displayName||'');
   if(!perfil.startsWith(PREFIXO_FAMILIA_CONTA))return null;
   const codigo=perfil.slice(PREFIXO_FAMILIA_CONTA.length);
-  return /^[a-z0-9_-]{1,64}$/.test(codigo)?codigo:null;
+  return codigoFamiliaValido(codigo)?codigo:null;
 }
 async function vincularFamiliaAConta(user){
   if(!user||user.isAnonymous)throw new Error('Entre com uma conta de responsável.');
