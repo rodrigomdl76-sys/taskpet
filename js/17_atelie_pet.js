@@ -24,9 +24,14 @@
   ];
   let abaAtual = 'pet';
 
+  function obterEstado() {
+    if (typeof estado !== 'undefined' && estado) return estado;
+    return obterEstado() || null;
+  }
   function personalizacao() {
-    if (!window.estado) window.estado = {};
-    const p = window.estado.personalizacao || (window.estado.personalizacao = {});
+    const atual = obterEstado();
+    if (!atual) return {adquiridos:[], equipados:{}};
+    const p = atual.personalizacao || (atual.personalizacao = {});
     if (!Array.isArray(p.adquiridos)) p.adquiridos = [];
     if (!p.equipados || typeof p.equipados !== 'object') p.equipados = {};
     return p;
@@ -88,7 +93,7 @@
     const el = document.getElementById('modal-atelie-pet');
     if (!el) return;
     const balance = el.querySelector('[data-atelier-balance]');
-    if (balance) balance.textContent = String(Math.max(0, Number(window.estado?.moedas) || 0));
+    if (balance) balance.textContent = String(Math.max(0, Number(obterEstado()?.moedas) || 0));
     el.querySelector('.atelier-tabs').innerHTML = abas.map(a =>
       '<button type="button" class="atelier-tab' + (abaAtual === a.id ? ' ativo' : '') + '" role="tab" aria-selected="' + (abaAtual === a.id) + '" data-atelier-tab="' + a.id + '"><span>' + a.emoji + '</span>' + a.nome + '</button>'
     ).join('');
@@ -112,9 +117,9 @@
     if (!x) return;
     const p = personalizacao();
     if (acao === 'buy') {
-      const saldo = Math.max(0, Number(window.estado?.moedas) || 0);
+      const saldo = Math.max(0, Number(obterEstado()?.moedas) || 0);
       if (saldo < x.preco) { avisar('Faltam ' + (x.preco - saldo) + ' PetCoins para esse item.'); return; }
-      window.estado.moedas = saldo - x.preco;
+      obterEstado().moedas = saldo - x.preco;
       if (!p.adquiridos.includes(id)) p.adquiridos.push(id);
       p.equipados[x.slot] = id;
       salvarEstado();
@@ -213,7 +218,7 @@
         const result = original.apply(this, args);
         const fala = document.getElementById('balao-fala');
         if (fala) {
-          const humor = String(window.estado?.humor || '').toLowerCase();
+          const humor = String(obterEstado()?.humor || '').toLowerCase();
           const reacao = /feliz|alegr|animad/.test(humor) ? '💖' : /trist|cansad/.test(humor) ? '💤' : '✨';
           fala.setAttribute('data-atelier-reaction', reacao);
           setTimeout(() => fala.removeAttribute('data-atelier-reaction'), Number(args[1]) || 2600);
