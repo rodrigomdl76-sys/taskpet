@@ -479,7 +479,7 @@ const hojeLocal=()=>{const d=new Date();return `${d.getFullYear()}-${String(d.ge
 const ontemLocal=()=>{const d=new Date();d.setDate(d.getDate()-1);return `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`};
 // Campos que pertencem a UM filho específico (progresso do pet, tarefas, moedas...).
 // Tudo que NÃO está nessa lista é compartilhado pela família inteira (PIN, e-mails, taxa de câmbio).
-const CAMPOS_CRIANCA=['gestosDesbloqueados','palcoAtual','palcosComprados','decoracaoItens','extraDiaRemovida','avisosMissao','miniPetsComprados','miniPetAtivo','bauDatasResgatadas','historicoRecompensas','avisosRecompensas','acessorios','conquistas','habilidades','desafiosMathAcertos','dinheiroAcumulado','mesadaAtiva','fundoAtual','fundosComprados','temaInterfaceAtual','historicoConclusoes','idadeCrianca','dificuldadeJogos','nomePet','lembreteEnviadoData','metaMoedas','moedas','onboardingVistoCrianca','pausaAte','petAtual','pets','recompensas','sonhos','registroDiario','solicitacoesPremios','streak','surpresaResgatadaData','tarefas','tarefasHojeCount','timerFim','totalSacado','ultimoDiaAcesso','ultimoDiaConcluido','ultimoStreakPremiado','vozSalva','ultimoAcaoPet','ultimoDecay','desafioDiarioData','desafioDiarioFeitoData','bauDiarioAbertoData','escudosOfensiva','adesivos','eventoSemanalData','missaoFamilia','mensagensPais','historicoEngajamento'];
+const CAMPOS_CRIANCA=['personalizacao','gestosDesbloqueados','palcoAtual','palcosComprados','decoracaoItens','extraDiaRemovida','avisosMissao','miniPetsComprados','miniPetAtivo','bauDatasResgatadas','historicoRecompensas','avisosRecompensas','acessorios','conquistas','habilidades','desafiosMathAcertos','dinheiroAcumulado','mesadaAtiva','fundoAtual','fundosComprados','temaInterfaceAtual','historicoConclusoes','idadeCrianca','dificuldadeJogos','nomePet','lembreteEnviadoData','metaMoedas','moedas','onboardingVistoCrianca','pausaAte','petAtual','pets','recompensas','sonhos','registroDiario','solicitacoesPremios','streak','surpresaResgatadaData','tarefas','tarefasHojeCount','timerFim','totalSacado','ultimoDiaAcesso','ultimoDiaConcluido','ultimoStreakPremiado','vozSalva','ultimoAcaoPet','ultimoDecay','desafioDiarioData','desafioDiarioFeitoData','bauDiarioAbertoData','escudosOfensiva','adesivos','eventoSemanalData','missaoFamilia','mensagensPais','historicoEngajamento'];
 function valoresPadraoCrianca(){
   return {
     gestosDesbloqueados:[],decoracaoItens:[],extraDiaRemovida:null,miniPetsComprados:['passarinho'],miniPetAtivo:'passarinho',petAtual:'gato',moedas:15,dinheiroAcumulado:.15,mesadaAtiva:true,idadeCrianca:7,dificuldadeJogos:'auto',nomePet:'Pipoca',
@@ -488,7 +488,7 @@ function valoresPadraoCrianca(){
     tarefasHojeCount:0,desafiosMathAcertos:0,timerFim:null,vozSalva:null,
     pets:{gato:{nivel:1,xp:0,felicidade:100,saude:100,faseConfirmada:1},cachorra:{nivel:1,xp:0,felicidade:100,saude:100},cabra:{nivel:1,xp:0,felicidade:100,saude:100},frango:{nivel:1,xp:0,felicidade:100,saude:100},unicornio:{nivel:1,xp:0,felicidade:100,saude:100},dinossauro:{nivel:1,xp:0,felicidade:100,saude:100},capivara:{nivel:1,xp:0,felicidade:100,saude:100}},
     tarefas:[{id:1,texto:'Escovar os dentes',recompensa:5,xp:20,tipo:'obrigatoria',status:'pendente',foto:null,dias:[]},{id:2,texto:'Arrumar a cama',recompensa:5,xp:20,tipo:'obrigatoria',status:'pendente',foto:null,dias:[]}],
-    recompensas:[],sonhos:[],
+    recompensas:[],sonhos:[],personalizacao:{adquiridos:[],equipados:{}},
     solicitacoesPremios:[],conquistas:{},habilidades:{},acessorios:{comprados:[],ativo:null},pausaAte:null,
     historicoConclusoes:{},registroDiario:{},onboardingVistoCrianca:false,lembreteEnviadoData:null,
     surpresaResgatadaData:null,metasPersonalizadas:[],ultimoAcaoPet:{},ultimoDecay:null,desafioDiarioData:null,desafioDiarioFeitoData:null,bauDiarioAbertoData:null,bauDatasResgatadas:[],avisosRecompensas:[],historicoRecompensas:[],avisosMissao:[],escudosOfensiva:0,adesivos:[],eventoSemanalData:null,missaoFamilia:{alvo:20,progresso:0,inicio:null},mensagensPais:[],historicoEngajamento:[]
@@ -535,6 +535,22 @@ function garantirCriancaAtiva(){
     estado.criancaAtivaId=Object.keys(estado.criancas)[0];
   }
   estado.criancasDados=estado.criancasDados||{};
+  // A coleção era familiar. Na migração, cada perfil existente recebe uma cópia
+  // para ninguém perder itens; compras futuras passam a pertencer ao filho ativo.
+  const antiga=estado.personalizacao&&typeof estado.personalizacao==='object'
+    ? JSON.parse(JSON.stringify(estado.personalizacao)) : null;
+  Object.keys(estado.criancas).forEach(id=>{
+    const dados=estado.criancasDados[id]||(estado.criancasDados[id]={});
+    if(!dados.personalizacao){
+      dados.personalizacao=antiga
+        ? JSON.parse(JSON.stringify(antiga))
+        : {adquiridos:[],equipados:{}};
+    }
+  });
+  const dadosAtivos=estado.criancasDados[estado.criancaAtivaId];
+  if(!estado.personalizacao&&dadosAtivos?.personalizacao){
+    estado.personalizacao=JSON.parse(JSON.stringify(dadosAtivos.personalizacao));
+  }
 }
 const ICONES_PERFIL_CRIANCA=['🐾','🦁','🐱','🐶','🦊','🐼','🐸','🦄','🐬','⭐','🚀','🌈'];
 let iconePerfilSelecionado='🐾';
@@ -801,7 +817,10 @@ function aplicarEstadoRemotoComMerge(d){
   const tarefasAntesDosDados=estado.tarefas;
   if(dadosCriancaRemotos){
     const dadosAtuais=capturarDadosCrianca();
-    aplicarDadosCrianca({...dadosAtuais,...dadosCriancaRemotos});
+    const perfilRemoto={...dadosAtuais,...dadosCriancaRemotos};
+    // O estado ativo no topo da família é a versão mais recente do filho ativo.
+    if(d.personalizacao!==undefined)perfilRemoto.personalizacao=d.personalizacao;
+    aplicarDadosCrianca(perfilRemoto);
     estado.tarefas=aplicarTarefasDaCriancaSemPerderCadastro(tarefasAntesDosDados,estado.tarefas);
   }
   if(!Array.isArray(estado.tarefas))estado.tarefas=[];
