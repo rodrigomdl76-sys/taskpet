@@ -1598,47 +1598,35 @@ function dispararEfeitoPet(tipo){
   }
 }
 function dispararHeartsBurst(e){
-  const wrap=document.getElementById('pet-principal');
-  const stage=document.querySelector('.pet-stage');
-  if(wrap){
-    wrap.classList.remove('pet-bounce');
-    void wrap.offsetWidth;
-    wrap.classList.add('pet-bounce');
-    setTimeout(()=>wrap.classList.remove('pet-bounce'),600);
-  }
-  if(stage){
-    stage.classList.remove('stage-react');
-    void stage.offsetWidth;
-    stage.classList.add('stage-react');
-    setTimeout(()=>stage.classList.remove('stage-react'),750);
-  }
-  dispararHeartsBurst(e);
-}
-function dispararHeartsBurst(e){
   const area=document.getElementById('pet-section-area');
   if(!area)return;
   const host=document.createElement('div');
   host.className='heart-burst';
-  if(e&&e.clientX){
-    const r=area.getBoundingClientRect();
-    host.style.left=(e.clientX-r.left)+'px';
-    host.style.top=(e.clientY-r.top)+'px';
+  const areaRect=area.getBoundingClientRect();
+  const petRect=document.getElementById('pet-principal')?.getBoundingClientRect();
+  if(petRect){
+    host.style.left=(petRect.left+petRect.width/2-areaRect.left)+'px';
+    host.style.top=(petRect.top+petRect.height*.34-areaRect.top)+'px';
+  }else if(e&&Number.isFinite(e.clientX)&&Number.isFinite(e.clientY)){
+    host.style.left=(e.clientX-areaRect.left)+'px';
+    host.style.top=(e.clientY-areaRect.top)+'px';
   }
-  const hearts=['❤️','💖','💕','✨','💜'];
-  for(let i=0;i<6;i++){
+  const hearts=['❤️','💖','💕','💗','💜'];
+  for(let i=0;i<18;i++){
     const el=document.createElement('i');
-    const ang=(-60+Math.random()*120)*Math.PI/180;
-    const dist=36+Math.random()*48;
+    const ang=(-165+Math.random()*150)*Math.PI/180;
+    const dist=70+Math.random()*95;
     el.textContent=hearts[i%hearts.length];
     el.style.setProperty('--dx',Math.cos(ang)*dist+'px');
-    el.style.setProperty('--dy',(-Math.abs(Math.sin(ang))*dist-20)+'px');
-    el.style.setProperty('--rot',(-25+Math.random()*50)+'deg');
-    el.style.setProperty('--dur',(.7+Math.random()*.45)+'s');
-    el.style.fontSize=(12+Math.random()*10)+'px';
+    el.style.setProperty('--dy',(-Math.abs(Math.sin(ang))*dist-30)+'px');
+    el.style.setProperty('--rot',(-35+Math.random()*70)+'deg');
+    el.style.setProperty('--dur',(.95+Math.random()*.55)+'s');
+    el.style.animationDelay=(Math.random()*.42)+'s';
+    el.style.fontSize=(16+Math.random()*13)+'px';
     host.appendChild(el);
   }
   area.appendChild(host);
-  setTimeout(()=>host.remove(),1200);
+  setTimeout(()=>host.remove(),2200);
 }
 function animarMoedasBump(){
   const coin=document.querySelector('.coin-dot');
