@@ -2487,24 +2487,16 @@ function renderizarTarefas(){
   idTarefaRecemAprovada=null;
   atualizarOfensiva();
 }
-// Quem está usando o app agora (criança ou responsável) — fica salvo só neste
-// aparelho (localStorage), nunca sincroniza com a família. Assim, cada aparelho
-// lembra sozinho o último perfil usado nele e pula a telinha de escolha da
-// próxima vez — mas o PIN continua sendo pedido sempre que o perfil for "pais".
+// O app abre sempre no perfil infantil; o perfil dos pais é acessado pelo botão próprio e continua protegido por PIN.
 let CHAVE_PERFIL_LOCAL='ROTINAPET_PERFIL_'+codigoFamilia;
-let perfilAtivo=(()=>{try{return localStorage.getItem(CHAVE_PERFIL_LOCAL)}catch(e){return null}})();
+let perfilAtivo='crianca';
 function verificarPrimeiroAcesso(){
-  if(!perfilAtivo){
-    abrirModal('modal-selecao-perfil');
-  }else if(perfilAtivo==='pais'){
-    abrirPainelPais();
+  try{localStorage.setItem(CHAVE_PERFIL_LOCAL,'crianca')}catch(e){}
+  const ids=Object.keys(estado.criancas||{});
+  if(ids.length>1){
+    abrirSelecaoCrianca();
   }else{
-    const ids=Object.keys(estado.criancas||{});
-    if(ids.length>1){
-      abrirSelecaoCrianca();
-    }else{
-      entrarComoCrianca();
-    }
+    entrarComoCrianca();
   }
 }
 function escolherPerfilInicial(tipo){
