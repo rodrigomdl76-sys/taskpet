@@ -356,11 +356,11 @@
     <button type="button" class="primary-btn blue-btn botao-secundario" style="width:100%;margin-top:4px" onclick="abrirNovoFilho()">+ Adicionar filho</button>
     <small style="font-size:8px;color:#64748b;margin-top:3px;display:block">Cada filho tem pet, tarefas e moedas separados. Toque num filho para trocar quem está ativo.</small>
   </div>
-  <div class="section-card"><label class="field-label" for="opcao-mesada">💰 Mesada em dinheiro</label><label class="opcao-mesada"><input type="checkbox" id="opcao-mesada" onchange="alternarMesada(this.checked)"><span>Converter moedas em reais e mostrar o saldo no topo</span></label><small style="font-size:8px;color:#64748b">Ao desligar, as moedas virtuais continuam valendo no app. O saldo anterior fica guardado.</small></div>
-  <div class="section-card" id="card-cofrinho"><div style="display:flex;justify-content:space-between;align-items:center"><b style="font-size:10px">💸 Cofrinho</b><button class="primary-btn green-btn" onclick="sacarDinheiro()">Pagar / sacar</button></div><div style="font-size:9px;color:#64748b;margin-top:5px">Cada moeda vale R$ <span id="texto-taxa-atual">0,01</span>.</div></div>
+  <div class="section-card"><label class="field-label" for="opcao-mesada">💰 Mesada em dinheiro</label><label class="opcao-mesada"><input type="checkbox" id="opcao-mesada" onchange="alternarMesada(this.checked)"><span>Tarefas aprovadas também acumulam valor em reais</span></label><small style="font-size:8px;color:#64748b">Jogos, baús, desafios e conquistas continuam dando PetCoins, mas não aumentam a mesada. Ao desligar, o saldo anterior fica guardado.</small></div>
+  <div class="section-card" id="card-cofrinho"><div style="display:flex;justify-content:space-between;align-items:center"><b style="font-size:10px">💸 Cofrinho</b><button class="primary-btn green-btn" onclick="sacarDinheiro()">Pagar / sacar</button></div><div style="font-size:9px;color:#64748b;margin-top:5px">Cada PetCoin de tarefa aprovada vale R$ <span id="texto-taxa-atual">0,01</span>.</div></div>
   <div class="section-card"><label class="field-label">👶 Idade da criança</label><input class="field" id="input-idade-crianca" type="number" min="3" max="15" onchange="atualizarIdadeCrianca(this.value)"></div>
   <div class="section-card"><label class="field-label">🎮 Dificuldade dos jogos</label><select class="field" id="input-dificuldade-jogos" onchange="atualizarDificuldadeJogos(this.value)"><option value="auto">Automática pela idade</option><option value="facil">Fácil</option><option value="medio">Média</option><option value="dificil">Difícil</option></select><small style="font-size:8px;color:#64748b">A idade também ajusta os jogos quando a opção automática está selecionada.</small></div>
-  <div class="section-card"><label class="field-label">💵 Valor por moeda (R$)</label><input class="field" id="input-taxa-cambio" type="number" min="0" step="0.01" onchange="atualizarTaxaCambio(this.value)"></div>
+  <div class="section-card"><label class="field-label">💵 Valor por PetCoin de tarefa (R$)</label><input class="field" id="input-taxa-cambio" type="number" min="0" step="0.01" onchange="atualizarTaxaCambio(this.value)"></div>
 </details>
 <details class="pais-grupo"><summary>🔒 Conta e segurança</summary>
   <div class="section-card"><label class="field-label">🔑 Alterar PIN</label><div style="display:flex;gap:5px"><input class="field" id="novo-pin-pais" inputmode="numeric" maxlength="4" placeholder="4 dígitos"><button class="primary-btn" onclick="salvarNovoPin()">Salvar</button></div>
@@ -665,11 +665,11 @@
 <div class="banner-offline" id="banner-offline">📡 Sem conexão — as alterações serão sincronizadas quando a internet voltar.</div>
 <div class="banner-evento" id="banner-evento" onclick="abrirModalEventoSazonal()"></div>
 <script src="third_party/qrcode-generator/qrcode.js?v=local-qrcode-v1" defer></script>
-<script src="js/02_principal.js?v=painel-crianca-padrao-v1" defer></script>
+<script src="js/02_principal.js?v=mesada-tarefas-v1" defer></script>
   <script src="js/03_extras_01.js" defer></script>
 <div id="modal-central-aventuras" class="modal-overlay"><div class="modal" style="max-width:360px"><div class="modal-title"><h3>🌟 Central de Aventuras</h3><button class="close-btn" onclick="fecharModal('modal-central-aventuras')">×</button></div><div id="central-aventuras-conteudo"></div></div></div>
 <div id="modal-bau-diario" class="modal-overlay"><div class="modal" style="max-width:320px;text-align:center"><div class="modal-title"><h3>🎁 Baú do Dia</h3><button class="close-btn" onclick="fecharModal('modal-bau-diario')">×</button></div><div id="bau-diario-conteudo"></div></div></div>
-<script src="js/04_engajamento.js?v=bau-raro-v1" defer></script><link rel="stylesheet" href="css/06_extras_01.css">
+<script src="js/04_engajamento.js?v=mesada-tarefas-v1" defer></script><link rel="stylesheet" href="css/06_extras_01.css">
 <div id="modal-resumo-meta" class="modal-overlay"><div class="modal" style="max-width:340px"><div class="modal-title"><h3>🎯 Minha meta</h3><button class="close-btn" onclick="fecharModal('modal-resumo-meta')">×</button></div><div id="resumo-meta-conteudo"></div></div></div>
 <div id="modal-resumo-hoje" class="modal-overlay"><div class="modal" style="max-width:340px"><div class="modal-title"><h3>🗓️ Aventura de hoje</h3><button class="close-btn" onclick="fecharModal('modal-resumo-hoje')">×</button></div><div id="resumo-hoje-conteudo"></div></div></div>
 <script src="js/05_interface.js" defer></script>

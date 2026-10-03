@@ -39,7 +39,7 @@ function renderizarEngajamento(){
 }
 function concluirDesafioDiario(){
   garantirEngajamento();if(estado.desafioDiarioFeitoData===hojeLocal())return;
-  estado.desafioDiarioFeitoData=hojeLocal();estado.moedas=(Number(estado.moedas)||0)+10;estado.dinheiroAcumulado=(Number(estado.dinheiroAcumulado)||0)+(10*(Number(estado.taxaCambio)||.01));ganharXP(20);estado.adesivos.push('desafio_'+hojeLocal());registrarEngajamento('Desafio diário concluído');dispararConfetes();mostrarAviso('🌟','Desafio concluído!','+10 moedas, +20 XP e um adesivo foram adicionados.');atualizarTela();
+  estado.desafioDiarioFeitoData=hojeLocal();estado.moedas=(Number(estado.moedas)||0)+10;ganharXP(20);estado.adesivos.push('desafio_'+hojeLocal());registrarEngajamento('Desafio diário concluído');dispararConfetes();mostrarAviso('🌟','Desafio concluído!','+10 moedas, +20 XP e um adesivo foram adicionados.');atualizarTela();
 }
 let bauDataEmAbertura=null;
 function bauJaResgatado(data){return estado.bauDiarioAbertoData===data||(estado.bauDatasResgatadas||[]).includes(data)}

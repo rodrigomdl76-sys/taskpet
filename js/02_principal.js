@@ -500,7 +500,7 @@ const ontemLocal=()=>{const d=new Date();d.setDate(d.getDate()-1);return `${d.ge
 const CAMPOS_CRIANCA=['personalizacao','gestosDesbloqueados','palcoAtual','palcosComprados','decoracaoItens','extraDiaRemovida','avisosMissao','miniPetsComprados','miniPetAtivo','bauDatasResgatadas','historicoRecompensas','avisosRecompensas','acessorios','conquistas','habilidades','desafiosMathAcertos','dinheiroAcumulado','mesadaAtiva','fundoAtual','fundosComprados','temaInterfaceAtual','historicoConclusoes','idadeCrianca','dificuldadeJogos','nomePet','lembreteEnviadoData','metaMoedas','moedas','onboardingVistoCrianca','pausaAte','petAtual','pets','recompensas','sonhos','registroDiario','solicitacoesPremios','streak','surpresaResgatadaData','tarefas','tarefasHojeCount','timerFim','totalSacado','ultimoDiaAcesso','ultimoDiaConcluido','ultimoStreakPremiado','vozSalva','ultimoAcaoPet','ultimoDecay','desafioDiarioData','desafioDiarioFeitoData','bauDiarioAbertoData','escudosOfensiva','adesivos','eventoSemanalData','missaoFamilia','mensagensPais','historicoEngajamento'];
 function valoresPadraoCrianca(){
   return {
-    gestosDesbloqueados:[],decoracaoItens:[],extraDiaRemovida:null,miniPetsComprados:['passarinho'],miniPetAtivo:'passarinho',petAtual:'gato',moedas:15,dinheiroAcumulado:.15,mesadaAtiva:true,idadeCrianca:7,dificuldadeJogos:'auto',nomePet:'Pipoca',
+    gestosDesbloqueados:[],decoracaoItens:[],extraDiaRemovida:null,miniPetsComprados:['passarinho'],miniPetAtivo:'passarinho',petAtual:'gato',moedas:15,dinheiroAcumulado:0,mesadaAtiva:true,idadeCrianca:7,dificuldadeJogos:'auto',nomePet:'Pipoca',
     palcoAtual:'cristal',palcosComprados:['cristal'],fundoAtual:'ceu',fundosComprados:['ceu'],temaInterfaceAtual:'classico',metaMoedas:50,totalSacado:0,
     ultimoDiaAcesso:hojeLocal(),ultimoDiaConcluido:null,streak:0,ultimoStreakPremiado:0,
     tarefasHojeCount:0,desafiosMathAcertos:0,timerFim:null,vozSalva:null,
@@ -617,7 +617,7 @@ function salvarPerfilCrianca(){
 }
 let estado={
   criancaAtivaId:'c1',criancas:{c1:{nome:'Minha Criança',emoji:'🐾'}},criancasDados:{},
-  gestosDesbloqueados:[],decoracaoItens:[],extraDiaRemovida:null,miniPetsComprados:['passarinho'],miniPetAtivo:'passarinho',petAtual:'gato',moedas:15,taxaCambio:.01,pinHash:null,dinheiroAcumulado:.15,mesadaAtiva:true,idadeCrianca:7,dificuldadeJogos:'auto',nomePet:'Pipoca',
+  gestosDesbloqueados:[],decoracaoItens:[],extraDiaRemovida:null,miniPetsComprados:['passarinho'],miniPetAtivo:'passarinho',petAtual:'gato',moedas:15,taxaCambio:.01,pinHash:null,dinheiroAcumulado:0,mesadaAtiva:true,idadeCrianca:7,dificuldadeJogos:'auto',nomePet:'Pipoca',
   palcoAtual:'cristal',palcosComprados:['cristal'],fundoAtual:'ceu',fundosComprados:['ceu'],temaInterfaceAtual:'classico',metaMoedas:50,totalSacado:0,
   ultimoDiaAcesso:hojeLocal(),ultimoDiaConcluido:null,streak:0,ultimoStreakPremiado:0,
   tarefasHojeCount:0,desafiosMathAcertos:0,timerFim:null,vozSalva:null,
@@ -1651,7 +1651,6 @@ function abrirSurpresaDia(){
   const xpBonus=Math.random()<.4?3:0;
   estado.surpresaResgatadaData=hoje;
   estado.moedas+=moedas;
-  creditoMesada(moedas);
   registrarNoRelatorioDiario(0,moedas);
   if(xpBonus)ganharXP(xpBonus);
   const p=obterDadosPetAtual();
@@ -1724,7 +1723,6 @@ function resgatarBonusEvento(){
   estado.eventoBonusData=hojeLocal();
   estado.eventoBonusId=ev.id;
   estado.moedas+=ev.bonusMoedas;
-  creditoMesada(ev.bonusMoedas);
   registrarNoRelatorioDiario(0,ev.bonusMoedas);
   ganharXP(ev.bonusXp);
   // Oferece aplicar fundo do evento se já comprado
@@ -1787,7 +1785,6 @@ function resgatarBauFamiliar(){
   const moedas=20+Math.floor(Math.random()*15);
   const xp=40;
   estado.moedas+=moedas;
-  creditoMesada(moedas);
   estado.metaFamiliarResgatadaEm=Date.now();
   estado.metaFamiliarResgatadaStreak=progresso;
   estado.metaFamiliarUltimoResgate=meta;
@@ -3326,7 +3323,6 @@ function abrirBauSemanal(streakAtual){
   const moedasGanhas=15+Math.floor(Math.random()*16);
   const xpGanho=50;
   estado.moedas+=moedasGanhas;
-  creditoMesada(moedasGanhas);
   estado.ultimoStreakPremiado=streakAtual;
   ganharXP(xpGanho);
   salvar();
@@ -4040,7 +4036,6 @@ function marcarConquistas(){
       const c=CONQUISTAS.find(x=>x[0]===id);
       const premio=Number(c[4])||0;
       estado.moedas=(estado.moedas||0)+premio;
-      creditoMesada(premio);
       mostrarAviso(c[1],'🏆 Nova Conquista!',`${c[2]} +${premio} moedas`);
       ganharXP(30);
     }
@@ -4152,7 +4147,6 @@ function atualizarEstatisticas(){
 }
 function recompensarMiniJogo(moedas,xp,msg){
   estado.moedas+=moedas;
-  creditoMesada(moedas);
   registrarNoRelatorioDiario(0,moedas);
   ganharXP(xp);
   dispararConfetes();
