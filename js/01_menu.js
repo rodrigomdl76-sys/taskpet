@@ -64,10 +64,7 @@ function abrirMenuMais(){
   });
 
   window.addEventListener('keydown',evento=>{
-    if(evento.key!=='Escape'&&evento.key!=='Backspace')return;
-    // Backspace deve continuar editando campos (ex.: valor por moeda),
-    // em vez de ser interpretado como o botão Voltar do app.
-    if(evento.key==='Backspace'&&evento.target?.matches?.('input, textarea, select, [contenteditable="true"]'))return;
+    if(evento.key!=='Escape')return;
     if(fecharTelaAtual()){
       evento.preventDefault();
       ultimoVoltar=0;
