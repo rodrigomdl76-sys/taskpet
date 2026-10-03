@@ -5,7 +5,7 @@ body .app{
   padding:max(6px,min(env(safe-area-inset-top),12px)) clamp(8px,2.4vw,16px) calc(env(safe-area-inset-bottom) + 16px);
   gap:clamp(5px,.85dvh,10px);overflow:hidden;isolation:isolate;
 }
-body .app .pet-selector{display:none}
+
 .app .top-row{order:0}.app .cat-section{order:1}.app .pet-actions{order:2}.app .tasks-section{order:3}.app .bottom-buttons{order:4}
 
 /* HUD */
