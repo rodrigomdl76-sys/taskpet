@@ -1,4 +1,4 @@
-const CACHE_NAME = 'rotinapet-cache-v20';
+const CACHE_NAME = 'rotinapet-cache-v21';
 const RUNTIME_CACHE_NAME = 'rotinapet-media-v2';
 const KEEP_CACHES = new Set([CACHE_NAME, RUNTIME_CACHE_NAME]);
 const MAX_RUNTIME_ENTRIES = 100;
@@ -15,7 +15,7 @@ const ASSETS = [
   "./css/03_mapa_album.css",
   "./css/04_animacoes_pet.css?v=efeitos-reacoes-v1",
   "./css/05_evolucao_pet.css",
-  "./css/13_gato_laranja.css?v=pet-visivel-2",
+  "./css/13_gato_laranja.css?v=seletor-pet-v1",
   "./third_party/qrcode-generator/qrcode.js?v=local-qrcode-v1",
   "./js/02_principal.js?v=carinho-botoes-v2",
   "./js/03_extras_01.js",
@@ -36,11 +36,11 @@ const ASSETS = [
   "./js/09_gato_laranja.js?v=ovo-animacoes-v2",
   "./js/10_pet_companheiro.js?v=6",
   "./css/17_pet_no_chao.css?v=2",
-  "./css/18_topo_limpo.css?v=2",
+  "./css/18_topo_limpo.css?v=seletor-pet-v1",
   "./css/19_plataforma_pet.css?v=1",
   "./css/16_evolucao_interativa.css?v=1",
   "./css/20_palcos.css?v=2",
-  "./css/21_home_v2.css?v=12",
+  "./css/21_home_v2.css?v=seletor-pet-v1",
   "./css/23_axolote.css?v=1",
   "./css/24_atelie_pet.css?v=2",
   "./js/12_home_nav.js?v=2",
