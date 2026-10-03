@@ -1510,7 +1510,6 @@ function acaoPet(tipo){
     criarTextoFlutuante('🎾 +15',null);
     mostrarBalaoFala(escolherFalaContextual('brincar'));
     mostrarToast(`🎾 ${nome} adorou brincar! +2 XP`);
-    dispararHeartsBurst(null);
   }else if(tipo==='dormir'){
     d.felicidade=Math.min(100,d.felicidade+6);
     d.saude=Math.min(100,d.saude+12);

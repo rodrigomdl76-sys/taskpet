@@ -116,6 +116,7 @@
         botao.append(icone,nome);
         botao.addEventListener('click',()=>{
           if(extras.includes(a)&&!window.gestoPetLiberado?.(a.id)){window.abrirLojaFundos?.();return}
+          if(a.id==='carinho'){window.interagirComPet?.();return}
           tocar(a.id);
         });
         area.appendChild(botao);
