@@ -4,7 +4,7 @@
 #pet-principal #pet-svg-container{display:block}
 #pet-principal.gato-laranja-pronto #pet-svg-container{display:none!important}
 @media(max-height:650px){#pet-principal{width:116px;height:116px;flex-basis:116px}}
-#btn-pet-atual,#lista-pets,.opcao-pet,#tab-col-pets,#painel-col-pets{display:none!important}
+
 .pet-actions{display:flex;align-items:center;justify-content:center;gap:6px;flex-wrap:wrap;width:100%;padding:2px 0 4px}
 .pet-actions .pet-action-btn{min-height:34px;padding:7px 8px;font-size:9px;white-space:nowrap}
 .acoes-gato-laranja{display:contents}
