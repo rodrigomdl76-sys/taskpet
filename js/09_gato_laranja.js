@@ -1,6 +1,7 @@
 /* WebP originais do pet, organizados por fase e ação na pasta animacoes/. */
 (() => {
   const pasta = 'animacoes/';
+  const versaoAnimacoes = 'ovo-animacoes-v2';
   const arquivos = {
     2:{idle:'01_parado.webp',carinho:'02_carinho.webp',dormir:'03_dormir.webp',comemoracao:'04_comemorar.webp'},
     1:{idle:'01_parado.webp',carinho:'02_carinho.webp',dormir:'03_dormir.webp',comemoracao:'04_comemorar.webp'},
@@ -15,7 +16,8 @@
   const fase = () => perfilAtivo==='pais' && faseTeste ? faseTeste : faseReal();
   function voltar(){clearTimeout(volta);volta=null;img?.classList.remove('gesto-css-pulinho','gesto-css-giro');acao='';mostrar();}
   function caminho(f,a){
-    return gestos[f]?.[a] ? `${pasta}${gestos[f][a]}` : `${pasta}fase${f}/${arquivos[f][a]}`;
+    const arquivo = gestos[f]?.[a] ? `${pasta}${gestos[f][a]}` : `${pasta}fase${f}/${arquivos[f][a]}`;
+    return `${arquivo}?v=${versaoAnimacoes}`;
   }
   function precarregarFase(f){
     if(fasePrecarregada===f || !arquivos[f])return;
