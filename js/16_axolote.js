@@ -11,7 +11,7 @@
   ];
   const pasta='animacoes/axolote/fase1/';
   const pastaFase2='animacoes/axolote/fase2/';
-  const versaoAnimacoes='ovo-animacoes-v2';
+  const versaoAnimacoes='ovo-animacoes-v3';
   const faseAtual=()=>Number(estado.pets?.axolote?.nivel||1)>=21?2:1;
   let img=null,acao='idle',timer=null,token=0,srcAtual='',timerDesbloqueio=null,animandoDesbloqueio=false;
   const ativa=()=>estado?.petAtual==='axolote';
