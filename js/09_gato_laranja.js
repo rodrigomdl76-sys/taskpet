@@ -1,7 +1,7 @@
 /* WebP originais do pet, organizados por fase e ação na pasta animacoes/. */
 (() => {
   const pasta = 'animacoes/';
-  const versaoAnimacoes = 'ovo-animacoes-v4';
+  const versaoAnimacoes = 'ovo-animacoes-v5';
   const arquivos = {
     2:{idle:'01_parado.webp',carinho:'02_carinho.webp',dormir:'03_dormir.webp',comemoracao:'04_comemorar.webp'},
     1:{idle:'01_parado.webp',carinho:'02_carinho.webp',brincar:'05_brincar.webp',dormir:'03_dormir.webp',comemoracao:'04_comemorar.webp'},
@@ -76,7 +76,7 @@
       if(img){void img.offsetWidth;img.classList.add(`gesto-css-${a}`)}
     }else{acao=a;chave='';mostrar()}
     const atual=++token;
-    const duracao={carinho:1600,brincar:3200,comemoracao:2100,pulinho:3000,giro:8600}[a]||2300;
+    const duracao={carinho:3200,brincar:3200,comemoracao:2100,pulinho:3000,giro:8600}[a]||2300;
     volta=setTimeout(()=>{if(token===atual)voltar()},gestoLiberado||f===2||(f===1&&(a==='carinho'||a==='brincar'))?duracao:2300);
   }
   function atualizarRolagem(){
