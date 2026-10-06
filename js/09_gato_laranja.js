@@ -1,21 +1,23 @@
 /* WebP originais do pet, organizados por fase e ação na pasta animacoes/. */
 (() => {
   const pasta = 'animacoes/';
-  const versaoAnimacoes = 'ovo-animacoes-v2';
+  const versaoAnimacoes = 'ovo-animacoes-v4';
   const arquivos = {
     2:{idle:'01_parado.webp',carinho:'02_carinho.webp',dormir:'03_dormir.webp',comemoracao:'04_comemorar.webp'},
-    1:{idle:'01_parado.webp',carinho:'02_carinho.webp',dormir:'03_dormir.webp',comemoracao:'04_comemorar.webp'},
+    1:{idle:'01_parado.webp',carinho:'02_carinho.webp',brincar:'05_brincar.webp',dormir:'03_dormir.webp',comemoracao:'04_comemorar.webp'},
     3:{idle:'01_parado.webp',carinho:'02_carinho.webp',dormir:'03_dormir.webp',comemoracao:'04_comemorar.webp'}
   };
   const gestos = {1:{pulinho:'gestos/ovo_gato_pulinho.webp',giro:'gestos/ovo_gato_giro_final.webp'}};
   const acoes = [{id:'carinho',icone:'💖',nome:'Dar Carinho'},{id:'comemoracao',icone:'🎉',nome:'Comemorar'}];
   let img, volta, faseVisivel=0, faseTeste=0, acao='', chave='', token=0, audioAtivo=0;
-  let fasePrecarregada=0, imagensPrecarregadas=[];
+  let fasePrecarregada=0, imagensPrecarregadas=[], acoesPersonalizadas=null;
+  const acoesPersonalizadasProntas=fetch(`${pasta}fase1/acoes_personalizadas.json?v=${versaoAnimacoes}`).then(r=>r.ok?r.json():null).then(d=>{acoesPersonalizadas=d;return d}).catch(()=>null);
   const nivel = () => Number(estado?.pets?.gato?.nivel)||1;
   const faseReal = () => calcularFase(nivel());
   const fase = () => perfilAtivo==='pais' && faseTeste ? faseTeste : faseReal();
   function voltar(){clearTimeout(volta);volta=null;img?.classList.remove('gesto-css-pulinho','gesto-css-giro');acao='';mostrar();}
   function caminho(f,a){
+    if(f===1&&acoesPersonalizadas?.[a])return acoesPersonalizadas[a];
     const arquivo = gestos[f]?.[a] ? `${pasta}${gestos[f][a]}` : `${pasta}fase${f}/${arquivos[f][a]}`;
     return `${arquivo}?v=${versaoAnimacoes}`;
   }
@@ -57,11 +59,13 @@
     img.src=caminho(f,a);
     atualizarBotoes();
   }
-  function tocar(a){
+  async function tocar(a){
     if(a==='comemoracao')window.dispararEfeitoPet?.('comemoracao');
     else if(a==='pulinho')window.dispararEfeitoPet?.('brincar');
     else if(a==='giro')window.dispararEfeitoPet?.('giro');
     const f=fase();
+    if(f===1&&(a==='carinho'||a==='brincar'))await acoesPersonalizadasProntas;
+    if(estado?.petAtual!=='gato')return;
     const gestoLiberado=window.gestoPetLiberado?.(a) && (a==='pulinho'||a==='giro');
     if(a==='idle'||(!arquivos[f]?.[a]&&!gestoLiberado))return;
     clearTimeout(volta);
@@ -72,8 +76,8 @@
       if(img){void img.offsetWidth;img.classList.add(`gesto-css-${a}`)}
     }else{acao=a;chave='';mostrar()}
     const atual=++token;
-    const duracao={carinho:1300,comemoracao:2100,pulinho:3000,giro:8600}[a]||2300;
-    volta=setTimeout(()=>{if(token===atual)voltar()},gestoLiberado?duracao:(f===2?duracao:2300));
+    const duracao={carinho:1600,brincar:3200,comemoracao:2100,pulinho:3000,giro:8600}[a]||2300;
+    volta=setTimeout(()=>{if(token===atual)voltar()},gestoLiberado||f===2||(f===1&&(a==='carinho'||a==='brincar'))?duracao:2300);
   }
   function atualizarRolagem(){
     const faixa=document.getElementById('pet-actions');if(!faixa)return;
@@ -163,6 +167,12 @@
   const interagir=window.interagirComPet;
   if(typeof interagir==='function')window.interagirComPet=function(){
     const resultado=interagir.apply(this,arguments);if(estado?.petAtual==='gato')tocar('carinho');return resultado;
+  };
+  const acaoPrincipal=window.acaoPet;
+  if(typeof acaoPrincipal==='function')window.acaoPet=function(tipo){
+    const resultado=acaoPrincipal.apply(this,arguments);
+    if(tipo==='brincar'&&estado?.petAtual==='gato')tocar('brincar');
+    return resultado;
   };
   const renderEvolucoes=window.renderizarEvolucoes;
   if(typeof renderEvolucoes==='function')window.renderizarEvolucoes=function(){
