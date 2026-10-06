@@ -1605,23 +1605,25 @@ function dispararHeartsBurst(e){
   const petRect=document.getElementById('pet-principal')?.getBoundingClientRect();
   if(petRect){
     host.style.left=(petRect.left+petRect.width/2-areaRect.left)+'px';
-    host.style.top=(petRect.top+petRect.height*.34-areaRect.top)+'px';
+    const beijoGato=estado?.petAtual==='gato';
+    host.style.top=(petRect.top+petRect.height*(beijoGato?.94:.34)-areaRect.top)+'px';
   }else if(e&&Number.isFinite(e.clientX)&&Number.isFinite(e.clientY)){
     host.style.left=(e.clientX-areaRect.left)+'px';
     host.style.top=(e.clientY-areaRect.top)+'px';
   }
+  const beijoGato=estado?.petAtual==='gato';
   const hearts=['❤️','💖','💕','💗','💜'];
-  for(let i=0;i<18;i++){
+  for(let i=0;i<(beijoGato?16:18);i++){
     const el=document.createElement('i');
     const ang=(-165+Math.random()*150)*Math.PI/180;
-    const dist=70+Math.random()*95;
+    const dist=beijoGato?38+Math.random()*22:70+Math.random()*95;
     el.textContent=hearts[i%hearts.length];
     el.style.setProperty('--dx',Math.cos(ang)*dist+'px');
     el.style.setProperty('--dy',(-Math.abs(Math.sin(ang))*dist-30)+'px');
     el.style.setProperty('--rot',(-35+Math.random()*70)+'deg');
     el.style.setProperty('--dur',(.95+Math.random()*.55)+'s');
     el.style.animationDelay=(Math.random()*.42)+'s';
-    el.style.fontSize=(16+Math.random()*13)+'px';
+    el.style.fontSize=(beijoGato?12+Math.random()*7:16+Math.random()*13)+'px';
     host.appendChild(el);
   }
   area.appendChild(host);
