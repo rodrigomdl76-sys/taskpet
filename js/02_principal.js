@@ -59,21 +59,9 @@ function playSound(tipo){
 function somConquista(){playSound('nivel')}
 function somBauLendario(){playSound('nivel')}
 const PETS={
-gato:{id:'gato',nome:'Pipoca',emoji:'🐱',desbloqueioNivel:1,som:'',evolucoes:[
-{nivel:1,nome:'Ovo-gato',desc:'O começo da aventura'},{nivel:21,nome:'Gato Cavalheiro',desc:'Uma nova forma para o pet'},{nivel:41,nome:'Gato Real',desc:'Capa e coroa da última evolução'}]},
-cachorra:{id:'cachorra',nome:'Mel',emoji:'🐶',desbloqueioNivel:5,som:'https://assets.mixkit.co/sfx/preview/mixkit-dog-barking-twice-1.mp3',evolucoes:[
-{nivel:1,nome:'Filhote Caramelo',desc:'Orelhas caídas, super fofinha'},{nivel:21,nome:'Cãozinho Brincalhão',desc:'Bandana colorida'},{nivel:41,nome:'Cão Guia',desc:'Colete brilhante + distintivo'},{nivel:61,nome:'Cão Campeão',desc:'Faixa + medalha dourada'},{nivel:81,nome:'Guardiã Lendária',desc:'Asas de anjo + aurora dourada'}]},
-cabra:{id:'cabra',nome:'Nuvem',emoji:'🐐',desbloqueioNivel:10,som:'https://assets.mixkit.co/sfx/preview/mixkit-goat-bleat-1.mp3',evolucoes:[
-{nivel:1,nome:'Cabritinha Felpuda',desc:'Chifres pequenos e fofos'},{nivel:21,nome:'Cabra da Montanha',desc:'Chifres maiores + pelo espesso'},{nivel:41,nome:'Cabra de Cristal',desc:'Chifres brilhantes + pedras'},{nivel:61,nome:'Rainha da Serra',desc:'Coroa de folhas + manto'},{nivel:81,nome:'Lenda da Montanha',desc:'Aura mágica + chifres reluzentes'}]},
-frango:{id:'frango',nome:'Piu-Piu',emoji:'🐔',desbloqueioNivel:15,som:'https://assets.mixkit.co/sfx/preview/mixkit-chicken-cluck-1.mp3',evolucoes:[
-{nivel:1,nome:'Pintinho Amarelinho',desc:'Penas fofinhas'},{nivel:21,nome:'Franguinho Colorido',desc:'Penas vibrantes'},{nivel:41,nome:'Galo Arco-Íris',desc:'Cauda colorida + crista'},{nivel:61,nome:'Imperador das Cores',desc:'Penas brilhantes + coroa'},{nivel:81,nome:'Fênix Dourada',desc:'Asas de fogo + brilho intenso'}]},
-unicornio:{id:'unicornio',nome:'Lumi',emoji:'🦄',desbloqueioNivel:20,som:'',evolucoes:[
-{nivel:1,nome:'Potrinho Estelar',desc:'Chifre de cristal e brilho suave'},{nivel:21,nome:'Unicórnio Arco-Íris',desc:'Crina prismática e cauda colorida'},{nivel:41,nome:'Unicórnio Celestial',desc:'Asas de luz e constelações'},{nivel:61,nome:'Rainha do Arco-Íris',desc:'Coroa celestial e aura multicolorida'},{nivel:81,nome:'Lenda Cósmica',desc:'Asas cósmicas, estrelas e chifre radiante'}]},
-dinossauro:{id:'dinossauro',nome:'Rex',emoji:'🦖',desbloqueioNivel:25,som:'',evolucoes:[
-{nivel:1,nome:'Filhote Jurássico',desc:'Escamas fofas e cauda forte'},{nivel:21,nome:'Rex Explorador',desc:'Cristas maiores e mochila aventureira'},{nivel:41,nome:'Rex Vulcânico',desc:'Placas incandescentes e magma'},{nivel:61,nome:'Rei Jurássico',desc:'Coroa fóssil e armadura pré-histórica'},{nivel:81,nome:'Titã Primordial',desc:'Aura ancestral, placas douradas e energia sísmica'}]},
-capivara:{id:'capivara',nome:'Capi',emoji:'🦫',desbloqueioNivel:30,som:'',evolucoes:[
-{nivel:1,nome:'Capivara Tranquila',desc:'Pelagem macia e expressão serena'},{nivel:21,nome:'Capi de Banho',desc:'Toalha macia e vapor relaxante'},{nivel:41,nome:'Capi Tropical',desc:'Coroa de folhas e flores'},{nivel:61,nome:'Capi Zen',desc:'Kimono confortável e aura calma'},{nivel:81,nome:'Mestre das Águas',desc:'Coroa de lótus, água brilhante e aura dourada'}]},
-axolote:{id:'axolote',nome:'Axolote',emoji:'🥚',desbloqueioNivel:10,som:'',evolucoes:[{nivel:1,nome:'Axolote no Ovo',desc:'Fase 1 · dentro do ovo'},{nivel:21,nome:'Axolote Desabrochado',desc:'Saiu do ovo e começou uma nova aventura'}]}
+ gato:{id:'gato',nome:'Pipoca',emoji:'🐱',desbloqueioNivel:1,som:'',evolucoes:[
+ {nivel:1,nome:'Ovo-gato',desc:'O começo da aventura'},{nivel:21,nome:'Gato Cavalheiro',desc:'Uma nova forma para o pet'},{nivel:41,nome:'Gato Real',desc:'Capa e coroa da última evolução'}]},
+ axolote:{id:'axolote',nome:'Axolote',emoji:'🥚',desbloqueioNivel:10,som:'',evolucoes:[{nivel:1,nome:'Axolote no Ovo',desc:'Fase 1 · dentro do ovo'},{nivel:21,nome:'Axolote Desabrochado',desc:'Saiu do ovo e começou uma nova aventura'}]}
 };
 function ajustarCor(hex,amt){
   hex=String(hex).replace('#','');
@@ -504,7 +492,7 @@ function valoresPadraoCrianca(){
     palcoAtual:'cristal',palcosComprados:['cristal'],fundoAtual:'ceu',fundosComprados:['ceu'],temaInterfaceAtual:'classico',metaMoedas:50,totalSacado:0,
     ultimoDiaAcesso:hojeLocal(),ultimoDiaConcluido:null,streak:0,ultimoStreakPremiado:0,
     tarefasHojeCount:0,desafiosMathAcertos:0,timerFim:null,vozSalva:null,
-    pets:{gato:{nivel:1,xp:0,felicidade:100,saude:100,faseConfirmada:1},cachorra:{nivel:1,xp:0,felicidade:100,saude:100},cabra:{nivel:1,xp:0,felicidade:100,saude:100},frango:{nivel:1,xp:0,felicidade:100,saude:100},unicornio:{nivel:1,xp:0,felicidade:100,saude:100},dinossauro:{nivel:1,xp:0,felicidade:100,saude:100},capivara:{nivel:1,xp:0,felicidade:100,saude:100}},
+    pets:{gato:{nivel:1,xp:0,felicidade:100,saude:100,faseConfirmada:1},axolote:{nivel:1,xp:0,felicidade:100,saude:100}},
     tarefas:[{id:1,texto:'Escovar os dentes',recompensa:5,xp:20,tipo:'obrigatoria',status:'pendente',foto:null,dias:[]},{id:2,texto:'Arrumar a cama',recompensa:5,xp:20,tipo:'obrigatoria',status:'pendente',foto:null,dias:[]}],
     recompensas:[],sonhos:[],personalizacao:{adquiridos:[],equipados:{}},
     solicitacoesPremios:[],conquistas:{},habilidades:{},acessorios:{comprados:[],ativo:null},pausaAte:null,
@@ -621,7 +609,7 @@ let estado={
   palcoAtual:'cristal',palcosComprados:['cristal'],fundoAtual:'ceu',fundosComprados:['ceu'],temaInterfaceAtual:'classico',metaMoedas:50,totalSacado:0,
   ultimoDiaAcesso:hojeLocal(),ultimoDiaConcluido:null,streak:0,ultimoStreakPremiado:0,
   tarefasHojeCount:0,desafiosMathAcertos:0,timerFim:null,vozSalva:null,
-  pets:{gato:{nivel:1,xp:0,felicidade:100,saude:100,faseConfirmada:1},cachorra:{nivel:1,xp:0,felicidade:100,saude:100},cabra:{nivel:1,xp:0,felicidade:100,saude:100},frango:{nivel:1,xp:0,felicidade:100,saude:100},unicornio:{nivel:1,xp:0,felicidade:100,saude:100},dinossauro:{nivel:1,xp:0,felicidade:100,saude:100},capivara:{nivel:1,xp:0,felicidade:100,saude:100}},
+  pets:{gato:{nivel:1,xp:0,felicidade:100,saude:100,faseConfirmada:1},axolote:{nivel:1,xp:0,felicidade:100,saude:100}},
   tarefas:[{id:1,texto:'Escovar os dentes',recompensa:5,xp:20,tipo:'obrigatoria',status:'pendente',foto:null,dias:[]},{id:2,texto:'Arrumar a cama',recompensa:5,xp:20,tipo:'obrigatoria',status:'pendente',foto:null,dias:[]}],
   recompensas:[
     {id:1,texto:'15 min de tela',descricao:'Tempo de tela liberado pelos pais.',custo:10,tipo:'timer',minutos:15,icone:'📱',ativo:true},
@@ -1208,7 +1196,7 @@ function obterDadosPetAtual(){
   if(estado.petAtual==='gato' && dados.faseConfirmada==null)dados.faseConfirmada=(Number(dados.nivel)||1)>=21?2:1;
   return dados;
 }
-function nivelJogador(){return Math.max(...Object.values(estado.pets).map(p=>p.nivel||1))}
+function nivelJogador(){return Math.max(...Object.keys(PETS).map(id=>Number(estado.pets?.[id]?.nivel)||1))}
 function calcularFase(n){
   if(estado.petAtual==='axolote')return n>=21?2:1;
   if(estado.petAtual==='gato'){
