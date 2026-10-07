@@ -33,7 +33,7 @@ const ASSETS = [
   "./css/11_premium_63.css",
   "./css/12_mapa_vivo.css",
   "./js/08_meu_pet.js?v=gestos-1",
-  "./js/09_gato_laranja.js?v=ovo-animacoes-v5",
+  "./js/09_gato_laranja.js?v=ovo-animacoes-v6",
   "./js/10_pet_companheiro.js?v=6",
   "./css/17_pet_no_chao.css?v=2",
   "./css/18_topo_limpo.css?v=seletor-pet-v1",
