@@ -1,13 +1,13 @@
-const CACHE_NAME = 'rotinapet-cache-v31';
+const CACHE_NAME = 'rotinapet-cache-v32';
 const RUNTIME_CACHE_NAME = 'rotinapet-media-v3';
 const KEEP_CACHES = new Set([CACHE_NAME, RUNTIME_CACHE_NAME]);
 const MAX_RUNTIME_ENTRIES = 100;
 const ASSETS = [
   "./index.html",
   "./manifest.json",
-  "./icon-192.png",
-  "./icon-512.png",
-  "./icon-512-maskable.png",
+  "./icon-192.webp?v=cat-crown-v1",
+  "./icon-512.webp?v=cat-crown-v1",
+  "./icon-512-maskable.webp?v=cat-crown-v1",
   "./css/14_pet_companheiro.css?v=5",
   "./css/01_base.css?v=layout-ref-v1",
   "./js/01_menu.js?v=back-3",
@@ -160,8 +160,8 @@ messaging.onBackgroundMessage(payload => {
 
   return self.registration.showNotification(title, {
     body,
-    icon: './icon-192.png',
-    badge: './icon-192.png',
+    icon: './icon-192.webp?v=cat-crown-v1',
+    badge: './icon-192.webp?v=cat-crown-v1',
     data,
     tag: data.tag || 'rotinapet-fcm',
     renotify: true
