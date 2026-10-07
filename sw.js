@@ -1,4 +1,4 @@
-const CACHE_NAME = 'rotinapet-cache-v30';
+const CACHE_NAME = 'rotinapet-cache-v31';
 const RUNTIME_CACHE_NAME = 'rotinapet-media-v3';
 const KEEP_CACHES = new Set([CACHE_NAME, RUNTIME_CACHE_NAME]);
 const MAX_RUNTIME_ENTRIES = 100;
@@ -118,7 +118,21 @@ self.addEventListener('fetch', event => {
   }
 
   event.respondWith(
-    caches.match(event.request).then(response => response || fetch(event.request))
+    (async () => {
+      // Arquivos do app vão primeiro à rede para evitar que uma implantação
+      // deixe JavaScript ou CSS antigo preso no cache do celular.
+      try {
+        const response = await fetch(new Request(event.request, { cache: 'no-cache' }));
+        if (response.ok && response.type === 'basic') {
+          const cache = await caches.open(CACHE_NAME);
+          await cache.put(event.request, response.clone());
+        }
+        return response;
+      } catch (error) {
+        const cached = await caches.match(event.request);
+        return cached || Response.error();
+      }
+    })()
   );
 });
 
