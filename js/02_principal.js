@@ -61,7 +61,7 @@ function somBauLendario(){playSound('nivel')}
 const PETS={
  gato:{id:'gato',nome:'Pipoca',emoji:'🐱',desbloqueioNivel:1,som:'',evolucoes:[
  {nivel:1,nome:'Ovo-gato',desc:'O começo da aventura'},{nivel:21,nome:'Gato Cavalheiro',desc:'Uma nova forma para o pet'},{nivel:41,nome:'Gato Real',desc:'Capa e coroa da última evolução'}]},
- axolote:{id:'axolote',nome:'Axolote',emoji:'🥚',desbloqueioNivel:10,som:'',evolucoes:[{nivel:1,nome:'Axolote no Ovo',desc:'Fase 1 · dentro do ovo'},{nivel:21,nome:'Axolote Desabrochado',desc:'Saiu do ovo e começou uma nova aventura'}]}
+ axolote:{id:'axolote',nome:'Axolote',emoji:'🥚',desbloqueioNivel:10,som:'',evolucoes:[{nivel:1,nome:'Axolote no Ovo',desc:'Fase 1 · dentro do ovo'},{nivel:21,nome:'Axolote Desabrochado',desc:'Saiu do ovo e começou uma nova aventura'},{nivel:41,nome:'Axolote Radiante',desc:'Fase 3 · uma nova forma cheia de energia'}]}
 };
 function ajustarCor(hex,amt){
   hex=String(hex).replace('#','');
@@ -1198,7 +1198,7 @@ function obterDadosPetAtual(){
 }
 function nivelJogador(){return Math.max(...Object.keys(PETS).map(id=>Number(estado.pets?.[id]?.nivel)||1))}
 function calcularFase(n){
-  if(estado.petAtual==='axolote')return n>=21?2:1;
+  if(estado.petAtual==='axolote')return n>=41?3:n>=21?2:1;
   if(estado.petAtual==='gato'){
     const confirmou=Number(estado.pets?.gato?.faseConfirmada)||1;
     if(n<21 || confirmou<2)return 1;
