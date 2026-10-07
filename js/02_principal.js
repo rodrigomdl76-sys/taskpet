@@ -3347,7 +3347,6 @@ async function apagarFotoDepoisDaAprovacao(t,registro){
     r.foto=null;r.fotoUrl=null;r.fotoPath=null;r.fotoApagadaEm=Date.now();
   });
 }
-const aprovacoesEmAndamento=new Set();
 async function aprovarTarefaPais(id){
   const t=estado.tarefas.find(x=>String(x.id)===String(id));
   if(!t)return;
@@ -3363,13 +3362,6 @@ async function aprovarTarefaPais(id){
     mostrarToast('ℹ️ A missão não está aguardando aprovação.');
     return;
   }
-  const chaveProcessamento=`${String(t.id)}:${hoje}`;
-  if(aprovacoesEmAndamento.has(chaveProcessamento)){
-    mostrarToast('⏳ Esta aprovação já está sendo processada.');
-    return;
-  }
-  aprovacoesEmAndamento.add(chaveProcessamento);
-  try{
   const agora=Date.now();
   const recompensa=Math.max(0,Number(t.recompensa)||0);
   const xp=Math.max(0,Number(t.xp)||20);
@@ -3421,9 +3413,6 @@ async function aprovarTarefaPais(id){
   mostrarToast('✅ Aprovada! A criança verá suas recompensas ao entrar.');
   renderizarPainelPais();
   atualizarTela();
-  }finally{
-    aprovacoesEmAndamento.delete(chaveProcessamento);
-  }
 }
 function ativarPausa(){
   const dias=Math.max(1,Math.min(30,parseInt(document.getElementById('input-dias-pausa').value)||3));
