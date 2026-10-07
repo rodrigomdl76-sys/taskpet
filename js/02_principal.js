@@ -3827,6 +3827,7 @@ function alternarListaPets(e){
   document.getElementById('lista-pets').classList.toggle('abrir');
 }
 function escolherPet(tipo){
+  if(!PETS[tipo])return;
   if(nivelJogador()<PETS[tipo].desbloqueioNivel)return mostrarToast(`🔒 Nível ${PETS[tipo].desbloqueioNivel} necessário.`);
   estado.petAtual=tipo;
   salvar();
