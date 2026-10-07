@@ -9,8 +9,8 @@
     "fullscreen",
     "standalone"
   ],
-  "background_color": "#E0F2FE",
-  "theme_color": "#7C3AED",
+  "background_color": "#6D2AE6",
+  "theme_color": "#6D2AE6",
   "orientation": "portrait-primary",
   "lang": "pt-BR",
   "icons": [
