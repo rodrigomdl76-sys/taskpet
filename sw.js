@@ -1,4 +1,4 @@
-const CACHE_NAME = 'rotinapet-cache-v37';
+const CACHE_NAME = 'rotinapet-cache-v38';
 const RUNTIME_CACHE_NAME = 'rotinapet-media-v3';
 const KEEP_CACHES = new Set([CACHE_NAME, RUNTIME_CACHE_NAME]);
 const MAX_RUNTIME_ENTRIES = 100;
@@ -6,6 +6,7 @@ const ASSETS = [
   "./index.html",
   "./manifest.json",
   "./icon-192.webp?v=cat-crown-v1",
+  "./icon-192.png?v=cat-crown-v2",
   "./icon-512.webp?v=cat-crown-v1",
   "./icon-512-maskable.webp?v=cat-crown-v1",
   "./css/14_pet_companheiro.css?v=5",
