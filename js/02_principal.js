@@ -274,7 +274,7 @@ function soprarLinguaDeSogra(el){
   lingua.style.transform='scaleY(1.85) rotate(-6deg)';
   setTimeout(()=>{lingua.style.transform='';},380);
 }
-const firebaseConfig={apiKey:"AIzaSyCiDk3ERIe8_uVqBhRnFRD5Od8nyLNlLVQ",authDomain:"rotinapet-624a9.firebaseapp.com",databaseURL:"https://rotinapet-624a9-default-rtdb.firebaseio.com",projectId:"rotinapet-624a9",storageBucket:"rotinapet-624a9.appspot.com",messagingSenderId:"218579871240",appId:"1:218579871240:web:c681389aacd70f677693bd"};
+const firebaseConfig={apiKey:"AIzaSyCiDk3ERIe8_uVqBhRnFRD5Od8nyLNlLVQ",authDomain:"rotinapet-624a9.firebaseapp.com",databaseURL:"https://rotinapet-624a9-default-rtdb.firebaseio.com",projectId:"rotinapet-624a9",storageBucket:"rotinapet-624a9.firebasestorage.app",messagingSenderId:"218579871240",appId:"1:218579871240:web:c681389aacd70f677693bd"};
 let dbFirebase=null,storageFirebase=null,sincronizacaoNuvemAtiva=false,ignorarProximoSyncNuvem=false;
 // Enquanto true, salvar() NÃO envia nada para a nuvem — evita que um estado local
 // "de fábrica" (ex.: depois de limpar cache) sobrescreva dados reais já salvos
