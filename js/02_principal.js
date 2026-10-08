@@ -382,6 +382,35 @@ async function vincularFamiliaAConta(user){
   if(anterior&&anterior!==codigoFamilia)throw new Error('Este e-mail já está vinculado a outra família. Entre nessa família antes de alterar o vínculo.');
   if(!anterior)await user.updateProfile({displayName:PREFIXO_FAMILIA_CONTA+codigoFamilia});
 }
+let acessoFamiliar=null;
+let ultimoEstadoPrivadoPais={};
+const CAMPOS_PRIVADOS_PAIS=['pinHash','pinBloqueadoAte','pinTentativasFalhas','pinPersonalizado','privacidadeAceita','onboardingVistoPais','emailsRecuperacao','emailRecuperacao','pinPais'];
+function extrairCamposPrivadosPais(origem){const dados={};CAMPOS_PRIVADOS_PAIS.forEach(k=>{if(Object.prototype.hasOwnProperty.call(origem||{},k))dados[k]=origem[k]});return dados}
+function removerCamposPrivadosPais(origem){const dados={...(origem||{})};CAMPOS_PRIVADOS_PAIS.forEach(k=>{delete dados[k]});return dados}
+function estadoCompartilhadoParaSincronizar(origem=estado){
+  const base=removerCamposPrivadosPais(origem);
+  if(acessoFamiliar?.role!=='child')return base;
+  const permitidos=new Set([...(typeof CAMPOS_CRIANCA!=='undefined'?CAMPOS_CRIANCA:[]),'tarefas','pets','criancas','criancasDados','criancaAtivaId','schemaTarefas']);
+  return Object.fromEntries(Object.entries(base).filter(([k])=>permitidos.has(k)));
+}
+function aplicarPrivadosPaisLocal(dados){CAMPOS_PRIVADOS_PAIS.forEach(k=>{if(Object.prototype.hasOwnProperty.call(dados||{},k))estado[k]=dados[k]})}
+async function verificarMembroFamilia(user){
+  const token=await user.getIdTokenResult(true);
+  const claims=token?.claims||{};
+  if(claims.familyId===codigoFamilia&&['parent','child'].includes(claims.familyRole)){
+    acessoFamiliar={familyId:claims.familyId,role:claims.familyRole};
+    perfilAtivo=claims.familyRole==='parent'?'pais':'crianca';
+    localStorage.setItem(CHAVE_PERFIL_LOCAL,perfilAtivo);
+    if(claims.familyRole==='child'){const padrao=extrairCamposPrivadosPais(estadoInicial);CAMPOS_PRIVADOS_PAIS.forEach(k=>{estado[k]=padrao[k]});salvarLocalmente()}
+    return true;
+  }
+  acessoFamiliar=null;
+  if(familiaExplicitaNesteAparelho&&window.firebase?.functions){
+    try{await firebase.functions('us-central1').httpsCallable('solicitarAcessoFamilia')({familyId:codigoFamilia,deviceLabel:(navigator.userAgent||'Aparelho').slice(0,60)})}
+    catch(error){if(error?.code!=='functions/already-exists')console.warn('Solicitação de acesso pendente:',error)}
+  }
+  return false;
+}
 let inicializacaoFirebase=Promise.resolve();
   function obterLinkConvite(){
     // URL pública do deploy (pasta histórica taskpet); marca do produto: RotinaPet
@@ -429,7 +458,8 @@ try{
       try{storageFirebase=firebase.storage()}catch(storageError){console.warn('Firebase Storage indisponível:',storageError)}
       definirIdUsuario(usuario.uid);
       sincronizacaoNuvemAtiva = true;
-      const codigoConta=familiaDaConta(usuario);
+      const tokenAtual=await usuario.getIdTokenResult();
+      const codigoConta=tokenAtual?.claims?.familyId||familiaDaConta(usuario);
       if(codigoConta&&codigoConta!==codigoFamilia){
         codigoFamilia=codigoConta;
         localStorage.setItem('ROTINAPET_FAMILIA_ID',codigoFamilia);
@@ -442,7 +472,10 @@ try{
           if(salvo)estado={...estado,...JSON.parse(salvo)};
         }catch(e){console.warn('Cópia local da família indisponível:',e)}
       }
-      await iniciarSincronizacaoNuvem();
+      const membroAprovado=await verificarMembroFamilia(usuario);
+      sincronizacaoNuvemAtiva=membroAprovado;
+      if(membroAprovado){await iniciarSincronizacaoNuvem()}
+      else{statusSyncAtual='local';atualizarStatusSyncUI();if(familiaExplicitaNesteAparelho)mostrarToast('📨 Aparelho aguardando aprovação do responsável.')}
     }).catch((error)=>{
       console.error('Firebase indisponível:',error);
       sincronizacaoNuvemAtiva = false;
@@ -718,7 +751,8 @@ if(verificarResetDiario()){
 }
 function salvarLocalmente(){
   try{
-    localStorage.setItem(`ROTINAPET_SAVE_${codigoFamilia}`,JSON.stringify(estado));
+    const estadoLocal=acessoFamiliar?.role==='child'?removerCamposPrivadosPais(estado):estado;
+    localStorage.setItem(`ROTINAPET_SAVE_${codigoFamilia}`,JSON.stringify(estadoLocal));
   }catch(e){
     mostrarToast('⚠️ Memória cheia; foto não armazenada.');
   }
@@ -732,17 +766,20 @@ async function persistirNuvemAgora(){
     marcarFilaSync(true);
     return;
   }
-  const mudancas=calcularDiffParaNuvem(ultimoEstadoSincronizado,estado);
-  if(!Object.keys(mudancas).length){
-    marcarFilaSync(false);
-    return;
-  }
-  statusSyncAtual='syncing';
-  marcarFilaSync(true);
-  atualizarStatusSyncUI();
-  const snapshot=JSON.parse(JSON.stringify(estado));
-  await dbFirebase.ref(getCaminhoFirebase()).update(mudancas);
+  const compartilhado=estadoCompartilhadoParaSincronizar();
+  const baseSincronizada=acessoFamiliar?.role==='child'?estadoCompartilhadoParaSincronizar(ultimoEstadoSincronizado||{}):ultimoEstadoSincronizado;
+  const mudancas=calcularDiffParaNuvem(baseSincronizada,compartilhado);
+  const privados=acessoFamiliar?.role==='parent'?extrairCamposPrivadosPais(estado):null;
+  const mudancasPrivadas=privados?calcularDiffParaNuvem(ultimoEstadoPrivadoPais,privados):{};
+  if(!Object.keys(mudancas).length&&!Object.keys(mudancasPrivadas).length){marcarFilaSync(false);return}
+  statusSyncAtual='syncing';marcarFilaSync(true);atualizarStatusSyncUI();
+  const snapshot=JSON.parse(JSON.stringify(compartilhado));
+  const gravacoes=[];
+  if(Object.keys(mudancas).length)gravacoes.push(dbFirebase.ref(getCaminhoFirebase()).update(mudancas));
+  if(Object.keys(mudancasPrivadas).length)gravacoes.push(dbFirebase.ref(`rotinapet/familias/${codigoFamilia}/pais/segredos`).update(mudancasPrivadas));
+  await Promise.all(gravacoes);
   ultimoEstadoSincronizado=snapshot;
+  if(privados)ultimoEstadoPrivadoPais=JSON.parse(JSON.stringify(privados));
   ultimaSyncOkEm=Date.now();
   statusSyncAtual='online';
   marcarFilaSync(false);
@@ -785,12 +822,15 @@ async function carregarEstadoNuvem(){
     const timeout=new Promise((_,reject)=>setTimeout(()=>reject(new Error('timeout ao buscar dados da família')),timeoutMs));
     const snap=await Promise.race([dbFirebase.ref(getCaminhoFirebase()).once('value'),timeout]);
     const remoto=snap.val();
-    if(!remoto||typeof remoto!=='object'){
-      ultimoEstadoSincronizado=null;
-      return false;
-    }
-    ultimoEstadoSincronizado=JSON.parse(JSON.stringify(remoto));
-    aplicarEstadoRemotoComMerge(remoto);
+    if(!remoto||typeof remoto!=='object'){ultimoEstadoSincronizado=null;return false}
+    const compartilhado=removerCamposPrivadosPais(remoto);
+    ultimoEstadoSincronizado=JSON.parse(JSON.stringify(compartilhado));
+    aplicarEstadoRemotoComMerge(compartilhado);
+    if(acessoFamiliar?.role==='parent'){
+      const privSnap=await dbFirebase.ref(`rotinapet/familias/${codigoFamilia}/pais/segredos`).once('value');
+      ultimoEstadoPrivadoPais=extrairCamposPrivadosPais(privSnap.val()||{});
+      aplicarPrivadosPaisLocal(ultimoEstadoPrivadoPais);
+    }else{const padrao=extrairCamposPrivadosPais(estadoInicial);CAMPOS_PRIVADOS_PAIS.forEach(k=>{estado[k]=padrao[k]})}
     normalizarEmailsRecuperacao();
     garantirCriancaAtiva();
     localStorage.setItem(`ROTINAPET_SAVE_${codigoFamilia}`,JSON.stringify(estado));
@@ -874,7 +914,8 @@ async function iniciarSincronizacaoNuvem(){
     if(d&&typeof d==='object'){
       const moedasAntes=Number(estado.moedas)||0;
       const nivelAntes=Number(estado.pets?.[estado.petAtual]?.nivel)||1;
-      ultimoEstadoSincronizado=JSON.parse(JSON.stringify(d));
+      const compartilhado=removerCamposPrivadosPais(d);
+      ultimoEstadoSincronizado=JSON.parse(JSON.stringify(compartilhado));
       ultimaSyncOkEm=Date.now();
       statusSyncAtual='online';
       marcarFilaSync(false);
@@ -886,7 +927,7 @@ async function iniciarSincronizacaoNuvem(){
         estado.criancasDados[d.criancaAtivaId]=dadosRecebidos;
         Object.keys(d).forEach(k=>{if(!CAMPOS_CRIANCA.includes(k)&&k!=='criancaAtivaId')estado[k]=d[k]});
       }else{
-        aplicarEstadoRemotoComMerge(d);
+        aplicarEstadoRemotoComMerge(compartilhado);
       }
       garantirCriancaAtiva();
       if(perfilAtivo==='crianca'){
@@ -1799,7 +1840,7 @@ function caminhoTokensFcm(){
 async function salvarTokenFcmNaFamilia(token){
   if(!token||!dbFirebase)return;
   const uid=localStorage.getItem('ROTINAPET_UID')||'anon';
-  const perfil=perfilAtivo||'desconhecido';
+  const perfil=acessoFamiliar?.role==='parent'?'pais':acessoFamiliar?.role==='child'?'crianca':'desconhecido';
   try{
     await dbFirebase.ref(caminhoTokensFcm()+'/'+uid).set({
       token,
@@ -2606,18 +2647,14 @@ async function entrarComEmail(){
     if(!codigoConta&&!familiaExplicitaNesteAparelho){
       throw new Error('Esta conta ainda não tem uma família vinculada. Entre usando o convite ou o código da família e faça o vínculo pelo painel dos pais.');
     }
-    const destino=codigoConta||codigoFamilia;
-    if(!dbFirebase||!sincronizacaoNuvemAtiva)throw new Error('A nuvem está indisponível. Verifique a conexão e tente novamente.');
-    const snap=await dbFirebase.ref(`rotinapet/familias/${destino}/estado`).once('value');
-    if(!snap.exists())throw new Error('Não encontramos os dados desta família na nuvem. Confira o código ou restaure um backup.');
-    if(!codigoConta){
-      const emails=snap.val()?.emailsRecuperacao||[];
-      const antigos=Array.isArray(emails)?emails:[snap.val()?.emailRecuperacao];
-      if(!antigos.some(item=>String(item||'').toLowerCase()===email.toLowerCase())){
-        throw new Error('Esta conta antiga ainda não está vinculada a esta família. Abra o app no aparelho antigo e atualize o e-mail no painel dos pais.');
-      }
-      await vincularFamiliaAConta(user);
-    }
+    const tokenResult=await user.getIdTokenResult(true);
+    const familyClaim=tokenResult?.claims?.familyId;
+    const familyRole=tokenResult?.claims?.familyRole;
+    const destino=familyClaim||codigoConta||codigoFamilia;
+    if(familyClaim!==destino||familyRole!=='parent')throw new Error('Esta conta ainda não foi aprovada como responsável. Abra o convite no aparelho e peça ao responsável para aprová-lo.');
+    if(!dbFirebase)throw new Error('A nuvem está indisponível. Verifique a conexão e tente novamente.');
+    codigoFamilia=destino;acessoFamiliar={familyId:destino,role:familyRole};perfilAtivo=familyRole==='parent'?'pais':'crianca';
+    if(!codigoConta)await vincularFamiliaAConta(user);
     if(destino!==codigoFamilia){
       await filaEscritaNuvem.catch(()=>{});
       cargaNuvemPendente=true;
@@ -2815,6 +2852,7 @@ async function salvarEmailRecuperacao(){
   }
 }
 function abrirPainelPais(){
+  if(acessoFamiliar?.role==='child'){mostrarToast('🔒 Só um responsável pode abrir este painel.');return}
   // Primeiro acesso: criar PIN do zero (sem senha padrão 1234 em produção).
   if(!estado.pinPersonalizado&&!estado.pinHash){
     if(!estado.privacidadeAceita){
@@ -3076,6 +3114,31 @@ function renderizarResumoPainelPais(){
     else elProx.textContent='🎯 Nenhuma missão pendente hoje.';
   }
 }
+async function renderizarSolicitacoesAcesso(){
+  if(acessoFamiliar?.role!=='parent'||!dbFirebase)return;
+  const lista=document.getElementById('lista-aprovacao-pais');
+  if(!lista?.parentElement)return;
+  let box=document.getElementById('acesso-familiar-pendencias');
+  if(!box){box=document.createElement('section');box.id='acesso-familiar-pendencias';box.style.cssText='margin:10px 0;padding:10px;border:1px solid #ddd6fe;border-radius:14px;background:#faf5ff';lista.parentElement.insertBefore(box,lista)}
+  try{
+    const resposta=await firebase.functions('us-central1').httpsCallable('listarSolicitacoesFamilia')({});
+    const pendentes=Object.entries(resposta.data?.requests||{}).filter(([,r])=>r?.status==='pending');
+    box.replaceChildren();const titulo=document.createElement('strong');titulo.textContent='📱 Aparelhos aguardando aprovação';box.appendChild(titulo);
+    if(!pendentes.length){const vazio=document.createElement('div');vazio.textContent='Nenhuma solicitação pendente.';vazio.style.marginTop='6px';box.appendChild(vazio);return}
+    pendentes.forEach(([uid])=>{
+      const linha=document.createElement('div');linha.style.cssText='display:flex;justify-content:space-between;align-items:center;gap:8px;margin-top:8px';
+      const texto=document.createElement('span');texto.textContent='Aparelho · '+uid.slice(0,8);
+      const botao=document.createElement('button');botao.type='button';botao.className='primary-btn green-btn';botao.textContent='Aprovar como criança';botao.addEventListener('click',()=>aprovarAparelhoFamilia(uid,botao));
+      linha.append(texto,botao);box.appendChild(linha);
+    });
+  }catch(error){console.warn('Solicitações de acesso indisponíveis:',error);box.replaceChildren()}
+}
+async function aprovarAparelhoFamilia(uid,botao){
+  if(acessoFamiliar?.role!=='parent')return;
+  botao.disabled=true;botao.textContent='Aprovando…';
+  try{await firebase.functions('us-central1').httpsCallable('aprovarAcessoFamilia')({uid,role:'child'});mostrarToast('✅ Aparelho aprovado. No outro aparelho, atualize o app.');await renderizarSolicitacoesAcesso()}
+  catch(error){console.error('Falha ao aprovar aparelho:',error);mostrarToast('⚠️ Não foi possível aprovar este aparelho.');botao.disabled=false;botao.textContent='Aprovar como criança'}
+}
 function renderizarPainelPais(){
   document.getElementById('input-taxa-cambio').value=estado.taxaCambio;
   document.getElementById('input-idade-crianca').value=estado.idadeCrianca||7;
@@ -3099,6 +3162,7 @@ function renderizarPainelPais(){
   atualizarBotaoLembrete();
   renderizarGerenciamentoPremiosPais();
   renderizarSolicitacoesPremiosPais();
+  renderizarSolicitacoesAcesso();
   const ap=document.getElementById('lista-aprovacao-pais');
   const ps=estado.tarefas.filter(t=>(!t.dataSugerida||t.dataSugerida===hojeLocal())&&statusTarefaAtual(t)==='aguardando_aprovacao');
   const contador=document.getElementById('contador-aprovacoes-pais');
