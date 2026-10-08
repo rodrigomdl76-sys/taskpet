@@ -1,7 +1,7 @@
 /* WebP originais do pet, organizados por fase e ação na pasta animacoes/. */
 (() => {
   const pasta = 'animacoes/';
-  const versaoAnimacoes = 'ovo-animacoes-v11';
+  const versaoAnimacoes = 'ovo-animacoes-v12';
   const arquivos = {
     2:{idle:'01_parado.webp',carinho:'02_carinho.webp',dormir:'03_dormir.webp',comemoracao:'04_comemorar.webp'},
     1:{idle:'01_parado.webp',carinho:'02_carinho.webp',brincar:'05_brincar.webp',dormir:'03_dormir.webp',comemoracao:'04_comemorar.webp'},
@@ -60,11 +60,19 @@
     atualizarBotoes();
   }
   async function tocar(a){
+    const atual=++token;
     if(a==='comemoracao')window.dispararEfeitoPet?.('comemoracao');
     else if(a==='pulinho')window.dispararEfeitoPet?.('brincar');
     else if(a==='giro')window.dispararEfeitoPet?.('giro');
-    const f=fase();
-    if(f===1&&(a==='carinho'||a==='brincar'))await acoesPersonalizadasProntas;
+    let f=fase();
+    if(f===1&&(a==='carinho'||a==='brincar')&&!acoesPersonalizadas){
+      clearTimeout(volta);volta=null;
+      img?.classList.remove('gesto-css-pulinho','gesto-css-giro');
+      acao='';chave='';mostrar();
+      await acoesPersonalizadasProntas;
+      if(token!==atual)return;
+      f=fase();
+    }
     if(estado?.petAtual!=='gato')return;
     const gestoLiberado=window.gestoPetLiberado?.(a) && (a==='pulinho'||a==='giro');
     if(a==='idle'||(!arquivos[f]?.[a]&&!gestoLiberado))return;
@@ -75,7 +83,6 @@
       acao='';mostrar();
       if(img){void img.offsetWidth;img.classList.add(`gesto-css-${a}`)}
     }else{acao=a;chave='';mostrar()}
-    const atual=++token;
     const duracao={carinho:3850,brincar:3200,comemoracao:2100,pulinho:3000,giro:8600}[a]||2300;
     volta=setTimeout(()=>{if(token===atual)voltar()},gestoLiberado||f===2||(f===1&&(a==='carinho'||a==='brincar'))?duracao:2300);
   }
