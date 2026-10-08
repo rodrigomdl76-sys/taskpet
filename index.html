@@ -22,6 +22,22 @@
   @media(prefers-reduced-motion:reduce){#rp-startup-screen .rp-startup-spinner,#rp-startup-screen .rp-startup-mascot{animation:none}}
 </style>
 <script>document.documentElement.classList.add('rp-starting')</script>
+<script>
+(() => {
+  if (!('serviceWorker' in navigator)) return;
+  let recarregando = false;
+  navigator.serviceWorker.addEventListener('controllerchange', () => {
+    if (recarregando || !document.documentElement.classList.contains('rp-starting')) return;
+    recarregando = true;
+    location.reload();
+  });
+  window.addEventListener('load', () => {
+    navigator.serviceWorker.register('./sw.js', { updateViaCache: 'none' })
+      .then(registro => registro.update())
+      .catch(erro => console.warn('Atualização do app:', erro));
+  }, { once: true });
+})();
+</script>
 <link rel="stylesheet" href="css/14_pet_companheiro.css?v=5">
 <link rel="manifest" href="manifest.json">
 <link rel="icon" type="image/webp" href="icon-192.webp?v=cat-crown-v1">
@@ -688,7 +704,7 @@
      numa função só, sem duplo processamento. Este bloco de estilo continua sendo usado. -->
 
 <link rel="stylesheet" href="css/12_mapa_vivo.css">
-<script src="js/08_meu_pet.js?v=gestos-1" defer></script><script src="js/09_gato_laranja.js?v=ovo-animacoes-v10" defer></script>
+<script src="js/08_meu_pet.js?v=gestos-1" defer></script><script src="js/09_gato_laranja.js?v=ovo-animacoes-v11" defer></script>
 
 <script src="js/10_pet_companheiro.js?v=6" defer></script>
 <link rel="stylesheet" href="css/17_pet_no_chao.css?v=2">
