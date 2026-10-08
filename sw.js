@@ -1,4 +1,4 @@
-const CACHE_NAME = 'rotinapet-cache-v36';
+const CACHE_NAME = 'rotinapet-cache-v37';
 const RUNTIME_CACHE_NAME = 'rotinapet-media-v3';
 const KEEP_CACHES = new Set([CACHE_NAME, RUNTIME_CACHE_NAME]);
 const MAX_RUNTIME_ENTRIES = 100;
@@ -71,22 +71,47 @@ self.addEventListener('activate', event => {
   );
 });
 
-async function buscarEGuardarMidia(request) {
-  const cache = await caches.open(RUNTIME_CACHE_NAME);
-  const existente = await cache.match(request);
-  if (existente) return existente;
-
-  const resposta = await fetch(request);
-  if (resposta.ok && resposta.type === 'basic') {
-    await cache.put(request, resposta.clone());
-    const chaves = await cache.keys();
-    while (chaves.length > MAX_RUNTIME_ENTRIES) {
-      await cache.delete(chaves.shift());
-    }
+async function limitarCacheMidia(cache) {
+  const chaves = await cache.keys();
+  while (chaves.length > MAX_RUNTIME_ENTRIES) {
+    await cache.delete(chaves.shift());
   }
-  return resposta;
 }
 
+function buscarEGuardarMidia(request, event) {
+  const cachePromise = caches.open(RUNTIME_CACHE_NAME);
+  const existentePromise = cachePromise.then(cache => cache.match(request));
+
+  const atualizarPromise = existentePromise.then(async existente => {
+    const cache = await cachePromise;
+    try {
+      if (existente) {
+        await cache.delete(request);
+        await cache.put(request, existente.clone());
+      }
+
+      const resposta = await fetch(new Request(request, {cache: 'no-cache'}));
+      if (resposta.ok && resposta.type === 'basic') {
+        await cache.put(request, resposta.clone());
+        await limitarCacheMidia(cache);
+      }
+      return existente || resposta;
+    } catch (error) {
+      if (existente) return existente;
+      console.warn('Não foi possível atualizar a mídia em cache:', request.url, error);
+      return caches.match(request);
+    }
+  });
+
+  event.waitUntil(atualizarPromise.then(() => undefined).catch(error => {
+    console.warn('Falha ao atualizar o cache de mídia:', error);
+  }));
+
+  return existentePromise
+    .then(existente => existente || atualizarPromise)
+    .then(resposta => resposta || caches.match(request))
+    .then(resposta => resposta || Response.error());
+}
 self.addEventListener('fetch', event => {
   if (event.request.method !== 'GET') return;
 
@@ -109,11 +134,7 @@ self.addEventListener('fetch', event => {
   }
 
   if (url.pathname.includes('/animacoes/') || url.pathname.includes('/assets/')) {
-    event.respondWith(
-      buscarEGuardarMidia(event.request)
-        .catch(() => caches.match(event.request))
-        .then(response => response || Response.error())
-    );
+    event.respondWith(buscarEGuardarMidia(event.request, event));
     return;
   }
 
@@ -170,18 +191,37 @@ messaging.onBackgroundMessage(payload => {
 
 self.addEventListener('notificationclick', event => {
   event.notification.close();
-  const url = event.notification.data?.url || './';
+  const scope = new URL(self.registration.scope);
+  let destino;
+  try {
+    destino = new URL(event.notification.data?.url || './', scope);
+  } catch (error) {
+    destino = scope;
+  }
+  if (destino.origin !== scope.origin || !destino.pathname.startsWith(scope.pathname)) {
+    destino = scope;
+  }
 
   event.waitUntil(
     clients.matchAll({type: 'window', includeUncontrolled: true})
-      .then(list => {
-        for (const client of list) {
-          if ('focus' in client) {
-            client.focus();
-            return;
+      .then(async lista => {
+        const janela = lista.find(client => {
+          try {
+            const url = new URL(client.url);
+            return url.origin === scope.origin && url.pathname.startsWith(scope.pathname);
+          } catch (error) {
+            return false;
           }
+        });
+        if (janela) {
+          try {
+            if ('navigate' in janela) await janela.navigate(destino.href);
+          } catch (error) {
+            console.warn('Não foi possível navegar para a notificação:', error);
+          }
+          return janela.focus();
         }
-        return clients.openWindow ? clients.openWindow(url) : undefined;
+        return clients.openWindow ? clients.openWindow(destino.href) : undefined;
       })
   );
 });
