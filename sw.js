@@ -167,7 +167,7 @@ firebase.initializeApp({
   authDomain: 'rotinapet-624a9.firebaseapp.com',
   databaseURL: 'https://rotinapet-624a9-default-rtdb.firebaseio.com',
   projectId: 'rotinapet-624a9',
-  storageBucket: 'rotinapet-624a9.appspot.com',
+  storageBucket: 'rotinapet-624a9.firebasestorage.app',
   messagingSenderId: '218579871240',
   appId: '1:218579871240:web:c681389aacd70f677693bd'
 });
