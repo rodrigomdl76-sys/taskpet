@@ -1,0 +1,67 @@
+{
+  "rules": {
+    "rotinapet": {
+      "familias": {
+        "$familyId": {
+          "estado": {
+            ".read": "auth != null && auth.token.familyId === $familyId && (auth.token.familyRole === 'parent' || auth.token.familyRole === 'child')",
+            ".write": "auth != null && auth.token.familyId === $familyId && auth.token.familyRole === 'parent'",
+            "$field": {
+              ".write": "auth != null && auth.token.familyId === $familyId && auth.token.familyRole === 'child' && $field.matches(/^(personalizacao|gestosDesbloqueados|palcoAtual|palcosComprados|decoracaoItens|extraDiaRemovida|avisosMissao|miniPetsComprados|miniPetAtivo|bauDatasResgatadas|historicoRecompensas|avisosRecompensas|acessorios|conquistas|habilidades|desafiosMathAcertos|dinheiroAcumulado|mesadaAtiva|fundoAtual|fundosComprados|temaInterfaceAtual|historicoConclusoes|idadeCrianca|dificuldadeJogos|nomePet|lembreteEnviadoData|metaMoedas|moedas|onboardingVistoCrianca|pausaAte|petAtual|pets|recompensas|sonhos|registroDiario|solicitacoesPremios|streak|surpresaResgatadaData|tarefas|tarefasHojeCount|timerFim|totalSacado|ultimoDiaAcesso|ultimoDiaConcluido|ultimoStreakPremiado|vozSalva|ultimoAcaoPet|ultimoDecay|desafioDiarioData|desafioDiarioFeitoData|bauDiarioAbertoData|escudosOfensiva|adesivos|eventoSemanalData|missaoFamilia|mensagensPais|historicoEngajamento|schemaTarefas|criancas|criancasDados|criancaAtivaId)$/)"
+            },
+            ".validate": "!newData.hasChildren(['pinHash', 'pinBloqueadoAte', 'pinTentativasFalhas', 'pinPersonalizado', 'privacidadeAceita', 'onboardingVistoPais', 'emailsRecuperacao', 'emailRecuperacao', 'pinPais'])"
+          },
+          "pais": {
+            "segredos": {
+              ".read": "auth != null && auth.token.familyId === $familyId && auth.token.familyRole === 'parent'",
+              ".write": "auth != null && auth.token.familyId === $familyId && auth.token.familyRole === 'parent'"
+            }
+          },
+          "fcmTokens": {
+            "$uid": {
+              ".read": "auth != null && auth.uid === $uid && auth.token.familyId === $familyId",
+              ".write": "auth != null && auth.uid === $uid && auth.token.familyId === $familyId && (auth.token.familyRole === 'parent' || auth.token.familyRole === 'child')",
+              ".validate": "newData.hasChildren(['token', 'perfil', 'atualizadoEm']) && newData.child('token').isString() && newData.child('token').val().length <= 4096 && newData.child('perfil').val() === (auth.token.familyRole === 'parent' ? 'pais' : 'crianca') && newData.child('atualizadoEm').isNumber()"
+            }
+          },
+          "pushQueue": {
+            "$pushId": {
+              ".read": false,
+              ".write": "auth != null && auth.token.familyId === $familyId && (auth.token.familyRole === 'parent' || auth.token.familyRole === 'child') && !data.exists() && newData.exists()",
+              ".validate": "newData.hasChildren(['title', 'body', 'tag', 'onlyPerfil', 'url', 'createdAt']) && newData.child('title').isString() && newData.child('title').val().length <= 80 && newData.child('body').isString() && newData.child('body').val().length <= 220 && newData.child('tag').isString() && newData.child('tag').val().length <= 64 && newData.child('onlyPerfil').val() === 'pais' && newData.child('url').isString() && newData.child('url').val().length <= 512 && newData.child('createdAt').isNumber()"
+            }
+          },
+          "security": {
+            "members": {
+              "$uid": {
+                ".read": "auth != null && auth.token.familyId === $familyId && (auth.uid === $uid || auth.token.familyRole === 'parent')",
+                ".write": false
+              }
+            },
+            "accessRequests": {
+              "$uid": {
+                ".read": false,
+                ".validate": "newData.hasChildren(['status', 'requestedAt', 'deviceLabel']) && newData.child('status').val() === 'pending' && newData.child('requestedAt').isNumber() && newData.child('deviceLabel').isString() && newData.child('deviceLabel').val().length <= 60",
+                ".write": false
+              }
+            }
+          },
+          "filhos": {
+            "$childId": {
+              "tarefas": {
+                "$taskId": {
+                  ".read": "auth != null && auth.token.familyId === $familyId && (auth.token.familyRole === 'parent' || auth.token.familyRole === 'child')",
+                  ".write": "auth != null && auth.token.familyId === $familyId && (auth.token.familyRole === 'parent' || auth.token.familyRole === 'child')"
+                }
+              }
+            }
+          },
+          "meta": {
+            ".read": "auth != null && auth.token.familyId === $familyId && (auth.token.familyRole === 'parent' || auth.token.familyRole === 'child')",
+            ".write": "auth != null && auth.token.familyId === $familyId && auth.token.familyRole === 'parent'"
+          }
+        }
+      }
+    }
+  }
+}
