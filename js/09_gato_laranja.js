@@ -1,7 +1,7 @@
 /* WebP originais do pet, organizados por fase e ação na pasta animacoes/. */
 (() => {
   const pasta = 'animacoes/';
-  const versaoAnimacoes = 'ovo-animacoes-v18';
+  const versaoAnimacoes = 'ovo-animacoes-v19';
   const arquivos = {
     2:{idle:'01_parado.webp',carinho:'02_carinho.webp',dormir:'03_dormir.webp',comemoracao:'04_comemorar.webp'},
     1:{idle:'01_parado.webp',carinho:'02_carinho.webp',brincar:'05_brincar.webp',dormir:'03_dormir.webp',comemoracao:'04_comemorar.webp'},
@@ -15,8 +15,44 @@
   const nivel = () => Number(estado?.pets?.gato?.nivel)||1;
   const faseReal = () => calcularFase(nivel());
   const fase = () => perfilAtivo==='pais' && faseTeste ? faseTeste : faseReal();
-  function voltar(){token++;clearTimeout(volta);volta=null;img?.classList.remove('gesto-css-pulinho','gesto-css-giro');acao='';mostrar();}
+  function nuvemMagica(){
+    const host=document.createElement('div');
+    host.className='pet-magic-cloud';
+    host.setAttribute('aria-hidden','true');
+    host.innerHTML='<svg viewBox="0 0 180 180" focusable="false"><path d="M36 119c-13 0-23-10-23-23 0-12 9-22 21-23 1-20 17-35 37-35 12 0 23 6 30 15 7-8 17-13 29-13 20 0 36 16 36 36 13 3 22 14 22 27 0 16-13 29-29 29H36z" fill="#fff9e8" stroke="#fff" stroke-width="5" stroke-linejoin="round"/><path d="M41 113c-7 0-12-5-12-12 0-6 4-11 10-12 2-14 13-24 27-24 10 0 18 5 23 13 6-9 15-14 25-14 15 0 27 12 28 27 9 1 16 8 16 17 0 10-8 18-18 18H41z" fill="#fff" opacity=".75"/><path d="m51 45 3 7 7 2-7 3-3 8-3-8-7-3 7-2 3-7zm83 92 2 5 5 2-5 2-2 5-2-5-5-2 5-2 2-5zm-99-13 2 4 4 2-4 1-2 5-2-5-4-1 4-2 2-4z" fill="#fbbf24"/></svg>';
+    return host;
+  }
+  function esperar(ms){return new Promise(resolve=>setTimeout(resolve,ms))}
+  async function transicaoMagica(trocar,atual,forcar=false){
+    const url=idlePersonalizadoUrl();
+    const pet=document.getElementById('pet-principal');
+    if((!url&&!forcar)||!pet){trocar();return}
+    if(window.matchMedia?.('(prefers-reduced-motion: reduce)').matches){trocar();return}
+    const host=nuvemMagica();
+    pet.appendChild(host);
+    window.somTransicaoMagicaPet?.();
+    await esperar(220);
+    if(atual!==token||!pet.isConnected){host.remove();return}
+    trocar();
+    await esperar(420);
+    host.remove();
+  }
+  function voltar(){
+    const atual=++token;
+    clearTimeout(volta);volta=null;
+    const trocar=()=>{img?.classList.remove('gesto-css-pulinho','gesto-css-giro');acao='';chave='';mostrar()};
+    if(idlePersonalizadoUrl()&&img?.dataset.acaoPet!=='idle')void transicaoMagica(trocar,atual);
+    else trocar();
+  }
+  function idlePersonalizadoUrl(){
+    if(fase()!==1)return '';
+    try{return String(window.obterIdlePersonalizadoGato?.()||'').trim()}catch(_){return ''}
+  }
   function caminho(f,a){
+    if(f===1&&a==='idle'){
+      const personalizado=idlePersonalizadoUrl();
+      if(personalizado)return `${personalizado}${personalizado.includes('?')?'&':'?'}v=${encodeURIComponent(versaoAnimacoes)}`;
+    }
     if(a==='carinho'&&acoesPersonalizadas?.carinho)return acoesPersonalizadas.carinho;
     if(f===1&&acoesPersonalizadas?.[a])return acoesPersonalizadas[a];
     const arquivo = gestos[f]?.[a] ? `${pasta}${gestos[f][a]}` : `${pasta}fase${f}/${arquivos[f][a]}`;
@@ -87,6 +123,7 @@
     const f=fase();const pedido=acao || ((new Date().getHours()>=21 || new Date().getHours()<7)?'dormir':'idle');
     const a=(arquivos[f][pedido]||gestos[f]?.[pedido])?pedido:'idle';
     img.dataset.acaoPet=a;
+    img.dataset.visualPersonalizado=f===1&&a==='idle'?idlePersonalizadoUrl():'';
     const novaChave=`${f}/${a}`;
     if(chave===novaChave)return;
     chave=novaChave;faseVisivel=f;
@@ -127,10 +164,15 @@
       if(token!==atual||estado?.petAtual!=='gato')return;
       if(f!==fase())return;
     }
-    if(gestoPorCss){
-      acao='';mostrar();
-      if(img){void img.offsetWidth;img.classList.add(`gesto-css-${a}`)}
-    }else{acao=a;chave='';mostrar()}
+    const iniciar=()=>{
+      if(gestoPorCss){
+        acao='';mostrar();
+        if(img){void img.offsetWidth;img.classList.add(`gesto-css-${a}`)}
+      }else{acao=a;chave='';mostrar()}
+    };
+    if(!gestoPorCss&&idlePersonalizadoUrl()&&img?.dataset.visualPersonalizado)await transicaoMagica(iniciar,atual);
+    else iniciar();
+    if(token!==atual)return;
     const duracao={carinho:8200,brincar:10800,comemoracao:2100,pulinho:3000,giro:8600}[a]||2300;
     volta=setTimeout(()=>{if(token===atual)voltar()},gestoLiberado||a==='carinho'||f===2||(f===1&&a==='brincar')?duracao:2300);
   }
@@ -208,6 +250,15 @@
   window.testarFaseGato=n=>{if(perfilAtivo!=='pais')return;faseTeste=n;chave='';mostrar()};
   window.acaoGatoLaranja=a=>{if(estado?.petAtual==='gato')tocar(a)};
   window.atualizarAcoesGato=atualizarBotoes;
+  window.atualizarIdleGatoPersonalizado=()=>{
+    const atualUrl=img?.dataset.visualPersonalizado||'';
+    const novoUrl=idlePersonalizadoUrl();
+    if(img?.dataset.acaoPet!=='idle'||atualUrl===novoUrl)return;
+    const atual=++token;clearTimeout(volta);volta=null;
+    const trocar=()=>{acao='';chave='';mostrar()};
+    if(estado?.petAtual==='gato'&&fase()===1)void transicaoMagica(trocar,atual,true);
+    else trocar();
+  };
   window.gatoLaranjaAudio=audio=>{
     if(!audio?.addEventListener)return;
     audio.addEventListener('playing',()=>{audioAtivo++;if(estado?.petAtual==='gato')tocar('comemoracao')});
