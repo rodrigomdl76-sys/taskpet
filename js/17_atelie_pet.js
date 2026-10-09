@@ -55,6 +55,10 @@
   }
   function item(id) { return catalogo.find(x => x.id === id); }
   function equip(slot) { return personalizacao().equipados[slot] || ''; }
+  window.obterIdlePersonalizadoGato = function() {
+    const visual = item(equip('pet:visual'));
+    return visual?.idleWebp || '';
+  };
   function avisar(msg) {
     if (typeof window.mostrarToast === 'function') window.mostrarToast(msg);
     else if (typeof window.exibirToast === 'function') window.exibirToast(msg);
@@ -77,6 +81,7 @@
   function atualizar() {
     renderizar();
     renderizarVisuais();
+    try { window.atualizarIdleGatoPersonalizado?.(); } catch (_) {}
     try { if (typeof window.atualizarTela === 'function') window.atualizarTela(); } catch (_) {}
   }
   function abrir() {
