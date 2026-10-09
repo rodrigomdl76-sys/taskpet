@@ -1,7 +1,7 @@
 /* WebP originais do pet, organizados por fase e ação na pasta animacoes/. */
 (() => {
   const pasta = 'animacoes/';
-  const versaoAnimacoes = 'ovo-animacoes-v17';
+  const versaoAnimacoes = 'ovo-animacoes-v18';
   const arquivos = {
     2:{idle:'01_parado.webp',carinho:'02_carinho.webp',dormir:'03_dormir.webp',comemoracao:'04_comemorar.webp'},
     1:{idle:'01_parado.webp',carinho:'02_carinho.webp',brincar:'05_brincar.webp',dormir:'03_dormir.webp',comemoracao:'04_comemorar.webp'},
@@ -17,6 +17,7 @@
   const fase = () => perfilAtivo==='pais' && faseTeste ? faseTeste : faseReal();
   function voltar(){token++;clearTimeout(volta);volta=null;img?.classList.remove('gesto-css-pulinho','gesto-css-giro');acao='';mostrar();}
   function caminho(f,a){
+    if(a==='carinho'&&acoesPersonalizadas?.carinho)return acoesPersonalizadas.carinho;
     if(f===1&&acoesPersonalizadas?.[a])return acoesPersonalizadas[a];
     const arquivo = gestos[f]?.[a] ? `${pasta}${gestos[f][a]}` : `${pasta}fase${f}/${arquivos[f][a]}`;
     return `${arquivo}?v=${versaoAnimacoes}`;
@@ -38,12 +39,43 @@
     if('requestIdleCallback' in window)requestIdleCallback(carregar,{timeout:1200});
     else setTimeout(carregar,150);
   }
+  function alinharSprite(){
+    if(!img?.naturalWidth)return;
+    const largura=img.clientWidth,altura=img.clientHeight;
+    if(!largura||!altura)return;
+    try{
+      const escalaAmostra=Math.min(1,128/img.naturalWidth,128/img.naturalHeight);
+      const amostraL=Math.max(1,Math.round(img.naturalWidth*escalaAmostra));
+      const amostraA=Math.max(1,Math.round(img.naturalHeight*escalaAmostra));
+      const canvas=document.createElement('canvas');canvas.width=amostraL;canvas.height=amostraA;
+      const contexto=canvas.getContext('2d',{willReadFrequently:true});
+      contexto.drawImage(img,0,0,amostraL,amostraA);
+      const pixels=contexto.getImageData(0,0,amostraL,amostraA).data;
+      let minX=amostraL,minY=amostraA,maxX=-1,maxY=-1;
+      for(let y=0;y<amostraA;y++)for(let x=0;x<amostraL;x++){
+        if(pixels[(y*amostraL+x)*4+3]<=32)continue;
+        if(x<minX)minX=x;if(x>maxX)maxX=x;if(y<minY)minY=y;if(y>maxY)maxY=y;
+      }
+      if(maxX<minX||maxY<minY)return;
+      const escalaConteudo=Math.min(largura/img.naturalWidth,altura/img.naturalHeight);
+      const esquerda=(largura-img.naturalWidth*escalaConteudo)/2;
+      const topo=altura-img.naturalHeight*escalaConteudo;
+      const escalaX=img.naturalWidth/amostraL,escalaY=img.naturalHeight/amostraA;
+      const centro=esquerda+((minX+maxX+1)/2)*escalaX*escalaConteudo;
+      const base=topo+(maxY+1)*escalaY*escalaConteudo;
+      img.style.setProperty('--pet-shift-x',`${((largura/2-centro)/largura*100).toFixed(2)}%`);
+      img.style.setProperty('--pet-shift-y',`${((altura-base)/altura*100).toFixed(2)}%`);
+    }catch(erro){
+      img.style.setProperty('--pet-shift-x','0%');img.style.setProperty('--pet-shift-y','0%');
+      console.warn('Não foi possível alinhar a imagem do pet:',erro);
+    }
+  }
   function garantirImagem(){
     const pet=document.getElementById('pet-principal');if(!pet)return false;
     if(!img || img.parentNode!==pet){
       chave='';img=document.createElement('img');img.className='gato-laranja-img';img.alt='Gato animado';img.draggable=false;
       img.onerror=()=>{pet.classList.remove('gato-laranja-pronto');img.style.display='none';img.alt='Imagem do pet indisponível'};
-      img.onload=()=>{img.style.display='';pet.classList.add('gato-laranja-pronto');precarregarFase(faseVisivel)};pet.appendChild(img);
+      img.onload=()=>{img.style.display='';pet.classList.add('gato-laranja-pronto');alinharSprite();precarregarFase(faseVisivel)};pet.appendChild(img);
     }
     return true;
   }
@@ -99,7 +131,7 @@
       acao='';mostrar();
       if(img){void img.offsetWidth;img.classList.add(`gesto-css-${a}`)}
     }else{acao=a;chave='';mostrar()}
-    const duracao={carinho:6300,brincar:10800,comemoracao:2100,pulinho:3000,giro:8600}[a]||2300;
+    const duracao={carinho:8200,brincar:10800,comemoracao:2100,pulinho:3000,giro:8600}[a]||2300;
     volta=setTimeout(()=>{if(token===atual)voltar()},gestoLiberado||f===2||(f===1&&(a==='carinho'||a==='brincar'))?duracao:2300);
   }
   function atualizarRolagem(){
