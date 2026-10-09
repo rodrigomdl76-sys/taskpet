@@ -58,6 +58,17 @@ function playSound(tipo){
 }
 function somConquista(){playSound('nivel')}
 function somBauLendario(){playSound('nivel')}
+function somTransicaoMagicaPet(){
+  if(estado?.sonsAtivos===false||obterVolumeSom()<=0.01)return;
+  try{
+    const ctx=obterAudioContext(),agora=ctx.currentTime,vol=obterVolumeSom();
+    const puff=ctx.createOscillator(),ganho=ctx.createGain();
+    puff.type='sine';puff.frequency.setValueAtTime(360,agora);puff.frequency.exponentialRampToValueAtTime(125,agora+.13);
+    ganho.gain.setValueAtTime(.055*vol,agora);ganho.gain.exponentialRampToValueAtTime(.001,agora+.15);
+    puff.connect(ganho);ganho.connect(ctx.destination);puff.start(agora);puff.stop(agora+.16);
+    tocarTom(784,'sine',.13,.055,.035);tocarTom(1046,'sine',.17,.12,.025);
+  }catch(_){}
+}
 const PETS={
  gato:{id:'gato',nome:'Pipoca',emoji:'🐱',desbloqueioNivel:1,som:'',evolucoes:[
  {nivel:1,nome:'Ovo-gato',desc:'O começo da aventura'},{nivel:21,nome:'Gato Cavalheiro',desc:'Uma nova forma para o pet'},{nivel:41,nome:'Gato Real',desc:'Capa e coroa da última evolução'}]},
