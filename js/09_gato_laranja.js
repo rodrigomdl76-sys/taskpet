@@ -15,7 +15,7 @@
   const nivel = () => Number(estado?.pets?.gato?.nivel)||1;
   const faseReal = () => calcularFase(nivel());
   const fase = () => perfilAtivo==='pais' && faseTeste ? faseTeste : faseReal();
-  function voltar(){clearTimeout(volta);volta=null;img?.classList.remove('gesto-css-pulinho','gesto-css-giro');acao='';mostrar();}
+  function voltar(){token++;clearTimeout(volta);volta=null;img?.classList.remove('gesto-css-pulinho','gesto-css-giro');acao='';mostrar();}
   function caminho(f,a){
     if(f===1&&acoesPersonalizadas?.[a])return acoesPersonalizadas[a];
     const arquivo = gestos[f]?.[a] ? `${pasta}${gestos[f][a]}` : `${pasta}fase${f}/${arquivos[f][a]}`;
@@ -48,25 +48,36 @@
     return true;
   }
   function mostrar(){
-    if(estado?.petAtual!=='gato'){if(img)img.style.display='none';chave='';return}
+    if(estado?.petAtual!=='gato'){if(img)img.style.display='none';document.getElementById('pet-principal')?.classList.remove('gato-laranja-animado');chave='';return}
     if(!garantirImagem())return;
+    document.getElementById('pet-principal')?.classList.add('gato-laranja-animado');
     img.style.display='';
     const f=fase();const pedido=acao || ((new Date().getHours()>=21 || new Date().getHours()<7)?'dormir':'idle');
     const a=(arquivos[f][pedido]||gestos[f]?.[pedido])?pedido:'idle';
+    img.dataset.acaoPet=a;
     const novaChave=`${f}/${a}`;
     if(chave===novaChave)return;
     chave=novaChave;faseVisivel=f;
     img.src=caminho(f,a);
     atualizarBotoes();
   }
+  async function aguardarImagem(src){
+    const imagem=new Image();imagem.decoding='async';imagem.src=src;
+    if(typeof imagem.decode==='function'){
+      try{await imagem.decode()}catch(erro){if(!imagem.complete||!imagem.naturalWidth)throw erro}
+    }else if(!imagem.complete){
+      await new Promise((resolve,reject)=>{imagem.onload=resolve;imagem.onerror=()=>reject(new Error('Não foi possível carregar a animação do pet.'))});
+    }
+    if(!imagem.naturalWidth)throw new Error('A animação do pet não carregou.');
+  }
   async function tocar(a){
     const atual=++token;
+    clearTimeout(volta);volta=null;
     if(a==='comemoracao')window.dispararEfeitoPet?.('comemoracao');
     else if(a==='pulinho')window.dispararEfeitoPet?.('brincar');
     else if(a==='giro')window.dispararEfeitoPet?.('giro');
     let f=fase();
     if(f===1&&(a==='carinho'||a==='brincar')&&!acoesPersonalizadas){
-      clearTimeout(volta);volta=null;
       img?.classList.remove('gesto-css-pulinho','gesto-css-giro');
       acao='';chave='';mostrar();
       await acoesPersonalizadasProntas;
@@ -76,14 +87,19 @@
     if(estado?.petAtual!=='gato')return;
     const gestoLiberado=window.gestoPetLiberado?.(a) && (a==='pulinho'||a==='giro');
     if(a==='idle'||(!arquivos[f]?.[a]&&!gestoLiberado))return;
-    clearTimeout(volta);
     img?.classList.remove('gesto-css-pulinho','gesto-css-giro');
     const gestoPorCss=gestoLiberado&&!gestos[f]?.[a];
+    if(!gestoPorCss){
+      const src=caminho(f,a);
+      try{await aguardarImagem(src)}catch(erro){if(token===atual)console.warn('Não foi possível preparar a animação do pet:',erro);return}
+      if(token!==atual||estado?.petAtual!=='gato')return;
+      if(f!==fase())return;
+    }
     if(gestoPorCss){
       acao='';mostrar();
       if(img){void img.offsetWidth;img.classList.add(`gesto-css-${a}`)}
     }else{acao=a;chave='';mostrar()}
-    const duracao={carinho:3850,brincar:10800,comemoracao:2100,pulinho:3000,giro:8600}[a]||2300;
+    const duracao={carinho:6300,brincar:10800,comemoracao:2100,pulinho:3000,giro:8600}[a]||2300;
     volta=setTimeout(()=>{if(token===atual)voltar()},gestoLiberado||f===2||(f===1&&(a==='carinho'||a==='brincar'))?duracao:2300);
   }
   function atualizarRolagem(){
