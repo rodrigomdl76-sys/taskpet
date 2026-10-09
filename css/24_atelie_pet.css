@@ -33,7 +33,7 @@
 .atelier-hub-card{border-color:#c4b5fd!important;background:linear-gradient(135deg,#f5f3ff,#fff)!important}
 .atelier-hub-card span{background:#ede9fe!important}
 .cat-wrapper{position:relative}
-.rp-pet-cosmetic-layer{position:absolute;inset:0;z-index:9;pointer-events:none}
+.rp-pet-cosmetic-layer{position:absolute;inset:0;z-index:9;pointer-events:none;transform:translate(calc(var(--pet-shift-x,0%) + var(--pet-body-shift-x,0%)),var(--pet-shift-y,0%));transform-origin:center bottom}
 .rp-pet-accessory{position:absolute;display:block;transform:translate(-50%,-50%);font-size:27px;line-height:1;filter:drop-shadow(0 2px 2px #17203350);white-space:nowrap}
 .rp-pet-accessory.eyes{font-size:29px}
 .rp-pet-accessory.crown{font-size:25px}

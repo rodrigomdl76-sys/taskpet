@@ -1,7 +1,7 @@
 /* WebP originais do pet, organizados por fase e ação na pasta animacoes/. */
 (() => {
   const pasta = 'animacoes/';
-  const versaoAnimacoes = 'ovo-animacoes-v20';
+  const versaoAnimacoes = 'ovo-animacoes-v21';
   const arquivos = {
     2:{idle:'01_parado.webp',carinho:'02_carinho.webp',dormir:'03_dormir.webp',comemoracao:'04_comemorar.webp'},
     1:{idle:'01_parado.webp',carinho:'02_carinho.webp',brincar:'05_brincar.webp',dormir:'03_dormir.webp',comemoracao:'04_comemorar.webp'},
@@ -99,10 +99,16 @@
       const escalaX=img.naturalWidth/amostraL,escalaY=img.naturalHeight/amostraA;
       const centro=esquerda+((minX+maxX+1)/2)*escalaX*escalaConteudo;
       const base=topo+(maxY+1)*escalaY*escalaConteudo;
-      img.style.setProperty('--pet-shift-x',`${((largura/2-centro)/largura*100).toFixed(2)}%`);
-      img.style.setProperty('--pet-shift-y',`${((altura-base)/altura*100).toFixed(2)}%`);
+      const shiftX=`${((largura/2-centro)/largura*100).toFixed(2)}%`;
+      const shiftY=`${((altura-base)/altura*100).toFixed(2)}%`;
+      img.style.setProperty('--pet-shift-x',shiftX);
+      img.style.setProperty('--pet-shift-y',shiftY);
+      img.parentElement?.style.setProperty('--pet-shift-x',shiftX);
+      img.parentElement?.style.setProperty('--pet-shift-y',shiftY);
     }catch(erro){
       img.style.setProperty('--pet-shift-x','0%');img.style.setProperty('--pet-shift-y','0%');
+      img.parentElement?.style.setProperty('--pet-shift-x','0%');
+      img.parentElement?.style.setProperty('--pet-shift-y','0%');
       console.warn('Não foi possível alinhar a imagem do pet:',erro);
     }
   }
@@ -116,11 +122,20 @@
     return true;
   }
   function mostrar(){
-    if(estado?.petAtual!=='gato'){if(img)img.style.display='none';document.getElementById('pet-principal')?.classList.remove('gato-laranja-animado');chave='';return}
+    if(estado?.petAtual!=='gato'){
+      if(img)img.style.display='none';
+      const pet=document.getElementById('pet-principal');
+      pet?.classList.remove('gato-laranja-animado');
+      pet?.style.setProperty('--pet-body-shift-x','0%');
+      chave='';return;
+    }
     if(!garantirImagem())return;
     document.getElementById('pet-principal')?.classList.add('gato-laranja-animado');
     img.style.display='';
-    const f=fase();const pedido=acao || ((new Date().getHours()>=21 || new Date().getHours()<7)?'dormir':'idle');
+    const f=fase();
+    const pet=document.getElementById('pet-principal');
+    pet?.style.setProperty('--pet-body-shift-x',f===1?'10%':'0%');
+    const pedido=acao || ((new Date().getHours()>=21 || new Date().getHours()<7)?'dormir':'idle');
     const a=(arquivos[f][pedido]||gestos[f]?.[pedido])?pedido:'idle';
     img.dataset.acaoPet=a;
     img.dataset.visualPersonalizado=f===1&&a==='idle'?idlePersonalizadoUrl():'';
