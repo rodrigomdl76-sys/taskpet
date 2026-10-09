@@ -3,6 +3,7 @@
   'use strict';
 
   const catalogo = [
+    {id:'visual-ovo-gato-oculos',aba:'pet',slot:'pet:visual',nome:'Ovo-gato estiloso',emoji:'🕶️',preco:0,desc:'Visual animado de boas-vindas, com óculos e fundo transparente.',idleWebp:'animacoes/fase1/visuais/ovo-gato-oculos.webp'},
     {id:'oculos-sol',aba:'pet',slot:'pet:eyes',nome:'Óculos de sol',emoji:'🕶️',preco:55,desc:'Um visual descolado para qualquer aventura.'},
     {id:'coroa',aba:'pet',slot:'pet:crown',nome:'Coroinha',emoji:'👑',preco:55,desc:'Um toque de realeza no topo da cabeça.'},
     {id:'laco',aba:'pet',slot:'pet:neck',nome:'Laço colorido',emoji:'🎀',preco:40,desc:'Um acessório fofo para o pescoço.'},
@@ -51,6 +52,12 @@
     const p = atual.personalizacao || (atual.personalizacao = {});
     if (!Array.isArray(p.adquiridos)) p.adquiridos = [];
     if (!p.equipados || typeof p.equipados !== 'object') p.equipados = {};
+    const visualInicial = 'visual-ovo-gato-oculos';
+    if (!p.adquiridos.includes(visualInicial)) {
+      p.adquiridos.push(visualInicial);
+      if (!p.equipados['pet:visual']) p.equipados['pet:visual'] = visualInicial;
+      setTimeout(salvarEstado, 0);
+    }
     return p;
   }
   function item(id) { return catalogo.find(x => x.id === id); }

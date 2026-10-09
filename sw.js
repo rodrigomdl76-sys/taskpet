@@ -1,9 +1,10 @@
-const CACHE_NAME = 'rotinapet-cache-v44';
+const CACHE_NAME = 'rotinapet-cache-v45';
 const RUNTIME_CACHE_NAME = 'rotinapet-media-v3';
 const KEEP_CACHES = new Set([CACHE_NAME, RUNTIME_CACHE_NAME]);
 const MAX_RUNTIME_ENTRIES = 100;
 const ASSETS = [
   "./index.html",
+  "./animacoes/fase1/visuais/ovo-gato-oculos.webp?v=ovo-animacoes-v20",
   "./manifest.json",
   "./icon-192.webp?v=cat-crown-v1",
   "./icon-192.png?v=cat-crown-v2",
@@ -34,7 +35,7 @@ const ASSETS = [
   "./css/11_premium_63.css",
   "./css/12_mapa_vivo.css",
   "./js/08_meu_pet.js?v=gestos-1",
-  "./js/09_gato_laranja.js?v=ovo-animacoes-v18",
+  "./js/09_gato_laranja.js?v=ovo-animacoes-v20",
   "./js/10_pet_companheiro.js?v=6",
   "./css/17_pet_no_chao.css?v=2",
   "./css/18_topo_limpo.css?v=seletor-pet-v1",
@@ -48,7 +49,7 @@ const ASSETS = [
   "./css/22_gestos.css?v=5",
   "./js/13_gestos.js?v=4",
   "./js/16_axolote.js?v=axolote-fase3-v1",
-  "./js/17_atelie_pet.js?v=3"
+  "./js/17_atelie_pet.js?v=4"
 ];
 
 self.addEventListener('install', event => {
