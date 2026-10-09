@@ -3,7 +3,10 @@
   'use strict';
 
   const catalogo = [
-    {id:'visual-ovo-gato-oculos',aba:'pet',slot:'pet:visual',nome:'Ovo-gato estiloso',emoji:'🕶️',preco:75,desc:'Compre para usar este visual animado com óculos no Ovo-gato. Você pode trocá-lo quando quiser.',idleWebp:'animacoes/fase1/visuais/ovo-gato-oculos.webp'},
+    {id:'visual-ovo-gato-oculos',aba:'visuais',slot:'pet:visual',nome:'Ovo-gato estiloso',emoji:'🕶️',preco:75,desc:'Visual animado com óculos. Você pode trocá-lo quando quiser.',idleWebp:'animacoes/fase1/visuais/ovo-gato-oculos.webp',previewWebp:'animacoes/fase1/visuais/ovo-gato-oculos.webp'},
+    {id:'visual-ovo-gato-samurai',aba:'visuais',slot:'pet:visual',nome:'Ovo-gato samurai',emoji:'🥷',preco:120,desc:'Um visual animado de samurai para as aventuras do pet.',idleWebp:'animacoes/fase1/visuais/ovo-gato-samurai.webp',previewWebp:'animacoes/fase1/visuais/ovo-gato-samurai.webp'},
+    {id:'visual-ovo-gato-espacial',aba:'visuais',slot:'pet:visual',nome:'Explorador espacial',emoji:'👽',preco:120,desc:'Uma roupa alienígena animada para explorar novos mundos.',idleWebp:'animacoes/fase1/visuais/ovo-gato-explorador-espacial.webp',previewWebp:'animacoes/fase1/visuais/ovo-gato-explorador-espacial.webp'},
+    {id:'visual-ovo-gato-armadura',aba:'visuais',slot:'pet:visual',nome:'Armadura de herói',emoji:'🦾',preco:120,desc:'Uma armadura vermelha animada para proteger o pet.',idleWebp:'animacoes/fase1/visuais/ovo-gato-armadura-heroica.webp',previewWebp:'animacoes/fase1/visuais/ovo-gato-armadura-heroica.webp'},
     {id:'oculos-sol',aba:'pet',slot:'pet:eyes',nome:'Óculos de sol',emoji:'🕶️',preco:55,desc:'Um visual descolado para qualquer aventura.'},
     {id:'coroa',aba:'pet',slot:'pet:crown',nome:'Coroinha',emoji:'👑',preco:55,desc:'Um toque de realeza no topo da cabeça.'},
     {id:'laco',aba:'pet',slot:'pet:neck',nome:'Laço colorido',emoji:'🎀',preco:40,desc:'Um acessório fofo para o pescoço.'},
@@ -35,6 +38,7 @@
   ];
   const abas = [
     {id:'pet',emoji:'🐾',nome:'Pet'},
+    {id:'visuais',emoji:'✨',nome:'Visuais'},
     {id:'falas',emoji:'💬',nome:'Falas'},
     {id:'toques',emoji:'✨',nome:'Toques'},
     {id:'cenario',emoji:'🏡',nome:'Cenário'},
@@ -145,7 +149,8 @@
       if (equipado) botao = '<button type="button" class="secundario" data-atelier-action="remove" data-item-id="' + x.id + '">Guardar</button>';
       else if (possui) botao = '<button type="button" data-atelier-action="equip" data-item-id="' + x.id + '">Usar</button>';
       else botao = '<button type="button" data-atelier-action="buy" data-item-id="' + x.id + '">Comprar · ' + x.preco + ' 🪙</button>';
-      return '<article class="atelier-card' + (equipado ? ' ativo' : '') + '"><span class="atelier-card-emoji">' + x.emoji + '</span><strong>' + x.nome + (equipado ? ' ✓' : '') + '</strong><small>' + x.desc + (outro ? '<br>Substitui: ' + outro.nome : '') + '</small>' + botao + '</article>';
+      const imagem = x.previewWebp ? '<img class="atelier-visual-thumb" src="' + x.previewWebp + '" alt="">' : '<span class="atelier-card-emoji">' + x.emoji + '</span>';
+      return '<article class="atelier-card' + (equipado ? ' ativo' : '') + '">' + imagem + '<strong>' + x.nome + (equipado ? ' ✓' : '') + '</strong><small>' + x.desc + (outro ? '<br>Substitui: ' + outro.nome : '') + '</small>' + botao + '</article>';
     }).join('');
     const coleção = p.adquiridos.length + ' de ' + catalogo.length + ' itens';
     el.querySelector('[data-atelier-content]').innerHTML = '<h4 class="atelier-section-title">' + abas.find(a => a.id === abaAtual).emoji + ' ' + abas.find(a => a.id === abaAtual).nome + ' · ' + coleção + '</h4><div class="atelier-items">' + (cards || '<div class="atelier-empty">Novas ideias chegam em breve!</div>') + '</div>';
