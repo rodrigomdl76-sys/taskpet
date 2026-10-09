@@ -132,7 +132,7 @@
       if(img){void img.offsetWidth;img.classList.add(`gesto-css-${a}`)}
     }else{acao=a;chave='';mostrar()}
     const duracao={carinho:8200,brincar:10800,comemoracao:2100,pulinho:3000,giro:8600}[a]||2300;
-    volta=setTimeout(()=>{if(token===atual)voltar()},gestoLiberado||f===2||(f===1&&(a==='carinho'||a==='brincar'))?duracao:2300);
+    volta=setTimeout(()=>{if(token===atual)voltar()},gestoLiberado||a==='carinho'||f===2||(f===1&&a==='brincar')?duracao:2300);
   }
   function atualizarRolagem(){
     const faixa=document.getElementById('pet-actions');if(!faixa)return;
