@@ -159,10 +159,10 @@
       if (saldo < x.preco) { avisar('Faltam ' + (x.preco - saldo) + ' PetCoins para esse item.'); return; }
       obterEstado().moedas = saldo - x.preco;
       if (!p.adquiridos.includes(id)) p.adquiridos.push(id);
-      p.equipados[x.slot] = id;
+      if (x.slot !== 'pet:visual') p.equipados[x.slot] = id;
       salvarEstado();
       atualizar();
-      avisar(x.nome + ' já está com você! ✨');
+      avisar(x.slot === 'pet:visual' ? 'Visual comprado! Toque em “Usar” para escolher esse visual.' : x.nome + ' já está com você! ✨');
     } else if (acao === 'equip') {
       if (!p.adquiridos.includes(id)) return;
       p.equipados[x.slot] = id;
