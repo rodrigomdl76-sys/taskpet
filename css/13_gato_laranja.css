@@ -1,9 +1,8 @@
 /* Novo personagem: o GIF usa a mesma área e tamanho do pet antigo. */
 #pet-principal{position:relative;display:block;width:148px;height:148px;flex:0 0 148px}
-#pet-principal .gato-laranja-img{position:absolute;inset:0;width:100%;height:100%;object-fit:contain;object-position:center bottom;z-index:3;pointer-events:none;transform:translateY(0)}
+#pet-principal .gato-laranja-img{position:absolute;inset:0;width:100%;height:100%;object-fit:contain;object-position:center bottom;z-index:3;pointer-events:none;transform:translate(var(--pet-shift-x,0%),var(--pet-shift-y,0%))}
 #pet-principal.gato-laranja-animado{animation:none;transform:none}
 #pet-principal.gato-laranja-animado.pet-bounce{animation:none}
-#pet-principal .gato-laranja-img[data-acao-pet="brincar"]{transform:translateY(8%)}
 #pet-principal #pet-svg-container{display:block}
 #pet-principal.gato-laranja-pronto #pet-svg-container{display:none!important}
 @media(max-height:650px){#pet-principal{width:116px;height:116px;flex-basis:116px}}
