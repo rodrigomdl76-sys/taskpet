@@ -3,7 +3,7 @@
   'use strict';
 
   const catalogo = [
-    {id:'visual-ovo-gato-oculos',aba:'pet',slot:'pet:visual',nome:'Ovo-gato estiloso',emoji:'🕶️',preco:0,desc:'Visual animado de boas-vindas, com óculos e fundo transparente.',idleWebp:'animacoes/fase1/visuais/ovo-gato-oculos.webp'},
+    {id:'visual-ovo-gato-oculos',aba:'pet',slot:'pet:visual',nome:'Ovo-gato estiloso',emoji:'🕶️',preco:75,desc:'Compre para usar este visual animado com óculos no Ovo-gato. Você pode trocá-lo quando quiser.',idleWebp:'animacoes/fase1/visuais/ovo-gato-oculos.webp'},
     {id:'oculos-sol',aba:'pet',slot:'pet:eyes',nome:'Óculos de sol',emoji:'🕶️',preco:55,desc:'Um visual descolado para qualquer aventura.'},
     {id:'coroa',aba:'pet',slot:'pet:crown',nome:'Coroinha',emoji:'👑',preco:55,desc:'Um toque de realeza no topo da cabeça.'},
     {id:'laco',aba:'pet',slot:'pet:neck',nome:'Laço colorido',emoji:'🎀',preco:40,desc:'Um acessório fofo para o pescoço.'},
@@ -52,10 +52,11 @@
     const p = atual.personalizacao || (atual.personalizacao = {});
     if (!Array.isArray(p.adquiridos)) p.adquiridos = [];
     if (!p.equipados || typeof p.equipados !== 'object') p.equipados = {};
-    const visualInicial = 'visual-ovo-gato-oculos';
-    if (!p.adquiridos.includes(visualInicial)) {
-      p.adquiridos.push(visualInicial);
-      if (!p.equipados['pet:visual']) p.equipados['pet:visual'] = visualInicial;
+    p.migracoes = p.migracoes && typeof p.migracoes === 'object' ? p.migracoes : {};
+    if (!p.migracoes.visualInicialGratisRemovido) {
+      p.adquiridos = p.adquiridos.filter(id => id !== 'visual-ovo-gato-oculos');
+      if (p.equipados['pet:visual'] === 'visual-ovo-gato-oculos') delete p.equipados['pet:visual'];
+      p.migracoes.visualInicialGratisRemovido = true;
       setTimeout(salvarEstado, 0);
     }
     return p;
@@ -106,7 +107,7 @@
     el.className = 'modal-overlay';
     el.innerHTML = '<div class="modal atelier-modal" role="dialog" aria-modal="true" aria-labelledby="atelier-title">' +
       '<div class="modal-title"><h3 id="atelier-title">🎨 Ateliê do Pet</h3><button type="button" class="close-btn" data-atelier-close aria-label="Fechar">×</button></div>' +
-      '<div class="atelier-intro"><div><strong>Deixe o cantinho com a sua cara!</strong><span>Personalize o pet, as falas e o cenário.</span></div><span class="atelier-balance">🪙 <b data-atelier-balance>0</b></span></div>' +
+      '<div class="atelier-intro"><div><strong>Deixe o cantinho com a sua cara!</strong><span>Compre visuais e personalize o pet, as falas e o cenário.</span></div><span class="atelier-balance">🪙 <b data-atelier-balance>0</b></span></div>' +
       '<div class="atelier-tabs" role="tablist" aria-label="Categorias do ateliê"></div><div data-atelier-content></div></div>';
     document.body.appendChild(el);
     el.addEventListener('click', e => {
@@ -288,7 +289,7 @@
       btn.type = 'button';
       btn.className = 'loja-hub-card atelier-hub-card';
       btn.setAttribute('onclick', 'abrirAteliePet()');
-      btn.innerHTML = '<span>🎨</span><b>Ateliê do Pet</b><small>Acessórios, falas e cenário</small>';
+      btn.innerHTML = '<span>🎨</span><b>Ateliê do Pet</b><small>Visuais, acessórios, falas e cenário</small>';
       hub.appendChild(btn);
     }
     if (typeof window.mostrarBalaoFala === 'function' && !window.mostrarBalaoFala.__atelierWrapped) {
