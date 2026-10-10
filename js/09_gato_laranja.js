@@ -45,7 +45,7 @@
     else trocar();
   }
   function idlePersonalizadoUrl(){
-    if(fase()!==1)return '';
+    if(fase()!==2)return '';
     try{return String(window.obterIdlePersonalizadoGato?.()||'').trim()}catch(_){return ''}
   }
   function caminho(f,a){
@@ -138,7 +138,7 @@
     const pedido=acao || ((new Date().getHours()>=21 || new Date().getHours()<7)?'dormir':'idle');
     const a=(arquivos[f][pedido]||gestos[f]?.[pedido])?pedido:'idle';
     img.dataset.acaoPet=a;
-    img.dataset.visualPersonalizado=f===1&&a==='idle'?idlePersonalizadoUrl():'';
+    img.dataset.visualPersonalizado=f===2&&a==='idle'?idlePersonalizadoUrl():'';
     const novaChave=`${f}/${a}`;
     if(chave===novaChave)return;
     chave=novaChave;faseVisivel=f;
@@ -262,6 +262,7 @@
     const nomes=['','Ovo-gato','Gato Cavalheiro','Gato Real'];
     const label=document.getElementById('pet-evol-nome');if(label)label.textContent=`${estado.nomePet||'Pipoca'} • ${nomes[f]}${faseTeste?' (teste)':''}`;
   }
+  window.faseGatoAtual=()=>fase();
   window.testarFaseGato=n=>{if(perfilAtivo!=='pais')return;faseTeste=n;chave='';mostrar()};
   window.acaoGatoLaranja=a=>{if(estado?.petAtual==='gato')tocar(a)};
   window.atualizarAcoesGato=atualizarBotoes;
@@ -271,7 +272,7 @@
     if(img?.dataset.acaoPet!=='idle'||atualUrl===novoUrl)return;
     const atual=++token;clearTimeout(volta);volta=null;
     const trocar=()=>{acao='';chave='';mostrar()};
-    if(estado?.petAtual==='gato'&&fase()===1)void transicaoMagica(trocar,atual,true);
+    if(estado?.petAtual==='gato'&&fase()===2)void transicaoMagica(trocar,atual,true);
     else trocar();
   };
   window.gatoLaranjaAudio=audio=>{

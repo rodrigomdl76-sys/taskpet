@@ -5,8 +5,8 @@
   const catalogo = [
     {id:'visual-ovo-gato-oculos',aba:'visuais',slot:'pet:visual',nome:'Ovo-gato estiloso',emoji:'🕶️',preco:75,desc:'Visual animado com óculos. Você pode trocá-lo quando quiser.',idleWebp:'animacoes/fase1/visuais/ovo-gato-oculos.webp',previewWebp:'animacoes/fase1/visuais/ovo-gato-oculos.webp'},
     {id:'visual-ovo-gato-samurai',aba:'visuais',slot:'pet:visual',nome:'Ovo-gato samurai',emoji:'🥷',preco:120,desc:'Um visual animado de samurai para as aventuras do pet.',idleWebp:'animacoes/fase1/visuais/ovo-gato-samurai.webp?v=visual-quality-v2',previewWebp:'animacoes/fase1/visuais/ovo-gato-samurai-thumb.webp'},
-    {id:'visual-ovo-gato-espacial',aba:'visuais',slot:'pet:visual',nome:'Explorador espacial',emoji:'👽',preco:120,desc:'Uma roupa alienígena animada para explorar novos mundos.',idleWebp:'animacoes/fase1/visuais/ovo-gato-explorador-espacial.webp?v=visual-quality-v2',previewWebp:'animacoes/fase1/visuais/ovo-gato-explorador-espacial-thumb.webp'},
-    {id:'visual-ovo-gato-armadura',aba:'visuais',slot:'pet:visual',nome:'Armadura de herói',emoji:'🦾',preco:120,desc:'Uma armadura vermelha animada para proteger o pet.',idleWebp:'animacoes/fase1/visuais/ovo-gato-armadura-heroica.webp?v=visual-quality-v2',previewWebp:'animacoes/fase1/visuais/ovo-gato-armadura-heroica-thumb.webp'},
+    {id:'visual-ovo-gato-espacial',aba:'visuais',fase:2,slot:'pet:visual',nome:'Explorador espacial',emoji:'👽',preco:120,desc:'Visual animado para o Gato Cavalheiro da fase 2.',idleWebp:'animacoes/fase2/visuais/gato-explorador-espacial.webp?v=fase2-visuais-v1',previewWebp:'animacoes/fase2/visuais/gato-explorador-espacial-thumb.webp'},
+    {id:'visual-ovo-gato-armadura',aba:'visuais',fase:2,slot:'pet:visual',nome:'Armadura de herói',emoji:'🦾',preco:120,desc:'Visual animado para o Gato Cavalheiro da fase 2.',idleWebp:'animacoes/fase2/visuais/gato-armadura-heroica.webp?v=fase2-visuais-v1',previewWebp:'animacoes/fase2/visuais/gato-armadura-heroica-thumb.webp'},
     {id:'oculos-sol',aba:'pet',slot:'pet:eyes',nome:'Óculos de sol',emoji:'🕶️',preco:55,desc:'Um visual descolado para qualquer aventura.'},
     {id:'coroa',aba:'pet',slot:'pet:crown',nome:'Coroinha',emoji:'👑',preco:55,desc:'Um toque de realeza no topo da cabeça.'},
     {id:'laco',aba:'pet',slot:'pet:neck',nome:'Laço colorido',emoji:'🎀',preco:40,desc:'Um acessório fofo para o pescoço.'},
@@ -140,7 +140,8 @@
       '<button type="button" class="atelier-tab' + (abaAtual === a.id ? ' ativo' : '') + '" role="tab" aria-selected="' + (abaAtual === a.id) + '" data-atelier-tab="' + a.id + '"><span>' + a.emoji + '</span>' + a.nome + '</button>'
     ).join('');
     const p = personalizacao();
-    const lista = catalogo.filter(x => x.aba === abaAtual);
+    const faseAtual = Number(window.faseGatoAtual?.()) || 1;
+    const lista = catalogo.filter(x => x.aba === abaAtual && (!x.fase || faseAtual >= x.fase));
     const cards = lista.map(x => {
       const possui = p.adquiridos.includes(x.id);
       const equipado = p.equipados[x.slot] === x.id;
@@ -153,7 +154,7 @@
       return '<article class="atelier-card' + (equipado ? ' ativo' : '') + '">' + imagem + '<strong>' + x.nome + (equipado ? ' ✓' : '') + '</strong><small>' + x.desc + (outro ? '<br>Substitui: ' + outro.nome : '') + '</small>' + botao + '</article>';
     }).join('');
     const coleção = p.adquiridos.length + ' de ' + catalogo.length + ' itens';
-    el.querySelector('[data-atelier-content]').innerHTML = '<h4 class="atelier-section-title">' + abas.find(a => a.id === abaAtual).emoji + ' ' + abas.find(a => a.id === abaAtual).nome + ' · ' + coleção + '</h4><div class="atelier-items">' + (cards || '<div class="atelier-empty">Novas ideias chegam em breve!</div>') + '</div>';
+    el.querySelector('[data-atelier-content]').innerHTML = '<h4 class="atelier-section-title">' + abas.find(a => a.id === abaAtual).emoji + ' ' + abas.find(a => a.id === abaAtual).nome + ' · ' + coleção + '</h4><div class="atelier-items">' + (cards || (abaAtual === 'visuais' && faseAtual < 2 ? '<div class="atelier-empty">🔒 Desbloqueie o Gato Cavalheiro na fase 2 para comprar estas animações.</div>' : '<div class="atelier-empty">Novas ideias chegam em breve!</div>')) + '</div>';
   }
   function executarAcao(acao, id) {
     const x = item(id);
