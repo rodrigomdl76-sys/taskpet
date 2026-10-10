@@ -53,7 +53,6 @@
 <link rel="stylesheet" href="css/01_base.css?v=layout-ref-v1">
 <script src="js/01_menu.js?v=back-3" defer></script>
 <link rel="stylesheet" href="css/02_menu.css">
-<link rel="stylesheet" href="css/03_mapa_album.css">
 <link rel="stylesheet" href="css/04_animacoes_pet.css?v=efeitos-reacoes-v1">
 
 <link rel="stylesheet" href="css/05_evolucao_pet.css">
@@ -209,7 +208,6 @@
       <button class="menu-mais-item extras" onclick="fecharModal('modal-menu-mais');abrirCentralAventuras()"><span>🌟</span><b>Extras</b><small>Desafios e eventos</small></button>
       <button class="menu-mais-item hoje" onclick="fecharModal('modal-menu-mais');abrirResumoHoje()"><span>🗓️</span><b>Hoje</b><small>Progresso do dia</small></button>
       <button class="menu-mais-item caixa" onclick="fecharModal('modal-menu-mais');abrirCaixaConquistas()"><span>🎁</span><b>Conquistas</b><small id="menu-caixa-contagem">Ver surpresas</small></button>
-      <button class="menu-mais-item album" onclick="fecharModal('modal-menu-mais');abrirAlbumFigurinhas()"><span>📒</span><b>Álbum</b><small>Ver figurinhas</small></button>
 
       <button class="menu-mais-item mini-pets" onclick="fecharModal('modal-menu-mais');abrirLojaMiniPets()"><span>🐝</span><b>Mini pets</b><small>Escolher companheiro</small></button>
       <button class="menu-mais-item loja" onclick="fecharModal('modal-menu-mais');abrirLojaRecompensas()"><span>🏆</span><b>Sonhos</b><small>PetCoins e desejos</small></button>
@@ -223,7 +221,7 @@
   <div class="modal-title"><div><h3 style="margin:0">🛍️ Loja</h3><small style="font-size:8px;color:#64748b;font-weight:800">Explore e acompanhe seus itens</small></div><button class="close-btn" onclick="fecharModal('modal-loja-principal')" aria-label="Fechar">×</button></div>
   <div class="loja-hub-grid">
     <button type="button" class="loja-hub-card visual" onclick="fecharModal('modal-loja-principal');abrirLojaFundos()"><span>🎨</span><b>Visuais</b><small>Fundos, palcos, temas e gestos</small></button>
-    <button type="button" class="loja-hub-card colecao" onclick="fecharModal('modal-loja-principal');abrirColecao()"><span>📚</span><b>Minha coleção</b><small>Pets, evoluções, fundos e figurinhas</small></button>
+    <button type="button" class="loja-hub-card colecao" onclick="fecharModal('modal-loja-principal');abrirColecao()"><span>📚</span><b>Minha coleção</b><small>Pets, evoluções e fundos</small></button>
   </div>
 </div></div>
 <div id="modal-caixa-conquistas" class="modal-overlay"><div class="modal" style="max-width:370px"><div class="modal-title"><h3>🎁 Caixa de Conquistas</h3><button class="close-btn" onclick="fecharModal('modal-caixa-conquistas')">×</button></div><div id="conteudo-caixa-conquistas"></div></div></div>
@@ -543,12 +541,10 @@
       <button type="button" class="tab-btn ativa" id="tab-col-pets" onclick="alternarAbaColecao('pets')">🐾 Pets</button>
       <button type="button" class="tab-btn" id="tab-col-evos" onclick="alternarAbaColecao('evos')">⭐ Evos</button>
       <button type="button" class="tab-btn" id="tab-col-fundos" onclick="alternarAbaColecao('fundos')">🖼️ Fundos</button>
-      <button type="button" class="tab-btn" id="tab-col-adesivos" onclick="alternarAbaColecao('adesivos')">📒 Adesivos</button>
     </div>
     <div id="painel-col-pets"></div>
     <div id="painel-col-evos" class="hidden"></div>
     <div id="painel-col-fundos" class="hidden"></div>
-    <div id="painel-col-adesivos" class="hidden"></div>
     <button class="primary-btn" style="width:100%;margin-top:10px;background:#e2e8f0;color:#475569" onclick="fecharModal('modal-colecao');abrirModal('modal-evolucoes')">Ver evoluções do pet atual</button>
   </div>
 </div>
@@ -689,16 +685,11 @@
 <div id="modal-resumo-hoje" class="modal-overlay"><div class="modal" style="max-width:340px"><div class="modal-title"><h3>🗓️ Aventura de hoje</h3><button class="close-btn" onclick="fecharModal('modal-resumo-hoje')">×</button></div><div id="resumo-hoje-conteudo"></div></div></div>
 <script src="js/05_interface.js" defer></script>
 <link rel="stylesheet" href="css/07_extras_02.css"><link rel="stylesheet" href="css/08_interface.css">
-<link rel="stylesheet" href="css/09_album.css?v=album-paginas-v1">
-<div id="sticker-toast" class="sticker-toast" aria-live="polite"><b>🎉 Nova figurinha!</b><span id="sticker-toast-text">Você ganhou uma nova lembrança.</span></div>
-<script src="js/14_figurinhas_artes_ovo.js?v=1" defer></script>
-<script src="js/15_figurinhas_artes_cinza.js?v=1" defer></script>
-<script src="js/06_premium.js?v=album-art-v2" defer></script>
+<script src="js/06_premium.js?v=premium-reward-v2" defer></script>
 
 
 <link rel="stylesheet" href="css/10_premium_62.css">
 
-<script src="js/07_mapa_album.js?v=album-art-v2" defer></script>
 <link rel="stylesheet" href="css/11_premium_63.css">
 <script src="js/08_meu_pet.js?v=gestos-1" defer></script><script src="js/09_gato_laranja.js?v=fase2-visuais-v24" defer></script>
 
