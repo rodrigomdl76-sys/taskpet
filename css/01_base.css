@@ -690,7 +690,9 @@ button:focus-visible,input:focus-visible,.top-pill:focus-visible{
 .pais-grupo>summary:after{content:'⌄';font-size:15px;color:#64748b;transition:transform .18s}
 .pais-grupo[open]>summary:after{transform:rotate(180deg)}
 .pais-grupo>.section-card{margin:6px 8px 8px}
-#card-aprovacoes-pais{border:1px solid #fbbf24;background:#fffbeb}
+#card-aprovacoes-pais{border:1px solid #fbbf24;background:#fffbeb;color:#713f12}
+#card-aprovacoes-pais>b{color:#713f12}
+#card-aprovacoes-pais #lista-aprovacao-pais>span{color:#475569!important}
 
 /* Cenários fotográficos e temas visuais desbloqueados junto com cada cenário. */
 body.cenario-arena_galactica,.bg-layer.cenario-arena_galactica{background:#0b1634 url('../assets/fundos/arena_galactica.webp') center center / cover no-repeat}
