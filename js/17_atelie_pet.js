@@ -3,10 +3,11 @@
   'use strict';
 
   const catalogo = [
-    {id:'visual-ovo-gato-oculos',aba:'visuais',slot:'pet:visual',nome:'Ovo-gato estiloso',emoji:'🕶️',preco:75,desc:'Visual animado com óculos. Você pode trocá-lo quando quiser.',idleWebp:'animacoes/fase1/visuais/ovo-gato-oculos.webp',previewWebp:'animacoes/fase1/visuais/ovo-gato-oculos.webp'},
-    {id:'visual-ovo-gato-samurai',aba:'visuais',slot:'pet:visual',nome:'Ovo-gato samurai',emoji:'🥷',preco:120,desc:'Um visual animado de samurai para as aventuras do pet.',idleWebp:'animacoes/fase1/visuais/ovo-gato-samurai.webp?v=visual-quality-v2',previewWebp:'animacoes/fase1/visuais/ovo-gato-samurai-thumb.webp'},
-    {id:'visual-ovo-gato-espacial',aba:'visuais',slot:'pet:visual',nome:'Explorador espacial',emoji:'👽',preco:120,desc:'Visual alienígena animado para o Ovo-gato.',idleWebp:'animacoes/fase1/visuais/ovo-gato-explorador-espacial.webp?v=ovo-visuais-v2',previewWebp:'animacoes/fase1/visuais/ovo-gato-explorador-espacial-thumb.webp'},
-    {id:'visual-ovo-gato-armadura',aba:'visuais',slot:'pet:visual',nome:'Armadura de herói',emoji:'🦾',preco:120,desc:'Armadura animada para o Ovo-gato.',idleWebp:'animacoes/fase1/visuais/ovo-gato-armadura-heroica.webp?v=ovo-visuais-v2',previewWebp:'animacoes/fase1/visuais/ovo-gato-armadura-heroica-thumb.webp'},
+    {id:'visual-ovo-gato-oculos',aba:'visuais',pet:'gato',slot:'pet:visual',nome:'Ovo-gato estiloso',emoji:'🕶️',preco:75,desc:'Visual animado com óculos. Você pode trocá-lo quando quiser.',idleWebp:'animacoes/fase1/visuais/ovo-gato-oculos.webp',previewWebp:'animacoes/fase1/visuais/ovo-gato-oculos.webp'},
+    {id:'visual-ovo-gato-samurai',aba:'visuais',pet:'gato',slot:'pet:visual',nome:'Ovo-gato samurai',emoji:'🥷',preco:120,desc:'Um visual animado de samurai para as aventuras do pet.',idleWebp:'animacoes/fase1/visuais/ovo-gato-samurai.webp?v=visual-quality-v2',previewWebp:'animacoes/fase1/visuais/ovo-gato-samurai-thumb.webp'},
+    {id:'visual-ovo-gato-espacial',aba:'visuais',pet:'gato',slot:'pet:visual',nome:'Explorador espacial',emoji:'👽',preco:120,desc:'Visual alienígena animado para o Ovo-gato.',idleWebp:'animacoes/fase1/visuais/ovo-gato-explorador-espacial.webp?v=ovo-visuais-v2',previewWebp:'animacoes/fase1/visuais/ovo-gato-explorador-espacial-thumb.webp'},
+    {id:'visual-ovo-gato-armadura',aba:'visuais',pet:'gato',slot:'pet:visual',nome:'Armadura de herói',emoji:'🦾',preco:120,desc:'Armadura animada para o Ovo-gato.',idleWebp:'animacoes/fase1/visuais/ovo-gato-armadura-heroica.webp?v=ovo-visuais-v2',previewWebp:'animacoes/fase1/visuais/ovo-gato-armadura-heroica-thumb.webp'},
+    {id:'visual-axolote-cachorrinho',aba:'visuais',pet:'axolote',slot:'pet:visual:axolote',nome:'Axolote cachorrinho',faseExata:1,emoji:'🐶',preco:120,desc:'Visual animado de cachorrinho para o Ovo-axolote.',idleWebp:'animacoes/axolote/fase1/visuais/axolote-fantasia-cachorrinho.webp',previewWebp:'animacoes/axolote/fase1/visuais/axolote-fantasia-cachorrinho-thumb.webp'},
     {id:'oculos-sol',aba:'pet',slot:'pet:eyes',nome:'Óculos de sol',emoji:'🕶️',preco:55,desc:'Um visual descolado para qualquer aventura.'},
     {id:'coroa',aba:'pet',slot:'pet:crown',nome:'Coroinha',emoji:'👑',preco:55,desc:'Um toque de realeza no topo da cabeça.'},
     {id:'laco',aba:'pet',slot:'pet:neck',nome:'Laço colorido',emoji:'🎀',preco:40,desc:'Um acessório fofo para o pescoço.'},
@@ -69,6 +70,10 @@
   function equip(slot) { return personalizacao().equipados[slot] || ''; }
   window.obterIdlePersonalizadoGato = function() {
     const visual = item(equip('pet:visual'));
+    return visual?.idleWebp || '';
+  };
+  window.obterIdlePersonalizadoAxolote = function() {
+    const visual = item(equip('pet:visual:axolote'));
     return visual?.idleWebp || '';
   };
   function avisar(msg) {
@@ -141,7 +146,9 @@
     ).join('');
     const p = personalizacao();
     const faseAtual = Number(window.faseGatoAtual?.()) || 1;
-    const lista = catalogo.filter(x => x.aba === abaAtual && (!x.fase || faseAtual >= x.fase));
+    const petAtual = obterEstado()?.petAtual === 'axolote' ? 'axolote' : 'gato';
+    const faseDoPet = petAtual === 'axolote' ? Number(window.faseAxoloteAtual?.()) || 1 : faseAtual;
+    const lista = catalogo.filter(x => x.aba === abaAtual && (!x.pet || x.pet === petAtual) && (!x.fase || faseAtual >= x.fase) && (!x.faseExata || faseDoPet === x.faseExata));
     const cards = lista.map(x => {
       const possui = p.adquiridos.includes(x.id);
       const equipado = p.equipados[x.slot] === x.id;

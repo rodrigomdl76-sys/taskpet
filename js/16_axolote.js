@@ -18,13 +18,18 @@
   const pasta='animacoes/axolote/fase1/';
   const pastaFase2='animacoes/axolote/fase2/';
   const pastaFase3='animacoes/axolote/fase3/';
-  const versaoAnimacoes='axolote-fase3-v1';
+  const versaoAnimacoes='axolote-fase1-visual-v1';
   const faseAtual=()=>Number(estado.pets?.axolote?.nivel||1)>=41?3:Number(estado.pets?.axolote?.nivel||1)>=21?2:1;
+  window.faseAxoloteAtual=faseAtual;
   const listaReacoes=()=>faseAtual()>=3?reacoesFase3:reacoes;
   const mapaSprites=()=>faseAtual()>=3?spritesFase3:faseAtual()>=2?spritesFase2:sprites;
   const pastaAtual=()=>faseAtual()>=3?pastaFase3:faseAtual()>=2?pastaFase2:pasta;
   let img=null,acao='idle',timer=null,token=0,srcAtual='',timerDesbloqueio=null,animandoDesbloqueio=false;
   const ativa=()=>estado?.petAtual==='axolote';
+  const idlePersonalizadoAxolote=()=>{
+    if(faseAtual()!==1)return '';
+    try{return String(window.obterIdlePersonalizadoAxolote?.()||'').trim()}catch(_){return ''}
+  };
   function compras(){
     if(!Array.isArray(estado.axoloteReacoesCompradas))estado.axoloteReacoesCompradas=[];
     const legado=estado.axoloteReacoes;
@@ -58,8 +63,8 @@
     const spritesAtuais=mapaSprites();
     const nome=spritesAtuais[id]?id:'idle';
     img.alt=faseAtual()===1?'Axolote dentro do ovo':faseAtual()===2?'Axolote fora do ovo, fase 2':'Axolote fase 3';
-    const arquivo=pastaAtual()+spritesAtuais[nome];
-    const src=arquivo+'?v='+versaoAnimacoes;
+    const arquivo=(nome==='idle'?idlePersonalizadoAxolote():'')||pastaAtual()+spritesAtuais[nome];
+    const src=arquivo+(arquivo.includes('?')?'&':'?')+'v='+versaoAnimacoes;
     if(reiniciar||src!==srcAtual){srcAtual=src;img.src=src}
   }
   function tocar(id){
