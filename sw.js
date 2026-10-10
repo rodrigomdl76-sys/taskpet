@@ -1,4 +1,4 @@
-const CACHE_NAME = 'rotinapet-cache-v53';
+const CACHE_NAME = 'rotinapet-cache-v54';
 const RUNTIME_CACHE_NAME = 'rotinapet-media-v3';
 const KEEP_CACHES = new Set([CACHE_NAME, RUNTIME_CACHE_NAME]);
 const MAX_RUNTIME_ENTRIES = 100;
@@ -36,9 +36,9 @@ const ASSETS = [
   "./js/15_figurinhas_artes_cinza.js?v=1",
   "./js/06_premium.js?v=album-art-v2",
   "./css/10_premium_62.css",
-  "./js/07_mapa_album.js?v=album-art-v1",
+  "./js/07_mapa_album.js?v=album-art-v2",
   "./css/11_premium_63.css",
-  "./css/12_mapa_vivo.css",
+
   "./js/08_meu_pet.js?v=gestos-1",
   "./js/09_gato_laranja.js?v=fase2-visuais-v24",
   "./js/10_pet_companheiro.js?v=6",
