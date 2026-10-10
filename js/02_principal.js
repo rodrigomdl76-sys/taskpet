@@ -298,6 +298,9 @@ let ultimoEstadoSincronizado=null;
 let filaSyncPendente=false;
 let ultimaSyncOkEm=null;
 let filaEscritaNuvem=Promise.resolve();
+let tarefasV2ListenerRef=null;
+let tarefasV2ListenerCallback=null;
+let tarefasV2ListenerCriancaId=null;
 const SCHEMA_TAREFAS_V2=2;
 let statusSyncAtual='local'; // local | offline | syncing | online | erro
 function atualizarStatusSyncUI(){
@@ -561,6 +564,7 @@ function trocarCriancaAtiva(novoId){
   // Na troca de perfil, as tarefas do filho escolhido são a fonte correta.
   // Comparar apenas a quantidade misturava missões de irmãos diferentes.
   estado.criancaAtivaId=novoId;
+  sincronizarListenerTarefasV2();
   salvar();
   atualizarTela();
   ultimoFundoParticulas=null;
@@ -800,20 +804,23 @@ function salvar(){
   salvarLocalmente();
   if(!sincronizacaoNuvemAtiva||!dbFirebase){
     marcarFilaSync(false);
-    return;
+    return Promise.resolve(false);
   }
   if(cargaNuvemPendente||!navigator.onLine){
     marcarFilaSync(true);
-    return;
+    return Promise.resolve(false);
   }
   filaEscritaNuvem=filaEscritaNuvem
     .then(()=>persistirNuvemAgora())
+    .then(()=>true)
     .catch(err=>{
       console.warn('Erro na fila de sincronização:',err);
       statusSyncAtual='erro';
       marcarFilaSync(true);
       atualizarStatusSyncUI();
+      return false;
     });
+  return filaEscritaNuvem;
 }
 // Suporta até 2 responsáveis com e-mails próprios vinculados à mesma família.
 // Migra o campo antigo (um único e-mail em string) para a lista nova.
@@ -858,6 +865,9 @@ function aplicarTarefasDaCriancaSemPerderCadastro(tarefasBase,tarefasFilha){
   // A lista mais completa vence: evita que os 2 exemplos padrão substituam
   // as tarefas reais cadastradas no painel dos responsáveis.
   if(filha.length>base.length)return filha;
+  // Com a mesma quantidade, mescla por versão. Retornar sempre a lista base
+  // aqui descartava mudanças recentes de status vindas de outro aparelho.
+  if(filha.length===base.length&&base.length)return mergeTarefasPorVersao(base,filha);
   if(base.length)return base;
   return filha;
 }
@@ -918,6 +928,7 @@ async function iniciarSincronizacaoNuvem(){
   statusSyncAtual='online';
   // Reenvia o estado já mesclado/resetado sem risco de sobrescrever a carga inicial.
   salvar();
+  sincronizarListenerTarefasV2();
   atualizarStatusSyncUI();
   ref.on('value',s=>{
     if(ignorarProximoSyncNuvem){ignorarProximoSyncNuvem=false;return}
@@ -940,6 +951,7 @@ async function iniciarSincronizacaoNuvem(){
       }else{
         aplicarEstadoRemotoComMerge(compartilhado);
       }
+      sincronizarListenerTarefasV2();
       garantirCriancaAtiva();
       if(perfilAtivo==='crianca'){
         if((Number(estado.pets?.[estado.petAtual]?.nivel)||1)>nivelAntes)playSound('nivel');
@@ -2183,9 +2195,10 @@ async function persistirTarefaIndividualV2(t){
   const agora=Date.now();
   // O timestamp também fica no estado local para o merge entre aparelhos.
   t.atualizadoEm=Math.max(Number(t.atualizadoEm)||0,agora);
-  if(!dbFirebase||!sincronizacaoNuvemAtiva||!navigator.onLine||cargaNuvemPendente)return;
+  if(!dbFirebase||!sincronizacaoNuvemAtiva||!navigator.onLine||cargaNuvemPendente)return false;
   const id=idTarefaSeguro(t.id);
   await dbFirebase.ref(`${caminhoTarefasV2()}/${id}`).set({...t,id,atualizadoEm:t.atualizadoEm});
+  return true;
 }
 function mergeTarefasPorVersao(locais,remotas){
   const mapa=new Map();
@@ -2298,7 +2311,33 @@ async function carregarTarefasIndividuaisComFallback(){
   return true;
 }
 
-function enviarParaAprovacao(id){
+function sincronizarListenerTarefasV2(){
+  if(!dbFirebase||!sincronizacaoNuvemAtiva)return;
+  const criancaId=String(estado.criancaAtivaId||'c1');
+  if(tarefasV2ListenerCriancaId===criancaId&&tarefasV2ListenerRef)return;
+  if(tarefasV2ListenerRef&&tarefasV2ListenerCallback){
+    tarefasV2ListenerRef.off('value',tarefasV2ListenerCallback);
+  }
+  tarefasV2ListenerCriancaId=criancaId;
+  tarefasV2ListenerRef=dbFirebase.ref(caminhoTarefasV2(criancaId));
+  tarefasV2ListenerCallback=snap=>{
+    if(String(estado.criancaAtivaId||'c1')!==criancaId)return;
+    const dados=snap.val();
+    if(!dados||typeof dados!=='object')return;
+    const remotas=Object.values(dados);
+    const mescladas=mergeTarefasPorVersao(estado.tarefas,remotas);
+    estado.tarefas=aplicarTarefasDaCriancaSemPerderCadastro(estado.tarefas,mescladas);
+    estado.criancasDados=estado.criancasDados||{};
+    estado.criancasDados[criancaId]=estado.criancasDados[criancaId]||{};
+    estado.criancasDados[criancaId].tarefas=JSON.parse(JSON.stringify(estado.tarefas));
+    try{localStorage.setItem(`ROTINAPET_SAVE_${codigoFamilia}`,JSON.stringify(estado))}catch(e){}
+    renderizarTarefas();
+    if(perfilAtivo==='pais'&&document.getElementById('modal-pais')?.classList.contains('mostrar'))renderizarPainelPais();
+  };
+  tarefasV2ListenerRef.on('value',tarefasV2ListenerCallback);
+}
+
+async function enviarParaAprovacao(id){
   const t=estado.tarefas.find(t=>String(t.id)===String(id));
   if(!t)return;
   if(statusTarefaAtual(t)!=='pendente')return;
@@ -2309,13 +2348,31 @@ function enviarParaAprovacao(id){
   r.status='aguardando_aprovacao';
   r.enviadaEm=Date.now();
   t.status='aguardando_aprovacao';
-  persistirTarefaIndividualV2(t).catch(e=>console.warn('Tarefa individual:',e));
-  salvar();
+  salvarLocalmente();
   renderizarTarefas();
-  mostrarToast('⏳ Missão enviada! Os pais vão conferir.');
-  registrarLogAtividade(`Pedido de aprovação: ${t.texto}`);
-  enviarNotificacaoLocal('📋 Tarefa para aprovar',`${t.texto} — abra o painel dos pais.`,'rotinapet-aprovacao');
-  enfileirarPushFamilia('📋 Tarefa para aprovar',t.texto,{tag:'rotinapet-aprovacao',onlyPerfil:'pais'});
+  if(!sincronizacaoNuvemAtiva||!dbFirebase||!navigator.onLine||cargaNuvemPendente){
+    salvar();
+    mostrarToast('📱 Pedido salvo neste aparelho. Ele será enviado quando a sincronização estiver online.');
+    return;
+  }
+  try{
+    const tarefaV2Gravada=await persistirTarefaIndividualV2(t);
+    const estadoGravado=await salvar();
+    if(!tarefaV2Gravada&&!estadoGravado)throw new Error('A tarefa não foi gravada na nuvem.');
+    registrarLogAtividade(`Pedido de aprovação: ${t.texto}`);
+    enviarNotificacaoLocal('📋 Tarefa para aprovar',`${t.texto} — abra o painel dos pais.`,'rotinapet-aprovacao');
+    enfileirarPushFamilia('📋 Tarefa para aprovar',t.texto,{tag:'rotinapet-aprovacao',onlyPerfil:'pais'});
+    mostrarToast('⏳ Missão enviada! Os pais vão conferir.');
+  }catch(e){
+    console.warn('Falha ao enviar tarefa para os pais:',e);
+    if(statusTarefaAtual(t)==='aguardando_aprovacao'){
+      r.status='pendente';
+      t.status='pendente';
+      salvarLocalmente();
+      renderizarTarefas();
+    }
+    mostrarToast('⚠️ Não foi possível enviar. Confira a conexão e tente novamente.');
+  }
 }
 let tarefaParaConfirmarId=null;
 function pedirConfirmacaoMissao(id){
