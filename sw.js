@@ -1,4 +1,4 @@
-const CACHE_NAME = 'rotinapet-cache-v58';
+const CACHE_NAME = 'rotinapet-cache-v59';
 const RUNTIME_CACHE_NAME = 'rotinapet-media-v3';
 const KEEP_CACHES = new Set([CACHE_NAME, RUNTIME_CACHE_NAME]);
 const MAX_RUNTIME_ENTRIES = 100;
@@ -12,6 +12,8 @@ const ASSETS = [
   "./animacoes/fase1/visuais/ovo-gato-armadura-heroica-thumb.webp",
   "./animacoes/axolote/fase1/visuais/axolote-fantasia-cachorrinho.webp?v=axolote-fase1-visual-v1",
   "./animacoes/axolote/fase1/visuais/axolote-fantasia-cachorrinho-thumb.webp",
+  "./animacoes/axolote/fase1/visuais/axolote-disco-voador.webp?v=axolote-ufo-loop-v1",
+  "./animacoes/axolote/fase1/visuais/axolote-disco-voador-thumb.webp",
   "./animacoes/fase2/visuais/gato-explorador-espacial-thumb.webp",
   "./animacoes/fase2/visuais/gato-armadura-heroica-thumb.webp",
   "./manifest.json",
@@ -53,7 +55,7 @@ const ASSETS = [
   "./css/22_gestos.css?v=5",
   "./js/13_gestos.js?v=4",
   "./js/16_axolote.js?v=axolote-fase1-visual-v1",
-  "./js/17_atelie_pet.js?v=ovo-visuais-v12"
+  "./js/17_atelie_pet.js?v=ovo-visuais-v13"
 ];
 
 self.addEventListener('install', event => {
