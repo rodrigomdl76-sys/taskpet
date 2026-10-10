@@ -529,7 +529,7 @@ const hojeLocal=()=>{const d=new Date();return `${d.getFullYear()}-${String(d.ge
 const ontemLocal=()=>{const d=new Date();d.setDate(d.getDate()-1);return `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`};
 // Campos que pertencem a UM filho específico (progresso do pet, tarefas, moedas...).
 // Tudo que NÃO está nessa lista é compartilhado pela família inteira (PIN, e-mails, taxa de câmbio).
-const CAMPOS_CRIANCA=['personalizacao','gestosDesbloqueados','palcoAtual','palcosComprados','decoracaoItens','extraDiaRemovida','avisosMissao','miniPetsComprados','miniPetAtivo','bauDatasResgatadas','historicoRecompensas','avisosRecompensas','acessorios','conquistas','habilidades','desafiosMathAcertos','dinheiroAcumulado','mesadaAtiva','fundoAtual','fundosComprados','temaInterfaceAtual','historicoConclusoes','idadeCrianca','dificuldadeJogos','nomePet','lembreteEnviadoData','metaMoedas','moedas','onboardingVistoCrianca','pausaAte','petAtual','pets','recompensas','sonhos','registroDiario','solicitacoesPremios','streak','surpresaResgatadaData','tarefas','tarefasHojeCount','timerFim','totalSacado','ultimoDiaAcesso','ultimoDiaConcluido','ultimoStreakPremiado','vozSalva','ultimoAcaoPet','ultimoDecay','desafioDiarioData','desafioDiarioFeitoData','bauDiarioAbertoData','escudosOfensiva','adesivos','eventoSemanalData','missaoFamilia','mensagensPais','historicoEngajamento'];
+const CAMPOS_CRIANCA=['personalizacao','gestosDesbloqueados','palcoAtual','palcosComprados','decoracaoItens','extraDiaRemovida','avisosMissao','miniPetsComprados','miniPetAtivo','bauDatasResgatadas','historicoRecompensas','avisosRecompensas','acessorios','conquistas','habilidades','desafiosMathAcertos','dinheiroAcumulado','mesadaAtiva','fundoAtual','fundosComprados','temaInterfaceAtual','historicoConclusoes','idadeCrianca','dificuldadeJogos','nomePet','lembreteEnviadoData','metaMoedas','moedas','onboardingVistoCrianca','pausaAte','petAtual','pets','recompensas','sonhos','registroDiario','solicitacoesPremios','streak','surpresaResgatadaData','tarefas','tarefasHojeCount','timerFim','totalSacado','ultimoDiaAcesso','ultimoDiaConcluido','ultimoStreakPremiado','vozSalva','ultimoAcaoPet','ultimoDecay','desafioDiarioData','desafioDiarioFeitoData','bauDiarioAbertoData','escudosOfensiva','eventoSemanalData','missaoFamilia','mensagensPais','historicoEngajamento'];
 function valoresPadraoCrianca(){
   return {
     gestosDesbloqueados:[],decoracaoItens:[],extraDiaRemovida:null,miniPetsComprados:['passarinho'],miniPetAtivo:'passarinho',petAtual:'gato',moedas:15,dinheiroAcumulado:0,mesadaAtiva:true,idadeCrianca:7,dificuldadeJogos:'auto',nomePet:'Pipoca',
@@ -541,7 +541,7 @@ function valoresPadraoCrianca(){
     recompensas:[],sonhos:[],personalizacao:{adquiridos:[],equipados:{}},
     solicitacoesPremios:[],conquistas:{},habilidades:{},acessorios:{comprados:[],ativo:null},pausaAte:null,
     historicoConclusoes:{},registroDiario:{},onboardingVistoCrianca:false,lembreteEnviadoData:null,
-    surpresaResgatadaData:null,metasPersonalizadas:[],ultimoAcaoPet:{},ultimoDecay:null,desafioDiarioData:null,desafioDiarioFeitoData:null,bauDiarioAbertoData:null,bauDatasResgatadas:[],avisosRecompensas:[],historicoRecompensas:[],avisosMissao:[],escudosOfensiva:0,adesivos:[],eventoSemanalData:null,missaoFamilia:{alvo:20,progresso:0,inicio:null},mensagensPais:[],historicoEngajamento:[]
+    surpresaResgatadaData:null,metasPersonalizadas:[],ultimoAcaoPet:{},ultimoDecay:null,desafioDiarioData:null,desafioDiarioFeitoData:null,bauDiarioAbertoData:null,bauDatasResgatadas:[],avisosRecompensas:[],historicoRecompensas:[],avisosMissao:[],escudosOfensiva:0,eventoSemanalData:null,missaoFamilia:{alvo:20,progresso:0,inicio:null},mensagensPais:[],historicoEngajamento:[]
   };
 }
 function capturarDadosCrianca(){
@@ -1709,7 +1709,7 @@ const EVENTOS_SAZONAIS=[
   {id:'carnaval',nome:'Carnaval',emoji:'🎊',mesInicio:2,diaInicio:10,mesFim:3,diaFim:5,fundoId:'festa',desc:'É tempo de festa! Complete missões e ganhe bônus coloridos.',bonusMoedas:3,bonusXp:5},
   {id:'pascoa',nome:'Páscoa',emoji:'🐰',mesInicio:3,diaInicio:20,mesFim:4,diaFim:25,fundoId:'fazenda',desc:'Caça aos ovos virtual! Cuide do pet e ganhe recompensas especiais.',bonusMoedas:4,bonusXp:6},
   {id:'ferias_julho',nome:'Férias de Julho',emoji:'☀️',mesInicio:7,diaInicio:1,mesFim:7,diaFim:31,fundoId:'praia',desc:'Férias! Mantenha a rotina leve e resgate o bônus diário de verão.',bonusMoedas:3,bonusXp:4},
-  {id:'halloween',nome:'Halloween',emoji:'🎃',mesInicio:10,diaInicio:20,mesFim:11,diaFim:2,fundoId:'halloween',desc:'Noite de travessuras! Desbloqueie fantasias de Esqueleto, Vampirinho e Abóbora, adesivos e missões divertidas.',bonusMoedas:5,bonusXp:8},
+  {id:'halloween',nome:'Halloween',emoji:'🎃',mesInicio:10,diaInicio:20,mesFim:11,diaFim:2,fundoId:'halloween',desc:'Noite de travessuras! Desbloqueie fantasias de Esqueleto, Vampirinho e Abóbora e missões divertidas.',bonusMoedas:5,bonusXp:8},
   {id:'natal',nome:'Natal',emoji:'🎄',mesInicio:12,diaInicio:1,mesFim:12,diaFim:26,fundoId:'neve',desc:'Clima de Natal! Complete a ofensiva e ganhe neve de recompensas.',bonusMoedas:5,bonusXp:10},
   {id:'ano_novo',nome:'Ano Novo',emoji:'🎆',mesInicio:12,diaInicio:27,mesFim:1,diaFim:5,fundoId:'festa',desc:'Virada do ano! Comece a sequência com energia e bônus extra.',bonusMoedas:4,bonusXp:8}
 ];
@@ -3479,7 +3479,6 @@ async function aprovarTarefaPais(id){
   const nivelAntes=obterDadosPetAtual().nivel;
   ganharXP(xp);
   if(obterDadosPetAtual().nivel===nivelAntes)playSound('moedas');
-  ganharFigurinhaPorMissao(t);
   estado.avisosMissao=Array.isArray(estado.avisosMissao)?estado.avisosMissao:[];
   estado.avisosMissao.push(t.texto);
   estado.avisosMissao=estado.avisosMissao.slice(-10);
@@ -3928,7 +3927,7 @@ function abrirColecao(){
   abrirModal('modal-colecao');
 }
 function alternarAbaColecao(aba){
-  ['pets','evos','fundos','adesivos'].forEach(id=>{
+  ['pets','evos','fundos'].forEach(id=>{
     document.getElementById('painel-col-'+id)?.classList.toggle('hidden',id!==aba);
     document.getElementById('tab-col-'+id)?.classList.toggle('ativa',id===aba);
   });
@@ -4041,13 +4040,7 @@ function renderizarColecao(){
       grid.appendChild(card);
     });
   }
-  const pAdesivos=document.getElementById('painel-col-adesivos');
-  if(pAdesivos){
-    const encontrados=new Set(Array.isArray(estado.adesivos)?estado.adesivos:[]);
-    const grupos=[['🌈 Gentileza',['desafio','elogio'],'Complete desafios e receba adesivos de gentileza.'],['🎁 Surpresas',['bau'],'Abra baús para encontrar adesivos surpresa.'],['⚡ Aventuras',['jogo','estrelas'],'Jogue minijogos para completar esta coleção.'],['🏆 Conquistas',['conquista','streak'],'Mantenha sua sequência para encontrar adesivos raros.']];
-    pAdesivos.innerHTML='<p style="font-size:9px;color:#64748b;margin-bottom:8px">Cada missão concluída deixa uma lembrança especial. Complete uma coleção para liberar um prêmio!</p>';
-    grupos.forEach((g,gi)=>{const bloco=document.createElement('div');bloco.className='section-card';bloco.style.marginBottom='8px';const itens=Array.from({length:6},(_,i)=>{const ach=Array.from(encontrados).find(x=>String(x).startsWith(g[1][i%g[1].length]+'_'));return `<span class="adesivo-slot ${ach?'encontrado':''}" title="${ach||'Ainda não encontrado'}">${ach?'⭐':'?'}</span>`}).join('');bloco.innerHTML=`<div style="display:flex;justify-content:space-between;align-items:center"><b style="font-size:10px">${g[0]}</b><small style="font-size:8px;color:#64748b">${g[2]}</small></div><div class="adesivos-grade">${itens}</div>`;pAdesivos.appendChild(bloco);});
-  }
+
 }
 const CONQUISTAS=[
   ['primeira','🥇','Primeiro Passo','Aprove sua primeira tarefa.',10],
@@ -4395,8 +4388,6 @@ function iniciarJogoEstrelas(){
       status.textContent=`⭐ ${estrelasPegas}/${alvo} estrelas`;
       if(estrelasPegas>=alvo){
         clearTimeout(estrelaTimer);
-        estado.adesivos=Array.isArray(estado.adesivos)?estado.adesivos:[];
-        estado.adesivos.push('estrelas_'+hojeLocal()+'_'+Date.now());
         fecharModal('modal-desafio');
         recompensarMiniJogo(3,3,'Caça às estrelas!');
         renderizarColecao();
