@@ -1,4 +1,4 @@
-const CACHE_NAME = 'rotinapet-cache-v57';
+const CACHE_NAME = 'rotinapet-cache-v58';
 const RUNTIME_CACHE_NAME = 'rotinapet-media-v3';
 const KEEP_CACHES = new Set([CACHE_NAME, RUNTIME_CACHE_NAME]);
 const MAX_RUNTIME_ENTRIES = 100;
@@ -53,7 +53,7 @@ const ASSETS = [
   "./css/22_gestos.css?v=5",
   "./js/13_gestos.js?v=4",
   "./js/16_axolote.js?v=axolote-fase1-visual-v1",
-  "./js/17_atelie_pet.js?v=ovo-visuais-v11"
+  "./js/17_atelie_pet.js?v=ovo-visuais-v12"
 ];
 
 self.addEventListener('install', event => {
