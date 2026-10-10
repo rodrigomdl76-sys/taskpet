@@ -11,49 +11,6 @@
  cicloDia();setInterval(cicloDia,60000);
 })();
 
-const ALBUM_FIGURINHAS=[
-{id:'missao_cuidado',emoji:'💚',nome:'Coração do Cuidado',raridade:'Comum',grupo:'Cuidado'},
-{id:'missao_energia',emoji:'⚡',nome:'Raio de Energia',raridade:'Comum',grupo:'Rotina'},
-{id:'missao_estudo',emoji:'📚',nome:'Mestre da Rotina',raridade:'Rara',grupo:'Aprendizado'},
-{id:'missao_ajuda',emoji:'🤝',nome:'Mão Amiga',raridade:'Rara',grupo:'Gentileza'},
-{id:'missao_criativa',emoji:'🎨',nome:'Artista Pet',raridade:'Rara',grupo:'Criatividade'},
-{id:'missao_saude',emoji:'🥕',nome:'Pet Saudável',raridade:'Épica',grupo:'Cuidado'},
-{id:'missao_ordem',emoji:'✨',nome:'Tudo no Lugar',raridade:'Comum',grupo:'Rotina'},
-{id:'missao_foco',emoji:'🎯',nome:'Foco Total',raridade:'Épica',grupo:'Concentração'},
-{id:'missao_alegria',emoji:'🌈',nome:'Arco-íris da Alegria',raridade:'Épica',grupo:'Alegria'},
-{id:'missao_coragem',emoji:'🦁',nome:'Coragem',raridade:'Lendária',grupo:'Conquistas'},
-{id:'missao_paz',emoji:'🌿',nome:'Momento Zen',raridade:'Rara',grupo:'Bem-estar'},
-{id:'missao_familia',emoji:'🏠',nome:'Time Família',raridade:'Lendária',grupo:'Família'},
-{id:'arte_ovo_01',emoji:'🐾',nome:'Gato-ovo curioso',raridade:'Comum',grupo:'Começos',imagem:window.ROTINAPET_FIGURINHAS_ARTES['arte_ovo_01']},
-{id:'arte_ovo_02',emoji:'🐾',nome:'Gato-ovo acenando',raridade:'Comum',grupo:'Começos',imagem:window.ROTINAPET_FIGURINHAS_ARTES['arte_ovo_02']},
-{id:'arte_ovo_03',emoji:'🐾',nome:'Gato-ovo estudioso',raridade:'Rara',grupo:'Começos',imagem:window.ROTINAPET_FIGURINHAS_ARTES['arte_ovo_03']},
-{id:'arte_ovo_04',emoji:'🐾',nome:'Gato cinza elegante',raridade:'Comum',grupo:'Gatinhos cinza',imagem:window.ROTINAPET_FIGURINHAS_ARTES['arte_ovo_04']},
-{id:'arte_ovo_05',emoji:'🐾',nome:'Gato cinza feliz',raridade:'Comum',grupo:'Gatinhos cinza',imagem:window.ROTINAPET_FIGURINHAS_ARTES['arte_ovo_05']},
-{id:'arte_ovo_06',emoji:'🐾',nome:'Gato cinza leitor',raridade:'Rara',grupo:'Gatinhos cinza',imagem:window.ROTINAPET_FIGURINHAS_ARTES['arte_ovo_06']},
-{id:'arte_ovo_07',emoji:'🐾',nome:'Gato-ovo chorando de alegria',raridade:'Comum',grupo:'Começos',imagem:window.ROTINAPET_FIGURINHAS_ARTES['arte_ovo_07']},
-{id:'arte_ovo_08',emoji:'🐾',nome:'Gatinho astronauta',raridade:'Épica',grupo:'Aventuras',imagem:window.ROTINAPET_FIGURINHAS_ARTES['arte_ovo_08']},
-{id:'arte_ovo_09',emoji:'🐾',nome:'Gato-ovo estiloso',raridade:'Rara',grupo:'Começos',imagem:window.ROTINAPET_FIGURINHAS_ARTES['arte_ovo_09']},
-{id:'arte_ovo_10',emoji:'🐾',nome:'Gato cinza emocionado',raridade:'Comum',grupo:'Gatinhos cinza',imagem:window.ROTINAPET_FIGURINHAS_ARTES['arte_ovo_10']},
-{id:'arte_ovo_11',emoji:'🐾',nome:'Gato cinza rei',raridade:'Épica',grupo:'Heróis',imagem:window.ROTINAPET_FIGURINHAS_ARTES['arte_ovo_11']},
-{id:'arte_ovo_12',emoji:'🐾',nome:'Gato com coração',raridade:'Rara',grupo:'Gatinhos cinza',imagem:window.ROTINAPET_FIGURINHAS_ARTES['arte_ovo_12']},
-{id:'arte_ovo_13',emoji:'🐾',nome:'Gato-ovo dormindo',raridade:'Comum',grupo:'Começos',imagem:window.ROTINAPET_FIGURINHAS_ARTES['arte_ovo_13']},
-{id:'arte_ovo_14',emoji:'🐾',nome:'Gato-ovo apaixonado',raridade:'Comum',grupo:'Começos',imagem:window.ROTINAPET_FIGURINHAS_ARTES['arte_ovo_14']},
-{id:'arte_ovo_15',emoji:'🐾',nome:'Gato-ovo surpreso',raridade:'Comum',grupo:'Começos',imagem:window.ROTINAPET_FIGURINHAS_ARTES['arte_ovo_15']},
-{id:'arte_ovo_16',emoji:'🐾',nome:'Gato cinza dormindo',raridade:'Comum',grupo:'Gatinhos cinza',imagem:window.ROTINAPET_FIGURINHAS_ARTES['arte_ovo_16']},
-{id:'arte_ovo_17',emoji:'🐾',nome:'Astronauta real',raridade:'Épica',grupo:'Aventuras',imagem:window.ROTINAPET_FIGURINHAS_ARTES['arte_ovo_17']},
-{id:'arte_ovo_18',emoji:'🐾',nome:'Festa espacial',raridade:'Épica',grupo:'Aventuras',imagem:window.ROTINAPET_FIGURINHAS_ARTES['arte_ovo_18']},
-{id:'arte_cinza_01',emoji:'🐾',nome:'Gato rei com capa',raridade:'Lendária',grupo:'Heróis',imagem:window.ROTINAPET_FIGURINHAS_ARTES['arte_cinza_01']},
-{id:'arte_cinza_02',emoji:'🐾',nome:'Gato rei apaixonado',raridade:'Épica',grupo:'Heróis',imagem:window.ROTINAPET_FIGURINHAS_ARTES['arte_cinza_02']},
-{id:'arte_cinza_03',emoji:'🐾',nome:'Gato rei com tablet',raridade:'Rara',grupo:'Heróis',imagem:window.ROTINAPET_FIGURINHAS_ARTES['arte_cinza_03']},
-{id:'arte_cinza_04',emoji:'🐾',nome:'Gato astronauta voando',raridade:'Lendária',grupo:'Aventuras',imagem:window.ROTINAPET_FIGURINHAS_ARTES['arte_cinza_04']},
-{id:'arte_cinza_05',emoji:'🐾',nome:'Gato no arco-íris',raridade:'Épica',grupo:'Aventuras',imagem:window.ROTINAPET_FIGURINHAS_ARTES['arte_cinza_05']},
-{id:'arte_cinza_06',emoji:'🐾',nome:'Gato alienígena',raridade:'Lendária',grupo:'Aventuras',imagem:window.ROTINAPET_FIGURINHAS_ARTES['arte_cinza_06']},
-{id:'arte_cinza_07',emoji:'🐾',nome:'Gato rei dormindo',raridade:'Rara',grupo:'Heróis',imagem:window.ROTINAPET_FIGURINHAS_ARTES['arte_cinza_07']},
-{id:'arte_cinza_08',emoji:'🐾',nome:'Gato rei comemorando',raridade:'Épica',grupo:'Heróis',imagem:window.ROTINAPET_FIGURINHAS_ARTES['arte_cinza_08']},
-{id:'arte_cinza_09',emoji:'🐾',nome:'Gato rei com estrela',raridade:'Épica',grupo:'Heróis',imagem:window.ROTINAPET_FIGURINHAS_ARTES['arte_cinza_09']}
-];
-window.ALBUM_FIGURINHAS=ALBUM_FIGURINHAS;
-
 function enfileirarRecompensaCrianca(aviso){
   estado.avisosRecompensas=Array.isArray(estado.avisosRecompensas)?estado.avisosRecompensas:[];
   aviso.id=aviso.idAviso||('r_'+Date.now()+'_'+Math.random().toString(36).slice(2));
@@ -70,7 +27,6 @@ function atualizarCaixaConquistas(){
   const menu=document.getElementById('menu-caixa-contagem');if(menu)menu.textContent=n?`${n} para descobrir`:'Ver histórico';
 }
 function descricaoConquista(a){
-  if(a.tipo==='figurinha'){const f=ALBUM_FIGURINHAS.find(x=>x.id===a.idFigurinha);return {emoji:f?.emoji||'📒',titulo:f?.nome||'Nova figurinha',texto:f?`${f.raridade} · ${f.grupo}`:'Confira seu álbum'};}
   if(a.tipo==='bau')return {emoji:'🎁',titulo:'Baú do dia',texto:a.premio||'Uma surpresa pela missão concluída'};
   if(a.tipo==='semanal')return {emoji:'🏆',titulo:`Baú dos ${Number(a.streak)||7} dias`,texto:`+${Number(a.moedas)||0} moedas e +${Number(a.xp)||0} XP`};
   return {emoji:'⭐',titulo:'Conquista',texto:'Missão concluída'};
@@ -100,38 +56,7 @@ function abrirConquistaDaCaixa(indice){
   estado.historicoRecompensas=estado.historicoRecompensas.slice(-40);
   salvar();atualizarCaixaConquistas();renderizarCaixaConquistas();
   const d=descricaoConquista(aviso);
-  if(aviso.tipo==='figurinha'){fecharModal('modal-caixa-conquistas');abrirAlbumFigurinhas(true)}
-  else {fecharModal('modal-caixa-conquistas');somBauLendario();mostrarAviso(d.emoji,d.titulo,d.texto)}
+  fecharModal('modal-caixa-conquistas');somBauLendario();mostrarAviso(d.emoji,d.titulo,d.texto)
   dispararConfetes();
 }
 function mostrarRecompensasCrianca(){atualizarCaixaConquistas()}
-let albumFiltroAtual='Todos';
-function ganharFigurinhaPorMissao(){
- if(!Array.isArray(estado.adesivos))estado.adesivos=[];
- const f=ALBUM_FIGURINHAS.find(x=>!estado.adesivos.includes(x.id));
- if(!f)return null;
- estado.adesivos.push(f.id);
- enfileirarRecompensaCrianca({tipo:'figurinha',idFigurinha:f.id});
- return f;
-}
-/* Versão base do álbum (grade simples por raridade). Fica inativa na prática: logo
-   abaixo, rotinapet-map-v1-script substitui window.renderizarAlbumFigurinhas por uma
-   versão paginada por região ("P"). Mantida só como fallback de segurança —
-   se for mexer no álbum, edite a versão de baixo, que é a que realmente roda. */
-function renderizarAlbumFigurinhas(novo){
- const c=document.getElementById('album-figurinhas-conteudo');if(!c)return;
- const found=new Set(estado.adesivos||[]),n=ALBUM_FIGURINHAS.filter(f=>found.has(f.id)).length,p=Math.round(n/ALBUM_FIGURINHAS.length*100);
- const grupos=['Todos','Comum','Rara','Épica','Lendária'];
- const lista=albumFiltroAtual==='Todos'?ALBUM_FIGURINHAS:ALBUM_FIGURINHAS.filter(f=>f.raridade===albumFiltroAtual);
- const ultima=ALBUM_FIGURINHAS.findIndex(f=>found.has(f.id)&&f.id===((ALBUM_FIGURINHAS.filter(f=>found.has(f.id)).at(-1)||{}).id));
- c.innerHTML=`<div class="album-hero premium">
-   <div class="album-topline"><div><small>MINHA COLEÇÃO</small><b>${n}/${ALBUM_FIGURINHAS.length}</b><span>figurinhas</span></div><div class="album-badge">${n===ALBUM_FIGURINHAS.length?'🏆 COMPLETO':'📒 EM PROGRESSO'}</div></div>
-   <div class="album-progress"><i style="width:${p}%"></i></div><div class="album-progress-meta"><span>${p}% completo</span><span>${ALBUM_FIGURINHAS.length-n} restantes</span></div>
-   <p>Complete missões, descubra novas raridades e monte sua coleção. Cada figurinha registra uma conquista. ✨</p>
- </div>
- <div class="album-filters">${grupos.map(g=>`<button class="album-filter ${albumFiltroAtual===g?'ativo':''}" onclick="albumFiltroAtual='${g}';renderizarAlbumFigurinhas()">${g}</button>`).join('')}</div>
- <div class="album-grid premium-grid">${lista.map((f)=>{const ok=found.has(f.id),fresh=novo&&ok&&f.id===ALBUM_FIGURINHAS[ultima]?.id;return `<button class="sticker-card ${ok?'unlocked':'locked'} rar-${f.raridade.toLowerCase()} ${fresh?'new':''}" onclick="mostrarDetalheFigurinha('${f.id}')" title="${ok?f.nome:'Figurinha secreta'}"><span class="sticker-art">${ok?(f.imagem?`<img src="${f.imagem}" alt="${f.nome}" loading="lazy">`:f.emoji):'?'}</span><span class="sticker-name">${ok?esc(f.nome):'Figurinha secreta'}</span><span class="sticker-rarity">${ok?f.raridade:'???'}</span></button>`}).join('')}</div>
- <div class="album-footer">${n===ALBUM_FIGURINHAS.length?'🌟 Você completou o álbum!':'💡 Dica: missões concluídas desbloqueiam novas figurinhas.'}</div>`;
-}
-function mostrarDetalheFigurinha(id){const f=ALBUM_FIGURINHAS.find(x=>x.id===id),ok=(estado.adesivos||[]).includes(id);if(!f)return;mostrarAviso(ok?f.emoji:'🔒',ok?f.nome:'Figurinha secreta',ok?`${f.raridade} · ${f.grupo}`:'Continue completando missões para descobrir esta figurinha.');}
-function abrirAlbumFigurinhas(novo){let m=document.getElementById('modal-album-figurinhas');if(!m){m=document.createElement('div');m.id='modal-album-figurinhas';m.className='modal-overlay';m.innerHTML=`<div class="modal album-modal"><div class="modal-title"><h3>📒 Álbum de figurinhas</h3><button class="close-btn" onclick="fecharModal('modal-album-figurinhas')">×</button></div><div id="album-figurinhas-conteudo"></div><button class="primary-btn album-close-btn" onclick="fecharModal('modal-album-figurinhas')">Continuar missão 🚀</button></div>`;document.body.appendChild(m)}renderizarAlbumFigurinhas(!!novo);abrirModal('modal-album-figurinhas')}
