@@ -49,7 +49,7 @@
     try{return String(window.obterIdlePersonalizadoGato?.()||'').trim()}catch(_){return ''}
   }
   function caminho(f,a){
-    if(f===1&&a==='idle'){
+    if(f===2&&a==='idle'){
       const personalizado=idlePersonalizadoUrl();
       if(personalizado)return `${personalizado}${personalizado.includes('?')?'&':'?'}v=${encodeURIComponent(versaoAnimacoes)}`;
     }
