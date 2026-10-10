@@ -1,6 +1,5 @@
 // As compras antigas continuam no estado para compatibilidade, sem sobrepor acessórios aos novos pets.
 (() => {
-  window.verificarRecompensasMapa = () => false;
   window.salvarNomePet = () => {
     if(perfilAtivo!=='crianca')return;
     const input=document.getElementById('input-nome-pet');
