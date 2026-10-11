@@ -135,7 +135,8 @@
     const f=fase();
     const pet=document.getElementById('pet-principal');
     pet?.style.setProperty('--pet-body-shift-x',f===1?'10%':'0%');
-    const pedido=acao || ((new Date().getHours()>=21 || new Date().getHours()<7)?'dormir':'idle');
+    const visualEquipado=f===1&&!!idlePersonalizadoUrl();
+    const pedido=acao || ((new Date().getHours()>=21 || new Date().getHours()<7)&&!visualEquipado?'dormir':'idle');
     const a=(arquivos[f][pedido]||gestos[f]?.[pedido])?pedido:'idle';
     img.dataset.acaoPet=a;
     img.dataset.visualPersonalizado=f===2&&a==='idle'?idlePersonalizadoUrl():'';
