@@ -1527,10 +1527,11 @@ function interagirComPet(e){
   d.felicidade=Math.min(100,d.felicidade+5);
   tocarAudioPet(PETS[estado.petAtual].som);
   navigator.vibrate?.(25);
-  criarTextoFlutuante('❤️ +5',e);
-  animarPetToque(e);
-  if(Math.random()<.55)mostrarBalaoFala(escolherFalaContextual('carinho'));
-  else mostrarToast(`❤️ ${PETS[estado.petAtual].nome} adorou!`);
+  const toqueNoOvoEstiloso=estado.petAtual==='gato'&&!!window.ovoGatoEstilosoEquipado?.();
+  criarTextoFlutuante(toqueNoOvoEstiloso?'✨ +5':'❤️ +5',e);
+  animarPetToque(e,toqueNoOvoEstiloso?'brilho':'carinho');
+  if(Math.random()<.55)mostrarBalaoFala(toqueNoOvoEstiloso?'✨ '+(estado.nomePet||PETS[estado.petAtual].nome)+' brilhou!':escolherFalaContextual('carinho'));
+  else mostrarToast(toqueNoOvoEstiloso?`✨ ${PETS[estado.petAtual].nome} brilhou!`:`❤️ ${PETS[estado.petAtual].nome} adorou!`);
   salvar();
   atualizarTela();
   animarMoedasBump();
