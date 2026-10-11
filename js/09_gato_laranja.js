@@ -121,6 +121,33 @@
     }
     return true;
   }
+  let brilhosOvo=null;
+  function sincronizarBrilhosOvo(ativo){
+    const pet=document.getElementById('pet-principal');if(!pet)return;
+    if(!ativo||estado?.petAtual!=='gato'){
+      brilhosOvo?.remove();brilhosOvo=null;return;
+    }
+    if(brilhosOvo?.parentNode===pet)return;
+    brilhosOvo=document.createElement('div');
+    brilhosOvo.className='ovo-gato-brilhos';
+    brilhosOvo.setAttribute('aria-hidden','true');
+    const particulas=[
+      ['20%','34%','-10px','-22px','0s'],['76%','30%','10px','-26px','.4s'],
+      ['84%','55%','13px','-20px','.9s'],['16%','58%','-12px','-18px','1.3s'],
+      ['32%','77%','-9px','-21px','.7s'],['69%','73%','11px','-24px','1.6s'],
+      ['50%','20%','0px','-30px','1.1s']
+    ];
+    for(const [x,y,dx,dy,delay] of particulas){
+      const brilho=document.createElement('i');
+      brilho.textContent='✨';
+      brilho.style.setProperty('--px',x);brilho.style.setProperty('--py',y);
+      brilho.style.setProperty('--dx',dx);brilho.style.setProperty('--dy',dy);
+      brilho.style.setProperty('--delay',delay);
+      brilho.setAttribute('aria-hidden','true');
+      brilhosOvo.appendChild(brilho);
+    }
+    pet.appendChild(brilhosOvo);
+  }
   function mostrar(){
     if(estado?.petAtual!=='gato'){
       if(img)img.style.display='none';
@@ -138,6 +165,7 @@
     const visualEquipado=f===1&&!!idlePersonalizadoUrl();
     const pedido=acao || ((new Date().getHours()>=21 || new Date().getHours()<7)&&!visualEquipado?'dormir':'idle');
     const a=(arquivos[f][pedido]||gestos[f]?.[pedido])?pedido:'idle';
+    sincronizarBrilhosOvo(!!window.ovoGatoEstilosoEquipado?.()&&a==='idle');
     img.dataset.acaoPet=a;
     img.dataset.visualPersonalizado=f===2&&a==='idle'?idlePersonalizadoUrl():'';
     const novaChave=`${f}/${a}`;
@@ -289,7 +317,11 @@
   };
   const interagir=window.interagirComPet;
   if(typeof interagir==='function')window.interagirComPet=function(){
-    const resultado=interagir.apply(this,arguments);if(estado?.petAtual==='gato')tocar('carinho');return resultado;
+    const toqueNoPet=!!arguments[0]&&Number.isFinite(arguments[0].clientX);
+    const toqueComBrilho=toqueNoPet&&!!window.ovoGatoEstilosoEquipado?.();
+    const resultado=interagir.apply(this,arguments);
+    if(estado?.petAtual==='gato'&&!toqueComBrilho)tocar('carinho');
+    return resultado;
   };
   const acaoPrincipal=window.acaoPet;
   if(typeof acaoPrincipal==='function')window.acaoPet=function(tipo){
