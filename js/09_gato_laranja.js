@@ -45,11 +45,11 @@
     else trocar();
   }
   function idlePersonalizadoUrl(){
-    if(fase()!==2)return '';
+    if(fase()!==1)return '';
     try{return String(window.obterIdlePersonalizadoGato?.()||'').trim()}catch(_){return ''}
   }
   function caminho(f,a){
-    if(f===2&&a==='idle'){
+    if(f===1&&a==='idle'){
       const personalizado=idlePersonalizadoUrl();
       if(personalizado)return `${personalizado}${personalizado.includes('?')?'&':'?'}v=${encodeURIComponent(versaoAnimacoes)}`;
     }
@@ -272,7 +272,7 @@
     if(img?.dataset.acaoPet!=='idle'||atualUrl===novoUrl)return;
     const atual=++token;clearTimeout(volta);volta=null;
     const trocar=()=>{acao='';chave='';mostrar()};
-    if(estado?.petAtual==='gato'&&fase()===2)void transicaoMagica(trocar,atual,true);
+    if(estado?.petAtual==='gato'&&fase()===1)void transicaoMagica(trocar,atual,true);
     else trocar();
   };
   window.gatoLaranjaAudio=audio=>{
