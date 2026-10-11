@@ -291,6 +291,10 @@
     const nomes=['','Ovo-gato','Gato Cavalheiro','Gato Real'];
     const label=document.getElementById('pet-evol-nome');if(label)label.textContent=`${estado.nomePet||'Pipoca'} • ${nomes[f]}${faseTeste?' (teste)':''}`;
   }
+  window.ovoGatoEstilosoEquipado=()=>{
+    if(estado?.petAtual!=='gato'||fase()!==1)return false;
+    try{return /(?:^|\/)ovo-gato-oculos\.webp(?:\?|$)/.test(String(window.obterIdlePersonalizadoGato?.()||''))}catch(_){return false}
+  };
   window.faseGatoAtual=()=>fase();
   window.testarFaseGato=n=>{if(perfilAtivo!=='pais')return;faseTeste=n;chave='';mostrar()};
   window.acaoGatoLaranja=a=>{if(estado?.petAtual==='gato')tocar(a)};
