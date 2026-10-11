@@ -65,6 +65,12 @@
       p.migracoes.visualInicialGratisRemovido = true;
       setTimeout(salvarEstado, 0);
     }
+    if (!p.migracoes.visualCompradoAutoEquipadoV1) {
+      const visualPossuido = [...p.adquiridos].reverse().map(item).find(x => x && x.slot === 'pet:visual');
+      if (!p.equipados['pet:visual'] && visualPossuido) p.equipados['pet:visual'] = visualPossuido.id;
+      p.migracoes.visualCompradoAutoEquipadoV1 = true;
+      setTimeout(salvarEstado, 0);
+    }
     return p;
   }
   function item(id) { return catalogo.find(x => x.id === id); }
