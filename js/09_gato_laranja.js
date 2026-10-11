@@ -167,7 +167,7 @@
     const a=(arquivos[f][pedido]||gestos[f]?.[pedido])?pedido:'idle';
     sincronizarBrilhosOvo(!!window.ovoGatoEstilosoEquipado?.()&&a==='idle');
     img.dataset.acaoPet=a;
-    img.dataset.visualPersonalizado=f===2&&a==='idle'?idlePersonalizadoUrl():'';
+    img.dataset.visualPersonalizado=f===1&&a==='idle'?idlePersonalizadoUrl():'';
     const novaChave=`${f}/${a}`;
     if(chave===novaChave)return;
     chave=novaChave;faseVisivel=f;
