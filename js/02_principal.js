@@ -532,10 +532,10 @@ const hojeLocal=()=>{const d=new Date();return `${d.getFullYear()}-${String(d.ge
 const ontemLocal=()=>{const d=new Date();d.setDate(d.getDate()-1);return `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`};
 // Campos que pertencem a UM filho específico (progresso do pet, tarefas, moedas...).
 // Tudo que NÃO está nessa lista é compartilhado pela família inteira (PIN, e-mails, taxa de câmbio).
-const CAMPOS_CRIANCA=['personalizacao','gestosDesbloqueados','palcoAtual','palcosComprados','decoracaoItens','extraDiaRemovida','avisosMissao','miniPetsComprados','miniPetAtivo','bauDatasResgatadas','historicoRecompensas','avisosRecompensas','acessorios','conquistas','habilidades','desafiosMathAcertos','dinheiroAcumulado','mesadaAtiva','fundoAtual','fundosComprados','temaInterfaceAtual','historicoConclusoes','idadeCrianca','dificuldadeJogos','nomePet','lembreteEnviadoData','metaMoedas','moedas','onboardingVistoCrianca','pausaAte','petAtual','pets','recompensas','sonhos','registroDiario','solicitacoesPremios','streak','surpresaResgatadaData','tarefas','tarefasHojeCount','timerFim','totalSacado','ultimoDiaAcesso','ultimoDiaConcluido','ultimoStreakPremiado','vozSalva','ultimoAcaoPet','ultimoDecay','desafioDiarioData','desafioDiarioFeitoData','bauDiarioAbertoData','escudosOfensiva','eventoSemanalData','missaoFamilia','mensagensPais','historicoEngajamento'];
+const CAMPOS_CRIANCA=['tarefasExcluidas','personalizacao','gestosDesbloqueados','palcoAtual','palcosComprados','decoracaoItens','extraDiaRemovida','avisosMissao','miniPetsComprados','miniPetAtivo','bauDatasResgatadas','historicoRecompensas','avisosRecompensas','acessorios','conquistas','habilidades','desafiosMathAcertos','dinheiroAcumulado','mesadaAtiva','fundoAtual','fundosComprados','temaInterfaceAtual','historicoConclusoes','idadeCrianca','dificuldadeJogos','nomePet','lembreteEnviadoData','metaMoedas','moedas','onboardingVistoCrianca','pausaAte','petAtual','pets','recompensas','sonhos','registroDiario','solicitacoesPremios','streak','surpresaResgatadaData','tarefas','tarefasHojeCount','timerFim','totalSacado','ultimoDiaAcesso','ultimoDiaConcluido','ultimoStreakPremiado','vozSalva','ultimoAcaoPet','ultimoDecay','desafioDiarioData','desafioDiarioFeitoData','bauDiarioAbertoData','escudosOfensiva','eventoSemanalData','missaoFamilia','mensagensPais','historicoEngajamento'];
 function valoresPadraoCrianca(){
   return {
-    gestosDesbloqueados:[],decoracaoItens:[],extraDiaRemovida:null,miniPetsComprados:['passarinho'],miniPetAtivo:'passarinho',petAtual:'gato',moedas:15,dinheiroAcumulado:0,mesadaAtiva:true,idadeCrianca:7,dificuldadeJogos:'auto',nomePet:'Pipoca',
+    tarefasExcluidas:[],gestosDesbloqueados:[],decoracaoItens:[],extraDiaRemovida:null,miniPetsComprados:['passarinho'],miniPetAtivo:'passarinho',petAtual:'gato',moedas:15,dinheiroAcumulado:0,mesadaAtiva:true,idadeCrianca:7,dificuldadeJogos:'auto',nomePet:'Pipoca',
     palcoAtual:'cristal',palcosComprados:['cristal'],fundoAtual:'ceu',fundosComprados:['ceu'],temaInterfaceAtual:'classico',metaMoedas:50,totalSacado:0,
     ultimoDiaAcesso:hojeLocal(),ultimoDiaConcluido:null,streak:0,ultimoStreakPremiado:0,
     tarefasHojeCount:0,desafiosMathAcertos:0,timerFim:null,vozSalva:null,
@@ -876,10 +876,13 @@ function aplicarEstadoRemotoComMerge(d){
   const tarefasRemotas=Array.isArray(d.tarefas)?d.tarefas:null;
   const idAtiva=d.criancaAtivaId||estado.criancaAtivaId;
   const dadosCriancaRemotos=d.criancasDados&&d.criancasDados[idAtiva];
+  const exclusoesRemotas=[...(Array.isArray(d.tarefasExcluidas)?d.tarefasExcluidas:[]),...(Array.isArray(dadosCriancaRemotos?.tarefasExcluidas)?dadosCriancaRemotos.tarefasExcluidas:[])].map(String);
+  const exclusoesMescladas=Array.from(new Set([...(Array.isArray(estado.tarefasExcluidas)?estado.tarefasExcluidas:[]).map(String),...exclusoesRemotas]));
+  estado.tarefasExcluidas=exclusoesMescladas;
   const tarefasDaCrianca=dadosCriancaRemotos&&Array.isArray(dadosCriancaRemotos.tarefas)?dadosCriancaRemotos.tarefas:null;
   const fonteTarefas=tarefasRemotas||tarefasDaCrianca;
   const tarefasMescladas=fonteTarefas?mergeTarefasPorVersao(estado.tarefas,fonteTarefas):estado.tarefas;
-  estado={...estado,...d,pets:{...estado.pets,...(d.pets||{})},tarefas:tarefasMescladas};
+  estado={...estado,...d,pets:{...estado.pets,...(d.pets||{})},tarefas:tarefasMescladas,tarefasExcluidas:exclusoesMescladas};
   garantirCriancaAtiva();
   const tarefasAntesDosDados=estado.tarefas;
   if(dadosCriancaRemotos){
@@ -890,6 +893,7 @@ function aplicarEstadoRemotoComMerge(d){
     aplicarDadosCrianca(perfilRemoto);
     estado.tarefas=aplicarTarefasDaCriancaSemPerderCadastro(tarefasAntesDosDados,estado.tarefas);
   }
+  estado.tarefasExcluidas=exclusoesMescladas;
   if(!Array.isArray(estado.tarefas))estado.tarefas=[];
   estado.tarefas.forEach(prepararTarefaParaHoje);
 }
@@ -2201,11 +2205,17 @@ async function persistirTarefaIndividualV2(t){
   await dbFirebase.ref(`${caminhoTarefasV2()}/${id}`).set({...t,id,atualizadoEm:t.atualizadoEm});
   return true;
 }
+function idsTarefasExcluidas(){
+  return new Set((Array.isArray(estado.tarefasExcluidas)?estado.tarefasExcluidas:[]).map(id=>String(id)));
+}
+function registrarTarefaExcluida(id){
+  estado.tarefasExcluidas=Array.from(new Set([...(Array.isArray(estado.tarefasExcluidas)?estado.tarefasExcluidas:[]).map(String),String(id)]));
+}
 function mergeTarefasPorVersao(locais,remotas){
-  const mapa=new Map();
-  (Array.isArray(locais)?locais:[]).forEach(t=>{if(t&&t.id!=null)mapa.set(String(t.id),t)});
+  const mapa=new Map(),excluidas=idsTarefasExcluidas();
+  (Array.isArray(locais)?locais:[]).forEach(t=>{if(t&&t.id!=null&&!excluidas.has(String(t.id)))mapa.set(String(t.id),t)});
   (Array.isArray(remotas)?remotas:[]).forEach(r=>{
-    if(!r||r.id==null)return;
+    if(!r||r.id==null||excluidas.has(String(r.id)))return;
     const chave=String(r.id),l=mapa.get(chave);
     const tl=Number(l?.atualizadoEm)||0,tr=Number(r.atualizadoEm)||0;
     if(!l||tr>=tl)mapa.set(chave,r);
@@ -3817,9 +3827,16 @@ function editarDiasTarefa(id){
 }
 function removerTarefa(id){
   const removida=estado.tarefas.find(t=>String(t.id)===String(id));
-  if(removida?.extraRotativa)estado.extraDiaRemovida=removida.dataSugerida;
+  if(!removida)return;
+  registrarTarefaExcluida(id);
+  if(removida.extraRotativa)estado.extraDiaRemovida=removida.dataSugerida;
   estado.tarefas=estado.tarefas.filter(t=>String(t.id)!==String(id));
+  estado.criancasDados=estado.criancasDados||{};
+  estado.criancasDados[estado.criancaAtivaId]={...(estado.criancasDados[estado.criancaAtivaId]||{}),...capturarDadosCrianca()};
   salvar();
+  if(dbFirebase&&sincronizacaoNuvemAtiva&&navigator.onLine&&!cargaNuvemPendente){
+    dbFirebase.ref(`${caminhoTarefasV2()}/${idTarefaSeguro(id)}`).remove().catch(e=>console.warn('Não foi possível limpar a tarefa removida da nuvem:',e));
+  }
   renderizarPainelPais();
   atualizarTela();
 }
