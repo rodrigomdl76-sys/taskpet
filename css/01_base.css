@@ -114,7 +114,7 @@ button{touch-action:manipulation}
 .btn-icon{font-size:20px}
 .modal-overlay{position:fixed;inset:0;background:#0f172a99;backdrop-filter:blur(7px);display:flex;align-items:center;justify-content:center;padding:14px;z-index:10000;opacity:0;visibility:hidden;transition:.2s}
 .modal-overlay.mostrar{opacity:1;visibility:visible}
-.modal{width:100%;max-width:370px;max-height:88dvh;overflow:auto;background:#fff;border-radius:25px;padding:17px;box-shadow:0 25px 60px #0005}
+.modal{width:100%;max-width:370px;max-height:88dvh;overflow:auto;background:#fff;border-radius:25px;padding:17px;box-shadow:0 25px 60px #0005;color:#172033}
 .modal-title{display:flex;align-items:center;justify-content:space-between;margin-bottom:12px}
 .modal-title h3{font-size:16px;font-weight:900}
 .close-btn{border:0;background:#eef2f7;width:30px;height:30px;border-radius:10px;font-weight:900;cursor:pointer}
