@@ -32,29 +32,41 @@ function tocarClique(){
     const fonte=ctx.createBufferSource(),ganho=ctx.createGain();
     fonte.buffer=bufferClique;ganho.gain.value=Math.min(.25,volume*.22);
     fonte.connect(ganho);ganho.connect(ctx.destination);fonte.start();
+    tocarNotaCartoon(720,390,.07,0,.10,'sine');
     return true;
   }catch(e){return false}
 }
-function prepararSons(){
-  Object.entries(ARQUIVOS_SOM).forEach(([tipo,arquivo])=>{
-    try{
-      const audio=new Audio(`assets/sons/${arquivo}.mp3`);
-      audio.preload='auto';audio.load();sonsPrecarregados[tipo]=audio;
-    }catch(e){}
-  });
+function tocarNotaCartoon(fInicial,fFinal,duracao,atraso=0,volume=.1,forma='sine'){
+  try{
+    const ctx=obterAudioContext(),inicio=ctx.currentTime+atraso,vol=obterVolumeSom();
+    if(vol<=.01)return;
+    const osc=ctx.createOscillator(),ganho=ctx.createGain();
+    osc.type=forma;
+    osc.frequency.setValueAtTime(fInicial,inicio);
+    osc.frequency.exponentialRampToValueAtTime(fFinal,inicio+duracao);
+    ganho.gain.setValueAtTime(.0001,inicio);
+    ganho.gain.exponentialRampToValueAtTime(Math.max(.001,volume*vol),inicio+.008);
+    ganho.gain.exponentialRampToValueAtTime(.0001,inicio+duracao);
+    osc.connect(ganho);ganho.connect(ctx.destination);
+    osc.start(inicio);osc.stop(inicio+duracao+.01);
+  }catch(e){}
 }
+function prepararSons(){prepararClique()}
 function playSound(tipo){
   if(tipo==='ui')return tocarClique();
-  if(!ARQUIVOS_SOM[tipo]||obterVolumeSom()<=0.01)return false;
+  if(!ARQUIVOS_SOM[tipo]||obterVolumeSom()<=.01)return false;
   const agora=Date.now();
   if(agora-(ultimoSomPorTipo[tipo]||0)<95)return false;
   ultimoSomPorTipo[tipo]=agora;
-  try{
-    const audio=sonsPrecarregados[tipo]||(sonsPrecarregados[tipo]=new Audio(`assets/sons/${ARQUIVOS_SOM[tipo]}.mp3`));
-    audio.pause();audio.currentTime=0;audio.volume=obterVolumeSom()*(tipo==='ui'?.32:.70);
-    audio.play().catch(()=>{});
-    return true;
-  }catch(e){return false}
+  const notas={
+    pet:[[520,250,.16,0,.13,'sine'],[380,560,.10,.09,.06,'triangle']],
+    tarefa:[[560,760,.09,0,.10,'triangle'],[760,1040,.11,.075,.08,'sine']],
+    moedas:[[880,1120,.11,0,.09,'sine'],[1120,1480,.14,.085,.075,'sine'],[1480,1260,.16,.17,.06,'triangle']],
+    nivel:[[523,523,.13,0,.08,'sine'],[659,659,.13,.10,.08,'sine'],[784,784,.15,.20,.09,'sine'],[1046,1046,.24,.31,.10,'sine']]
+  }[tipo];
+  if(!notas)return false;
+  notas.forEach(n=>tocarNotaCartoon(...n));
+  return true;
 }
 function somConquista(){playSound('nivel')}
 function somBauLendario(){playSound('nivel')}
