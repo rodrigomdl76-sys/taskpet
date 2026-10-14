@@ -124,6 +124,14 @@ function pausarMusicaAmbiente(){
     ganhoMusicaAmbiente.gain.setTargetAtTime(0,agora,.08);
   }
 }
+function sincronizarMusicaAmbienteComEstado(){
+  if(estado.musicaAmbienteAtiva===false){pausarMusicaAmbiente();renderizarMusicaAmbientePainel();return}
+  if(musicaAmbienteLiberada&&!document.hidden&&!musicaAmbienteTimer)iniciarMusicaAmbiente();
+  if(ganhoMusicaAmbiente&&audioCtx&&estado.musicaAmbienteAtiva!==false){
+    ganhoMusicaAmbiente.gain.setTargetAtTime(Math.max(0,Math.min(.30,Number(estado.volumeMusicaAmbiente)||0)),audioCtx.currentTime,.2);
+  }
+  renderizarMusicaAmbientePainel();
+}
 function atualizarMusicaAmbiente(ativa){
   estado.musicaAmbienteAtiva=!!ativa;
   musicaAmbienteLiberada=true;
@@ -1451,6 +1459,7 @@ function celebrarEvolucaoPet(fase){
   mostrarToast(`🌟 ${ev.nome} desbloqueado!`);
 }
 function atualizarTela(){
+  sincronizarMusicaAmbienteComEstado();
   window.verificarMarcosGestos?.();
   aplicarPalcoPet();
   const def=PETS[estado.petAtual],p=obterDadosPetAtual(),fase=calcularFase(p.nivel);
