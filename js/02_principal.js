@@ -10,14 +10,13 @@ function prepararClique(){
   try{
     const ctx=audioCtx||(audioCtx=new(window.AudioContext||window.webkitAudioContext)({latencyHint:'interactive'}));
     if(!bufferClique){
-      const duracao=.024,n=Math.ceil(ctx.sampleRate*duracao);
+      const duracao=.014,n=Math.ceil(ctx.sampleRate*duracao);
       bufferClique=ctx.createBuffer(1,n,ctx.sampleRate);
       const dados=bufferClique.getChannelData(0);
-      let anterior=0;
       for(let i=0;i<n;i++){
-        const ruido=Math.random()*2-1;
-        dados[i]=(ruido-anterior)*Math.exp(-i/(ctx.sampleRate*.0045))*.22;
-        anterior=ruido;
+        const t=i/ctx.sampleRate;
+        const envelope=Math.exp(-t/.0024);
+        dados[i]=((Math.random()*2-1)*.68+Math.sin(2*Math.PI*1850*t)*.20)*envelope;
       }
     }
   }catch(e){}
@@ -30,9 +29,10 @@ function tocarClique(){
     const ctx=obterAudioContext();
     if(!bufferClique)return false;
     const fonte=ctx.createBufferSource(),ganho=ctx.createGain();
-    fonte.buffer=bufferClique;ganho.gain.value=Math.min(.25,volume*.22);
-    fonte.connect(ganho);ganho.connect(ctx.destination);fonte.start();
-    tocarNotaCartoon(720,390,.07,0,.10,'sine');
+    fonte.buffer=bufferClique;
+    ganho.gain.value=Math.min(.30,volume*.30);
+    fonte.connect(ganho);ganho.connect(ctx.destination);
+    fonte.start(ctx.currentTime);
     return true;
   }catch(e){return false}
 }
@@ -98,7 +98,7 @@ function programarMusicaAmbiente(){
   try{
     const ctx=obterAudioContext(),agora=ctx.currentTime;
     if(!ganhoMusicaAmbiente){ganhoMusicaAmbiente=ctx.createGain();ganhoMusicaAmbiente.gain.value=0;ganhoMusicaAmbiente.connect(ctx.destination)}
-    const volume=Math.max(0,Math.min(.30,Number(estado.volumeMusicaAmbiente)||0));
+    const volume=Math.max(0,Math.min(.40,(Number(estado.volumeMusicaAmbiente)||0)*1.35));
     ganhoMusicaAmbiente.gain.setTargetAtTime(volume,agora,.25);
     if(!proximaNotaAmbiente)proximaNotaAmbiente=agora+.08;
     while(proximaNotaAmbiente<agora+1.1){
@@ -118,7 +118,7 @@ function iniciarMusicaAmbiente(){
     const ctx=obterAudioContext();
     if(!ganhoMusicaAmbiente){ganhoMusicaAmbiente=ctx.createGain();ganhoMusicaAmbiente.gain.value=0;ganhoMusicaAmbiente.connect(ctx.destination)}
     if(!proximaNotaAmbiente)proximaNotaAmbiente=ctx.currentTime+.08;
-    ganhoMusicaAmbiente.gain.setTargetAtTime(Math.max(0,Math.min(.30,Number(estado.volumeMusicaAmbiente)||0)),ctx.currentTime,.25);
+    ganhoMusicaAmbiente.gain.setTargetAtTime(Math.max(0,Math.min(.40,(Number(estado.volumeMusicaAmbiente)||0)*1.35)),ctx.currentTime,.25);
     if(!musicaAmbienteTimer)musicaAmbienteTimer=setInterval(programarMusicaAmbiente,250);
     programarMusicaAmbiente();
     return true;
@@ -136,7 +136,7 @@ function sincronizarMusicaAmbienteComEstado(){
   if(estado.musicaAmbienteAtiva===false){pausarMusicaAmbiente();renderizarMusicaAmbientePainel();return}
   if(musicaAmbienteLiberada&&!document.hidden&&!musicaAmbienteTimer)iniciarMusicaAmbiente();
   if(ganhoMusicaAmbiente&&audioCtx&&estado.musicaAmbienteAtiva!==false){
-    ganhoMusicaAmbiente.gain.setTargetAtTime(Math.max(0,Math.min(.30,Number(estado.volumeMusicaAmbiente)||0)),audioCtx.currentTime,.2);
+    ganhoMusicaAmbiente.gain.setTargetAtTime(Math.max(0,Math.min(.40,(Number(estado.volumeMusicaAmbiente)||0)*1.35)),audioCtx.currentTime,.2);
   }
   renderizarMusicaAmbientePainel();
 }
@@ -150,7 +150,7 @@ function atualizarMusicaAmbiente(ativa){
 function atualizarVolumeMusicaAmbiente(valor){
   const n=Math.max(0,Math.min(30,parseInt(valor,10)||0));
   estado.volumeMusicaAmbiente=n/100;
-  if(ganhoMusicaAmbiente&&audioCtx)ganhoMusicaAmbiente.gain.setTargetAtTime(estado.volumeMusicaAmbiente,audioCtx.currentTime,.12);
+  if(ganhoMusicaAmbiente&&audioCtx)ganhoMusicaAmbiente.gain.setTargetAtTime(Math.max(0,Math.min(.40,estado.volumeMusicaAmbiente*1.35)),audioCtx.currentTime,.12);
   const texto=document.getElementById('txt-volume-musica');
   if(texto)texto.textContent=n+'%';
   salvar();
@@ -161,7 +161,7 @@ function renderizarMusicaAmbientePainel(){
   const volume=document.getElementById('input-volume-musica');
   const volumeTexto=document.getElementById('txt-volume-musica');
   const ativa=estado.musicaAmbienteAtiva!==false;
-  const pct=Math.round(Math.max(0,Math.min(.30,Number(estado.volumeMusicaAmbiente)||0))*100);
+  const pct=Math.round(Math.max(0,Math.min(.40,(Number(estado.volumeMusicaAmbiente)||0)*1.35))*100);
   if(input)input.checked=ativa;
   if(texto)texto.textContent=ativa?'Ligada':'Desligada';
   if(volume)volume.value=pct;
