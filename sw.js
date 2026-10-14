@@ -1,4 +1,4 @@
-const CACHE_NAME = 'rotinapet-cache-v67';
+const CACHE_NAME = 'rotinapet-cache-v68';
 const RUNTIME_CACHE_NAME = 'rotinapet-media-v3';
 const KEEP_CACHES = new Set([CACHE_NAME, RUNTIME_CACHE_NAME]);
 const MAX_RUNTIME_ENTRIES = 100;
