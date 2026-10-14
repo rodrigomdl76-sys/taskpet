@@ -680,7 +680,10 @@ function trocarCriancaAtiva(novoId){
   atualizarTela();
   ultimoFundoParticulas=null;
   renderizarParticulasCenario(estado.fundoAtual);
-  if(document.getElementById('modal-pais')?.classList.contains('mostrar'))renderizarPainelPais();
+  if(document.getElementById('modal-pais')?.classList.contains('mostrar')){
+    renderizarPainelPais();
+    atualizarTarefasAprovacaoDaNuvem();
+  }
   mostrarToast(`🐾 Agora é a vez de ${estado.criancas[novoId].nome}!`);
 }
 function criarNovaCrianca(nome,emoji){
@@ -2526,6 +2529,35 @@ function sincronizarListenerTarefasV2(){
   tarefasV2ListenerRef.on('value',tarefasV2ListenerCallback);
 }
 
+// A lista de aprovação é uma decisão importante para o responsável. Ao abrir
+// o painel, confirma os dados com uma leitura pontual, além do listener realtime.
+async function atualizarTarefasAprovacaoDaNuvem(){
+  if(acessoFamiliar?.role!=='parent'||!dbFirebase||!sincronizacaoNuvemAtiva||!navigator.onLine)return false;
+  const criancaId=String(estado.criancaAtivaId||'c1');
+  try{
+    const [individuaisSnap,estadoSnap]=await Promise.all([
+      dbFirebase.ref(caminhoTarefasV2(criancaId)).once('value'),
+      dbFirebase.ref(getCaminhoFirebase()).once('value')
+    ]);
+    if(String(estado.criancaAtivaId||'c1')!==criancaId)return false;
+    const familia=estadoSnap.val()||{};
+    const tarefasPerfil=familia.criancasDados?.[criancaId]?.tarefas;
+    const tarefasLegadas=familia.criancaAtivaId===criancaId&&Array.isArray(familia.tarefas)?familia.tarefas:[];
+    const tarefasIndividuais=Object.values(individuaisSnap.val()||{});
+    const remotas=[...(Array.isArray(tarefasPerfil)?tarefasPerfil:[]),...tarefasLegadas,...tarefasIndividuais];
+    if(!remotas.length)return true;
+    estado.tarefas=mergeTarefasPorVersao(estado.tarefas,remotas);
+    estado.criancasDados=estado.criancasDados||{};
+    estado.criancasDados[criancaId]={...(estado.criancasDados[criancaId]||{}),tarefas:JSON.parse(JSON.stringify(estado.tarefas))};
+    salvarLocalmente();
+    if(document.getElementById('modal-pais')?.classList.contains('mostrar'))renderizarPainelPais();
+    return true;
+  }catch(error){
+    console.warn('Falha ao atualizar aprovações na abertura do painel:',error);
+    return false;
+  }
+}
+
 async function enviarParaAprovacao(id){
   const t=estado.tarefas.find(t=>String(t.id)===String(id));
   if(!t)return;
@@ -4124,6 +4156,7 @@ function fecharOnboardingPais(){
   fecharModal('modal-onboarding-pais');
   renderizarPainelPais();
   abrirModal('modal-pais');
+  atualizarTarefasAprovacaoDaNuvem();
   mostrarToast('👨‍👩‍👧 Painel pronto — bom uso em família!');
 }
 function entrarPainelPaisPosAuth(){
@@ -4133,6 +4166,7 @@ function entrarPainelPaisPosAuth(){
   }
   renderizarPainelPais();
   abrirModal('modal-pais');
+  atualizarTarefasAprovacaoDaNuvem();
 }
 function atualizarTaxaCambio(v){
   const n=Number(v);
