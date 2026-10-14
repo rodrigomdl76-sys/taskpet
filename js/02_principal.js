@@ -69,22 +69,28 @@ function playSound(tipo){
   return true;
 }
 const MELODIA_CANTINHO_PET=[
-  523.25,659.25,783.99,659.25,587.33,659.25,880,783.99,
-  659.25,783.99,987.77,783.99,698.46,659.25,587.33,523.25,
-  523.25,659.25,783.99,880,783.99,659.25,587.33,659.25,
-  587.33,659.25,783.99,659.25,523.25,587.33,659.25,523.25
+  523.25,659.25,783.99,1046.5,783.99,659.25,587.33,783.99,
+  659.25,783.99,1046.5,1318.5,1046.5,880,783.99,659.25,
+  698.46,880,1046.5,1318.5,1046.5,880,783.99,698.46,
+  587.33,783.99,987.77,1174.66,987.77,880,783.99,587.33
 ];
 const BAIXOS_CANTINHO_PET=[261.63,220,174.61,196];
 let musicaAmbienteTimer=null,indiceNotaAmbiente=0,proximaNotaAmbiente=0,ganhoMusicaAmbiente=null,musicaAmbienteLiberada=false;
-function tocarNotaAmbiente(freq,inicio,duracao,volume=.10){
+function tocarNotaAmbiente(freq,inicio,duracao,volume=.13){
   try{
-    const ctx=obterAudioContext(),osc=ctx.createOscillator(),ganho=ctx.createGain();
+    const ctx=obterAudioContext(),osc=ctx.createOscillator(),brilho=ctx.createOscillator(),ganho=ctx.createGain(),ganhoBrilho=ctx.createGain();
     osc.type='sine';osc.frequency.setValueAtTime(freq,inicio);
+    brilho.type='triangle';brilho.frequency.setValueAtTime(freq*2,inicio);
     ganho.gain.setValueAtTime(.0001,inicio);
-    ganho.gain.exponentialRampToValueAtTime(Math.max(.001,volume),inicio+.09);
-    ganho.gain.setTargetAtTime(.0001,inicio+duracao-.12,.08);
-    osc.connect(ganho);ganho.connect(ganhoMusicaAmbiente);
-    osc.start(inicio);osc.stop(inicio+duracao);
+    ganho.gain.exponentialRampToValueAtTime(Math.max(.001,volume),inicio+.025);
+    ganho.gain.setTargetAtTime(.0001,inicio+duracao-.08,.065);
+    ganhoBrilho.gain.setValueAtTime(.0001,inicio);
+    ganhoBrilho.gain.exponentialRampToValueAtTime(Math.max(.001,volume*.22),inicio+.025);
+    ganhoBrilho.gain.setTargetAtTime(.0001,inicio+duracao-.08,.055);
+    osc.connect(ganho);brilho.connect(ganhoBrilho);
+    ganho.connect(ganhoMusicaAmbiente);ganhoBrilho.connect(ganhoMusicaAmbiente);
+    osc.start(inicio);brilho.start(inicio);
+    osc.stop(inicio+duracao);brilho.stop(inicio+duracao);
   }catch(e){}
 }
 function programarMusicaAmbiente(){
@@ -98,9 +104,11 @@ function programarMusicaAmbiente(){
     while(proximaNotaAmbiente<agora+1.1){
       const passo=indiceNotaAmbiente%MELODIA_CANTINHO_PET.length;
       const nota=MELODIA_CANTINHO_PET[passo];
-      tocarNotaAmbiente(nota,proximaNotaAmbiente,.56,.10);
-      if(passo%8===0)tocarNotaAmbiente(BAIXOS_CANTINHO_PET[Math.floor(passo/8)%BAIXOS_CANTINHO_PET.length],proximaNotaAmbiente,1.25,.035);
-      proximaNotaAmbiente+=.68;indiceNotaAmbiente++;
+      tocarNotaAmbiente(nota,proximaNotaAmbiente,.34,.13);
+      if(passo%4===0)tocarNotaAmbiente(BAIXOS_CANTINHO_PET[Math.floor(passo/8)%BAIXOS_CANTINHO_PET.length],proximaNotaAmbiente,.72,.045);
+      if(passo%4===2)tocarNotaAmbiente(MELODIA_CANTINHO_PET[(passo+2)%MELODIA_CANTINHO_PET.length]*.5,proximaNotaAmbiente+.17,.34,.032);
+      const ritmoSaltitante=[.34,.42,.34,.54];
+      proximaNotaAmbiente+=ritmoSaltitante[passo%ritmoSaltitante.length];indiceNotaAmbiente++;
     }
   }catch(e){console.warn('Música ambiente indisponível:',e)}
 }
