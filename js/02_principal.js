@@ -3836,7 +3836,10 @@ function adicionarTarefa(){
         habilidade=document.getElementById('nova-tarefa-habilidade')?.value||'';
   if(!txt)return mostrarToast('Digite uma tarefa.');
   const id=estado.tarefas.length?Math.max(...estado.tarefas.map(t=>Number(t.id)||0))+1:1;
-  estado.tarefas.push({id,texto:txt,recompensa:moedas,xp:20,tipo,habilidade,status:'pendente',foto:null,dias:[...diasSelecionadosNovaTarefa]});
+  const tarefa={id,texto:txt,recompensa:moedas,xp:20,tipo,habilidade,status:'pendente',foto:null,dias:[...diasSelecionadosNovaTarefa],atualizadoEm:Date.now()};
+  estado.tarefas.push(tarefa);
+  // Além do estado geral, escreve no nó por criança que a sincronização V2 escuta.
+  persistirTarefaIndividualV2(tarefa).catch(error=>console.warn('Falha ao publicar tarefa individual:',error));
   document.getElementById('nova-tarefa-texto').value='';
   diasSelecionadosNovaTarefa=[];
   document.querySelectorAll('#dias-nova-tarefa .dia-chip').forEach(c=>c.classList.remove('on'));
