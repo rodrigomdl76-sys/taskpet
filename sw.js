@@ -120,6 +120,28 @@ function buscarEGuardarMidia(request, event) {
     .then(resposta => resposta || caches.match(request))
     .then(resposta => resposta || Response.error());
 }
+function buscarStaleWhileRevalidate(request, event) {
+  const cachePromise = caches.open(CACHE_NAME);
+  const cacheResponsePromise = cachePromise.then(cache => cache.match(request));
+  const networkResponsePromise = fetch(new Request(request, {cache: 'no-cache'}))
+    .then(async response => {
+      if (response.ok && response.type === 'basic') {
+        const cache = await cachePromise;
+        await cache.put(request, response.clone());
+      }
+      return response;
+    });
+
+  event.waitUntil(networkResponsePromise.then(() => undefined).catch(error => {
+    console.warn('Não foi possível atualizar o arquivo estático em cache:', request.url, error);
+  }));
+
+  return cacheResponsePromise
+    .then(cached => cached || networkResponsePromise)
+    .catch(async () => (await cacheResponsePromise) || Response.error())
+    .then(response => response || Response.error());
+}
+
 self.addEventListener('fetch', event => {
   if (event.request.method !== 'GET') return;
 
@@ -143,6 +165,11 @@ self.addEventListener('fetch', event => {
 
   if (url.pathname.includes('/animacoes/') || url.pathname.includes('/assets/')) {
     event.respondWith(buscarEGuardarMidia(event.request, event));
+    return;
+  }
+
+  if (/\.(?:css|js)$/i.test(url.pathname)) {
+    event.respondWith(buscarStaleWhileRevalidate(event.request, event));
     return;
   }
 
