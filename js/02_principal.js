@@ -2129,6 +2129,10 @@ async function processarFotoCapturada(e){
       const blob=await new Promise(resolve=>canvas.toBlob(resolve,'image/jpeg',0.55));
       const t=estado.tarefas.find(item=>String(item.id)===String(idAtual));
       if(!t)return;
+      if(!window.confirm(`Deseja anexar esta foto à tarefa “${t.texto}”? Ela será enviada aos responsáveis junto com o pedido de aprovação.`)){
+        mostrarToast('📷 Foto não anexada.');
+        return;
+      }
       // Fallback imediato: a foto continua disponível mesmo se Storage falhar.
       t.foto=miniDataUrl;t.fotoUrl=null;t.fotoPath=null;t.status='pendente';
       if(blob){
