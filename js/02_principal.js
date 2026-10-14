@@ -1990,30 +1990,68 @@ async function inicializarPushBase(){
     }
   }catch(e){}
 }
+function atualizarStatusPushAparelho(texto, erro=false){
+  const el=document.getElementById('status-push');
+  if(!el)return;
+  el.textContent=texto;
+  el.style.color=erro?'#b91c1c':'#475569';
+}
 async function ativarPushCompleto(){
-  if(!('Notification' in window)){
-    mostrarToast('Este aparelho não suporta notificações.');
+  const botao=document.getElementById('btn-ativar-push-aparelho');
+  if(botao){botao.disabled=true;botao.textContent='⏳ Ativando push...';}
+  atualizarStatusPushAparelho('Verificando permissão de notificações...');
+  try{
+    if(!('Notification' in window)){
+      const msg='Este aparelho não suporta notificações.';
+      atualizarStatusPushAparelho(msg,true);
+      mostrarToast(msg);
+      return false;
+    }
+    if(!('serviceWorker' in navigator)){
+      const msg='Este navegador não oferece suporte ao serviço de notificações do app.';
+      atualizarStatusPushAparelho(msg,true);
+      mostrarToast(msg);
+      return false;
+    }
+    let perm=Notification.permission;
+    if(perm==='default'){
+      atualizarStatusPushAparelho('Aguardando você permitir as notificações...');
+      perm=await Notification.requestPermission();
+    }
+    if(perm!=='granted'){
+      const msg=perm==='denied'
+        ?'Permissão bloqueada. Libere notificações nas configurações do Android ou do navegador e tente novamente.'
+        :'Ativação cancelada. Toque novamente para permitir as notificações.';
+      atualizarStatusPushAparelho(msg,true);
+      mostrarToast(msg);
+      return false;
+    }
+    estado.notificacoesAtivas=true;
+    salvar();
+    atualizarBotaoLembrete();
+    atualizarStatusPushAparelho('Permissão concedida. Registrando este aparelho no Firebase...');
+    const token=await registrarTokenFcm();
+    if(token){
+      atualizarStatusPushAparelho('✅ Push ativo neste aparelho. Ele poderá receber avisos da família.');
+      mostrarAviso('🔔','Push ativado','Este aparelho receberá avisos da família mesmo com o app em segundo plano.');
+      return true;
+    }
+    let ultimo=null;
+    try{ultimo=JSON.parse(localStorage.getItem('ROTINAPET_ULTIMO_ERRO_FCM')||'null')}catch(e){}
+    const detalhe=ultimo
+      ?`${ultimo.code||ultimo.name||'Erro FCM'}: ${ultimo.message||'Não foi possível gerar o token.'}`
+      :'Não foi possível gerar o token FCM. Confira a conexão e tente novamente.';
+    atualizarStatusPushAparelho('⚠️ Push não ativado: '+detalhe,true);
+    mostrarAviso('🔔','Push não ativado',detalhe);
     return false;
-  }
-  let perm=Notification.permission;
-  if(perm==='default')perm=await Notification.requestPermission();
-  if(perm!=='granted'){
-    mostrarToast('Permissão de notificação negada no sistema.');
+  }catch(e){
+    const msg=e?.message||String(e);
+    atualizarStatusPushAparelho('⚠️ Falha ao ativar push: '+msg,true);
+    mostrarAviso('⚠️','Falha ao ativar push',msg);
     return false;
+  }finally{
+    if(botao){botao.disabled=false;botao.textContent='📲 Ativar push neste aparelho';}
   }
-  estado.notificacoesAtivas=true;
-  salvar();
-  atualizarBotaoLembrete();
-  const token=await registrarTokenFcm();
-  if(token){
-    mostrarAviso('🔔','Push ativado','Este aparelho receberá avisos da família mesmo com o app em segundo plano (após configurar a VAPID key).');
-    return true;
-  }
-  mostrarAviso('🔔','Notificações locais ativas',
-    FIREBASE_VAPID_KEY==='COLE_SUA_CHAVE_VAPID_AQUI'
-      ?'Execute diagnosticoFcmAtual() no console e verifique se sw.js está publicado na raiz do app.'
-      :'Token FCM não foi gerado. Verifique o Service Worker e o domínio autorizado no Firebase.');
-  return false;
 }
 function darRemedio(){
   const p=obterDadosPetAtual();
