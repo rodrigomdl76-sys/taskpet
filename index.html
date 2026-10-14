@@ -748,8 +748,21 @@
 <script>
 (() => {
   let finalizando = false;
+  let appLiberado = false;
+
+  function mostrarApp() {
+    if (appLiberado) return;
+    appLiberado = true;
+    requestAnimationFrame(() => requestAnimationFrame(() => {
+      document.documentElement.classList.remove('rp-starting');
+      const tela = document.getElementById('rp-startup-screen');
+      tela?.setAttribute('aria-hidden', 'true');
+      setTimeout(() => tela?.remove(), 280);
+    }));
+  }
+
   async function liberarApp() {
-    if (finalizando) return;
+    if (finalizando || appLiberado) return;
     finalizando = true;
     const limite = new Promise(resolve => setTimeout(resolve, 12000));
     const sincronizacao = window.__rotinapetInitialSync || Promise.resolve();
@@ -758,15 +771,10 @@
       typeof imagem.decode === 'function' ? imagem.decode().catch(() => undefined) : Promise.resolve()
     );
     await Promise.race([Promise.allSettled([sincronizacao, fontes, ...imagens]), limite]);
-    requestAnimationFrame(() => requestAnimationFrame(() => {
-      document.documentElement.classList.remove('rp-starting');
-      const tela = document.getElementById('rp-startup-screen');
-      tela?.setAttribute('aria-hidden', 'true');
-      setTimeout(() => tela?.remove(), 280);
-    }));
+    mostrarApp();
   }
   window.addEventListener('load', liberarApp, { once: true });
-  setTimeout(() => { if (document.readyState === 'complete') liberarApp(); }, 13000);
+  setTimeout(mostrarApp, 13000);
 })();
 </script>
 </body>
