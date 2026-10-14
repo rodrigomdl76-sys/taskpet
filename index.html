@@ -411,7 +411,16 @@
     <div style="display:flex;justify-content:space-between;font-size:8px;color:#64748b;margin-top:2px">
       <span>Mudo</span><span id="txt-volume-som">55%</span><span>Alto</span>
     </div>
-    <small style="font-size:8px;color:#64748b;margin-top:3px;display:block">Controla meows, efeitos e voz gravada do pet.</small>
+    <small style="font-size:8px;color:#64748b;margin-top:3px;display:block">Controla os efeitos e a voz do pet.</small>
+  </div>
+  <div class="section-card">
+    <label class="field-label">🎵 Música ambiente · Cantinho do Pet</label>
+    <label style="display:flex;align-items:center;justify-content:space-between;font-size:10px;font-weight:800;margin:7px 0 9px;gap:8px">Música de fundo <span><input type="checkbox" id="input-musica-ambiente" checked onchange="atualizarMusicaAmbiente(this.checked)"> <span id="txt-musica-ambiente">Ligada</span></span></label>
+    <input type="range" id="input-volume-musica" min="0" max="30" value="18" style="width:100%" oninput="atualizarVolumeMusicaAmbiente(this.value)">
+    <div style="display:flex;justify-content:space-between;font-size:8px;color:#64748b;margin-top:2px">
+      <span>Mudo</span><span id="txt-volume-musica">18%</span><span>Mais alto</span>
+    </div>
+    <small style="font-size:8px;color:#64748b;margin-top:3px;display:block">Volume independente dos efeitos. A música começa no primeiro toque.</small>
   </div>
   <div class="section-card">
     <label class="field-label">📸 Fotos das tarefas</label>
@@ -676,7 +685,7 @@
 <div class="banner-offline" id="banner-offline">📡 Sem conexão — as alterações serão sincronizadas quando a internet voltar.</div>
 <div class="banner-evento" id="banner-evento" onclick="abrirModalEventoSazonal()"></div>
 <script src="third_party/qrcode-generator/qrcode.js?v=local-qrcode-v1" defer></script>
-<script src="js/02_principal.js?v=sounds-cartoon-v1" defer></script>
+<script src="js/02_principal.js?v=ambiente-pet-v1" defer></script>
   <script src="js/03_extras_01.js" defer></script>
 <div id="modal-central-aventuras" class="modal-overlay"><div class="modal" style="max-width:360px"><div class="modal-title"><h3>🌟 Central de Aventuras</h3><button class="close-btn" onclick="fecharModal('modal-central-aventuras')">×</button></div><div id="central-aventuras-conteudo"></div></div></div>
 <div id="modal-bau-diario" class="modal-overlay"><div class="modal" style="max-width:320px;text-align:center"><div class="modal-title"><h3>🎁 Baú do Dia</h3><button class="close-btn" onclick="fecharModal('modal-bau-diario')">×</button></div><div id="bau-diario-conteudo"></div></div></div>
