@@ -1,10 +1,11 @@
-const CACHE_NAME = 'rotinapet-cache-v76';
+const CACHE_NAME = 'rotinapet-cache-v77';
 const RUNTIME_CACHE_NAME = 'rotinapet-media-v3';
 const KEEP_CACHES = new Set([CACHE_NAME, RUNTIME_CACHE_NAME]);
 const MAX_RUNTIME_ENTRIES = 100;
 const ASSETS = [
   "./index.html",
-  "./animacoes/fase1/visuais/ovo-gato-oculos.webp?v=ovo-animacoes-v20",
+  "./animacoes/fase1/01_parado.webp?v=ovo-animacoes-v23",
+  "./animacoes/fase1/visuais/ovo-gato-oculos.webp?v=ovo-animacoes-v23",
   "./animacoes/fase1/visuais/ovo-gato-samurai-thumb.webp",
   "./animacoes/fase1/visuais/ovo-gato-explorador-espacial.webp?v=ovo-visuais-v2",
   "./animacoes/fase1/visuais/ovo-gato-armadura-heroica.webp?v=ovo-visuais-v2",
@@ -41,7 +42,7 @@ const ASSETS = [
   "./css/11_premium_63.css",
 
   "./js/08_meu_pet.js?v=gestos-1",
-  "./js/09_gato_laranja.js?v=sparkle-toque-v3",
+  "./js/09_gato_laranja.js?v=sparkle-toque-v4",
   "./js/10_pet_companheiro.js?v=6",
   "./css/17_pet_no_chao.css?v=2",
   "./css/18_topo_limpo.css?v=seletor-pet-v1",
