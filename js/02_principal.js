@@ -68,6 +68,89 @@ function playSound(tipo){
   notas.forEach(n=>tocarNotaCartoon(...n));
   return true;
 }
+const MELODIA_CANTINHO_PET=[
+  523.25,659.25,783.99,659.25,587.33,659.25,880,783.99,
+  659.25,783.99,987.77,783.99,698.46,659.25,587.33,523.25,
+  523.25,659.25,783.99,880,783.99,659.25,587.33,659.25,
+  587.33,659.25,783.99,659.25,523.25,587.33,659.25,523.25
+];
+const BAIXOS_CANTINHO_PET=[261.63,220,174.61,196];
+let musicaAmbienteTimer=null,indiceNotaAmbiente=0,proximaNotaAmbiente=0,ganhoMusicaAmbiente=null,musicaAmbienteLiberada=false;
+function tocarNotaAmbiente(freq,inicio,duracao,volume=.10){
+  try{
+    const ctx=obterAudioContext(),osc=ctx.createOscillator(),ganho=ctx.createGain();
+    osc.type='sine';osc.frequency.setValueAtTime(freq,inicio);
+    ganho.gain.setValueAtTime(.0001,inicio);
+    ganho.gain.exponentialRampToValueAtTime(Math.max(.001,volume),inicio+.09);
+    ganho.gain.setTargetAtTime(.0001,inicio+duracao-.12,.08);
+    osc.connect(ganho);ganho.connect(ganhoMusicaAmbiente);
+    osc.start(inicio);osc.stop(inicio+duracao);
+  }catch(e){}
+}
+function programarMusicaAmbiente(){
+  if(!musicaAmbienteLiberada||estado.musicaAmbienteAtiva===false||document.hidden){pausarMusicaAmbiente();return}
+  try{
+    const ctx=obterAudioContext(),agora=ctx.currentTime;
+    if(!ganhoMusicaAmbiente){ganhoMusicaAmbiente=ctx.createGain();ganhoMusicaAmbiente.gain.value=0;ganhoMusicaAmbiente.connect(ctx.destination)}
+    const volume=Math.max(0,Math.min(.30,Number(estado.volumeMusicaAmbiente)||0));
+    ganhoMusicaAmbiente.gain.setTargetAtTime(volume,agora,.25);
+    if(!proximaNotaAmbiente)proximaNotaAmbiente=agora+.08;
+    while(proximaNotaAmbiente<agora+1.1){
+      const passo=indiceNotaAmbiente%MELODIA_CANTINHO_PET.length;
+      const nota=MELODIA_CANTINHO_PET[passo];
+      tocarNotaAmbiente(nota,proximaNotaAmbiente,.56,.10);
+      if(passo%8===0)tocarNotaAmbiente(BAIXOS_CANTINHO_PET[Math.floor(passo/8)%BAIXOS_CANTINHO_PET.length],proximaNotaAmbiente,1.25,.035);
+      proximaNotaAmbiente+=.68;indiceNotaAmbiente++;
+    }
+  }catch(e){console.warn('Música ambiente indisponível:',e)}
+}
+function iniciarMusicaAmbiente(){
+  if(estado.musicaAmbienteAtiva===false||document.hidden||!musicaAmbienteLiberada)return false;
+  try{
+    const ctx=obterAudioContext();
+    if(!ganhoMusicaAmbiente){ganhoMusicaAmbiente=ctx.createGain();ganhoMusicaAmbiente.gain.value=0;ganhoMusicaAmbiente.connect(ctx.destination)}
+    if(!proximaNotaAmbiente)proximaNotaAmbiente=ctx.currentTime+.08;
+    ganhoMusicaAmbiente.gain.setTargetAtTime(Math.max(0,Math.min(.30,Number(estado.volumeMusicaAmbiente)||0)),ctx.currentTime,.25);
+    if(!musicaAmbienteTimer)musicaAmbienteTimer=setInterval(programarMusicaAmbiente,250);
+    programarMusicaAmbiente();
+    return true;
+  }catch(e){return false}
+}
+function pausarMusicaAmbiente(){
+  if(musicaAmbienteTimer){clearInterval(musicaAmbienteTimer);musicaAmbienteTimer=null}
+  if(ganhoMusicaAmbiente&&audioCtx){
+    const agora=audioCtx.currentTime;
+    ganhoMusicaAmbiente.gain.cancelScheduledValues(agora);
+    ganhoMusicaAmbiente.gain.setTargetAtTime(0,agora,.08);
+  }
+}
+function atualizarMusicaAmbiente(ativa){
+  estado.musicaAmbienteAtiva=!!ativa;
+  musicaAmbienteLiberada=true;
+  if(estado.musicaAmbienteAtiva)iniciarMusicaAmbiente();else pausarMusicaAmbiente();
+  renderizarMusicaAmbientePainel();
+  salvar();
+}
+function atualizarVolumeMusicaAmbiente(valor){
+  const n=Math.max(0,Math.min(30,parseInt(valor,10)||0));
+  estado.volumeMusicaAmbiente=n/100;
+  if(ganhoMusicaAmbiente&&audioCtx)ganhoMusicaAmbiente.gain.setTargetAtTime(estado.volumeMusicaAmbiente,audioCtx.currentTime,.12);
+  const texto=document.getElementById('txt-volume-musica');
+  if(texto)texto.textContent=n+'%';
+  salvar();
+}
+function renderizarMusicaAmbientePainel(){
+  const input=document.getElementById('input-musica-ambiente');
+  const texto=document.getElementById('txt-musica-ambiente');
+  const volume=document.getElementById('input-volume-musica');
+  const volumeTexto=document.getElementById('txt-volume-musica');
+  const ativa=estado.musicaAmbienteAtiva!==false;
+  const pct=Math.round(Math.max(0,Math.min(.30,Number(estado.volumeMusicaAmbiente)||0))*100);
+  if(input)input.checked=ativa;
+  if(texto)texto.textContent=ativa?'Ligada':'Desligada';
+  if(volume)volume.value=pct;
+  if(volumeTexto)volumeTexto.textContent=pct+'%';
+}
 function somConquista(){playSound('nivel')}
 function somBauLendario(){playSound('nivel')}
 function somTransicaoMagicaPet(){
@@ -687,7 +770,7 @@ let estado={
   notificacoesAtivas:false,
   surpresaResgatadaData:null,
   metasPersonalizadas:[],
-  volumeSom:0.55,sonsAtivos:true,
+  volumeSom:0.55,sonsAtivos:true,musicaAmbienteAtiva:true,volumeMusicaAmbiente:0.18,
   logAtividades:[],avisosMissao:[],
   ultimoAcaoPet:{},
   ultimoDecay:null
@@ -3381,6 +3464,7 @@ function renderizarVolumeSomPainel(){
   const estadoEl=document.getElementById('txt-sons-ativos');
   if(controle)controle.checked=estado.sonsAtivos!==false;
   if(estadoEl)estadoEl.textContent=estado.sonsAtivos===false?'Desligados':'Ligados';
+  renderizarMusicaAmbientePainel();
 }
 function limparTodasFotosTarefas(){
   const fotos=(estado.tarefas||[]).filter(t=>t.foto||t.fotoUrl||t.fotoPath);
@@ -5249,6 +5333,8 @@ window.addEventListener('DOMContentLoaded',()=>{
     tocarClique();
   };
   document.addEventListener('pointerdown',tocarNoBotao,true);
+  document.addEventListener('pointerdown',()=>{musicaAmbienteLiberada=true;iniciarMusicaAmbiente()},{once:true});
+  document.addEventListener('visibilitychange',()=>{if(document.hidden)pausarMusicaAmbiente();else if(estado.musicaAmbienteAtiva!==false&&musicaAmbienteLiberada)iniciarMusicaAmbiente()});
   document.addEventListener('click',evento=>{if(evento.detail===0||!window.PointerEvent)tocarNoBotao(evento)},true);
   if(typeof estado.volumeSom!=='number')estado.volumeSom=0.55;
   if(!Array.isArray(estado.logAtividades))estado.logAtividades=[];
