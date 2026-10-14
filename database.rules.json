@@ -9,7 +9,7 @@
             "$field": {
               ".write": "auth != null && auth.token.familyId === $familyId && auth.token.familyRole === 'child' && $field.matches(/^(personalizacao|gestosDesbloqueados|palcoAtual|palcosComprados|decoracaoItens|extraDiaRemovida|avisosMissao|miniPetsComprados|miniPetAtivo|bauDatasResgatadas|historicoRecompensas|avisosRecompensas|acessorios|conquistas|habilidades|desafiosMathAcertos|dinheiroAcumulado|fundoAtual|fundosComprados|temaInterfaceAtual|historicoConclusoes|nomePet|lembreteEnviadoData|metaMoedas|moedas|onboardingVistoCrianca|petAtual|pets|recompensas|sonhos|registroDiario|solicitacoesPremios|streak|surpresaResgatadaData|tarefas|tarefasHojeCount|timerFim|ultimoDiaAcesso|ultimoDiaConcluido|ultimoStreakPremiado|vozSalva|ultimoAcaoPet|ultimoDecay|desafioDiarioData|desafioDiarioFeitoData|bauDiarioAbertoData|escudosOfensiva|adesivos|eventoSemanalData|missaoFamilia|mensagensPais|historicoEngajamento|schemaTarefas|criancas|criancasDados|criancaAtivaId)$/)"
             },
-            ".validate": "!newData.hasChildren(['pinHash', 'pinBloqueadoAte', 'pinTentativasFalhas', 'pinPersonalizado', 'privacidadeAceita', 'onboardingVistoPais', 'emailsRecuperacao', 'emailRecuperacao', 'pinPais'])"
+            ".validate": "!newData.child('pinHash').exists() && !newData.child('pinBloqueadoAte').exists() && !newData.child('pinTentativasFalhas').exists() && !newData.child('pinPersonalizado').exists() && !newData.child('privacidadeAceita').exists() && !newData.child('onboardingVistoPais').exists() && !newData.child('emailsRecuperacao').exists() && !newData.child('emailRecuperacao').exists() && !newData.child('pinPais').exists()"
           },
           "pais": {
             "segredos": {
