@@ -38,25 +38,45 @@
   }, { once: true });
 })();
 </script>
-<link rel="stylesheet" href="css/14_pet_companheiro.css?v=5">
+
 <link rel="manifest" href="manifest.json">
 <link rel="icon" type="image/webp" href="icon-192.webp?v=cat-crown-v1">
 <link rel="apple-touch-icon" sizes="192x192" href="icon-192.png?v=cat-crown-v2">
-<script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.9.3/dist/confetti.browser.min.js" defer></script>
-<!-- Firebase Compat Core, Auth, Database e Messaging (FCM) -->
-<script src="https://www.gstatic.com/firebasejs/12.18.0/firebase-app-compat.js" defer></script>
-<script src="https://www.gstatic.com/firebasejs/12.18.0/firebase-auth-compat.js" defer></script>
-<script src="https://www.gstatic.com/firebasejs/12.18.0/firebase-functions-compat.js" defer></script>
-<script src="https://www.gstatic.com/firebasejs/12.18.0/firebase-database-compat.js" defer></script>
-<script src="https://www.gstatic.com/firebasejs/12.18.0/firebase-messaging-compat.js" defer></script>
-<script src="https://www.gstatic.com/firebasejs/12.18.0/firebase-storage-compat.js" defer></script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<link rel="stylesheet" href="css/14_pet_companheiro.css?v=5">
 <link rel="stylesheet" href="css/01_base.css?v=texto-modal-escuro-v1">
-<script src="js/01_menu.js?v=back-3" defer></script>
 <link rel="stylesheet" href="css/02_menu.css">
 <link rel="stylesheet" href="css/04_animacoes_pet.css?v=efeitos-reacoes-v1">
-
 <link rel="stylesheet" href="css/05_evolucao_pet.css">
 <link rel="stylesheet" href="css/13_gato_laranja.css?v=ovo-gato-brilhos-v1">
+<link rel="stylesheet" href="css/06_extras_01.css">
+<link rel="stylesheet" href="css/07_extras_02.css">
+<link rel="stylesheet" href="css/08_interface.css">
+<link rel="stylesheet" href="css/10_premium_62.css">
+<link rel="stylesheet" href="css/11_premium_63.css">
+<link rel="stylesheet" href="css/17_pet_no_chao.css?v=2">
+<link rel="stylesheet" href="css/18_topo_limpo.css?v=seletor-pet-v1">
+<link rel="stylesheet" href="css/19_plataforma_pet.css?v=1">
+<link rel="stylesheet" href="css/16_evolucao_interativa.css?v=1">
+<link rel="stylesheet" href="css/20_palcos.css?v=2">
+<link rel="stylesheet" href="css/21_home_v2.css?v=seletor-pet-v1">
+<link rel="stylesheet" href="css/23_axolote.css?v=1">
+<link rel="stylesheet" href="css/24_atelie_pet.css?v=visuais-animados-v1">
+<link rel="stylesheet" href="css/22_gestos.css?v=5">
 </head>
 <body class="cenario-ceu"><div id="rp-startup-screen" role="status" aria-live="polite"><div class="rp-startup-card"><div class="rp-startup-mascot" aria-hidden="true">🐾</div><div class="rp-startup-spinner" aria-hidden="true"></div><strong class="rp-startup-title">Preparando seu cantinho…</strong><span class="rp-startup-caption">Carregando o pet, os cenários e suas aventuras.</span></div></div>
 <!-- Tela Login por E-mail -->
@@ -684,36 +704,58 @@
 <div class="toast" id="toast"></div>
 <div class="banner-offline" id="banner-offline">📡 Sem conexão — as alterações serão sincronizadas quando a internet voltar.</div>
 <div class="banner-evento" id="banner-evento" onclick="abrirModalEventoSazonal()"></div>
-<script src="third_party/qrcode-generator/qrcode.js?v=local-qrcode-v1" defer></script>
-<script src="js/02_principal.js?v=ambiente-animado-v3" defer></script>
-  <script src="js/03_extras_01.js" defer></script>
+
+
+  
 <div id="modal-central-aventuras" class="modal-overlay"><div class="modal" style="max-width:360px"><div class="modal-title"><h3>🌟 Central de Aventuras</h3><button class="close-btn" onclick="fecharModal('modal-central-aventuras')">×</button></div><div id="central-aventuras-conteudo"></div></div></div>
 <div id="modal-bau-diario" class="modal-overlay"><div class="modal" style="max-width:320px;text-align:center"><div class="modal-title"><h3>🎁 Baú do Dia</h3><button class="close-btn" onclick="fecharModal('modal-bau-diario')">×</button></div><div id="bau-diario-conteudo"></div></div></div>
-<script src="js/04_engajamento.js?v=mesada-tarefas-v1" defer></script><link rel="stylesheet" href="css/06_extras_01.css">
+
 <div id="modal-resumo-meta" class="modal-overlay"><div class="modal" style="max-width:340px"><div class="modal-title"><h3>🎯 Minha meta</h3><button class="close-btn" onclick="fecharModal('modal-resumo-meta')">×</button></div><div id="resumo-meta-conteudo"></div></div></div>
 <div id="modal-resumo-hoje" class="modal-overlay"><div class="modal" style="max-width:340px"><div class="modal-title"><h3>🗓️ Aventura de hoje</h3><button class="close-btn" onclick="fecharModal('modal-resumo-hoje')">×</button></div><div id="resumo-hoje-conteudo"></div></div></div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.9.3/dist/confetti.browser.min.js" defer></script>
+<!-- Firebase Compat Core, Auth, Database e Messaging (FCM) -->
+<script src="https://www.gstatic.com/firebasejs/12.18.0/firebase-app-compat.js" defer></script>
+<script src="https://www.gstatic.com/firebasejs/12.18.0/firebase-auth-compat.js" defer></script>
+<script src="https://www.gstatic.com/firebasejs/12.18.0/firebase-functions-compat.js" defer></script>
+<script src="https://www.gstatic.com/firebasejs/12.18.0/firebase-database-compat.js" defer></script>
+<script src="https://www.gstatic.com/firebasejs/12.18.0/firebase-messaging-compat.js" defer></script>
+<script src="https://www.gstatic.com/firebasejs/12.18.0/firebase-storage-compat.js" defer></script>
+<script src="js/01_menu.js?v=back-3" defer></script>
+<script src="third_party/qrcode-generator/qrcode.js?v=local-qrcode-v1" defer></script>
+<script src="js/02_principal.js?v=ambiente-animado-v3" defer></script>
+<script src="js/03_extras_01.js" defer></script>
+<script src="js/04_engajamento.js?v=mesada-tarefas-v1" defer></script>
 <script src="js/05_interface.js" defer></script>
-<link rel="stylesheet" href="css/07_extras_02.css"><link rel="stylesheet" href="css/08_interface.css">
 <script src="js/06_premium.js?v=premium-reward-v2" defer></script>
-
-
-<link rel="stylesheet" href="css/10_premium_62.css">
-
-<link rel="stylesheet" href="css/11_premium_63.css">
-<script src="js/08_meu_pet.js?v=gestos-1" defer></script><script src="js/09_gato_laranja.js?v=sparkle-toque-v3" defer></script>
-
+<script src="js/08_meu_pet.js?v=gestos-1" defer></script>
+<script src="js/09_gato_laranja.js?v=sparkle-toque-v3" defer></script>
 <script src="js/10_pet_companheiro.js?v=6" defer></script>
-<link rel="stylesheet" href="css/17_pet_no_chao.css?v=2">
-<link rel="stylesheet" href="css/18_topo_limpo.css?v=seletor-pet-v1">
-<link rel="stylesheet" href="css/19_plataforma_pet.css?v=1">
-
-<link rel="stylesheet" href="css/16_evolucao_interativa.css?v=1">
-<link rel="stylesheet" href="css/20_palcos.css?v=2">
-<link rel="stylesheet" href="css/21_home_v2.css?v=seletor-pet-v1">
-<link rel="stylesheet" href="css/23_axolote.css?v=1">
-<link rel="stylesheet" href="css/24_atelie_pet.css?v=visuais-animados-v1">
 <script src="js/12_home_nav.js?v=2" defer></script>
-<link rel="stylesheet" href="css/22_gestos.css?v=5">
 <script src="js/13_gestos.js?v=4" defer></script>
 <script src="js/16_axolote.js?v=axolote-fase1-visual-v1" defer></script>
 <script src="js/17_atelie_pet.js?v=ovo-brilhos-v1" defer></script>
