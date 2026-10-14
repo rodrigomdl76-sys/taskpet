@@ -9,8 +9,8 @@ service firebase.storage {
         && request.auth.token.familyId == familyId
         && request.auth.token.familyRole in ['parent', 'child']
         && request.resource.size <= 2 * 1024 * 1024
-        && request.resource.contentType == 'image/jpeg'
-        && fileName.matches('^[0-9]{4}-[0-9]{2}-[0-9]{2}\\.jpg$');
+        && request.resource.contentType.matches('image/(jpeg|webp)')
+        && fileName.matches('^[0-9]{4}-[0-9]{2}-[0-9]{2}(_[0-9a-zA-Z-]+)?\\.(jpg|jpeg|webp)$');
     }
   }
 }
