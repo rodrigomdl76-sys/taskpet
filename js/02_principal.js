@@ -2365,12 +2365,36 @@ function idsTarefasExcluidas(){
 function registrarTarefaExcluida(id){
   estado.tarefasExcluidas=Array.from(new Set([...(Array.isArray(estado.tarefasExcluidas)?estado.tarefasExcluidas:[]).map(String),String(id)]));
 }
+function preferirStatusTarefa(local,remota){
+  const dia=hojeLocal();
+  const registroLocal=local?.registros?.[dia]||{};
+  const registroRemoto=remota?.registros?.[dia]||{};
+  const statusLocal=registroLocal.status||local?.status||'pendente';
+  const statusRemoto=registroRemoto.status||remota?.status||'pendente';
+  if(statusLocal===statusRemoto)return null;
+
+  // Um relógio adiantado não deve fazer uma cópia pendente apagar um envio.
+  // A recusa é a transição que devolve a tarefa para "pendente".
+  if(statusLocal==='aguardando_aprovacao'&&statusRemoto==='pendente'){
+    const enviada=Number(registroLocal.enviadaEm)||0;
+    const recusada=Number(registroRemoto.recusadaEm)||0;
+    return recusada>enviada?remota:local;
+  }
+  if(statusLocal==='pendente'&&statusRemoto==='aguardando_aprovacao'){
+    const recusada=Number(registroLocal.recusadaEm)||0;
+    const enviada=Number(registroRemoto.enviadaEm)||0;
+    return recusada>enviada?local:remota;
+  }
+  return null;
+}
 function mergeTarefasPorVersao(locais,remotas){
   const mapa=new Map(),excluidas=idsTarefasExcluidas();
   (Array.isArray(locais)?locais:[]).forEach(t=>{if(t&&t.id!=null&&!excluidas.has(String(t.id)))mapa.set(String(t.id),t)});
   (Array.isArray(remotas)?remotas:[]).forEach(r=>{
     if(!r||r.id==null||excluidas.has(String(r.id)))return;
     const chave=String(r.id),l=mapa.get(chave);
+    const statusPreferido=l?preferirStatusTarefa(l,r):null;
+    if(statusPreferido){mapa.set(chave,statusPreferido);return;}
     const tl=Number(l?.atualizadoEm)||0,tr=Number(r.atualizadoEm)||0;
     if(!l||tr>=tl)mapa.set(chave,r);
   });
