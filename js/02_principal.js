@@ -2001,6 +2001,7 @@ function resgatarBauFamiliar(){
 const FIREBASE_VAPID_KEY='BKI1F3y46HUD2RLIsdq5sWTPox-6FeUE3y7EnmhC6S5G8gLGqrQYkIoX_J5mEu9bDl3Aaze8diaThF38gqdcCVM';
 let fcmMessaging=null;
 let fcmTokenAtual=null;
+let fcmForegroundListenerInstalado=false;
 function caminhoTokensFcm(){
   return `rotinapet/familias/${codigoFamilia}/fcmTokens`;
 }
@@ -2022,6 +2023,21 @@ async function salvarTokenFcmNaFamilia(token){
   }
 }
 async function registrarTokenFcm(){
+  if(window.__rotinapetInitialSync){
+    try{
+      await Promise.race([
+        window.__rotinapetInitialSync,
+        new Promise((_,reject)=>setTimeout(()=>reject(new Error('timeout da autenticação familiar')),12000))
+      ]);
+    }catch(e){
+      console.warn('FCM aguardou a sessão familiar:',e);
+      return null;
+    }
+  }
+  if(!sincronizacaoNuvemAtiva||!acessoFamiliar?.role||!localStorage.getItem('ROTINAPET_UID')){
+    console.warn('FCM aguardando autenticação e vínculo familiar confirmados.');
+    return null;
+  }
   if(!window.firebase||!firebase.messaging){
     console.error('FCM indisponível: SDK Firebase Messaging não carregado.',{
       firebase:!!window.firebase,
@@ -2059,16 +2075,28 @@ async function registrarTokenFcm(){
     });
 
     if(token)await salvarTokenFcmNaFamilia(token);
-    fcmMessaging.onMessage(payload=>{
-      const n=payload.notification||{};
-      const d=payload.data||{};
-      const titulo=n.title||d.title||'🐾 RotinaPet';
-      const corpo=n.body||d.body||'Nova atividade na família';
-      mostrarToast('🔔 '+titulo+': '+corpo);
-      if(Notification.permission==='granted'){
-        try{new Notification(titulo,{body:corpo,tag:d.tag||'rotinapet-fg'})}catch(e){}
-      }
-    });
+    if(!fcmForegroundListenerInstalado){
+      fcmMessaging.onMessage(async payload=>{
+        const n=payload.notification||{};
+        const d=payload.data||{};
+        const titulo=n.title||d.title||'🐾 RotinaPet';
+        const corpo=n.body||d.body||'Nova atividade na família';
+        mostrarToast('🔔 '+titulo+': '+corpo);
+        if(Notification.permission==='granted'){
+          try{
+            const registro=await navigator.serviceWorker.ready;
+            await registro.showNotification(titulo,{
+              body:corpo,
+              icon:d.icon||'./icon-192.png',
+              badge:d.badge||'./icon-192.png',
+              tag:d.tag||'rotinapet-fg',
+              data:{url:d.url||(location.pathname+location.search),...d}
+            });
+          }catch(e){console.warn('Aviso em primeiro plano via Service Worker:',e)}
+        }
+      });
+      fcmForegroundListenerInstalado=true;
+    }
     return token;
   }catch(e){
     const detalhes={
@@ -2124,10 +2152,13 @@ function diagnosticoFcmAtual(){
 async function inicializarPushBase(){
   if(!('Notification' in window)||!('serviceWorker' in navigator))return;
   try{
+    // A permissão e o estado da família só são confiáveis depois da autenticação
+    // e da primeira sincronização com o Firebase.
+    if(window.__rotinapetInitialSync)await window.__rotinapetInitialSync;
     if(Notification.permission==='granted'&&estado.notificacoesAtivas){
       await registrarTokenFcm();
     }
-  }catch(e){}
+  }catch(e){console.warn('Inicialização do push adiada:',e)}
 }
 function atualizarStatusPushAparelho(texto, erro=false){
   const el=document.getElementById('status-push');
