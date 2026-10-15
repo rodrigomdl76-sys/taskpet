@@ -848,26 +848,50 @@ function verificarResetDiario(){
     }
   }
 
-  // NOVO: cada dia recebe um registro próprio. O histórico dos dias anteriores
-  // permanece em t.registros, mas o dia atual SEMPRE começa pendente.
+  // Cada dia recebe um registro próprio. Pedidos ainda aguardando os pais
+  // atravessam a virada do dia para não desaparecerem ao reabrir o app.
   estado.tarefas.forEach(t=>{
     if(t.extraRotativa&&t.dataSugerida!==hojeStr)return;
     t.registros=t.registros||{};
-    t.registros[hojeStr]={
-      status:'pendente',
-      foto:null,
-      fotoUrl:null,
-      fotoPath:null,
-      atualizadoEm:Date.now()
-    };
-    t.status='pendente';
-    t.foto=null;
-    t.fotoUrl=null;
-    t.fotoPath=null;
+    const registroHoje=t.registros[hojeStr];
+    const manterAprovacaoPendente=
+      registroHoje?.status==='aguardando_aprovacao'||
+      (!registroHoje&&t.status==='aguardando_aprovacao');
+    const registrosAguardando=Object.values(t.registros)
+      .filter(r=>r&&r.status==='aguardando_aprovacao')
+      .sort((a,b)=>(Number(a.enviadaEm)||Number(a.atualizadoEm)||0)-(Number(b.enviadaEm)||Number(b.atualizadoEm)||0));
+    const registroPendente=registroHoje?.status==='aguardando_aprovacao'
+      ?registroHoje
+      :(registrosAguardando[registrosAguardando.length-1]||{});
+    const agora=Date.now();
+    if(manterAprovacaoPendente){
+      t.registros[hojeStr]={
+        ...registroPendente,
+        status:'aguardando_aprovacao',
+        foto:registroPendente.foto??t.foto??null,
+        fotoUrl:registroPendente.fotoUrl??t.fotoUrl??null,
+        fotoPath:registroPendente.fotoPath??t.fotoPath??null,
+        atualizadoEm:agora
+      };
+      t.status='aguardando_aprovacao';
+      t.foto=t.registros[hojeStr].foto;
+      t.fotoUrl=t.registros[hojeStr].fotoUrl;
+      t.fotoPath=t.registros[hojeStr].fotoPath;
+    }else{
+      t.registros[hojeStr]={
+        status:'pendente',
+        foto:null,
+        fotoUrl:null,
+        fotoPath:null,
+        atualizadoEm:agora
+      };
+      t.status='pendente';
+      t.foto=null;
+      t.fotoUrl=null;
+      t.fotoPath=null;
+    }
     t.ultimoResetEm=hojeStr;
-    // Importante para o merge V2: impede uma versão antiga/aprovada do Firebase
-    // de vencer o reset recém-feito quando as tarefas individuais sincronizam.
-    t.atualizadoEm=Date.now();
+    t.atualizadoEm=agora;
   });
   estado.tarefasHojeCount=0;
   estado.ultimoDiaAcesso=hojeStr;
