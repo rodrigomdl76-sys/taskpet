@@ -1009,6 +1009,11 @@ function aplicarTarefasDaCriancaSemPerderCadastro(tarefasBase,tarefasFilha){
   if(base.length)return base;
   return filha;
 }
+function mesclarDadosPerfilCriancaAtivo(perfilSalvo,dadosAtuais){
+  // O filho ativo também existe no estado do topo. Esse estado é atualizado a cada
+  // gravação; o perfil aninhado pode estar desatualizado até a troca de criança.
+  return {...(perfilSalvo||{}),...(dadosAtuais||{})};
+}
 function aplicarEstadoRemotoComMerge(d){
   if(!d||typeof d!=='object')return;
   const tarefasRemotas=Array.isArray(d.tarefas)?d.tarefas:null;
@@ -1025,7 +1030,7 @@ function aplicarEstadoRemotoComMerge(d){
   const tarefasAntesDosDados=estado.tarefas;
   if(dadosCriancaRemotos){
     const dadosAtuais=capturarDadosCrianca();
-    const perfilRemoto={...dadosAtuais,...dadosCriancaRemotos};
+    const perfilRemoto=mesclarDadosPerfilCriancaAtivo(dadosCriancaRemotos,dadosAtuais);
     // O estado ativo no topo da família é a versão mais recente do filho ativo.
     if(d.personalizacao!==undefined)perfilRemoto.personalizacao=d.personalizacao;
     aplicarDadosCrianca(perfilRemoto);
