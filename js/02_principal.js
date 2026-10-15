@@ -2431,6 +2431,12 @@ function preferirStatusTarefa(local,remota){
   const statusRemoto=registroRemoto.status||remota?.status||'pendente';
   if(statusLocal===statusRemoto)return null;
 
+  // Um pagamento confirmado é terminal no dia: cópias antigas pendentes não
+  // podem devolver a tarefa para a lista da criança nem apagar a recompensa.
+  const localPago=statusLocal==='aprovada'&&Boolean(registroLocal.recompensaPagaEm);
+  const remotoPago=statusRemoto==='aprovada'&&Boolean(registroRemoto.recompensaPagaEm);
+  if(localPago!==remotoPago)return localPago?local:remota;
+
   // Um relógio adiantado não deve fazer uma cópia pendente apagar um envio.
   // A recusa é a transição que devolve a tarefa para "pendente".
   if(statusLocal==='aguardando_aprovacao'&&statusRemoto==='pendente'){
@@ -3799,8 +3805,6 @@ async function aprovarTarefaPais(id){
     estado.missaoFamilia.progresso=Math.min(Number(estado.missaoFamilia.alvo)||20,(Number(estado.missaoFamilia.progresso)||0)+1);
     estado.eventoSemanalProgresso=(Number(estado.eventoSemanalProgresso)||0)+1;
   }
-  persistirTarefaIndividualV2(t).catch(e=>console.warn('Tarefa individual:',e));
-  salvar();
   idTarefaRecemAprovada=id;
   if(estado.tarefasHojeCount===1)enfileirarRecompensaCrianca({tipo:'bau',data:hoje});
   const liberouOfensiva=registrarConclusaoDoDia();
@@ -3818,7 +3822,30 @@ async function aprovarTarefaPais(id){
   estado.avisosMissao=estado.avisosMissao.slice(-10);
   marcarConquistas();
   registrarLogAtividade(`Tarefa aprovada: ${t.texto} (+${recompensa}🪙)`);
-  mostrarToast('✅ Aprovada! A criança verá suas recompensas ao entrar.');
+
+  // Só confirma no painel depois que a tarefa e as recompensas foram gravadas.
+  const sincronizacaoDisponivel=sincronizacaoNuvemAtiva&&dbFirebase&&navigator.onLine&&!cargaNuvemPendente;
+  let gravouNaNuvem=false;
+  if(sincronizacaoDisponivel){
+    try{
+      const [tarefaGravada,estadoGravado]=await Promise.all([
+        persistirTarefaIndividualV2(t),
+        salvar()
+      ]);
+      gravouNaNuvem=Boolean(tarefaGravada&&estadoGravado);
+    }catch(error){
+      console.warn('Falha ao persistir aprovação e recompensas:',error);
+      marcarFilaSync(true);
+    }
+  }else{
+    await salvar();
+  }
+
+  if(gravouNaNuvem||!sincronizacaoDisponivel){
+    mostrarToast('✅ Aprovada! A criança verá suas recompensas ao entrar.');
+  }else{
+    mostrarToast('⚠️ Aprovada neste aparelho; a sincronização ainda não confirmou.');
+  }
   renderizarPainelPais();
   atualizarTela();
 }
