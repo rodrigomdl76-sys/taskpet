@@ -100,3 +100,20 @@ test('aprovação paga remota prevalece sobre cópia local pendente', () => {
 
   assert.equal(mergeTarefas([pendenteLocal], [aprovadoRemoto])[0].status, 'aprovada');
 });
+
+const perfilMergeStart = appSource.indexOf('function mesclarDadosPerfilCriancaAtivo(');
+const perfilMergeEnd = appSource.indexOf('function aplicarEstadoRemotoComMerge(', perfilMergeStart);
+assert(perfilMergeStart >= 0 && perfilMergeEnd > perfilMergeStart, 'função de mesclagem do perfil ativo encontrada');
+const mergePerfilAtivo = new Function(
+  `${appSource.slice(perfilMergeStart, perfilMergeEnd)}\nreturn mesclarDadosPerfilCriancaAtivo;`
+)();
+
+test('perfil ativo usa o saldo atualizado do estado principal', () => {
+  const perfilSalvoAntigo = { moedas: 12, pets: { gato: { nivel: 3, xp: 10 } } };
+  const estadoPrincipalAtualizado = { moedas: 27, pets: { gato: { nivel: 4, xp: 5 } } };
+
+  const mesclado = mergePerfilAtivo(perfilSalvoAntigo, estadoPrincipalAtualizado);
+
+  assert.equal(mesclado.moedas, 27);
+  assert.deepEqual(mesclado.pets, { gato: { nivel: 4, xp: 5 } });
+});
