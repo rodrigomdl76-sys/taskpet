@@ -199,7 +199,13 @@
     }
     if(estado?.petAtual!=='gato')return;
     const gestoLiberado=window.gestoPetLiberado?.(a) && (a==='pulinho'||a==='giro');
-    if(a==='idle'||(!arquivos[f]?.[a]&&!gestoLiberado))return;
+    if(a==='idle')return;
+    if(!arquivos[f]?.[a]&&!gestoLiberado){
+      // A fase pode não ter um WebP para esta ação (ex.: brincar na fase 2).
+      // Limpa a animação anterior para ela não ficar presa como resposta.
+      acao='';chave='';mostrar();
+      return;
+    }
     img?.classList.remove('gesto-css-pulinho','gesto-css-giro');
     const gestoPorCss=gestoLiberado&&!gestos[f]?.[a];
     if(!gestoPorCss){
