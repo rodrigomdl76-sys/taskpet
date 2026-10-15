@@ -66,3 +66,37 @@ test('aceita novo envio feito depois de uma recusa', () => {
 
   assert.equal(mergeTarefas([local], [remoto])[0].status, 'aguardando_aprovacao');
 });
+
+test('aprovação paga prevalece sobre cópia pendente antiga', () => {
+  const aprovado = {
+    id: 'tarefa-1',
+    status: 'aprovada',
+    atualizadoEm: 2000,
+    registros: { [hoje]: { status: 'aprovada', recompensaPagaEm: 2000 } }
+  };
+  const pendenteAntiga = {
+    id: 'tarefa-1',
+    status: 'pendente',
+    atualizadoEm: 3000,
+    registros: { [hoje]: { status: 'pendente' } }
+  };
+
+  assert.equal(mergeTarefas([aprovado], [pendenteAntiga])[0].status, 'aprovada');
+});
+
+test('aprovação paga remota prevalece sobre cópia local pendente', () => {
+  const pendenteLocal = {
+    id: 'tarefa-1',
+    status: 'pendente',
+    atualizadoEm: 3000,
+    registros: { [hoje]: { status: 'pendente' } }
+  };
+  const aprovadoRemoto = {
+    id: 'tarefa-1',
+    status: 'aprovada',
+    atualizadoEm: 2000,
+    registros: { [hoje]: { status: 'aprovada', recompensaPagaEm: 2000 } }
+  };
+
+  assert.equal(mergeTarefas([pendenteLocal], [aprovadoRemoto])[0].status, 'aprovada');
+});
