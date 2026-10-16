@@ -45,11 +45,10 @@
     else trocar();
   }
   function idlePersonalizadoUrl(){
-    if(fase()!==1)return '';
-    try{return String(window.obterIdlePersonalizadoGato?.()||'').trim()}catch(_){return ''}
+    try{return String(window.obterIdlePersonalizadoGato?.(fase())||'').trim()}catch(_){return ''}
   }
   function caminho(f,a){
-    if(f===1&&a==='idle'){
+    if(a==='idle'){
       const personalizado=idlePersonalizadoUrl();
       if(personalizado)return `${personalizado}${personalizado.includes('?')?'&':'?'}v=${encodeURIComponent(versaoAnimacoes)}`;
     }
@@ -162,12 +161,12 @@
     const f=fase();
     const pet=document.getElementById('pet-principal');
     pet?.style.setProperty('--pet-body-shift-x',f===1?'10%':'0%');
-    const visualEquipado=f===1&&!!idlePersonalizadoUrl();
+    const visualEquipado=!!idlePersonalizadoUrl();
     const pedido=acao || ((new Date().getHours()>=21 || new Date().getHours()<7)&&!visualEquipado?'dormir':'idle');
     const a=(arquivos[f][pedido]||gestos[f]?.[pedido])?pedido:'idle';
     sincronizarBrilhosOvo(!!window.ovoGatoEstilosoEquipado?.()&&a==='idle');
     img.dataset.acaoPet=a;
-    img.dataset.visualPersonalizado=f===1&&a==='idle'?idlePersonalizadoUrl():'';
+    img.dataset.visualPersonalizado=a==='idle'?idlePersonalizadoUrl():'';
     const novaChave=`${f}/${a}`;
     if(chave===novaChave)return;
     chave=novaChave;faseVisivel=f;

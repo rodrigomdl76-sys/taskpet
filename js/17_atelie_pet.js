@@ -5,8 +5,8 @@
   const catalogo = [
     {id:'visual-ovo-gato-oculos',aba:'visuais',pet:'gato',slot:'pet:visual',nome:'Ovo-gato estiloso',emoji:'🕶️',preco:75,desc:'Visual animado com óculos. Você pode trocá-lo quando quiser.',idleWebp:'animacoes/fase1/visuais/ovo-gato-oculos.webp',previewWebp:'animacoes/fase1/visuais/ovo-gato-oculos.webp'},
     {id:'visual-ovo-gato-samurai',aba:'visuais',pet:'gato',slot:'pet:visual',nome:'Ovo-gato samurai',emoji:'🥷',preco:120,desc:'Um visual animado de samurai para as aventuras do pet.',idleWebp:'animacoes/fase1/visuais/ovo-gato-samurai.webp?v=visual-quality-v2',previewWebp:'animacoes/fase1/visuais/ovo-gato-samurai-thumb.webp'},
-    {id:'visual-ovo-gato-espacial',aba:'visuais',pet:'gato',slot:'pet:visual',nome:'Explorador espacial',emoji:'👽',preco:120,desc:'Visual alienígena animado para o Ovo-gato.',idleWebp:'animacoes/fase1/visuais/ovo-gato-explorador-espacial.webp?v=ovo-visuais-v2',previewWebp:'animacoes/fase1/visuais/ovo-gato-explorador-espacial-thumb.webp'},
-    {id:'visual-ovo-gato-armadura',aba:'visuais',pet:'gato',slot:'pet:visual',nome:'Armadura de herói',emoji:'🦾',preco:120,desc:'Armadura animada para o Ovo-gato.',idleWebp:'animacoes/fase1/visuais/ovo-gato-armadura-heroica.webp?v=ovo-visuais-v2',previewWebp:'animacoes/fase1/visuais/ovo-gato-armadura-heroica-thumb.webp'},
+    {id:'visual-ovo-gato-espacial',aba:'visuais',pet:'gato',slot:'pet:visual',nome:'Explorador espacial',emoji:'👽',preco:120,desc:'Visual alienígena animado para o Ovo-gato.',idleWebp:'animacoes/fase1/visuais/ovo-gato-explorador-espacial.webp?v=ovo-visuais-v2',idleFase2Webp:'animacoes/fase2/visuais/gato-explorador-espacial.webp?v=visuais-gato-fase2-v1',previewWebp:'animacoes/fase1/visuais/ovo-gato-explorador-espacial-thumb.webp'},
+    {id:'visual-ovo-gato-armadura',aba:'visuais',pet:'gato',slot:'pet:visual',nome:'Armadura de herói',emoji:'🦾',preco:120,desc:'Armadura animada para o Ovo-gato.',idleWebp:'animacoes/fase1/visuais/ovo-gato-armadura-heroica.webp?v=ovo-visuais-v2',idleFase2Webp:'animacoes/fase2/visuais/gato-armadura-heroica.webp?v=visuais-gato-fase2-v1',previewWebp:'animacoes/fase1/visuais/ovo-gato-armadura-heroica-thumb.webp'},
     {id:'visual-axolote-cachorrinho',aba:'visuais',pet:'axolote',slot:'pet:visual:axolote',nome:'Axolote cachorrinho',faseExata:1,emoji:'🐶',preco:120,desc:'Visual animado de cachorrinho para o Ovo-axolote.',idleWebp:'animacoes/axolote/fase1/visuais/axolote-fantasia-cachorrinho.webp',previewWebp:'animacoes/axolote/fase1/visuais/axolote-fantasia-cachorrinho-thumb.webp'},
     {id:'visual-axolote-disco-voador',aba:'visuais',pet:'axolote',slot:'pet:visual:axolote',nome:'Axolote disco voador',faseExata:1,emoji:'🛸',preco:120,desc:'Axolote dentro do disco voador, em movimento contínuo.',idleWebp:'animacoes/axolote/fase1/visuais/axolote-disco-voador.webp?v=axolote-ufo-loop-v1',previewWebp:'animacoes/axolote/fase1/visuais/axolote-disco-voador-thumb.webp'},
     {id:'oculos-sol',aba:'pet',slot:'pet:eyes',nome:'Óculos de sol',emoji:'🕶️',preco:55,desc:'Um visual descolado para qualquer aventura.'},
@@ -75,8 +75,10 @@
   }
   function item(id) { return catalogo.find(x => x.id === id); }
   function equip(slot) { return personalizacao().equipados[slot] || ''; }
-  window.obterIdlePersonalizadoGato = function() {
+  window.obterIdlePersonalizadoGato = function(fasePet) {
     const visual = item(equip('pet:visual'));
+    const faseAtual = Number(fasePet || window.faseGatoAtual?.() || 1);
+    if (faseAtual >= 2) return visual?.[`idleFase${faseAtual}Webp`] || '';
     return visual?.idleWebp || '';
   };
   window.obterIdlePersonalizadoAxolote = function() {
