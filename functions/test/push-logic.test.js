@@ -40,7 +40,7 @@ test('aceita IDs de famílias legados, incluindo casa_principal e vitor', () => 
   assert.equal(familiaValida('a/b'), false);
 });
 
-test('envia payload de dados somente aos tokens dos pais e grava o resultado', async () => {
+test('envia payload urgente somente aos tokens dos pais e grava o resultado', async () => {
   const enviados = [];
   const atualizacoes = [];
   const mensagens = [];
@@ -67,6 +67,9 @@ test('envia payload de dados somente aos tokens dos pais e grava o resultado', a
   assert.equal(mensagens[0].notification, undefined);
   assert.deepEqual(mensagens[0].data, {
     title: 'Tarefa para aprovar', body: 'Arrumar a cama', tag: 'rotinapet-aprovacao-p1', url: '/taskpet/'
+  });
+  assert.deepEqual(mensagens[0].webpush, {
+    headers: { Urgency: 'high', TTL: '86400' }
   });
   assert.equal(atualizacoes[0].pushStatus, 'enviado');
 });
