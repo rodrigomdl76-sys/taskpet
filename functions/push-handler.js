@@ -56,6 +56,12 @@ function createPushHandler({ database, messaging, logger }) {
           body: aviso.body,
           tag: aviso.tag,
           url: aviso.url
+        },
+        webpush: {
+          headers: {
+            Urgency: 'high',
+            TTL: '86400'
+          }
         }
       });
       enviados += resposta.successCount;
