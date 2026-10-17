@@ -17,6 +17,14 @@ function enfileirarRecompensaCrianca(aviso){
   aviso.criadaEm=Date.now();
   estado.avisosRecompensas.push(aviso);
   salvar();atualizarCaixaConquistas();
+  if(perfilAtivo==='pais'){
+    const semanal=aviso.tipo==='semanal';
+    enfileirarPushFamilia(
+      semanal?'🏆 Recompensa semanal desbloqueada!':'🎁 Você ganhou um baú surpresa!',
+      semanal?'Sua sequência de '+(Number(aviso.streak)||7)+' dias liberou +'+(Number(aviso.moedas)||0)+' moedas e +'+(Number(aviso.xp)||0)+' XP.':'Complete uma missão para abrir seu baú do dia. ✨',
+      {tag:semanal?'rotinapet-recompensa-semanal':'rotinapet-recompensa-diaria',onlyPerfil:'crianca',targetChildId:estado.criancaAtivaId}
+    );
+  }
 }
 function atualizarCaixaConquistas(){
   const n=Array.isArray(estado.avisosRecompensas)?estado.avisosRecompensas.length:0;
