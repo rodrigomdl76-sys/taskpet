@@ -31,11 +31,19 @@
     recarregando = true;
     location.reload();
   });
+  const verificarAtualizacao = () => {
+    navigator.serviceWorker.getRegistration('./')
+      .then(registro => registro?.update())
+      .catch(erro => console.warn('Verificação de atualização do app:', erro));
+  };
   window.addEventListener('load', () => {
     navigator.serviceWorker.register('./sw.js', { updateViaCache: 'none' })
       .then(registro => registro.update())
       .catch(erro => console.warn('Atualização do app:', erro));
   }, { once: true });
+  document.addEventListener('visibilitychange', () => {
+    if (!document.hidden) verificarAtualizacao();
+  });
 })();
 </script>
 
