@@ -2015,12 +2015,11 @@ async function salvarTokenFcmNaFamilia(token){
   const uid=localStorage.getItem('ROTINAPET_UID')||'anon';
   const perfil=acessoFamiliar?.role==='parent'?'pais':acessoFamiliar?.role==='child'?'crianca':'desconhecido';
   try{
-    await dbFirebase.ref(caminhoTokensFcm()+'/'+uid).set({
-      token,
-      perfil,
-      atualizadoEm:Date.now(),
-      userAgent:(navigator.userAgent||'').slice(0,120)
-    });
+    const registro={token,perfil,atualizadoEm:Date.now(),userAgent:(navigator.userAgent||'').slice(0,120)};
+    if(perfil==='crianca'&&estado.criancaAtivaId){
+      registro.criancaId=String(estado.criancaAtivaId).slice(0,64);
+    }
+    await dbFirebase.ref(caminhoTokensFcm()+'/'+uid).set(registro);
     fcmTokenAtual=token;
     console.info('FCM token salvo na família');
   }catch(e){
@@ -2381,14 +2380,17 @@ async function iniciarMigracaoFotosStorage(){
 function enfileirarPushFamilia(title,body,opts={}){
   if(!dbFirebase||!sincronizacaoNuvemAtiva)return;
   try{
-    dbFirebase.ref(`rotinapet/familias/${codigoFamilia}/pushQueue`).push({
+    const aviso={
       title:title||'🐾 RotinaPet',
       body:body||'',
       tag:opts.tag||'rotinapet',
       onlyPerfil:opts.onlyPerfil||null,
       url:opts.url||(typeof location!=='undefined'?location.pathname+location.search:'/'),
       createdAt:Date.now()
-    });
+    };
+    if(opts.targetChildId)aviso.targetChildId=String(opts.targetChildId).slice(0,64);
+    dbFirebase.ref(`rotinapet/familias/${codigoFamilia}/pushQueue`).push(aviso)
+      .catch(e=>console.warn('Fila push:',e));
   }catch(e){console.warn('Fila push:',e)}
 }
 function caminhoTarefasV2(criancaId=estado.criancaAtivaId){
@@ -3666,7 +3668,7 @@ function reprovarTarefaPais(id){
   const motivo=window.prompt(`Por que a tarefa "${t.texto}" precisa ser refeita?`,t.motivoRecusa||'')
   if(motivo===null)return;
   const texto=motivo.trim().slice(0,180);
-  mostrarConfirmacao(`Devolver a tarefa para a criança${texto?` com o motivo: "${texto}"`:''}?`,()=>{
+  mostrarConfirmacao(`Devolver a tarefa para a criança${texto?` com o motivo: "${texto}"`:''}?`,async()=>{
     t.status='pendente';
     t.motivoRecusa=texto||'Confira a tarefa e tente novamente.';
     t.foto=null;
@@ -3674,8 +3676,12 @@ function reprovarTarefaPais(id){
     if(r){r.status='pendente';r.foto=null;r.motivoRecusa=t.motivoRecusa;r.recusadaEm=Date.now();r.historico=r.historico||[];r.historico.push({status:'recusada',t:Date.now(),motivo:t.motivoRecusa});r.historico=r.historico.slice(-20);r.atualizadoEm=Date.now();}
     t.historicoAprovacoes=t.historicoAprovacoes||[];t.historicoAprovacoes.push({status:'recusada',t:Date.now(),motivo:t.motivoRecusa});t.historicoAprovacoes=t.historicoAprovacoes.slice(-20);
     registrarLogAtividade(`Tarefa recusada: ${t.texto} — ${t.motivoRecusa}`);
-    persistirTarefaIndividualV2(t).catch(e=>console.warn('Tarefa individual:',e));
-    salvar();
+    let tarefaGravada=false,estadoGravado=false;
+    try{[tarefaGravada,estadoGravado]=await Promise.all([persistirTarefaIndividualV2(t),salvar()]);}
+    catch(e){console.warn('Tarefa individual:',e);}
+    if(tarefaGravada&&estadoGravado)enfileirarPushFamilia('↩️ Missão precisa ser refeita',`“${t.texto}”: ${t.motivoRecusa}`,{
+      tag:`rotinapet-recusada-${id}`,onlyPerfil:'crianca',targetChildId:estado.criancaAtivaId
+    });
     renderizarPainelPais();
     atualizarTela();
     mostrarToast('↩️ Devolvida com orientação para a criança.');
@@ -3848,6 +3854,9 @@ async function aprovarTarefaPais(id){
 
   if(gravouNaNuvem||!sincronizacaoDisponivel){
     mostrarToast('✅ Aprovada! A criança verá suas recompensas ao entrar.');
+    if(gravouNaNuvem)enfileirarPushFamilia('✅ Missão aprovada',`“${t.texto}” foi aprovada! Você ganhou ${recompensa} moedas e ${xp} XP. 🎉`,{
+      tag:`rotinapet-aprovacao-${id}`,onlyPerfil:'crianca',targetChildId:estado.criancaAtivaId
+    });
   }else{
     mostrarToast('⚠️ Aprovada neste aparelho; a sincronização ainda não confirmou.');
   }
@@ -4089,7 +4098,7 @@ function montarPickerDiasNovaTarefa(){
     c.appendChild(chip);
   });
 }
-function adicionarTarefa(){
+async function adicionarTarefa(){
   const txt=document.getElementById('nova-tarefa-texto').value.trim(),
         moedas=Math.max(1,parseInt(document.getElementById('nova-tarefa-moedas').value)||5),
         tipo=document.getElementById('nova-tarefa-tipo')?.value==='extra'?'extra':'obrigatoria',
@@ -4098,15 +4107,19 @@ function adicionarTarefa(){
   const id=estado.tarefas.length?Math.max(...estado.tarefas.map(t=>Number(t.id)||0))+1:1;
   const tarefa={id,texto:txt,recompensa:moedas,xp:20,tipo,habilidade,status:'pendente',foto:null,dias:[...diasSelecionadosNovaTarefa],atualizadoEm:Date.now()};
   estado.tarefas.push(tarefa);
-  // Além do estado geral, escreve no nó por criança que a sincronização V2 escuta.
-  persistirTarefaIndividualV2(tarefa).catch(error=>console.warn('Falha ao publicar tarefa individual:',error));
+  // Grava no estado e no nó individual antes de avisar o aparelho da criança.
+  let tarefaGravada=false,estadoGravado=false;
+  try{[tarefaGravada,estadoGravado]=await Promise.all([persistirTarefaIndividualV2(tarefa),salvar()]);}
+  catch(error){console.warn('Falha ao publicar tarefa individual:',error);}
   document.getElementById('nova-tarefa-texto').value='';
   diasSelecionadosNovaTarefa=[];
   document.querySelectorAll('#dias-nova-tarefa .dia-chip').forEach(c=>c.classList.remove('on'));
-  salvar();
   renderizarPainelPais();
   atualizarTela();
   mostrarToast(tipo==='obrigatoria'?'🔥 Tarefa criada!':'⭐ Tarefa extra criada!');
+  if(tipo==='obrigatoria'&&tarefaGravada&&estadoGravado)enfileirarPushFamilia('🔥 Nova missão obrigatória',`“${txt}” foi adicionada à sua lista de tarefas.`,{
+    tag:`rotinapet-obrigatoria-${id}`,onlyPerfil:'crianca',targetChildId:estado.criancaAtivaId
+  });
 }
 function editarDiasTarefa(id){
   const t=estado.tarefas.find(x=>String(x.id)===String(id));
