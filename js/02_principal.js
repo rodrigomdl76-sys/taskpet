@@ -2619,14 +2619,66 @@ const listenersAprovacoesPais=Object.create(null);
 function tarefasDeAprovacaoDoFilho(criancaId,tarefasIndividuais){
   const familia=familiaAprovacoesPaisCache||{};
   const perfil=familia.criancasDados?.[criancaId]?.tarefas;
+  const perfilLocal=estado.criancasDados?.[criancaId]?.tarefas;
   const legadas=familia.criancaAtivaId===criancaId&&Array.isArray(familia.tarefas)?familia.tarefas:[];
-  const locais=Array.isArray(perfil)?perfil:((criancaId===String(estado.criancaAtivaId||'c1')&&Array.isArray(estado.tarefas))?estado.tarefas:[]);
+  const ativa=criancaId===String(estado.criancaAtivaId||'c1')&&Array.isArray(estado.tarefas)?estado.tarefas:[];
+  const locais=mergeTarefasPorVersao(Array.isArray(perfil)?perfil:[],[...(Array.isArray(perfilLocal)?perfilLocal:[]),...ativa]);
   return mergeTarefasPorVersao([...locais,...legadas],Array.isArray(tarefasIndividuais)?tarefasIndividuais:[])
     .filter(t=>(!t.dataSugerida||t.dataSugerida===hojeLocal())&&statusTarefaAtual(t)==='aguardando_aprovacao')
     .map(t=>({...t,_criancaId:String(criancaId)}));
 }
 function renderizarAprovacoesPais(){
-  renderizarAprovacoesPais();
+  const ap=document.getElementById('lista-aprovacao-pais');
+  if(!ap)return;
+  const ids=new Set([...Object.keys(estado.criancas||{}),String(estado.criancaAtivaId||'c1')]);
+  ids.forEach(id=>{
+    const existentes=tarefasAprovacoesPaisPorFilho[id]||[];
+    tarefasAprovacoesPaisPorFilho[id]=tarefasDeAprovacaoDoFilho(id,existentes);
+  });
+  const pendentes=Object.values(tarefasAprovacoesPaisPorFilho).flat();
+  const contador=document.getElementById('contador-aprovacoes-pais');
+  if(contador)contador.textContent=pendentes.length?'('+pendentes.length+')':'';
+  ap.replaceChildren();
+  if(!pendentes.length){
+    const vazio=document.createElement('span');
+    vazio.style.cssText='font-size:9px;color:#94a3b8';
+    vazio.textContent='Nenhuma pendente.';
+    ap.appendChild(vazio);
+  }else pendentes.forEach(t=>{
+    const linha=document.createElement('div');
+    linha.className='approval-row';
+    linha.dataset.taskId=String(t.id);
+    linha.dataset.childId=t._criancaId;
+    const topo=document.createElement('div');topo.className='approval-top';
+    const resumo=document.createElement('span');
+    resumo.append(document.createTextNode((t.tipo==='obrigatoria'?'🔥 ':'⭐ ')+(t.texto||'Missão')));
+    const filho=document.createElement('small');
+    filho.style.cssText='display:block;color:#64748b;font-size:8px;margin-top:2px';
+    filho.textContent='👧 '+(familiaAprovacoesPaisCache?.criancas?.[t._criancaId]?.nome||estado.criancas?.[t._criancaId]?.nome||'Criança');
+    resumo.appendChild(filho);
+    const acoes=document.createElement('div');acoes.style.cssText='display:flex;gap:4px';
+    const recusar=document.createElement('button');
+    recusar.type='button';recusar.className='primary-btn red-btn';recusar.dataset.aprovacao='recusar';recusar.textContent='Recusar';
+    const aprovar=document.createElement('button');
+    aprovar.type='button';aprovar.className='primary-btn green-btn';aprovar.dataset.aprovacao='aprovar';aprovar.textContent='Aprovar';
+    acoes.append(recusar,aprovar);topo.append(resumo,acoes);linha.appendChild(topo);
+    const fotoSrc=t.fotoUrl||t.foto||'';
+    if(fotoSrc){
+      const foto=document.createElement('img');
+      foto.className='approval-foto';foto.src=fotoSrc;foto.alt='Comprovante da missão';linha.appendChild(foto);
+    }
+    ap.appendChild(linha);
+  });
+  ap.onclick=evento=>{
+    const botao=evento.target.closest('[data-aprovacao]');
+    if(botao){
+      const linha=botao.closest('.approval-row');
+      if(linha?.dataset.taskId&&linha.dataset.childId)executarAcaoAprovacaoDeCrianca(linha.dataset.childId,linha.dataset.taskId,botao.dataset.aprovacao);
+      return;
+    }
+    const foto=evento.target.closest('.approval-foto');
+    if(foto)abrirVisualizadorFoto(foto.currentSrc||foto.src);
+  };
 }
 function atualizarAprovacoesPaisDoFilho(criancaId,tarefasIndividuais){
   tarefasAprovacoesPaisPorFilho[criancaId]=tarefasDeAprovacaoDoFilho(criancaId,tarefasIndividuais);
