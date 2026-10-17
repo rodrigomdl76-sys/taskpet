@@ -21,14 +21,14 @@
             "$uid": {
               ".read": "auth != null && auth.uid === $uid && auth.token.familyId === $familyId",
               ".write": "auth != null && auth.uid === $uid && auth.token.familyId === $familyId && (auth.token.familyRole === 'parent' || auth.token.familyRole === 'child')",
-              ".validate": "newData.hasChildren(['token', 'perfil', 'atualizadoEm']) && newData.child('token').isString() && newData.child('token').val().length <= 4096 && newData.child('perfil').val() === (auth.token.familyRole === 'parent' ? 'pais' : 'crianca') && newData.child('atualizadoEm').isNumber()"
+              ".validate": "newData.hasChildren(['token', 'perfil', 'atualizadoEm']) && newData.child('token').isString() && newData.child('token').val().length <= 4096 && newData.child('perfil').val() === (auth.token.familyRole === 'parent' ? 'pais' : 'crianca') && newData.child('atualizadoEm').isNumber() && ((auth.token.familyRole === 'parent' && !newData.child('criancaId').exists()) || (auth.token.familyRole === 'child' && newData.child('criancaId').isString() && newData.child('criancaId').val().matches(/^[A-Za-z0-9_-]{1,64}$/)))"
             }
           },
           "pushQueue": {
             "$pushId": {
               ".read": false,
               ".write": "auth != null && auth.token.familyId === $familyId && (auth.token.familyRole === 'parent' || auth.token.familyRole === 'child') && !data.exists() && newData.exists()",
-              ".validate": "newData.hasChildren(['title', 'body', 'tag', 'onlyPerfil', 'url', 'createdAt']) && newData.child('title').isString() && newData.child('title').val().length <= 80 && newData.child('body').isString() && newData.child('body').val().length <= 220 && newData.child('tag').isString() && newData.child('tag').val().length <= 64 && newData.child('onlyPerfil').val() === 'pais' && newData.child('url').isString() && newData.child('url').val().length <= 512 && newData.child('createdAt').isNumber()"
+              ".validate": "newData.hasChildren(['title', 'body', 'tag', 'onlyPerfil', 'url', 'createdAt']) && newData.child('title').isString() && newData.child('title').val().length <= 80 && newData.child('body').isString() && newData.child('body').val().length <= 220 && newData.child('tag').isString() && newData.child('tag').val().length <= 64 && newData.child('url').isString() && newData.child('url').val().length <= 512 && newData.child('createdAt').isNumber() && (newData.child('onlyPerfil').val() === 'pais' && !newData.child('targetChildId').exists() || newData.child('onlyPerfil').val() === 'crianca' && auth.token.familyRole === 'parent' && newData.child('targetChildId').isString() && newData.child('targetChildId').val().matches(/^[A-Za-z0-9_-]{1,64}$/))"
             }
           },
           "security": {
