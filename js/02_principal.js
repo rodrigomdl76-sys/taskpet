@@ -2609,15 +2609,8 @@ async function sincronizarAprovacoesPendentesDoFilho(criancaId,tarefas){
   return falhas.length===0;
 }
 async function sincronizarAprovacoesPendentes(){
-  if(!dbFirebase||!sincronizacaoNuvemAtiva||!navigator.onLine||cargaNuvemPendente)return false;
-  const filhos=acessoFamiliar?.role==='parent'?Object.keys(estado.criancas||{}):[String(estado.criancaAtivaId||'c1')];
-  const resultados=await Promise.all(filhos.map(async id=>{
-    const tarefas=id===String(estado.criancaAtivaId||'c1')
-      ?estado.tarefas
-      :estado.criancasDados?.[id]?.tarefas;
-    return sincronizarAprovacoesPendentesDoFilho(id,tarefas);
-  }));
-  return resultados.every(Boolean);
+  if(acessoFamiliar?.role!=='child'||!dbFirebase||!sincronizacaoNuvemAtiva||!navigator.onLine||cargaNuvemPendente)return false;
+  return sincronizarAprovacoesPendentesDoFilho(String(estado.criancaAtivaId||'c1'),estado.tarefas);
 }
 
 function sincronizarListenerTarefasV2(){

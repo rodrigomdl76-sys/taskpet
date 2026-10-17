@@ -174,6 +174,27 @@ test('reenvia ao nó correto as tarefas que ficaram aguardando no aparelho', asy
   assert.deepEqual(gravadas, [['c_irma', 'tarefa-pendente']]);
 });
 
+const syncFamilyStart = appSource.indexOf('async function sincronizarAprovacoesPendentes(){');
+const syncFamilyEnd = appSource.indexOf('function sincronizarListenerTarefasV2(', syncFamilyStart);
+assert(syncFamilyStart >= 0 && syncFamilyEnd > syncFamilyStart, 'gatilho de reenvio do aparelho encontrado');
+const sincronizarPendentesDoAparelho = new Function(
+  'acessoFamiliar', 'dbFirebase', 'sincronizacaoNuvemAtiva', 'navigator', 'cargaNuvemPendente',
+  'estado', 'sincronizarAprovacoesPendentesDoFilho',
+  `${appSource.slice(syncFamilyStart, syncFamilyEnd)}\nreturn sincronizarAprovacoesPendentes;`
+);
+
+test('o reenvio automático só grava tarefas do aparelho com perfil criança', async () => {
+  let chamadas = 0;
+  const disparar = sincronizarPendentesDoAparelho(
+    { role: 'parent' }, {}, true, { onLine: true }, false,
+    { criancaAtivaId: 'c1', tarefas: [{ id: 't1', status: 'aguardando_aprovacao' }] },
+    async () => { chamadas++; return true; }
+  );
+
+  assert.equal(await disparar(), false);
+  assert.equal(chamadas, 0);
+});
+
 const guardStart = appSource.indexOf('function restaurarPetEscolhidoDuranteSync(');
 const guardEnd = appSource.indexOf('function aplicarPrivadosPaisLocal(', guardStart);
 assert(guardStart >= 0 && guardEnd > guardStart, 'proteção da seleção durante sync encontrada');
