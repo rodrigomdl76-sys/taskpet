@@ -117,3 +117,33 @@ test('perfil ativo usa o saldo atualizado do estado principal', () => {
   assert.equal(mesclado.moedas, 27);
   assert.deepEqual(mesclado.pets, { gato: { nivel: 4, xp: 5 } });
 });
+
+const approvalStart = appSource.indexOf('function tarefasDeAprovacaoDoFilho(');
+const approvalEnd = appSource.indexOf('function renderizarAprovacoesPais(', approvalStart);
+assert(approvalStart >= 0 && approvalEnd > approvalStart, 'função de lista de aprovações encontrada');
+const listarAprovacoesFilho = new Function(
+  'familiaAprovacoesPaisCache',
+  'estado',
+  'mergeTarefasPorVersao',
+  'statusTarefaAtual',
+  `${appSource.slice(approvalStart, approvalEnd)}\nreturn tarefasDeAprovacaoDoFilho;`
+)(
+  null,
+  { criancaAtivaId: 'c1', criancasDados: {} },
+  (a, b) => [...a, ...b],
+  tarefa => tarefa.status
+);
+
+test('mantém na aprovação uma tarefa enviada em outro dia', () => {
+  const tarefa = {
+    id: 'extra-antiga',
+    dataSugerida: '2026-10-16',
+    status: 'aguardando_aprovacao'
+  };
+
+  const resultado = listarAprovacoesFilho('c2', [tarefa]);
+
+  assert.equal(resultado.length, 1);
+  assert.equal(resultado[0]._criancaId, 'c2');
+  assert.equal(resultado[0].id, 'extra-antiga');
+});

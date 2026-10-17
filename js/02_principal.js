@@ -2635,7 +2635,7 @@ function tarefasDeAprovacaoDoFilho(criancaId,tarefasIndividuais){
   const ativa=criancaId===String(estado.criancaAtivaId||'c1')&&Array.isArray(estado.tarefas)?estado.tarefas:[];
   const locais=mergeTarefasPorVersao(Array.isArray(perfil)?perfil:[],[...(Array.isArray(perfilLocal)?perfilLocal:[]),...ativa]);
   return mergeTarefasPorVersao([...locais,...legadas],Array.isArray(tarefasIndividuais)?tarefasIndividuais:[])
-    .filter(t=>(!t.dataSugerida||t.dataSugerida===hojeLocal())&&statusTarefaAtual(t)==='aguardando_aprovacao')
+    .filter(t=>statusTarefaAtual(t)==='aguardando_aprovacao')
     .map(t=>({...t,_criancaId:String(criancaId)}));
 }
 function renderizarAprovacoesPais(){
@@ -3639,27 +3639,7 @@ function renderizarPainelPais(){
   renderizarGerenciamentoPremiosPais();
   renderizarSolicitacoesPremiosPais();
   renderizarSolicitacoesAcesso();
-  const ap=document.getElementById('lista-aprovacao-pais');
-  const ps=estado.tarefas.filter(t=>(!t.dataSugerida||t.dataSugerida===hojeLocal())&&statusTarefaAtual(t)==='aguardando_aprovacao');
-  const contador=document.getElementById('contador-aprovacoes-pais');
-  if(contador)contador.textContent=ps.length?`(${ps.length})`:'';
-  ap.innerHTML=ps.length?ps.map(t=>{
-    const fotoSrc=t.fotoUrl||t.foto||'';
-    const fotoHtml=fotoSrc?`<img class="approval-foto" src="${esc(fotoSrc)}" alt="Comprovante da missão">`:'';
-    return `<div class="approval-row" data-task-id="${esc(String(t.id))}"><div class="approval-top"><span>${t.tipo==='obrigatoria'?'🔥':'⭐'} <b>${esc(t.texto)}</b> ${fotoSrc?'📸':''}</span><div style="display:flex;gap:4px"><button type="button" class="primary-btn red-btn" data-aprovacao="recusar">Recusar</button><button type="button" class="primary-btn green-btn" data-aprovacao="aprovar">Aprovar</button></div></div>${fotoHtml}</div>`;
-  }).join(''):'<span style="font-size:9px;color:#94a3b8">Nenhuma pendente.</span>';
-  ap.onclick=evento=>{
-    const botao=evento.target.closest('[data-aprovacao]');
-    if(botao){
-      const id=botao.closest('.approval-row')?.dataset.taskId;
-      if(id==null)return;
-      if(botao.dataset.aprovacao==='aprovar')aprovarTarefaPais(id);
-      else reprovarTarefaPais(id);
-      return;
-    }
-    const foto=evento.target.closest('.approval-foto');
-    if(foto)abrirVisualizadorFoto(foto.currentSrc||foto.src);
-  };
+  renderizarAprovacoesPais();
   
   const ed=document.getElementById('lista-edicao-tarefas');
   ed.innerHTML='';
