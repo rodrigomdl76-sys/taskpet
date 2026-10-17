@@ -1,14 +1,14 @@
-const CACHE_NAME = 'rotinapet-cache-v99';
+const CACHE_NAME = 'rotinapet-cache-v100';
 const RUNTIME_CACHE_NAME = 'rotinapet-media-v3';
 const KEEP_CACHES = new Set([CACHE_NAME, RUNTIME_CACHE_NAME]);
 const MAX_RUNTIME_ENTRIES = 100;
 const ASSETS = [
   "./index.html",
-  "./animacoes/fase2/01_parado.webp?v=gato-fase2-pulinho-v4",
-  "./animacoes/fase2/02_carinho.webp?v=gato-fase2-pulinho-v4",
-  "./animacoes/fase2/03_dormir.webp?v=gato-fase2-pulinho-v4",
-  "./animacoes/fase2/04_comemorar.webp?v=gato-fase2-pulinho-v4",
-  "./animacoes/fase2/05_brincar.webp?v=gato-fase2-pulinho-v4",
+  "./animacoes/fase2/01_parado.webp?v=gato-fase2-pulinho-v5",
+  "./animacoes/fase2/02_carinho.webp?v=gato-fase2-pulinho-v5",
+  "./animacoes/fase2/03_dormir.webp?v=gato-fase2-pulinho-v5",
+  "./animacoes/fase2/04_comemorar.webp?v=gato-fase2-pulinho-v5",
+  "./animacoes/fase2/05_brincar.webp?v=gato-fase2-pulinho-v5",
   "./animacoes/fase1/01_parado.webp?v=ovo-animacoes-v23",
   "./animacoes/fase1/visuais/ovo-gato-oculos.webp?v=ovo-animacoes-v23",
   "./animacoes/fase1/visuais/ovo-gato-samurai-thumb.webp",
@@ -20,8 +20,8 @@ const ASSETS = [
   "./animacoes/axolote/fase1/visuais/axolote-fantasia-cachorrinho-thumb.webp",
   "./animacoes/axolote/fase1/visuais/axolote-disco-voador.webp?v=axolote-ufo-loop-v1",
   "./animacoes/axolote/fase1/visuais/axolote-disco-voador-thumb.webp",
-  "./animacoes/fase2/visuais/gato-explorador-espacial-thumb.webp",
-  "./animacoes/fase2/visuais/gato-armadura-heroica-thumb.webp",
+  "./animacoes/fase2/visuais/gato-explorador-espacial-thumb.webp?v=visuais-gato-fase2-v2",
+  "./animacoes/fase2/visuais/gato-armadura-heroica-thumb.webp?v=visuais-gato-fase2-v2",
   "./manifest.json",
   "./icon-192.webp?v=cat-crown-v1",
   "./icon-192.png?v=cat-crown-v2",
@@ -35,7 +35,7 @@ const ASSETS = [
   "./css/05_evolucao_pet.css",
   "./css/13_gato_laranja.css?v=ovo-gato-brilhos-v1",
   "./third_party/qrcode-generator/qrcode.js?v=local-qrcode-v1",
-  "./js/02_principal.js?v=aprovacoes-multifilho-nomes-v3",
+  "./js/02_principal.js?v=aprovacoes-multifilho-nomes-v4",
   "./js/03_extras_01.js",
   "./js/04_engajamento.js?v=mesada-tarefas-v1",
   "./css/06_extras_01.css",
@@ -47,7 +47,7 @@ const ASSETS = [
   "./css/11_premium_63.css",
 
   "./js/08_meu_pet.js?v=gestos-1",
-  "./js/09_gato_laranja.js?v=gato-fase2-pulinho-v4",
+  "./js/09_gato_laranja.js?v=gato-fase2-pulinho-v5",
   "./js/10_pet_companheiro.js?v=6",
   "./css/17_pet_no_chao.css?v=2",
   "./css/18_topo_limpo.css?v=seletor-pet-v1",

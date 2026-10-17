@@ -519,6 +519,12 @@ function estadoCompartilhadoParaSincronizar(origem=estado){
   const permitidos=new Set([...(typeof CAMPOS_CRIANCA!=='undefined'?CAMPOS_CRIANCA:[]),'tarefas','pets','criancas','criancasDados','criancaAtivaId','schemaTarefas']);
   return Object.fromEntries(Object.entries(base).filter(([k])=>permitidos.has(k)));
 }
+function restaurarPetEscolhidoDuranteSync(){
+  if(!petAtualPendenteSync)return;
+  if(estado.petAtual===petAtualPendenteSync){petAtualPendenteSync=null;return}
+  estado.petAtual=petAtualPendenteSync;
+  salvarLocalmente();
+}
 function aplicarPrivadosPaisLocal(dados){CAMPOS_PRIVADOS_PAIS.forEach(k=>{if(Object.prototype.hasOwnProperty.call(dados||{},k))estado[k]=dados[k]})}
 async function verificarMembroFamilia(user){
   const token=await user.getIdTokenResult(true);
@@ -1037,6 +1043,7 @@ function aplicarEstadoRemotoComMerge(d){
     aplicarDadosCrianca(perfilRemoto);
     estado.tarefas=aplicarTarefasDaCriancaSemPerderCadastro(tarefasAntesDosDados,estado.tarefas);
   }
+  restaurarPetEscolhidoDuranteSync();
   estado.tarefasExcluidas=exclusoesMescladas;
   if(!Array.isArray(estado.tarefas))estado.tarefas=[];
   estado.tarefas.forEach(prepararTarefaParaHoje);
@@ -1072,6 +1079,7 @@ async function iniciarSincronizacaoNuvem(){
     }catch(e){console.warn('Reset diário: falha ao atualizar tarefas V2:',e)}
   }
 
+  await sincronizarAprovacoesPendentes();
   ultimaSyncOkEm=Date.now();
   statusSyncAtual='online';
   // Reenvia o estado já mesclado/resetado sem risco de sobrescrever a carga inicial.
@@ -1104,13 +1112,7 @@ async function iniciarSincronizacaoNuvem(){
       // Uma atualização antiga que já estava em trânsito pode chegar enquanto
       // a troca de pet está sendo gravada. Mantemos a escolha feita neste
       // aparelho até a nuvem confirmar esse mesmo pet.
-      if(petAtualPendenteSync){
-        if(estado.petAtual===petAtualPendenteSync)petAtualPendenteSync=null;
-        else{
-          estado.petAtual=petAtualPendenteSync;
-          salvarLocalmente();
-        }
-      }
+      restaurarPetEscolhidoDuranteSync();
       if(perfilAtivo==='crianca'){
         if((Number(estado.pets?.[estado.petAtual]?.nivel)||1)>nivelAntes)playSound('nivel');
         else if((Number(estado.moedas)||0)>moedasAntes)playSound('moedas');
@@ -2440,14 +2442,14 @@ function registroTarefaHoje(t){
 function statusTarefaAtual(t){
   return t.registros?.[hojeLocal()]?.status||t.status||'pendente';
 }
-async function persistirTarefaIndividualV2(t){
+async function persistirTarefaIndividualV2(t,criancaId=estado.criancaAtivaId){
   if(!t)return;
   const agora=Date.now();
   // O timestamp também fica no estado local para o merge entre aparelhos.
   t.atualizadoEm=Math.max(Number(t.atualizadoEm)||0,agora);
   if(!dbFirebase||!sincronizacaoNuvemAtiva||!navigator.onLine||cargaNuvemPendente)return false;
   const id=idTarefaSeguro(t.id);
-  await dbFirebase.ref(`${caminhoTarefasV2()}/${id}`).set({...t,id,atualizadoEm:t.atualizadoEm});
+  await dbFirebase.ref(`${caminhoTarefasV2(criancaId)}/${id}`).set({...t,id,atualizadoEm:t.atualizadoEm});
   return true;
 }
 function idsTarefasExcluidas(){
@@ -2595,6 +2597,27 @@ async function carregarTarefasIndividuaisComFallback(){
   salvarLocalmente();
   renderizarTarefas();
   return true;
+}
+
+async function sincronizarAprovacoesPendentesDoFilho(criancaId,tarefas){
+  if(!dbFirebase||!sincronizacaoNuvemAtiva||!navigator.onLine||cargaNuvemPendente)return false;
+  const pendentes=(Array.isArray(tarefas)?tarefas:[]).filter(t=>statusTarefaAtual(t)==='aguardando_aprovacao');
+  if(!pendentes.length)return true;
+  const resultados=await Promise.allSettled(pendentes.map(t=>persistirTarefaIndividualV2(t,criancaId)));
+  const falhas=resultados.filter(r=>r.status==='rejected'||r.value!==true);
+  if(falhas.length)console.warn(`Não foi possível sincronizar ${falhas.length} tarefa(s) aguardando aprovação de ${criancaId}.`);
+  return falhas.length===0;
+}
+async function sincronizarAprovacoesPendentes(){
+  if(!dbFirebase||!sincronizacaoNuvemAtiva||!navigator.onLine||cargaNuvemPendente)return false;
+  const filhos=acessoFamiliar?.role==='parent'?Object.keys(estado.criancas||{}):[String(estado.criancaAtivaId||'c1')];
+  const resultados=await Promise.all(filhos.map(async id=>{
+    const tarefas=id===String(estado.criancaAtivaId||'c1')
+      ?estado.tarefas
+      :estado.criancasDados?.[id]?.tarefas;
+    return sincronizarAprovacoesPendentesDoFilho(id,tarefas);
+  }));
+  return resultados.every(Boolean);
 }
 
 function sincronizarListenerTarefasV2(){
@@ -2774,12 +2797,14 @@ async function enviarParaAprovacao(id){
   }catch(e){
     console.warn('Falha ao enviar tarefa para os pais:',e);
     if(statusTarefaAtual(t)==='aguardando_aprovacao'){
-      r.status='pendente';
-      t.status='pendente';
+      // Uma falha temporária não deve desfazer o envio que já está no aparelho.
+      // O pedido será reenviado na próxima inicialização ou reconexão.
+      t.atualizadoEm=Math.max(Number(t.atualizadoEm)||0,Date.now());
       salvarLocalmente();
+      salvar();
       renderizarTarefas();
     }
-    mostrarToast('⚠️ Não foi possível enviar. Confira a conexão e tente novamente.');
+    mostrarToast('📱 Pedido salvo. Será sincronizado quando a conexão voltar.');
   }
 }
 let tarefaParaConfirmarId=null;
@@ -3245,6 +3270,7 @@ function atualizarBannerOffline(){
   }
 }
 window.addEventListener('online',atualizarBannerOffline);
+window.addEventListener('online',()=>{void sincronizarAprovacoesPendentes()});
 window.addEventListener('offline',atualizarBannerOffline);
 async function reiniciarVinculacaoEmail(){
   const auth=obterAuth();

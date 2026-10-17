@@ -147,3 +147,47 @@ test('mantém na aprovação uma tarefa enviada em outro dia', () => {
   assert.equal(resultado[0]._criancaId, 'c2');
   assert.equal(resultado[0].id, 'extra-antiga');
 });
+
+const syncPendingStart = appSource.indexOf('async function sincronizarAprovacoesPendentesDoFilho(');
+const syncPendingEnd = appSource.indexOf('async function sincronizarAprovacoesPendentes(', syncPendingStart);
+assert(syncPendingStart >= 0 && syncPendingEnd > syncPendingStart, 'função de reenvio de aprovações encontrada');
+const sincronizarPendentes = new Function(
+  'dbFirebase', 'sincronizacaoNuvemAtiva', 'navigator', 'cargaNuvemPendente',
+  'statusTarefaAtual', 'persistirTarefaIndividualV2', 'console',
+  `${appSource.slice(syncPendingStart, syncPendingEnd)}\nreturn sincronizarAprovacoesPendentesDoFilho;`
+);
+
+test('reenvia ao nó correto as tarefas que ficaram aguardando no aparelho', async () => {
+  const gravadas = [];
+  const sincronizar = sincronizarPendentes(
+    {}, true, { onLine: true }, false,
+    tarefa => tarefa.status,
+    async (tarefa, criancaId) => { gravadas.push([criancaId, tarefa.id]); return true; },
+    { warn() {} }
+  );
+  const resultado = await sincronizar('c_irma', [
+    { id: 'tarefa-pendente', status: 'aguardando_aprovacao' },
+    { id: 'tarefa-aberta', status: 'pendente' }
+  ]);
+
+  assert.equal(resultado, true);
+  assert.deepEqual(gravadas, [['c_irma', 'tarefa-pendente']]);
+});
+
+const guardStart = appSource.indexOf('function restaurarPetEscolhidoDuranteSync(');
+const guardEnd = appSource.indexOf('function aplicarPrivadosPaisLocal(', guardStart);
+assert(guardStart >= 0 && guardEnd > guardStart, 'proteção da seleção durante sync encontrada');
+const restaurarPet = new Function(
+  'estado', 'petAtualPendenteSync', 'salvarLocalmente',
+  `${appSource.slice(guardStart, guardEnd)}\nreturn restaurarPetEscolhidoDuranteSync;`
+);
+
+test('a carga inicial da nuvem preserva a escolha recente da axolote', () => {
+  const estado = { petAtual: 'gato' };
+  let gravadoLocalmente = false;
+  const restaurar = restaurarPet(estado, 'axolote', () => { gravadoLocalmente = true; });
+  restaurar();
+
+  assert.equal(estado.petAtual, 'axolote');
+  assert.equal(gravadoLocalmente, true);
+});
