@@ -1,4 +1,4 @@
-const CACHE_NAME = 'rotinapet-cache-v93';
+const CACHE_NAME = 'rotinapet-cache-v94';
 const RUNTIME_CACHE_NAME = 'rotinapet-media-v3';
 const KEEP_CACHES = new Set([CACHE_NAME, RUNTIME_CACHE_NAME]);
 const MAX_RUNTIME_ENTRIES = 100;
@@ -34,7 +34,7 @@ const ASSETS = [
   "./css/05_evolucao_pet.css",
   "./css/13_gato_laranja.css?v=ovo-gato-brilhos-v1",
   "./third_party/qrcode-generator/qrcode.js?v=local-qrcode-v1",
-  "./js/02_principal.js?v=push-filhos-v2",
+  "./js/02_principal.js?v=aprovacoes-multifilho-nomes-v1",
   "./js/03_extras_01.js",
   "./js/04_engajamento.js?v=mesada-tarefas-v1",
   "./css/06_extras_01.css",

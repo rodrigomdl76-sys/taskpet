@@ -27,7 +27,7 @@
   if (!('serviceWorker' in navigator)) return;
   let recarregando = false;
   navigator.serviceWorker.addEventListener('controllerchange', () => {
-    if (recarregando || !document.documentElement.classList.contains('rp-starting')) return;
+    if (recarregando) return;
     recarregando = true;
     location.reload();
   });
@@ -120,7 +120,7 @@
   <header class="top-row" aria-label="Resumo da criança">
     <div class="home-profile-card">
       <button type="button" class="top-pill top-perfil-crianca" id="btn-perfil-crianca" onclick="abrirPerfilCrianca()" aria-label="Escolher ícone e apelido do perfil"><span class="perfil-crianca-emoji" id="perfil-crianca-emoji">🐾</span><span class="perfil-crianca-nome" id="perfil-crianca-nome">Meu perfil</span><span class="profile-edit" aria-hidden="true">✎</span></button>
-      <div class="evo-name" id="pet-evol-nome">Pipoca • Ovo-gato</div>
+      <div class="evo-name" id="pet-evol-nome" role="button" tabindex="0" aria-label="Editar nome do pet" title="Toque para mudar o nome" onclick="renomearPetAtual()" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();renomearPetAtual()}">Pipoca • Ovo-gato ✎</div>
     </div>
     <div class="home-hud-actions">
       <button class="top-pill hud-tile" id="btn-pill-streak" onclick="abrirModal('modal-conquistas')" title="Sequência diária"><span aria-hidden="true">🔥</span><strong id="txt-streak">0</strong><small>Ofensiva</small></button>
@@ -132,7 +132,7 @@
     <button class="pet-unico-btn" id="btn-pet-atual" onclick="alternarListaPets(event)">🐱</button>
     <div class="lista-pet-dropdown" id="lista-pets">
       <div class="opcao-pet" data-pet="gato" onclick="escolherPet('gato')" title="Gato">🐱</div>
-      <div class="opcao-pet" data-pet="axolote" onclick="escolherPet('axolote')" title="Axolote · desbloqueia no nível 10">🥚</div>
+      <div class="opcao-pet" data-pet="axolote" onclick="escolherPet('axolote')" title="Escolher Axolote">🦎</div>
     </div>
   </div>
   <div class="cat-section" id="pet-section-area">
@@ -733,7 +733,7 @@
 <script src="https://www.gstatic.com/firebasejs/12.18.0/firebase-storage-compat.js" defer></script>
 <script src="js/01_menu.js?v=back-3" defer></script>
 <script src="third_party/qrcode-generator/qrcode.js?v=local-qrcode-v1" defer></script>
-<script src="js/02_principal.js?v=push-filhos-v2" defer></script>
+<script src="js/02_principal.js?v=aprovacoes-multifilho-nomes-v1" defer></script>
 <script src="js/03_extras_01.js" defer></script>
 <script src="js/04_engajamento.js?v=mesada-tarefas-v1" defer></script>
 <script src="js/05_interface.js" defer></script>

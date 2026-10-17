@@ -183,7 +183,7 @@ function somTransicaoMagicaPet(){
 const PETS={
  gato:{id:'gato',nome:'Pipoca',emoji:'🐱',desbloqueioNivel:1,som:'',evolucoes:[
  {nivel:1,nome:'Ovo-gato',desc:'O começo da aventura'},{nivel:21,nome:'Gato Cavalheiro',desc:'Uma nova forma para o pet'},{nivel:41,nome:'Gato Real',desc:'Capa e coroa da última evolução'}]},
- axolote:{id:'axolote',nome:'Axolote',emoji:'🥚',desbloqueioNivel:10,som:'',evolucoes:[{nivel:1,nome:'Axolote no Ovo',desc:'Fase 1 · dentro do ovo'},{nivel:21,nome:'Axolote Desabrochado',desc:'Saiu do ovo e começou uma nova aventura'},{nivel:41,nome:'Axolote Radiante',desc:'Fase 3 · uma nova forma cheia de energia'}]}
+ axolote:{id:'axolote',nome:'Axolote',emoji:'🦎',desbloqueioNivel:10,som:'',evolucoes:[{nivel:1,nome:'Axolote no Ovo',desc:'Fase 1 · dentro do ovo'},{nivel:21,nome:'Axolote Desabrochado',desc:'Saiu do ovo e começou uma nova aventura'},{nivel:41,nome:'Axolote Radiante',desc:'Fase 3 · uma nova forma cheia de energia'}]}
 };
 function ajustarCor(hex,amt){
   hex=String(hex).replace('#','');
@@ -1401,11 +1401,25 @@ function aplicarTemaInterface(){
   document.querySelectorAll('.bottom-buttons .btn-icon').forEach((el,i)=>{if(tema.icons[i])el.textContent=tema.icons[i]});
 }
 function obterDadosPetAtual(){
+  estado.pets=estado.pets||{};
   if(!estado.pets[estado.petAtual])estado.pets[estado.petAtual]={nivel:1,xp:0,felicidade:100,saude:100};
   const dados=estado.pets[estado.petAtual];
-  // Perfis anteriores já exibiam a fase 2 automaticamente. Preserve a forma alcançada.
+  if(!dados.nome)dados.nome=estado.petAtual==='gato'?(estado.nomePet||PETS.gato.nome):(PETS[estado.petAtual]?.nome||estado.petAtual);
   if(estado.petAtual==='gato' && dados.faseConfirmada==null)dados.faseConfirmada=(Number(dados.nivel)||1)>=21?2:1;
   return dados;
+}
+function renomearPetAtual(){
+  const dados=obterDadosPetAtual();
+  const nomeAtual=dados.nome||PETS[estado.petAtual]?.nome||'Pet';
+  const nome=window.prompt('Como você quer chamar '+(PETS[estado.petAtual]?.nome||'seu pet')+'?',nomeAtual);
+  if(nome===null)return;
+  const limpo=nome.trim().replace(/\s+/g,' ').slice(0,18);
+  if(!limpo){mostrarToast('Digite um nome para o pet.');return}
+  dados.nome=limpo;
+  if(estado.petAtual==='gato')estado.nomePet=limpo;
+  salvar();
+  atualizarTela();
+  mostrarToast('✨ '+limpo+' agora é o nome do pet!');
 }
 function nivelJogador(){return Math.max(...Object.keys(PETS).map(id=>Number(estado.pets?.[id]?.nivel)||1))}
 function calcularFase(n){
@@ -1531,21 +1545,22 @@ function atualizarTela(){
   const petWrap=document.getElementById('pet-principal');
   if(petWrap)petWrap.className='cat-wrapper pet-tipo-'+estado.petAtual+(petWrap.classList.contains('gato-laranja-pronto')?' gato-laranja-pronto':'');
   
-  document.getElementById('pet-evol-nome').textContent=`${def.nome} • ${def.evolucoes[fase-1].nome}`;
+  const nomeAtual=p.nome||def.nome;
+  const nomeVisivel=document.getElementById('pet-evol-nome');
+  if(nomeVisivel)nomeVisivel.textContent=nomeAtual+' • '+def.evolucoes[fase-1].nome+' ✎';
   renderizarProgressoEvolucao();
   atualizarBotaoEvolucao();
   const modalNome=document.getElementById('modal-pet-evol-nome');
-  if(modalNome)modalNome.textContent=estado.nomePet||def.nome;
+  if(modalNome)modalNome.textContent=nomeAtual;
   document.getElementById('input-idade-crianca').value=estado.idadeCrianca||7;
   document.getElementById('input-dificuldade-jogos').value=estado.dificuldadeJogos||'auto';
   document.getElementById('input-taxa-cambio').value=estado.taxaCambio;
   
   document.querySelectorAll('.opcao-pet').forEach(el=>{
-    const tipo=el.dataset.pet,ok=nivelJogador()>=PETS[tipo].desbloqueioNivel;
+    const tipo=el.dataset.pet;
     el.classList.toggle('ativo',tipo===estado.petAtual);
-    el.classList.toggle('bloqueado',!ok);
+    el.classList.remove('bloqueado');
     el.querySelector('.lock-mini')?.remove();
-    if(!ok){const s=document.createElement('span');s.className='lock-mini';s.textContent='🔒';el.appendChild(s)}
   });
   aplicarFundoTela(estado.fundoAtual);
   aplicarTemaInterface();
@@ -2597,33 +2612,74 @@ function sincronizarListenerTarefasV2(){
   tarefasV2ListenerRef.on('value',tarefasV2ListenerCallback);
 }
 
-// A lista de aprovação é uma decisão importante para o responsável. Ao abrir
-// o painel, confirma os dados com uma leitura pontual, além do listener realtime.
+// O painel dos pais acompanha as tarefas de todos os perfis da família.
+let familiaAprovacoesPaisCache=null;
+const tarefasAprovacoesPaisPorFilho=Object.create(null);
+const listenersAprovacoesPais=Object.create(null);
+function tarefasDeAprovacaoDoFilho(criancaId,tarefasIndividuais){
+  const familia=familiaAprovacoesPaisCache||{};
+  const perfil=familia.criancasDados?.[criancaId]?.tarefas;
+  const legadas=familia.criancaAtivaId===criancaId&&Array.isArray(familia.tarefas)?familia.tarefas:[];
+  const locais=Array.isArray(perfil)?perfil:((criancaId===String(estado.criancaAtivaId||'c1')&&Array.isArray(estado.tarefas))?estado.tarefas:[]);
+  return mergeTarefasPorVersao([...locais,...legadas],Array.isArray(tarefasIndividuais)?tarefasIndividuais:[])
+    .filter(t=>(!t.dataSugerida||t.dataSugerida===hojeLocal())&&statusTarefaAtual(t)==='aguardando_aprovacao')
+    .map(t=>({...t,_criancaId:String(criancaId)}));
+}
+function renderizarAprovacoesPais(){
+  renderizarAprovacoesPais();
+}
+function atualizarAprovacoesPaisDoFilho(criancaId,tarefasIndividuais){
+  tarefasAprovacoesPaisPorFilho[criancaId]=tarefasDeAprovacaoDoFilho(criancaId,tarefasIndividuais);
+  if(document.getElementById('modal-pais')?.classList.contains('mostrar'))renderizarAprovacoesPais();
+}
+function observarAprovacoesPais(ids){
+  for(const id of ids){
+    if(listenersAprovacoesPais[id])continue;
+    const ref=dbFirebase.ref(caminhoTarefasV2(id));
+    const callback=snap=>atualizarAprovacoesPaisDoFilho(id,Object.values(snap.val()||{}));
+    listenersAprovacoesPais[id]={ref,callback};ref.on('value',callback);
+  }
+  for(const id of Object.keys(listenersAprovacoesPais)){
+    if(ids.includes(id))continue;
+    listenersAprovacoesPais[id].ref.off('value',listenersAprovacoesPais[id].callback);
+    delete listenersAprovacoesPais[id];delete tarefasAprovacoesPaisPorFilho[id];
+  }
+}
+async function executarAcaoAprovacaoDeCrianca(criancaId,id,acao){
+  criancaId=String(criancaId);
+  if(acao!=='aprovar'&&acao!=='recusar')return;
+  if(criancaId!==String(estado.criancaAtivaId||'c1')){
+    let tarefasRemotas=[];
+    try{const snap=await dbFirebase.ref(caminhoTarefasV2(criancaId)).once('value');tarefasRemotas=Object.values(snap.val()||{})}
+    catch(error){console.warn('Falha ao buscar tarefa da criança:',error)}
+    const perfil=familiaAprovacoesPaisCache?.criancasDados?.[criancaId]?.tarefas||estado.criancasDados?.[criancaId]?.tarefas||[];
+    estado.criancasDados=estado.criancasDados||{};
+    estado.criancasDados[criancaId]={...(estado.criancasDados[criancaId]||{}),tarefas:mergeTarefasPorVersao(perfil,tarefasRemotas)};
+    trocarCriancaAtiva(criancaId);
+  }
+  if(dbFirebase&&navigator.onLine){
+    try{const snap=await dbFirebase.ref(caminhoTarefasV2(criancaId)).once('value');estado.tarefas=mergeTarefasPorVersao(estado.tarefas,Object.values(snap.val()||{}))}
+    catch(error){console.warn('Falha ao atualizar tarefa antes da decisão:',error)}
+  }
+  if(!estado.tarefas.some(t=>String(t.id)===String(id))){mostrarToast('⚠️ Não foi possível carregar esta tarefa. Atualize o painel.');return}
+  if(acao==='aprovar')await aprovarTarefaPais(id);else reprovarTarefaPais(id);
+}
 async function atualizarTarefasAprovacaoDaNuvem(){
   if(acessoFamiliar?.role!=='parent'||!dbFirebase||!sincronizacaoNuvemAtiva||!navigator.onLine)return false;
-  const criancaId=String(estado.criancaAtivaId||'c1');
   try{
-    const [individuaisSnap,estadoSnap]=await Promise.all([
-      dbFirebase.ref(caminhoTarefasV2(criancaId)).once('value'),
-      dbFirebase.ref(getCaminhoFirebase()).once('value')
-    ]);
-    if(String(estado.criancaAtivaId||'c1')!==criancaId)return false;
-    const familia=estadoSnap.val()||{};
-    const tarefasPerfil=familia.criancasDados?.[criancaId]?.tarefas;
-    const tarefasLegadas=familia.criancaAtivaId===criancaId&&Array.isArray(familia.tarefas)?familia.tarefas:[];
-    const tarefasIndividuais=Object.values(individuaisSnap.val()||{});
-    const remotas=[...(Array.isArray(tarefasPerfil)?tarefasPerfil:[]),...tarefasLegadas,...tarefasIndividuais];
-    if(!remotas.length)return true;
-    estado.tarefas=mergeTarefasPorVersao(estado.tarefas,remotas);
-    estado.criancasDados=estado.criancasDados||{};
-    estado.criancasDados[criancaId]={...(estado.criancasDados[criancaId]||{}),tarefas:JSON.parse(JSON.stringify(estado.tarefas))};
-    salvarLocalmente();
-    if(document.getElementById('modal-pais')?.classList.contains('mostrar'))renderizarPainelPais();
+    const estadoSnap=await dbFirebase.ref(getCaminhoFirebase()).once('value');
+    familiaAprovacoesPaisCache=estadoSnap.val()||{};
+    const ids=Array.from(new Set([...Object.keys(familiaAprovacoesPaisCache.criancas||{}),...Object.keys(estado.criancas||{})]));
+    const ativa=String(estado.criancaAtivaId||'c1');
+    if(!ids.includes(ativa))ids.push(ativa);
+    observarAprovacoesPais(ids);
+    await Promise.all(ids.map(async id=>{
+      const snap=await dbFirebase.ref(caminhoTarefasV2(id)).once('value');
+      atualizarAprovacoesPaisDoFilho(id,Object.values(snap.val()||{}));
+    }));
+    if(document.getElementById('modal-pais')?.classList.contains('mostrar'))renderizarAprovacoesPais();
     return true;
-  }catch(error){
-    console.warn('Falha ao atualizar aprovações na abertura do painel:',error);
-    return false;
-  }
+  }catch(error){console.warn('Falha ao atualizar aprovações dos filhos:',error);return false}
 }
 
 async function enviarParaAprovacao(id){
@@ -2930,7 +2986,7 @@ function entrarComoCrianca(){
 }
 function fecharOnboarding(iniciarTour){
   const nome=document.getElementById('input-nome-pet-inicial')?.value.trim().replace(/\s+/g,' ').slice(0,18);
-  if(nome)estado.nomePet=nome;
+  if(nome){estado.nomePet=nome;estado.pets=estado.pets||{};estado.pets.gato=estado.pets.gato||{};estado.pets.gato.nome=nome;}
   estado.onboardingVistoCrianca=true;
   salvar();
   atualizarTela();
@@ -2939,7 +2995,7 @@ function fecharOnboarding(iniciarTour){
   setTimeout(()=>{
     palco?.classList.add('eclosao-inicial');
     dispararConfetes(75);
-    mostrarBalaoFala(`Olá! Eu sou ${estado.nomePet||'Pipoca'}!`);
+    mostrarBalaoFala('Olá! Eu sou '+(estado.pets?.gato?.nome||estado.nomePet||'Pipoca')+'!');
     setTimeout(()=>palco?.classList.remove('eclosao-inicial'),1600);
   },300);
   if(iniciarTour){
@@ -4293,8 +4349,8 @@ function alternarListaPets(e){
 }
 function escolherPet(tipo){
   if(!PETS[tipo])return;
-  if(nivelJogador()<PETS[tipo].desbloqueioNivel)return mostrarToast(`🔒 Nível ${PETS[tipo].desbloqueioNivel} necessário.`);
   estado.petAtual=tipo;
+  obterDadosPetAtual();
   salvar();
   atualizarTela();
   document.getElementById('lista-pets').classList.remove('abrir');
