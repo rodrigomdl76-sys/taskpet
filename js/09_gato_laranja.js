@@ -1,9 +1,9 @@
 /* WebP originais do pet, organizados por fase e ação na pasta animacoes/. */
 (() => {
   const pasta = 'animacoes/';
-  const versaoAnimacoes = 'ovo-animacoes-v24';
+  const versaoAnimacoes = 'gato-fase2-reacoes-v1';
   const arquivos = {
-    2:{idle:'01_parado.webp',carinho:'02_carinho.webp',dormir:'03_dormir.webp',comemoracao:'04_comemorar.webp'},
+    2:{idle:'01_parado.webp',carinho:'02_carinho.webp',brincar:'05_brincar.webp',dormir:'03_dormir.webp',comemoracao:'04_comemorar.webp'},
     1:{idle:'01_parado.webp',carinho:'02_carinho.webp',brincar:'05_brincar.webp',dormir:'03_dormir.webp',comemoracao:'04_comemorar.webp'},
     3:{idle:'01_parado.webp',carinho:'02_carinho.webp',dormir:'03_dormir.webp',comemoracao:'04_comemorar.webp'}
   };
@@ -222,7 +222,7 @@
     if(!gestoPorCss&&idlePersonalizadoUrl()&&img?.dataset.visualPersonalizado)await transicaoMagica(iniciar,atual);
     else iniciar();
     if(token!==atual)return;
-    const duracao=f===1&&a==='carinho'?5400:({carinho:8200,brincar:10800,comemoracao:2100,pulinho:3000,giro:8600}[a]||2300);
+    const duracao=f===2?({carinho:2500,brincar:2700,comemoracao:2500}[a]||2300):(f===1&&a==='carinho'?5400:({carinho:8200,brincar:10800,comemoracao:2100,pulinho:3000,giro:8600}[a]||2300));
     volta=setTimeout(()=>{if(token===atual)voltar()},gestoLiberado||a==='carinho'||f===2||(f===1&&a==='brincar')?duracao:2300);
   }
   function atualizarRolagem(){
