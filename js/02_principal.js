@@ -509,6 +509,7 @@ async function vincularFamiliaAConta(user){
 }
 let acessoFamiliar=null;
 let ultimoEstadoPrivadoPais={};
+let petAtualPendenteSync=null;
 const CAMPOS_PRIVADOS_PAIS=['pinHash','pinBloqueadoAte','pinTentativasFalhas','pinPersonalizado','privacidadeAceita','onboardingVistoPais','emailsRecuperacao','emailRecuperacao','pinPais'];
 function extrairCamposPrivadosPais(origem){const dados={};CAMPOS_PRIVADOS_PAIS.forEach(k=>{if(Object.prototype.hasOwnProperty.call(origem||{},k))dados[k]=origem[k]});return dados}
 function removerCamposPrivadosPais(origem){const dados={...(origem||{})};CAMPOS_PRIVADOS_PAIS.forEach(k=>{delete dados[k]});return dados}
@@ -1100,6 +1101,16 @@ async function iniciarSincronizacaoNuvem(){
       }
       sincronizarListenerTarefasV2();
       garantirCriancaAtiva();
+      // Uma atualização antiga que já estava em trânsito pode chegar enquanto
+      // a troca de pet está sendo gravada. Mantemos a escolha feita neste
+      // aparelho até a nuvem confirmar esse mesmo pet.
+      if(petAtualPendenteSync){
+        if(estado.petAtual===petAtualPendenteSync)petAtualPendenteSync=null;
+        else{
+          estado.petAtual=petAtualPendenteSync;
+          salvarLocalmente();
+        }
+      }
       if(perfilAtivo==='crianca'){
         if((Number(estado.pets?.[estado.petAtual]?.nivel)||1)>nivelAntes)playSound('nivel');
         else if((Number(estado.moedas)||0)>moedasAntes)playSound('moedas');
@@ -4402,6 +4413,7 @@ function alternarListaPets(e){
 function escolherPet(tipo){
   if(!PETS[tipo])return;
   estado.petAtual=tipo;
+  petAtualPendenteSync=sincronizacaoNuvemAtiva&&dbFirebase?tipo:null;
   obterDadosPetAtual();
   salvar();
   atualizarTela();
