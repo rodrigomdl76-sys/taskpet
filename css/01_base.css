@@ -75,7 +75,7 @@ button{touch-action:manipulation}
 .pet-unico-btn{width:42px;height:42px;border-radius:50%;border:3px solid #7c3aed;background:#fff;display:flex;align-items:center;justify-content:center;font-size:21px;box-shadow:0 5px 15px #7c3aed55;cursor:pointer}
 .lista-pet-dropdown{position:absolute;top:47px;background:#fff;border-radius:18px;padding:7px;display:flex;gap:6px;box-shadow:0 12px 30px #0003;opacity:0;visibility:hidden;transform:translateY(-7px);transition:.2s}
 .lista-pet-dropdown.abrir{opacity:1;visibility:visible;transform:translateY(0)}
-.opcao-pet{width:43px;height:43px;border-radius:13px;background:#f1f5f9;display:flex;align-items:center;justify-content:center;font-size:21px;cursor:pointer;position:relative}
+.opcao-pet{width:43px;height:43px;border:0;padding:0;border-radius:13px;background:#f1f5f9;color:inherit;display:flex;align-items:center;justify-content:center;font:inherit;font-size:21px;line-height:1;cursor:pointer;position:relative;touch-action:manipulation;-webkit-tap-highlight-color:transparent}
 .opcao-pet.ativo{background:#ede9fe;outline:2px solid #8b5cf6}
 .opcao-pet.bloqueado{filter:grayscale(1);opacity:.55}
 .lock-mini{position:absolute;right:-2px;bottom:-2px;font-size:10px}

@@ -1,13 +1,14 @@
-const CACHE_NAME = 'rotinapet-cache-v96';
+const CACHE_NAME = 'rotinapet-cache-v97';
 const RUNTIME_CACHE_NAME = 'rotinapet-media-v3';
 const KEEP_CACHES = new Set([CACHE_NAME, RUNTIME_CACHE_NAME]);
 const MAX_RUNTIME_ENTRIES = 100;
 const ASSETS = [
   "./index.html",
-  "./animacoes/fase2/01_parado.webp?v=gato-fase2-pulinho-v2",
-  "./animacoes/fase2/02_carinho.webp?v=gato-fase2-pulinho-v2",
-  "./animacoes/fase2/04_comemorar.webp?v=gato-fase2-pulinho-v2",
-  "./animacoes/fase2/05_brincar.webp?v=gato-fase2-pulinho-v2",
+  "./animacoes/fase2/01_parado.webp?v=gato-fase2-pulinho-v3",
+  "./animacoes/fase2/02_carinho.webp?v=gato-fase2-pulinho-v3",
+  "./animacoes/fase2/03_dormir.webp?v=gato-fase2-pulinho-v3",
+  "./animacoes/fase2/04_comemorar.webp?v=gato-fase2-pulinho-v3",
+  "./animacoes/fase2/05_brincar.webp?v=gato-fase2-pulinho-v3",
   "./animacoes/fase1/01_parado.webp?v=ovo-animacoes-v23",
   "./animacoes/fase1/visuais/ovo-gato-oculos.webp?v=ovo-animacoes-v23",
   "./animacoes/fase1/visuais/ovo-gato-samurai-thumb.webp",
@@ -27,7 +28,7 @@ const ASSETS = [
   "./icon-512.webp?v=cat-crown-v1",
   "./icon-512-maskable.webp?v=cat-crown-v1",
   "./css/14_pet_companheiro.css?v=5",
-  "./css/01_base.css?v=texto-modal-escuro-v1",
+  "./css/01_base.css?v=seletor-pet-toque-v1",
   "./js/01_menu.js?v=back-3",
   "./css/02_menu.css",
   "./css/04_animacoes_pet.css?v=efeitos-reacoes-v1",
@@ -46,7 +47,7 @@ const ASSETS = [
   "./css/11_premium_63.css",
 
   "./js/08_meu_pet.js?v=gestos-1",
-  "./js/09_gato_laranja.js?v=gato-fase2-pulinho-v2",
+  "./js/09_gato_laranja.js?v=gato-fase2-pulinho-v3",
   "./js/10_pet_companheiro.js?v=6",
   "./css/17_pet_no_chao.css?v=2",
   "./css/18_topo_limpo.css?v=seletor-pet-v1",

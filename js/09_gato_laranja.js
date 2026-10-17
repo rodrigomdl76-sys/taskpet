@@ -1,7 +1,7 @@
 /* WebP originais do pet, organizados por fase e ação na pasta animacoes/. */
 (() => {
   const pasta = 'animacoes/';
-  const versaoAnimacoes = 'gato-fase2-pulinho-v2';
+  const versaoAnimacoes = 'gato-fase2-pulinho-v3';
   const arquivos = {
     2:{idle:'01_parado.webp',carinho:'02_carinho.webp',brincar:'05_brincar.webp',dormir:'03_dormir.webp',comemoracao:'04_comemorar.webp'},
     1:{idle:'01_parado.webp',carinho:'02_carinho.webp',brincar:'05_brincar.webp',dormir:'03_dormir.webp',comemoracao:'04_comemorar.webp'},
@@ -13,7 +13,12 @@
   let fasePrecarregada=0, imagensPrecarregadas=[], acoesPersonalizadas=null;
   const acoesPersonalizadasProntas=fetch(`${pasta}fase1/acoes_personalizadas.json?v=${versaoAnimacoes}`).then(r=>r.ok?r.json():null).then(d=>{acoesPersonalizadas=d;return d}).catch(()=>null);
   const nivel = () => Number(estado?.pets?.gato?.nivel)||1;
-  const faseReal = () => calcularFase(nivel());
+  const faseReal = () => {
+    const n=nivel();
+    const confirmada=Number(estado?.pets?.gato?.faseConfirmada)||1;
+    if(n<21||confirmada<2)return 1;
+    return n>=41?3:2;
+  };
   const fase = () => perfilAtivo==='pais' && faseTeste ? faseTeste : faseReal();
   function nuvemMagica(){
     const host=document.createElement('div');

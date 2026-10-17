@@ -44,7 +44,7 @@
 <link rel="apple-touch-icon" sizes="192x192" href="icon-192.png?v=cat-crown-v2">
 
 <link rel="stylesheet" href="css/14_pet_companheiro.css?v=5">
-<link rel="stylesheet" href="css/01_base.css?v=texto-modal-escuro-v1">
+<link rel="stylesheet" href="css/01_base.css?v=seletor-pet-toque-v1">
 <link rel="stylesheet" href="css/02_menu.css">
 <link rel="stylesheet" href="css/04_animacoes_pet.css?v=efeitos-reacoes-v1">
 <link rel="stylesheet" href="css/05_evolucao_pet.css">
@@ -131,8 +131,8 @@
   <div class="pet-selector">
     <button class="pet-unico-btn" id="btn-pet-atual" onclick="alternarListaPets(event)">🐱</button>
     <div class="lista-pet-dropdown" id="lista-pets">
-      <div class="opcao-pet" data-pet="gato" onclick="escolherPet('gato')" title="Gato">🐱</div>
-      <div class="opcao-pet" data-pet="axolote" onclick="escolherPet('axolote')" title="Escolher Axolote">🦎</div>
+      <button type="button" class="opcao-pet" data-pet="gato" onclick="escolherPet('gato')" title="Gato" aria-label="Selecionar gato">🐱</button>
+      <button type="button" class="opcao-pet" data-pet="axolote" onclick="escolherPet('axolote')" title="Escolher Axolote" aria-label="Selecionar axolote">🦎</button>
     </div>
   </div>
   <div class="cat-section" id="pet-section-area">
@@ -739,7 +739,7 @@
 <script src="js/05_interface.js" defer></script>
 <script src="js/06_premium.js?v=push-recompensas-v2" defer></script>
 <script src="js/08_meu_pet.js?v=gestos-1" defer></script>
-<script src="js/09_gato_laranja.js?v=gato-fase2-pulinho-v2" defer></script>
+<script src="js/09_gato_laranja.js?v=gato-fase2-pulinho-v3" defer></script>
 <script src="js/10_pet_companheiro.js?v=6" defer></script>
 <script src="js/12_home_nav.js?v=2" defer></script>
 <script src="js/13_gestos.js?v=4" defer></script>
