@@ -1,4 +1,4 @@
-const { normalizarAviso, tokensDosPais, dividirEmLotes, familiaValida } = require('./push-logic');
+const { normalizarAviso, tokensDosPais, tokensDaCrianca, dividirEmLotes, familiaValida } = require('./push-logic');
 
 const INVALID_TOKEN_CODES = new Set([
   'messaging/invalid-registration-token',
@@ -31,17 +31,20 @@ function createPushHandler({ database, messaging, logger }) {
 
     const aviso = normalizarAviso(snapshot.val(), pushId);
     if (!aviso) {
-      logger.info('Push ignorado: aviso não destinado aos responsáveis.', { familyId, pushId });
+      logger.info('Push ignorado: aviso sem destinatário válido.', { familyId, pushId });
       return null;
     }
 
     const tokenSnapshot = await database
       .ref(`rotinapet/familias/${familyId}/fcmTokens`)
       .once('value');
-    const destinatarios = tokensDosPais(tokenSnapshot.val());
+    const destinatarios = aviso.onlyPerfil === 'crianca'
+      ? tokensDaCrianca(tokenSnapshot.val(), aviso.targetChildId)
+      : tokensDosPais(tokenSnapshot.val());
     if (!destinatarios.length) {
-      logger.warn('Nenhum aparelho de responsável tem push ativo.', { familyId, pushId });
-      await snapshot.ref.update({ pushStatus: 'sem_token_de_responsavel', pushProcessadoEm: Date.now() });
+      const statusSemToken = aviso.onlyPerfil === 'crianca' ? 'sem_token_da_crianca' : 'sem_token_de_responsavel';
+      logger.warn('Nenhum aparelho correspondente tem push ativo.', { familyId, pushId, perfil: aviso.onlyPerfil, targetChildId: aviso.targetChildId || null });
+      await snapshot.ref.update({ pushStatus: statusSemToken, pushProcessadoEm: Date.now() });
       return null;
     }
 
@@ -80,7 +83,7 @@ function createPushHandler({ database, messaging, logger }) {
       pushFalhas: falhas,
       pushProcessadoEm: Date.now()
     });
-    logger.info('Push de família processado.', { familyId, pushId, enviados, falhas });
+    logger.info('Push de família processado.', { familyId, pushId, perfil: aviso.onlyPerfil, targetChildId: aviso.targetChildId || null, enviados, falhas });
     return null;
   };
 }
