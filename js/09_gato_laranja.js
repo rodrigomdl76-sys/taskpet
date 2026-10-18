@@ -2,7 +2,7 @@
 (() => {
   const pasta = 'animacoes/';
   const versaoAnimacoes = 'gato-fase2-pulinho-v8';
-  const versaoAnimacoesFase2 = 'gato-fase2-pulinho-v10';
+  const versaoAnimacoesFase2 = 'gato-fase2-pulinho-v11';
   const arquivos = {
     2:{idle:'01_parado-v10.webp',carinho:'02_carinho-v10.webp',brincar:'05_brincar-pulinhos-v10.webp',dormir:'03_dormir-v10.webp',comemoracao:'04_comemorar-v10.webp'},
     1:{idle:'01_parado.webp',carinho:'02_carinho.webp',brincar:'05_brincar.webp',dormir:'03_dormir.webp',comemoracao:'04_comemorar.webp'},
@@ -323,10 +323,9 @@
     if(estado?.petAtual==='gato'&&fase()===1)void transicaoMagica(trocar,atual,true);
     else trocar();
   };
+  // A voz salva é apenas áudio: ela não deve substituir a reação escolhida.
   window.gatoLaranjaAudio=audio=>{
     if(!audio?.addEventListener)return;
-    audio.addEventListener('playing',()=>{audioAtivo++;if(estado?.petAtual==='gato')tocar('comemoracao')});
-    for(const evento of ['ended','pause'])audio.addEventListener(evento,()=>{if(audioAtivo){audioAtivo=0;voltar()}});
   };
   const anterior=window.atualizarTela;
   if(typeof anterior==='function')window.atualizarTela=function(){
