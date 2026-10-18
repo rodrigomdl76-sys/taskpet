@@ -2,9 +2,9 @@
 (() => {
   const pasta = 'animacoes/';
   const versaoAnimacoes = 'gato-fase2-pulinho-v8';
-  const versaoAnimacoesFase2 = 'gato-fase2-pulinho-v9';
+  const versaoAnimacoesFase2 = 'gato-fase2-pulinho-v10';
   const arquivos = {
-    2:{idle:'01_parado-v9.webp',carinho:'02_carinho-v9.webp',brincar:'05_brincar-pulinhos-v9.webp',dormir:'03_dormir-v9.webp',comemoracao:'04_comemorar-v9.webp'},
+    2:{idle:'01_parado-v10.webp',carinho:'02_carinho-v10.webp',brincar:'05_brincar-pulinhos-v10.webp',dormir:'03_dormir-v10.webp',comemoracao:'04_comemorar-v10.webp'},
     1:{idle:'01_parado.webp',carinho:'02_carinho.webp',brincar:'05_brincar.webp',dormir:'03_dormir.webp',comemoracao:'04_comemorar.webp'},
     3:{idle:'01_parado.webp',carinho:'02_carinho.webp',dormir:'03_dormir.webp',comemoracao:'04_comemorar.webp'}
   };
@@ -57,14 +57,15 @@
     try{return String(window.obterIdlePersonalizadoGato?.(fase())||'').trim()}catch(_){return ''}
   }
   function caminho(f,a){
+    const versao=f===2?versaoAnimacoesFase2:versaoAnimacoes;
     if(a==='idle'){
       const personalizado=idlePersonalizadoUrl();
-      if(personalizado)return `${personalizado}${personalizado.includes('?')?'&':'?'}v=${encodeURIComponent(versaoAnimacoes)}`;
+      if(personalizado)return `${personalizado}${personalizado.includes('?')?'&':'?'}v=${encodeURIComponent(versao)}`;
     }
     if(f===1&&a==='carinho'&&acoesPersonalizadas?.carinho)return acoesPersonalizadas.carinho;
     if(f===1&&acoesPersonalizadas?.[a])return acoesPersonalizadas[a];
     const arquivo = gestos[f]?.[a] ? `${pasta}${gestos[f][a]}` : `${pasta}fase${f}/${arquivos[f][a]}`;
-    return `${arquivo}?v=${versaoAnimacoes}`;
+    return `${arquivo}?v=${versao}`;
   }
   function precarregarFase(f){
     if(fasePrecarregada===f || !arquivos[f])return;
