@@ -1,5 +1,5 @@
-const CACHE_NAME = 'rotinapet-cache-v103';
-const RUNTIME_CACHE_NAME = 'rotinapet-media-v6';
+const CACHE_NAME = 'rotinapet-cache-v104';
+const RUNTIME_CACHE_NAME = 'rotinapet-media-v7';
 const KEEP_CACHES = new Set([CACHE_NAME, RUNTIME_CACHE_NAME]);
 const MAX_RUNTIME_ENTRIES = 100;
 const ASSETS = [
@@ -14,7 +14,7 @@ const ASSETS = [
   "./animacoes/fase1/05_brincar.webp?v=ovo-animacoes-v18",
   "./animacoes/fase1/01_parado.webp?v=gato-fase2-pulinho-v7",
   "./animacoes/fase1/visuais/ovo-gato-oculos.webp?v=gato-fase2-pulinho-v7",
-  ./animacoes/fase1/visuais/ovo-gato-oculos.webp?v=atelier-thumbs-v2",
+  "./animacoes/fase1/visuais/ovo-gato-oculos.webp?v=atelier-thumbs-v2",
   "./animacoes/fase1/visuais/ovo-gato-samurai.webp?v=visual-quality-v2",
   "./animacoes/fase1/visuais/ovo-gato-samurai-thumb.webp?v=atelier-thumbs-v2",
   "./animacoes/fase1/visuais/ovo-gato-explorador-espacial.webp?v=ovo-visuais-v2",
