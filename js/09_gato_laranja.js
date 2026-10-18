@@ -2,8 +2,9 @@
 (() => {
   const pasta = 'animacoes/';
   const versaoAnimacoes = 'gato-fase2-pulinho-v8';
+  const versaoAnimacoesFase2 = 'gato-fase2-pulinho-v9';
   const arquivos = {
-    2:{idle:'01_parado.webp',carinho:'02_carinho.webp',brincar:'05_brincar.webp',dormir:'03_dormir.webp',comemoracao:'04_comemorar.webp'},
+    2:{idle:'01_parado-v9.webp',carinho:'02_carinho-v9.webp',brincar:'05_brincar-pulinhos-v9.webp',dormir:'03_dormir-v9.webp',comemoracao:'04_comemorar-v9.webp'},
     1:{idle:'01_parado.webp',carinho:'02_carinho.webp',brincar:'05_brincar.webp',dormir:'03_dormir.webp',comemoracao:'04_comemorar.webp'},
     3:{idle:'01_parado.webp',carinho:'02_carinho.webp',dormir:'03_dormir.webp',comemoracao:'04_comemorar.webp'}
   };
