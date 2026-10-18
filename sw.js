@@ -1,27 +1,32 @@
-const CACHE_NAME = 'rotinapet-cache-v102';
-const RUNTIME_CACHE_NAME = 'rotinapet-media-v5';
+const CACHE_NAME = 'rotinapet-cache-v103';
+const RUNTIME_CACHE_NAME = 'rotinapet-media-v6';
 const KEEP_CACHES = new Set([CACHE_NAME, RUNTIME_CACHE_NAME]);
 const MAX_RUNTIME_ENTRIES = 100;
 const ASSETS = [
   "./index.html",
-  "./animacoes/fase2/01_parado.webp?v=gato-fase2-pulinho-v6",
-  "./animacoes/fase2/02_carinho.webp?v=gato-fase2-pulinho-v6",
-  "./animacoes/fase2/03_dormir.webp?v=gato-fase2-pulinho-v6",
-  "./animacoes/fase2/04_comemorar.webp?v=gato-fase2-pulinho-v6",
-  "./animacoes/fase2/05_brincar.webp?v=gato-fase2-pulinho-v6",
-  "./animacoes/fase1/01_parado.webp?v=ovo-animacoes-v23",
-  "./animacoes/fase1/visuais/ovo-gato-oculos.webp?v=ovo-animacoes-v23",
-  "./animacoes/fase1/visuais/ovo-gato-samurai-thumb.webp",
+  "./animacoes/fase2/01_parado.webp?v=gato-fase2-pulinho-v7",
+  "./animacoes/fase2/02_carinho.webp?v=gato-fase2-pulinho-v7",
+  "./animacoes/fase2/03_dormir.webp?v=gato-fase2-pulinho-v7",
+  "./animacoes/fase2/04_comemorar.webp?v=gato-fase2-pulinho-v7",
+  "./animacoes/fase2/05_brincar.webp?v=gato-fase2-pulinho-v7",
+  "./animacoes/fase1/acoes_personalizadas.json?v=gato-fase2-pulinho-v7",
+  "./animacoes/fase1/06_beijo_carinho.webp?v=beijo-gato-fase1-v2",
+  "./animacoes/fase1/05_brincar.webp?v=ovo-animacoes-v18",
+  "./animacoes/fase1/01_parado.webp?v=gato-fase2-pulinho-v7",
+  "./animacoes/fase1/visuais/ovo-gato-oculos.webp?v=gato-fase2-pulinho-v7",
+  ./animacoes/fase1/visuais/ovo-gato-oculos.webp?v=atelier-thumbs-v2",
+  "./animacoes/fase1/visuais/ovo-gato-samurai.webp?v=visual-quality-v2",
+  "./animacoes/fase1/visuais/ovo-gato-samurai-thumb.webp?v=atelier-thumbs-v2",
   "./animacoes/fase1/visuais/ovo-gato-explorador-espacial.webp?v=ovo-visuais-v2",
   "./animacoes/fase1/visuais/ovo-gato-armadura-heroica.webp?v=ovo-visuais-v2",
-  "./animacoes/fase1/visuais/ovo-gato-explorador-espacial-thumb.webp",
-  "./animacoes/fase1/visuais/ovo-gato-armadura-heroica-thumb.webp",
+  "./animacoes/fase1/visuais/ovo-gato-explorador-espacial-thumb.webp?v=atelier-thumbs-v2",
+  "./animacoes/fase1/visuais/ovo-gato-armadura-heroica-thumb.webp?v=atelier-thumbs-v2",
   "./animacoes/axolote/fase1/visuais/axolote-fantasia-cachorrinho.webp?v=axolote-fase1-visual-v1",
   "./animacoes/axolote/fase1/visuais/axolote-fantasia-cachorrinho-thumb.webp",
   "./animacoes/axolote/fase1/visuais/axolote-disco-voador.webp?v=axolote-ufo-loop-v1",
   "./animacoes/axolote/fase1/visuais/axolote-disco-voador-thumb.webp",
-  "./animacoes/fase2/visuais/gato-explorador-espacial-thumb.webp?v=visuais-gato-fase2-v3",
-  "./animacoes/fase2/visuais/gato-armadura-heroica-thumb.webp?v=visuais-gato-fase2-v3",
+  "./animacoes/fase2/visuais/gato-explorador-espacial-thumb.webp?v=visuais-gato-fase2-v4",
+  "./animacoes/fase2/visuais/gato-armadura-heroica-thumb.webp?v=visuais-gato-fase2-v4",
   "./manifest.json",
   "./icon-192.webp?v=cat-crown-v1",
   "./icon-192.png?v=cat-crown-v2",
@@ -35,7 +40,7 @@ const ASSETS = [
   "./css/05_evolucao_pet.css",
   "./css/13_gato_laranja.css?v=ovo-gato-brilhos-v1",
   "./third_party/qrcode-generator/qrcode.js?v=local-qrcode-v1",
-  "./js/02_principal.js?v=aprovacoes-multifilho-nomes-v5",
+  "./js/02_principal.js?v=aprovacoes-multifilho-nomes-v6",
   "./js/03_extras_01.js",
   "./js/04_engajamento.js?v=mesada-tarefas-v1",
   "./css/06_extras_01.css",
@@ -47,7 +52,7 @@ const ASSETS = [
   "./css/11_premium_63.css",
 
   "./js/08_meu_pet.js?v=gestos-1",
-  "./js/09_gato_laranja.js?v=gato-fase2-pulinho-v6",
+  "./js/09_gato_laranja.js?v=gato-fase2-pulinho-v7",
   "./js/10_pet_companheiro.js?v=6",
   "./css/17_pet_no_chao.css?v=2",
   "./css/18_topo_limpo.css?v=seletor-pet-v1",
@@ -61,7 +66,7 @@ const ASSETS = [
   "./css/22_gestos.css?v=5",
   "./js/13_gestos.js?v=4",
   "./js/16_axolote.js?v=axolote-fase1-visual-v1",
-  "./js/17_atelie_pet.js?v=fantasias-por-fase-v2"
+  "./js/17_atelie_pet.js?v=fantasias-por-fase-v3"
 ];
 
 self.addEventListener('install', event => {
@@ -92,39 +97,27 @@ async function limitarCacheMidia(cache) {
   }
 }
 
-function buscarEGuardarMidia(request, event) {
-  const cachePromise = caches.open(RUNTIME_CACHE_NAME);
-  const existentePromise = cachePromise.then(cache => cache.match(request));
-
-  const atualizarPromise = existentePromise.then(async existente => {
-    const cache = await cachePromise;
+function buscarEGuardarMidia(request) {
+  return (async () => {
+    const cache = await caches.open(RUNTIME_CACHE_NAME);
     try {
-      if (existente) {
-        await cache.delete(request);
-        await cache.put(request, existente.clone());
-      }
-
+      // Imagens podem ser substituídas mantendo o mesmo nome. Prefira a
+      // versão publicada agora e use o cache apenas se a rede estiver offline.
       const resposta = await fetch(new Request(request, {cache: 'no-cache'}));
       if (resposta.ok && resposta.type === 'basic') {
         await cache.put(request, resposta.clone());
         await limitarCacheMidia(cache);
       }
+      if (resposta.ok) return resposta;
+      const existente = await cache.match(request);
       return existente || resposta;
     } catch (error) {
+      const existente = await cache.match(request) || await caches.match(request);
       if (existente) return existente;
-      console.warn('Não foi possível atualizar a mídia em cache:', request.url, error);
-      return caches.match(request);
+      console.warn('Não foi possível carregar a mídia:', request.url, error);
+      return Response.error();
     }
-  });
-
-  event.waitUntil(atualizarPromise.then(() => undefined).catch(error => {
-    console.warn('Falha ao atualizar o cache de mídia:', error);
-  }));
-
-  return existentePromise
-    .then(existente => existente || atualizarPromise)
-    .then(resposta => resposta || caches.match(request))
-    .then(resposta => resposta || Response.error());
+  })();
 }
 function buscarStaleWhileRevalidate(request, event) {
   const cachePromise = caches.open(CACHE_NAME);
@@ -170,7 +163,7 @@ self.addEventListener('fetch', event => {
   }
 
   if (url.pathname.includes('/animacoes/') || url.pathname.includes('/assets/')) {
-    event.respondWith(buscarEGuardarMidia(event.request, event));
+    event.respondWith(buscarEGuardarMidia(event.request));
     return;
   }
 
