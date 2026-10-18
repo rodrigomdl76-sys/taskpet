@@ -10,7 +10,7 @@
   };
   const gestos = {1:{pulinho:'gestos/ovo_gato_pulinho.webp',giro:'gestos/ovo_gato_giro_final.webp'}};
   const acoes = [{id:'carinho',icone:'💖',nome:'Dar Carinho'},{id:'comemoracao',icone:'🎉',nome:'Comemorar'}];
-  let img, volta, faseVisivel=0, faseTeste=0, acao='', chave='', token=0, audioAtivo=0;
+  let img, volta, faseVisivel=0, faseTeste=0, acao='', chave='', token=0;
   let fasePrecarregada=0, imagensPrecarregadas=[], acoesPersonalizadas=null;
   const acoesPersonalizadasProntas=fetch(`${pasta}fase1/acoes_personalizadas.json?v=${versaoAnimacoes}`).then(r=>r.ok?r.json():null).then(d=>{acoesPersonalizadas=d;return d}).catch(()=>null);
   const nivel = () => Number(estado?.pets?.gato?.nivel)||1;
@@ -323,10 +323,8 @@
     if(estado?.petAtual==='gato'&&fase()===1)void transicaoMagica(trocar,atual,true);
     else trocar();
   };
-  // A voz salva é apenas áudio: ela não deve substituir a reação escolhida.
-  window.gatoLaranjaAudio=audio=>{
-    if(!audio?.addEventListener)return;
-  };
+  // A voz salva não deve iniciar nem encerrar uma reação visual.
+  window.gatoLaranjaAudio=()=>{};
   const anterior=window.atualizarTela;
   if(typeof anterior==='function')window.atualizarTela=function(){
     const resultado=anterior.apply(this,arguments);
