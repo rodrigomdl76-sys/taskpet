@@ -1,14 +1,14 @@
-const CACHE_NAME = 'rotinapet-cache-v101';
-const RUNTIME_CACHE_NAME = 'rotinapet-media-v4';
+const CACHE_NAME = 'rotinapet-cache-v102';
+const RUNTIME_CACHE_NAME = 'rotinapet-media-v5';
 const KEEP_CACHES = new Set([CACHE_NAME, RUNTIME_CACHE_NAME]);
 const MAX_RUNTIME_ENTRIES = 100;
 const ASSETS = [
   "./index.html",
-  "./animacoes/fase2/01_parado.webp?v=gato-fase2-pulinho-v5",
-  "./animacoes/fase2/02_carinho.webp?v=gato-fase2-pulinho-v5",
-  "./animacoes/fase2/03_dormir.webp?v=gato-fase2-pulinho-v5",
-  "./animacoes/fase2/04_comemorar.webp?v=gato-fase2-pulinho-v5",
-  "./animacoes/fase2/05_brincar.webp?v=gato-fase2-pulinho-v5",
+  "./animacoes/fase2/01_parado.webp?v=gato-fase2-pulinho-v6",
+  "./animacoes/fase2/02_carinho.webp?v=gato-fase2-pulinho-v6",
+  "./animacoes/fase2/03_dormir.webp?v=gato-fase2-pulinho-v6",
+  "./animacoes/fase2/04_comemorar.webp?v=gato-fase2-pulinho-v6",
+  "./animacoes/fase2/05_brincar.webp?v=gato-fase2-pulinho-v6",
   "./animacoes/fase1/01_parado.webp?v=ovo-animacoes-v23",
   "./animacoes/fase1/visuais/ovo-gato-oculos.webp?v=ovo-animacoes-v23",
   "./animacoes/fase1/visuais/ovo-gato-samurai-thumb.webp",
@@ -20,8 +20,8 @@ const ASSETS = [
   "./animacoes/axolote/fase1/visuais/axolote-fantasia-cachorrinho-thumb.webp",
   "./animacoes/axolote/fase1/visuais/axolote-disco-voador.webp?v=axolote-ufo-loop-v1",
   "./animacoes/axolote/fase1/visuais/axolote-disco-voador-thumb.webp",
-  "./animacoes/fase2/visuais/gato-explorador-espacial-thumb.webp?v=visuais-gato-fase2-v2",
-  "./animacoes/fase2/visuais/gato-armadura-heroica-thumb.webp?v=visuais-gato-fase2-v2",
+  "./animacoes/fase2/visuais/gato-explorador-espacial-thumb.webp?v=visuais-gato-fase2-v3",
+  "./animacoes/fase2/visuais/gato-armadura-heroica-thumb.webp?v=visuais-gato-fase2-v3",
   "./manifest.json",
   "./icon-192.webp?v=cat-crown-v1",
   "./icon-192.png?v=cat-crown-v2",
@@ -47,7 +47,7 @@ const ASSETS = [
   "./css/11_premium_63.css",
 
   "./js/08_meu_pet.js?v=gestos-1",
-  "./js/09_gato_laranja.js?v=gato-fase2-pulinho-v5",
+  "./js/09_gato_laranja.js?v=gato-fase2-pulinho-v6",
   "./js/10_pet_companheiro.js?v=6",
   "./css/17_pet_no_chao.css?v=2",
   "./css/18_topo_limpo.css?v=seletor-pet-v1",
@@ -61,7 +61,7 @@ const ASSETS = [
   "./css/22_gestos.css?v=5",
   "./js/13_gestos.js?v=4",
   "./js/16_axolote.js?v=axolote-fase1-visual-v1",
-  "./js/17_atelie_pet.js?v=fantasias-por-fase-v1"
+  "./js/17_atelie_pet.js?v=fantasias-por-fase-v2"
 ];
 
 self.addEventListener('install', event => {
