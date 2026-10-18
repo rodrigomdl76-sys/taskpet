@@ -1439,7 +1439,7 @@ function calcularFase(n){
   if(estado.petAtual==='axolote')return n>=41?3:n>=21?2:1;
   if(estado.petAtual==='gato'){
     const confirmou=Number(estado.pets?.gato?.faseConfirmada)||1;
-    if(n<21 || confirmou<2)return 1;
+    if(confirmou<2)return 1;
     return n>=41?3:2;
   }
   return n>=81?5:n>=61?4:n>=41?3:n>=21?2:1;
