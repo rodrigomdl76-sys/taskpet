@@ -2,7 +2,7 @@
 (() => {
   const pasta = 'animacoes/';
   const versaoAnimacoes = 'gato-fase2-pulinho-v8';
-  const versaoAnimacoesFase2 = 'gato-fase2-pulinho-v10';
+  const versaoAnimacoesFase2 = 'gato-fase2-pulinho-v11';
   const arquivos = {
     2:{idle:'01_parado-v10.webp',carinho:'02_carinho-v10.webp',brincar:'05_brincar-pulinhos-v10.webp',dormir:'03_dormir-v10.webp',comemoracao:'04_comemorar-v10.webp'},
     1:{idle:'01_parado.webp',carinho:'02_carinho.webp',brincar:'05_brincar.webp',dormir:'03_dormir.webp',comemoracao:'04_comemorar.webp'},
@@ -10,7 +10,7 @@
   };
   const gestos = {1:{pulinho:'gestos/ovo_gato_pulinho.webp',giro:'gestos/ovo_gato_giro_final.webp'}};
   const acoes = [{id:'carinho',icone:'💖',nome:'Dar Carinho'},{id:'comemoracao',icone:'🎉',nome:'Comemorar'}];
-  let img, volta, faseVisivel=0, faseTeste=0, acao='', chave='', token=0, audioAtivo=0;
+  let img, volta, faseVisivel=0, faseTeste=0, acao='', chave='', token=0;
   let fasePrecarregada=0, imagensPrecarregadas=[], acoesPersonalizadas=null;
   const acoesPersonalizadasProntas=fetch(`${pasta}fase1/acoes_personalizadas.json?v=${versaoAnimacoes}`).then(r=>r.ok?r.json():null).then(d=>{acoesPersonalizadas=d;return d}).catch(()=>null);
   const nivel = () => Number(estado?.pets?.gato?.nivel)||1;
@@ -323,11 +323,8 @@
     if(estado?.petAtual==='gato'&&fase()===1)void transicaoMagica(trocar,atual,true);
     else trocar();
   };
-  window.gatoLaranjaAudio=audio=>{
-    if(!audio?.addEventListener)return;
-    audio.addEventListener('playing',()=>{audioAtivo++;if(estado?.petAtual==='gato')tocar('comemoracao')});
-    for(const evento of ['ended','pause'])audio.addEventListener(evento,()=>{if(audioAtivo){audioAtivo=0;voltar()}});
-  };
+  // A voz salva não deve iniciar nem encerrar uma reação visual.
+  window.gatoLaranjaAudio=()=>{};
   const anterior=window.atualizarTela;
   if(typeof anterior==='function')window.atualizarTela=function(){
     const resultado=anterior.apply(this,arguments);
