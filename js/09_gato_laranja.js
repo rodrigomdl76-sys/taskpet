@@ -1,7 +1,7 @@
 /* WebP originais do pet, organizados por fase e ação na pasta animacoes/. */
 (() => {
   const pasta = 'animacoes/';
-  const versaoAnimacoes = 'gato-fase2-pulinho-v6';
+  const versaoAnimacoes = 'gato-fase2-pulinho-v7';
   const arquivos = {
     2:{idle:'01_parado.webp',carinho:'02_carinho.webp',brincar:'05_brincar.webp',dormir:'03_dormir.webp',comemoracao:'04_comemorar.webp'},
     1:{idle:'01_parado.webp',carinho:'02_carinho.webp',brincar:'05_brincar.webp',dormir:'03_dormir.webp',comemoracao:'04_comemorar.webp'},
@@ -16,7 +16,10 @@
   const faseReal = () => {
     const n=nivel();
     const confirmada=Number(estado?.pets?.gato?.faseConfirmada)||1;
-    if(n<21||confirmada<2)return 1;
+    // A confirmação é gravada após a evolução. Tratamos esse campo como
+    // fonte de verdade para não voltar ao ovo se o nível chegar atrasado
+    // durante a sincronização entre os aparelhos.
+    if(confirmada<2)return 1;
     return n>=41?3:2;
   };
   const fase = () => perfilAtivo==='pais' && faseTeste ? faseTeste : faseReal();
