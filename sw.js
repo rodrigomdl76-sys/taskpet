@@ -1,19 +1,19 @@
-const CACHE_NAME = 'rotinapet-cache-v105';
-const RUNTIME_CACHE_NAME = 'rotinapet-media-v8';
+const CACHE_NAME = 'rotinapet-cache-v106';
+const RUNTIME_CACHE_NAME = 'rotinapet-media-v9';
 const KEEP_CACHES = new Set([CACHE_NAME, RUNTIME_CACHE_NAME]);
 const MAX_RUNTIME_ENTRIES = 100;
 const ASSETS = [
   "./index.html",
-  "./animacoes/fase2/01_parado.webp?v=gato-fase2-pulinho-v7",
-  "./animacoes/fase2/02_carinho.webp?v=gato-fase2-pulinho-v7",
-  "./animacoes/fase2/03_dormir.webp?v=gato-fase2-pulinho-v7",
-  "./animacoes/fase2/04_comemorar.webp?v=gato-fase2-pulinho-v7",
-  "./animacoes/fase2/05_brincar.webp?v=gato-fase2-pulinho-v7",
-  "./animacoes/fase1/acoes_personalizadas.json?v=gato-fase2-pulinho-v7",
+  "./animacoes/fase2/01_parado.webp?v=gato-fase2-pulinho-v8",
+  "./animacoes/fase2/02_carinho.webp?v=gato-fase2-pulinho-v8",
+  "./animacoes/fase2/03_dormir.webp?v=gato-fase2-pulinho-v8",
+  "./animacoes/fase2/04_comemorar.webp?v=gato-fase2-pulinho-v8",
+  "./animacoes/fase2/05_brincar.webp?v=gato-fase2-pulinho-v8",
+  "./animacoes/fase1/acoes_personalizadas.json?v=gato-fase2-pulinho-v8",
   "./animacoes/fase1/06_beijo_carinho.webp?v=beijo-gato-fase1-v2",
   "./animacoes/fase1/05_brincar.webp?v=ovo-animacoes-v18",
-  "./animacoes/fase1/01_parado.webp?v=gato-fase2-pulinho-v7",
-  "./animacoes/fase1/visuais/ovo-gato-oculos.webp?v=gato-fase2-pulinho-v7",
+  "./animacoes/fase1/01_parado.webp?v=gato-fase2-pulinho-v8",
+  "./animacoes/fase1/visuais/ovo-gato-oculos.webp?v=gato-fase2-pulinho-v8",
   "./animacoes/fase1/visuais/ovo-gato-oculos.webp?v=atelier-thumbs-v2",
   "./animacoes/fase1/visuais/ovo-gato-samurai.webp?v=visual-quality-v2",
   "./animacoes/fase1/visuais/ovo-gato-samurai-thumb.webp?v=atelier-thumbs-v2",
@@ -52,7 +52,7 @@ const ASSETS = [
   "./css/11_premium_63.css",
 
   "./js/08_meu_pet.js?v=gestos-1",
-  "./js/09_gato_laranja.js?v=gato-fase2-pulinho-v7",
+  "./js/09_gato_laranja.js?v=gato-fase2-pulinho-v8",
   "./js/10_pet_companheiro.js?v=6",
   "./css/17_pet_no_chao.css?v=2",
   "./css/18_topo_limpo.css?v=seletor-pet-v1",
