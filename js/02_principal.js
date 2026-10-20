@@ -5461,11 +5461,10 @@ async function iniciarTourGuiado(){
   document.getElementById('modal-onboarding')?.classList.remove('mostrar','modal-top');
   await esperar(100);
   const passos=[
-    {texto:'1/5 · Toque no pet para dar carinho ❤️',alvo:'#pet-principal'},
-    {texto:'2/5 · Aqui você brinca, faz carinho e comemora 🎾',alvo:'#pet-actions'},
-    {texto:'3/5 · Envie uma missão para os pais conferirem ✅',alvo:'.tasks-section'},
-    {texto:'4/5 · Encontre jogos e outras aventuras aqui ⚡',alvo:'.bottom-buttons'},
-    {texto:'5/5 · Acompanhe suas moedas e sua sequência ✨',alvo:'.top-row'}
+    {texto:'1/4 · Toque no pet para dar carinho ❤️',alvo:'#pet-principal'},
+    {texto:'2/4 · Envie uma missão para os pais conferirem ✅',alvo:'.tasks-section'},
+    {texto:'3/4 · Encontre jogos e outras aventuras aqui ⚡',alvo:'.bottom-buttons'},
+    {texto:'4/4 · Acompanhe suas moedas e sua sequência ✨',alvo:'.top-row'}
   ];
   const hud=document.getElementById('demo-hud');
   try{

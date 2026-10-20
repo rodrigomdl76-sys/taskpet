@@ -171,14 +171,6 @@
       </svg>
     </span>
   </button>
-  <div class="pet-actions-shell">
-    <button type="button" class="pet-actions-seta pet-actions-anterior" id="acoes-anterior" aria-label="Ver ações anteriores" disabled>‹</button>
-    <div class="pet-actions" id="pet-actions" aria-label="Ações com o pet. Deslize para ver mais" tabindex="0">
-      <button type="button" class="pet-action-btn" id="btn-brincar" onclick="acaoPet('brincar')" aria-label="Brincar com o pet"><span class="action-icon" aria-hidden="true">⚽</span><span>Brincar</span></button>
-      <div id="acoes-gato-laranja" class="acoes-gato-laranja" aria-label="Ações do gato"></div>
-    </div>
-    <button type="button" class="pet-actions-seta pet-actions-proximo" id="acoes-proximo" aria-label="Ver mais ações">›</button>
-  </div>
   <!-- Os atalhos secundários agora ficam reunidos no botão Mais da barra inferior. -->
   <div class="metas-crianca-card" id="metas-crianca-card" style="display:none"><div class="metas-crianca-titulo">🎯 Minhas metas</div><div id="lista-metas-crianca"></div></div>
   <div id="engajamento-card" style="display:none">
@@ -663,7 +655,6 @@
     <div id="painel-ajuda-crianca">
       <div class="ajuda-item"><span class="ajuda-ico">🌟</span><div><b>Meu perfil</b><span>Toque no seu ícone no alto da tela para escolher um apelido e um ícone.</span></div></div>
       <div class="ajuda-item"><span class="ajuda-ico">👆</span><div><b>Toque no pet</b><span>Dê carinho: sobe a felicidade e o pet responde com sons e falas.</span></div></div>
-      <div class="ajuda-item"><span class="ajuda-ico">🎾</span><div><b>Brincar com o pet</b><span>Use o botão Brincar acima do pet para interagir com o Pipoca.</span></div></div>
       <div class="ajuda-item"><span class="ajuda-ico">🛡️</span><div><b>Tarefas do dia</b><span>Tire foto ou envie para os pais aprovarem. Obrigatórias 🔥 liberam a ofensiva; extras ⭐ dão moedas extras.</span></div></div>
       <div class="ajuda-item"><span class="ajuda-ico">🪙</span><div><b>Moedas e XP</b><span>Ganhe moedas e XP ao completar tarefas e desafios. XP sobe o nível e desbloqueia evoluções e novos pets.</span></div></div>
       <div class="ajuda-item"><span class="ajuda-ico">🎮</span><div><b>Desafio</b><span>Matemática, memória ou reação rápida — acerte e ganhe moedas + XP.</span></div></div>
@@ -747,7 +738,7 @@
 <script src="js/05_interface.js" defer></script>
 <script src="js/06_premium.js?v=push-recompensas-v2" defer></script>
 <script src="js/08_meu_pet.js?v=gestos-1" defer></script>
-<script src="js/09_gato_laranja.js?v=gato-fase2-respiracao-v12" defer></script>
+<script src="js/09_gato_laranja.js?v=remocao-acoes-pet-v1" defer></script>
 <script src="js/10_pet_companheiro.js?v=6" defer></script>
 <script src="js/12_home_nav.js?v=2" defer></script>
 <script src="js/13_gestos.js?v=4" defer></script>

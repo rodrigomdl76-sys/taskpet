@@ -235,76 +235,11 @@
     const duracao=f===2?({carinho:2500,brincar:2700,comemoracao:2500}[a]||2300):(f===1&&a==='carinho'?5400:({carinho:8200,brincar:10800,comemoracao:2100,pulinho:3000,giro:8600}[a]||2300));
     volta=setTimeout(()=>{if(token===atual)voltar()},gestoLiberado||a==='carinho'||f===2||(f===1&&a==='brincar')?duracao:2300);
   }
-  function atualizarRolagem(){
-    const faixa=document.getElementById('pet-actions');if(!faixa)return;
-    const anterior=document.getElementById('acoes-anterior');
-    const proximo=document.getElementById('acoes-proximo');
-    if(anterior)anterior.disabled=faixa.scrollLeft<4;
-    if(proximo)proximo.disabled=faixa.scrollLeft+faixa.clientWidth>=faixa.scrollWidth-4;
-  }
-  function instalarRolagem(){
-    const faixa=document.getElementById('pet-actions');if(!faixa||faixa.dataset.rolagemInstalada)return;
-    faixa.dataset.rolagemInstalada='1';
-    faixa.addEventListener('scroll',atualizarRolagem,{passive:true});
-    for(const [id,direcao] of [['acoes-anterior',-1],['acoes-proximo',1]]){
-      document.getElementById(id)?.addEventListener('click',()=>faixa.scrollBy({left:direcao*faixa.clientWidth*.86,behavior:'smooth'}));
-    }
-    window.addEventListener('resize',atualizarRolagem,{passive:true});
-  }
   function atualizarBotoes(){
-    const area=document.getElementById('acoes-gato-laranja');if(!area)return;
-    if(estado?.petAtual!=='gato'){
-      const faixa=document.getElementById('pet-actions'),brincar=document.getElementById('btn-brincar');
-      if(faixa&&brincar&&brincar.parentNode!==faixa)faixa.insertBefore(brincar,area);
-      area.replaceChildren();area.hidden=true;area.dataset.modoBotoes='';return;
-    }
-    area.hidden=false;
-    const f=fase();
-    const acoesVisiveis=acoes.filter(a=>arquivos[f][a.id]);
-    const extras=window.obterGestosPet?.()||[];
-    const modo=`${perfilAtivo==='pais'?'pais':'crianca'}:${[...acoesVisiveis,...extras].map(a=>a.id).join(',')}`;
-    const recriou=area.dataset.modoBotoes!==modo;
-    if(recriou){
-      const brincar=document.getElementById('btn-brincar');
-      area.replaceChildren();
-      for(const a of [...acoesVisiveis,...extras]){
-        if(a.id==='comemoracao'&&brincar)area.appendChild(brincar);
-        const botao=document.createElement('button');
-        botao.type='button';botao.dataset.acaoPet=a.id;
-        if(extras.includes(a))botao.classList.add('gesto-acao-btn');
-        const icone=document.createElement('span');
-        icone.className='action-icon';icone.setAttribute('aria-hidden','true');icone.textContent=a.icone;
-        const nome=document.createElement('span');nome.textContent=a.nome;
-        botao.append(icone,nome);
-        botao.addEventListener('click',()=>{
-          if(extras.includes(a)&&!window.gestoPetLiberado?.(a.id)){window.abrirLojaFundos?.();return}
-          if(a.id==='carinho'){window.interagirComPet?.();return}
-          tocar(a.id);
-        });
-        area.appendChild(botao);
-      }
-      if(perfilAtivo==='pais')for(const n of [1,2,3]){
-        const botao=document.createElement('button');
-        botao.type='button';botao.dataset.faseTeste=String(n);botao.textContent=`Testar fase ${n}`;
-        botao.addEventListener('click',()=>window.testarFaseGato(n));
-        area.appendChild(botao);
-      }
-      area.dataset.modoBotoes=modo;
-    }
-    for(const a of extras){
-      const botao=area.querySelector(`[data-acao-pet="${a.id}"]`);if(!botao)continue;
-      const liberado=!!window.gestoPetLiberado?.(a.id);
-      botao.classList.toggle('gesto-bloqueado',!liberado);
-      botao.setAttribute('aria-label',liberado?`${a.nome}. Ativar gesto`:`${a.nome} bloqueado. Abrir loja`);
-      botao.title=liberado?`Ativar ${a.nome}`:`Desbloqueie ${a.nome} na loja ou pela ofensiva`;
-    }
-    instalarRolagem();requestAnimationFrame(()=>{
-      if(recriou)document.getElementById('pet-actions').scrollLeft=0;
-      atualizarRolagem();
-    });
-    area.querySelectorAll('[data-fase-teste]').forEach(botao=>{botao.disabled=Number(botao.dataset.faseTeste)===f});
     const nomes=['','Ovo-gato','Gato Cavalheiro','Gato Real'];
-    const label=document.getElementById('pet-evol-nome');if(label)label.textContent=`${estado.nomePet||'Pipoca'} • ${nomes[f]}${faseTeste?' (teste)':''}`;
+    const f=fase();
+    const label=document.getElementById('pet-evol-nome');
+    if(label)label.textContent=`${estado.nomePet||'Pipoca'} • ${nomes[f]}${faseTeste?' (teste)':''}`;
   }
   window.ovoGatoEstilosoEquipado=()=>{
     if(estado?.petAtual!=='gato'||fase()!==1)return false;
