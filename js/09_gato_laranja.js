@@ -236,10 +236,14 @@
     volta=setTimeout(()=>{if(token===atual)voltar()},gestoLiberado||a==='carinho'||f===2||(f===1&&a==='brincar')?duracao:2300);
   }
   function atualizarBotoes(){
+    // O nome e a fase visíveis são atualizados por atualizarTela para qualquer pet.
+    // Este módulo só pode ajustar o rótulo quando o gato está selecionado.
+    if(estado?.petAtual!=='gato')return;
     const nomes=['','Ovo-gato','Gato Cavalheiro','Gato Real'];
     const f=fase();
+    const nome=estado.pets?.gato?.nome||estado.nomePet||'Pipoca';
     const label=document.getElementById('pet-evol-nome');
-    if(label)label.textContent=`${estado.nomePet||'Pipoca'} • ${nomes[f]}${faseTeste?' (teste)':''}`;
+    if(label)label.textContent=`${nome} • ${nomes[f]}${faseTeste?' (teste)':''} ✎`;
   }
   window.ovoGatoEstilosoEquipado=()=>{
     if(estado?.petAtual!=='gato'||fase()!==1)return false;
