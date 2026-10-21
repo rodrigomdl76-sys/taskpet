@@ -26,7 +26,7 @@
     balao: `<svg viewBox="0 0 48 44" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><path d="M24 3C12 3 8 12 11 21c2 6 9 11 13 14 4-3 11-8 13-14C40 12 36 3 24 3Z" fill="#ff8aa9" stroke="#864668" stroke-width="2"/><path d="M24 4v29M13 9c6-5 10-5 11-5m11 5c-6-5-10-5-11-5" fill="none" stroke="#ffd477" stroke-width="3"/><path d="m21 35 1 5h4l1-5" fill="#af8051" stroke="#864668" stroke-width="1.5"/></svg>`
   };
   const companheirosAnimados = {
-    hamster: '<img class="mini-pet-animado" src="assets/minipets/hamster-carinhoso.webp?v=hamster-v1" alt="">'
+    hamster: '<img class="mini-pet-animado" src="assets/minipets/hamster-carinhoso.gif?v=hamster-v1" alt="">'
   };
   let desenhoPassarinho;
   function ganho(item) {
