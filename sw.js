@@ -1,10 +1,11 @@
-const CACHE_NAME = 'rotinapet-cache-v116';
+const CACHE_NAME = 'rotinapet-cache-v117';
 const RUNTIME_CACHE_NAME = 'rotinapet-media-v16';
 const KEEP_CACHES = new Set([CACHE_NAME, RUNTIME_CACHE_NAME]);
 const MAX_RUNTIME_ENTRIES = 100;
 const ASSETS = [
   "./index.html",
   "./assets/minipets/hamster-carinhoso.webp?v=hamster-v1",
+  "./assets/minipets/hamster-carinhoso.gif?v=hamster-v1",
   "./assets/minipets/hamster-carinhoso-thumb.webp?v=hamster-v1",
   "./assets/fundos/castelo_halloween.webp?v=castelo-halloween-v1",
   "./animacoes/fase2/01_parado-v11.webp?v=gato-fase2-respiracao-v12",
