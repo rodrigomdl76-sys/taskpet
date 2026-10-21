@@ -11,7 +11,7 @@
     { id: 'tartaruga', nome: 'Tartaruguinha', preco: 120, descricao: 'Passeia devagar pelo cenário.' },
     { id: 'vagalumes', nome: 'Vaga-lumes', preco: 60, descricao: 'Piscam e voam pelo cenário.' },
     { id: 'coelho', nome: 'Coelhinho', preco: 110, descricao: 'Fica saltitando de um lado para o outro.' },
-    { id: 'hamster', nome: 'Hamster Carinhoso', preco: 130, descricao: 'Fica juntinho segurando sua sementinha.' }
+    { id: 'hamster', nome: 'Hamster Carinhoso', preco: 0, descricao: 'Grátis para teste: fica juntinho segurando sua sementinha.' }
   ];
   const desenhos = {
     hamster: '<img class="mini-pet-thumb" src="assets/minipets/hamster-carinhoso-thumb.webp?v=hamster-v1" alt="Hamster carinhoso">',
@@ -64,7 +64,7 @@
       const descricao = document.createElement('small');
       descricao.textContent = item.descricao;
       const preco = document.createElement('strong');
-      preco.textContent = estado.miniPetAtivo === item.id ? '✓ Em uso' : liberado(item) ? 'Usar' : item.conquista ? `${item.preco} 🪙 ou conquiste` : `Comprar por ${item.preco} 🪙`;
+      preco.textContent = estado.miniPetAtivo === item.id ? '✓ Em uso' : liberado(item) ? 'Usar' : item.preco === 0 ? 'Grátis · teste' : item.conquista ? `${item.preco} 🪙 ou conquiste` : `Comprar por ${item.preco} 🪙`;
       const amostra = document.createElement('span');
       amostra.innerHTML = desenhos[item.id] || desenhoPassarinho;
       card.append(amostra, titulo, descricao, preco);
@@ -73,7 +73,7 @@
         if (!liberado(item)) {
           const saldo = Number(estado.moedas) || 0;
           if (saldo < item.preco) return mostrarToast(`🪙 Faltam ${item.preco - saldo} moedas.`);
-          if (!window.confirm(`Comprar ${item.nome} por ${item.preco} moedas virtuais?`)) return;
+          if (item.preco > 0 && !window.confirm(`Comprar ${item.nome} por ${item.preco} moedas virtuais?`)) return;
           // Checagem repetida no momento da compra para evitar gastos duplicados.
           if (liberado(item) || Number(estado.moedas) < item.preco) return renderizarLoja();
           estado.moedas -= item.preco;
