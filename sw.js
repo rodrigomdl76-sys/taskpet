@@ -1,9 +1,11 @@
-const CACHE_NAME = 'rotinapet-cache-v114';
+const CACHE_NAME = 'rotinapet-cache-v115';
 const RUNTIME_CACHE_NAME = 'rotinapet-media-v16';
 const KEEP_CACHES = new Set([CACHE_NAME, RUNTIME_CACHE_NAME]);
 const MAX_RUNTIME_ENTRIES = 100;
 const ASSETS = [
   "./index.html",
+  "./assets/minipets/hamster-carinhoso.webp?v=hamster-v1",
+  "./assets/minipets/hamster-carinhoso-thumb.webp?v=hamster-v1",
   "./assets/fundos/castelo_halloween.webp?v=castelo-halloween-v1",
   "./animacoes/fase2/01_parado-v11.webp?v=gato-fase2-respiracao-v12",
   "./animacoes/fase2/02_carinho-v10.webp?v=gato-fase2-respiracao-v12",
@@ -35,7 +37,7 @@ const ASSETS = [
   "./icon-192.png?v=cat-crown-v2",
   "./icon-512.webp?v=cat-crown-v1",
   "./icon-512-maskable.webp?v=cat-crown-v1",
-  "./css/14_pet_companheiro.css?v=5",
+  "./css/14_pet_companheiro.css?v=6",
   "./css/01_base.css?v=seletor-pet-toque-v1",
   "./js/01_menu.js?v=back-3",
   "./css/02_menu.css",
@@ -56,7 +58,7 @@ const ASSETS = [
 
   "./js/08_meu_pet.js?v=gestos-1",
   "./js/09_gato_laranja.js?v=remocao-acoes-pet-v1",
-  "./js/10_pet_companheiro.js?v=6",
+  "./js/10_pet_companheiro.js?v=7",
   "./css/17_pet_no_chao.css?v=2",
   "./css/18_topo_limpo.css?v=seletor-pet-v1",
   "./css/19_plataforma_pet.css?v=1",
