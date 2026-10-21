@@ -10,9 +10,11 @@
     { id: 'pato', nome: 'Patinho com boia', preco: 95, descricao: 'Balança tranquilamente na boia.' },
     { id: 'tartaruga', nome: 'Tartaruguinha', preco: 120, descricao: 'Passeia devagar pelo cenário.' },
     { id: 'vagalumes', nome: 'Vaga-lumes', preco: 60, descricao: 'Piscam e voam pelo cenário.' },
-    { id: 'coelho', nome: 'Coelhinho', preco: 110, descricao: 'Fica saltitando de um lado para o outro.' }
+    { id: 'coelho', nome: 'Coelhinho', preco: 110, descricao: 'Fica saltitando de um lado para o outro.' },
+    { id: 'hamster', nome: 'Hamster Carinhoso', preco: 0, descricao: 'Grátis para teste: fica juntinho segurando sua sementinha.' }
   ];
   const desenhos = {
+    hamster: '<img class="mini-pet-thumb" src="assets/minipets/hamster-carinhoso-thumb.webp?v=hamster-v1" alt="Hamster carinhoso">',
     sapo: `<svg viewBox="0 0 48 44" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><ellipse cx="24" cy="29" rx="16" ry="11" fill="#83d957" stroke="#365b3c" stroke-width="2"/><circle cx="16" cy="17" r="8" fill="#9bea65" stroke="#365b3c" stroke-width="2"/><circle cx="32" cy="17" r="8" fill="#9bea65" stroke="#365b3c" stroke-width="2"/><circle cx="16" cy="17" r="3" fill="#fff"/><circle cx="32" cy="17" r="3" fill="#fff"/><circle cx="17" cy="18" r="1.5" fill="#263b2e"/><circle cx="33" cy="18" r="1.5" fill="#263b2e"/><path d="M18 30q6 6 12 0" fill="none" stroke="#365b3c" stroke-width="2" stroke-linecap="round"/><ellipse cx="11" cy="37" rx="7" ry="3" fill="#9bea65"/><ellipse cx="37" cy="37" rx="7" ry="3" fill="#9bea65"/></svg>`,
     pato: `<svg viewBox="0 0 48 44" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><ellipse cx="24" cy="31" rx="19" ry="9" fill="#56c8ef" stroke="#27627a" stroke-width="2"/><ellipse cx="24" cy="30" rx="10" ry="5" fill="#b9f3ff"/><ellipse cx="24" cy="21" rx="11" ry="12" fill="#ffe66d" stroke="#8a7040" stroke-width="2"/><circle cx="20" cy="18" r="1.6" fill="#26374a"/><circle cx="28" cy="18" r="1.6" fill="#26374a"/><path d="m21 23 3 2 3-2-3-2z" fill="#ff9c43" stroke="#ad6030"/><path d="M16 26q-5 5-7 1m23-1q5 5 7 1" fill="none" stroke="#e7c84e" stroke-width="2"/></svg>`,
     tartaruga: `<svg viewBox="0 0 48 44" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><ellipse cx="23" cy="25" rx="15" ry="12" fill="#68bd72" stroke="#365b3c" stroke-width="2"/><path d="M10 25q13-19 26 0-13 18-26 0Z" fill="#86d47a" stroke="#365b3c" stroke-width="2"/><path d="M18 17 23 25l8-7m-8 7-7 7m7-7 9 7" fill="none" stroke="#4e985b" stroke-width="1.5"/><circle cx="40" cy="25" r="6" fill="#9bea80" stroke="#365b3c" stroke-width="2"/><circle cx="41" cy="24" r="1.2" fill="#26374a"/><ellipse cx="12" cy="37" rx="4" ry="3" fill="#9bea80"/><ellipse cx="31" cy="37" rx="4" ry="3" fill="#9bea80"/></svg>`,
@@ -22,6 +24,9 @@
     drone: `<svg viewBox="0 0 48 44" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><path d="M8 17 18 24m22-7L30 24" stroke="#39465e" stroke-width="3"/><ellipse class="passarinho-asa" cx="8" cy="15" rx="8" ry="2.5" fill="#99e8f2" stroke="#39465e"/><ellipse class="passarinho-asa" cx="40" cy="15" rx="8" ry="2.5" fill="#99e8f2" stroke="#39465e"/><rect x="14" y="19" width="20" height="18" rx="8" fill="#8c9bff" stroke="#39465e" stroke-width="2"/><circle cx="24" cy="28" r="5" fill="#d9faff"/><circle cx="24" cy="28" r="2" fill="#39465e"/><path d="M17 36v4m14-4v4" stroke="#39465e" stroke-width="2"/></svg>`,
     disco: `<svg viewBox="0 0 48 44" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><path d="M17 20c0-9 14-9 14 0" fill="#b4a0ff" stroke="#35436b" stroke-width="2"/><ellipse cx="24" cy="25" rx="22" ry="9" fill="#8d74ec" stroke="#35436b" stroke-width="2"/><ellipse cx="24" cy="22" rx="14" ry="5" fill="#d8cfff"/><circle cx="9" cy="27" r="2" fill="#ffdb6d"/><circle cx="24" cy="30" r="2" fill="#7cfcda"/><circle cx="39" cy="27" r="2" fill="#ffdb6d"/><path d="M15 33 10 43h28l-5-10" fill="#b3fce0" opacity=".5"/></svg>`,
     balao: `<svg viewBox="0 0 48 44" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><path d="M24 3C12 3 8 12 11 21c2 6 9 11 13 14 4-3 11-8 13-14C40 12 36 3 24 3Z" fill="#ff8aa9" stroke="#864668" stroke-width="2"/><path d="M24 4v29M13 9c6-5 10-5 11-5m11 5c-6-5-10-5-11-5" fill="none" stroke="#ffd477" stroke-width="3"/><path d="m21 35 1 5h4l1-5" fill="#af8051" stroke="#864668" stroke-width="1.5"/></svg>`
+  };
+  const companheirosAnimados = {
+    hamster: '<img class="mini-pet-animado" src="assets/minipets/hamster-carinhoso.webp?v=hamster-v1" alt="">'
   };
   let desenhoPassarinho;
   function ganho(item) {
@@ -41,7 +46,7 @@
     botao.hidden = !item || !liberado(item);
     if (botao.hidden || botao.dataset.miniPet === id) return;
     botao.dataset.miniPet = id;
-    botao.querySelector('.passarinho-flutua').innerHTML = desenhos[id] || desenhoPassarinho;
+    botao.querySelector('.passarinho-flutua').innerHTML = companheirosAnimados[id] || desenhos[id] || desenhoPassarinho;
     botao.setAttribute('aria-label', `${item.nome} companheiro. Arraste para mudar de lugar; use as setas do teclado para mover.${id === 'passarinho' ? ' Toque para ver notas musicais e voltar à órbita.' : ''}`);
     botao.title = id === 'passarinho' ? 'Toque para ver notas musicais ou arraste' : `Arraste: ${item.nome}`;
   }
@@ -59,7 +64,7 @@
       const descricao = document.createElement('small');
       descricao.textContent = item.descricao;
       const preco = document.createElement('strong');
-      preco.textContent = estado.miniPetAtivo === item.id ? '✓ Em uso' : liberado(item) ? 'Usar' : item.conquista ? `${item.preco} 🪙 ou conquiste` : `Comprar por ${item.preco} 🪙`;
+      preco.textContent = estado.miniPetAtivo === item.id ? '✓ Em uso' : liberado(item) ? 'Usar' : item.preco === 0 ? 'Grátis · teste' : item.conquista ? `${item.preco} 🪙 ou conquiste` : `Comprar por ${item.preco} 🪙`;
       const amostra = document.createElement('span');
       amostra.innerHTML = desenhos[item.id] || desenhoPassarinho;
       card.append(amostra, titulo, descricao, preco);
@@ -68,7 +73,7 @@
         if (!liberado(item)) {
           const saldo = Number(estado.moedas) || 0;
           if (saldo < item.preco) return mostrarToast(`🪙 Faltam ${item.preco - saldo} moedas.`);
-          if (!window.confirm(`Comprar ${item.nome} por ${item.preco} moedas virtuais?`)) return;
+          if (item.preco > 0 && !window.confirm(`Comprar ${item.nome} por ${item.preco} moedas virtuais?`)) return;
           // Checagem repetida no momento da compra para evitar gastos duplicados.
           if (liberado(item) || Number(estado.moedas) < item.preco) return renderizarLoja();
           estado.moedas -= item.preco;
