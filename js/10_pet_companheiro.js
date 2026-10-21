@@ -47,6 +47,8 @@
     if (botao.hidden || botao.dataset.miniPet === id) return;
     botao.dataset.miniPet = id;
     botao.querySelector('.passarinho-flutua').innerHTML = companheirosAnimados[id] || desenhos[id] || desenhoPassarinho;
+    botao.style.zIndex = '12';
+    window.dispatchEvent(new Event('mini-pet-companion-change'));
     botao.setAttribute('aria-label', `${item.nome} companheiro. Arraste para mudar de lugar; use as setas do teclado para mover.${id === 'passarinho' ? ' Toque para ver notas musicais e voltar à órbita.' : ''}`);
     botao.title = id === 'passarinho' ? 'Toque para ver notas musicais ou arraste' : `Arraste: ${item.nome}`;
   }
@@ -228,6 +230,7 @@
       guardar();
     });
     window.addEventListener('resize', posicionar);
+    window.addEventListener('mini-pet-companion-change', posicionar);
     posicionar();
     let ultimoFrame = 0;
     function animar(tempo) {
