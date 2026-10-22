@@ -23,6 +23,7 @@ body.cenario-neve,.bg-layer.cenario-neve{background:linear-gradient(180deg,#e0f2
 body.cenario-aniversario,.bg-layer.cenario-aniversario{background:linear-gradient(160deg,#c4b5fd 0%,#f9a8d4 55%,#fde68a 100%)}
 body.cenario-floresta_luminosa,.bg-layer.cenario-floresta_luminosa{background:#0d1e18 url('../assets/fundos/floresta_luminosa.webp') center center / cover no-repeat}
 body.cenario-reino_submarino,.bg-layer.cenario-reino_submarino{background:#07385d url('../assets/fundos/reino_submarino.webp') center center / cover no-repeat}
+body.cenario-halloween_castelo,.bg-layer.cenario-halloween_castelo{background:#130b24 url('../assets/fundos/castelo_halloween.webp') center center / cover no-repeat}
 /* Camada de detalhes ilustrados dos cenários */
 .cenario-detalhes{position:fixed;inset:0;z-index:-1;pointer-events:none;overflow:hidden}
 .cenario-detalhes svg{width:100%;height:100%;display:block}

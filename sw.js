@@ -1,4 +1,4 @@
-const CACHE_NAME = 'rotinapet-cache-v117';
+const CACHE_NAME = 'rotinapet-cache-v118';
 const RUNTIME_CACHE_NAME = 'rotinapet-media-v16';
 const KEEP_CACHES = new Set([CACHE_NAME, RUNTIME_CACHE_NAME]);
 const MAX_RUNTIME_ENTRIES = 100;
@@ -31,7 +31,7 @@ const ASSETS = [
   "./animacoes/axolote/fase1/visuais/axolote-disco-voador-thumb.webp",
   "./animacoes/fase2/visuais/gato-explorador-espacial-thumb-v5.webp?v=visuais-gato-fase2-v5",
   "./animacoes/fase2/visuais/gato-armadura-heroica-thumb-v5.webp?v=visuais-gato-fase2-v5",
-  "./animacoes/fase2/visuais/gato-bruxinho-halloween.webp?v=halloween-gato-fase2-v1",
+  "./animacoes/fase2/visuais/gato-bruxinho-halloween-v2.webp?v=halloween-gato-fase2-v2",
   "./animacoes/fase2/visuais/gato-bruxinho-halloween-thumb.webp?v=halloween-gato-fase2-v1",
   "./manifest.json",
   "./icon-192.webp?v=cat-crown-v1",
@@ -39,7 +39,7 @@ const ASSETS = [
   "./icon-512.webp?v=cat-crown-v1",
   "./icon-512-maskable.webp?v=cat-crown-v1",
   "./css/14_pet_companheiro.css?v=6",
-  "./css/01_base.css?v=seletor-pet-toque-v1",
+  "./css/01_base.css?v=castelo-assombrado-v1",
   "./js/01_menu.js?v=back-3",
   "./css/02_menu.css",
   "./css/04_animacoes_pet.css?v=efeitos-reacoes-v1",
@@ -72,7 +72,7 @@ const ASSETS = [
   "./css/22_gestos.css?v=5",
   "./js/13_gestos.js?v=4",
   "./js/16_axolote.js?v=axolote-fase1-visual-v1",
-  "./js/17_atelie_pet.js?v=fantasias-por-fase-v3",
+  "./js/17_atelie_pet.js?v=fantasias-por-fase-v4",
   "./js/18_minijogos_extras.js?v=minijogos-3-novos-v1"
 ];
 
