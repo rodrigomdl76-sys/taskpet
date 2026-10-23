@@ -175,14 +175,17 @@
     const coleção = p.adquiridos.length + ' de ' + catalogo.length + ' itens';
     el.querySelector('[data-atelier-content]').innerHTML = '<h4 class="atelier-section-title">' + abas.find(a => a.id === abaAtual).emoji + ' ' + abas.find(a => a.id === abaAtual).nome + ' · ' + coleção + '</h4><div class="atelier-items">' + (cards || '<div class="atelier-empty">Novas ideias chegam em breve!</div>') + '</div>';
   }
-  function executarAcao(acao, id) {
+  async function executarAcao(acao, id) {
     const x = item(id);
     if (!x) return;
     const p = personalizacao();
     if (acao === 'buy') {
       const saldo = Math.max(0, Number(obterEstado()?.moedas) || 0);
       if (saldo < x.preco) { avisar('Faltam ' + (x.preco - saldo) + ' PetCoins para esse item.'); return; }
-      obterEstado().moedas = saldo - x.preco;
+      try {
+        const resposta = await window.operacaoCarteiraSegura('purchase', {category:'atelier',itemId:id});
+        if (!resposta.alreadyOwned && !p.adquiridos.includes(id)) p.adquiridos.push(id);
+      } catch (error) { avisar(error?.code === 'functions/failed-precondition' ? 'Saldo insuficiente para esse item.' : 'Conecte e sincronize para concluir a compra.'); return; }
       if (!p.adquiridos.includes(id)) p.adquiridos.push(id);
       p.equipados[x.slot] = id;
       salvarEstado();

@@ -157,7 +157,7 @@
   function concluir(mensagem) {
     sessao = null;
     fecharModal('modal-desafio');
-    if (typeof recompensarMiniJogo === 'function') recompensarMiniJogo(2, 2, mensagem);
+    if (typeof recompensarMiniJogo === 'function') recompensarMiniJogo('extras', 2, mensagem);
     else mostrarToast(`🎉 ${mensagem} +2 🪙 +2 XP`);
     document.getElementById('area-jogo-extras')?.classList.add('hidden');
   }

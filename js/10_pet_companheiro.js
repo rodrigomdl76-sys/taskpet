@@ -70,7 +70,7 @@
       const amostra = document.createElement('span');
       amostra.innerHTML = desenhos[item.id] || desenhoPassarinho;
       card.append(amostra, titulo, descricao, preco);
-      card.onclick = () => {
+      card.onclick = async () => {
         if (estado.miniPetAtivo === item.id) return;
         if (!liberado(item)) {
           const saldo = Number(estado.moedas) || 0;
@@ -78,9 +78,10 @@
           if (item.preco > 0 && !window.confirm(`Comprar ${item.nome} por ${item.preco} moedas virtuais?`)) return;
           // Checagem repetida no momento da compra para evitar gastos duplicados.
           if (liberado(item) || Number(estado.moedas) < item.preco) return renderizarLoja();
-          estado.moedas -= item.preco;
+          try { await window.operacaoCarteiraSegura('purchase', {category:'minipet',itemId:item.id}); }
+          catch (error) { return mostrarToast(error?.code === 'functions/failed-precondition' ? '🪙 Saldo insuficiente.' : '📡 Conecte e sincronize para concluir a compra.'); }
           estado.miniPetsComprados = Array.isArray(estado.miniPetsComprados) ? estado.miniPetsComprados : ['passarinho'];
-          estado.miniPetsComprados.push(item.id);
+          if (!estado.miniPetsComprados.includes(item.id)) estado.miniPetsComprados.push(item.id);
         }
         estado.miniPetAtivo = item.id;
         salvar();
