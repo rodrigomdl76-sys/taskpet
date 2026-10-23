@@ -36,9 +36,13 @@ function renderizarEngajamento(){
   const msg=estado.mensagensPais?.[estado.mensagensPais.length-1];
   if(msg&&msg.lida!==true&&document.getElementById('balao-fala')){mostrarBalaoFala('💌 '+msg.texto,3600);msg.lida=true;salvar();}
 }
-function concluirDesafioDiario(){
+async function concluirDesafioDiario(){
   garantirEngajamento();if(estado.desafioDiarioFeitoData===hojeLocal())return;
-  estado.desafioDiarioFeitoData=hojeLocal();estado.moedas=(Number(estado.moedas)||0)+10;ganharXP(20);registrarEngajamento('Desafio diário concluído');dispararConfetes();mostrarAviso('🌟','Desafio concluído!','+10 moedas e +20 XP foram adicionados.');atualizarTela();
+  let pagamento;
+  try{pagamento=await window.operacaoCarteiraSegura('claim-reward',{rewardId:'daily-challenge'});}
+  catch(error){console.warn('Desafio diário não confirmado:',error);return mostrarToast('📡 Conecte e sincronize para receber a recompensa.');}
+  if(pagamento.alreadyClaimed){estado.desafioDiarioFeitoData=hojeLocal();salvar();atualizarTela();abrirCentralAventuras();return mostrarToast('✅ O desafio de hoje já foi resgatado.');}
+  estado.desafioDiarioFeitoData=hojeLocal();ganharXP(Number(pagamento.xp)||0);registrarEngajamento('Desafio diário concluído');dispararConfetes();mostrarAviso('🌟','Desafio concluído!',`+${Number(pagamento.reward)||0} moedas e +${Number(pagamento.xp)||0} XP foram adicionados.`);atualizarTela();if(document.getElementById('modal-central-aventuras')?.classList.contains('mostrar'))abrirCentralAventuras();
 }
 let bauDataEmAbertura=null;
 function bauJaResgatado(data){return estado.bauDiarioAbertoData===data||(estado.bauDatasResgatadas||[]).includes(data)}
@@ -53,19 +57,23 @@ function abrirBauDiario(dataSolicitada){
   if(c)c.innerHTML='<div style="font-size:48px;margin:8px">🎁</div><p style="font-size:10px;color:#64748b">Uma surpresa pela missão concluída!</p><button class="primary-btn pink-btn" style="width:100%;margin-top:8px" onclick="abrirPremioBauDiario()">✨ Abrir agora</button>';
   abrirModal('modal-bau-diario');
 }
-function abrirPremioBauDiario(){
+async function abrirPremioBauDiario(){
   const data=bauDataEmAbertura||hojeLocal(),hoje=hojeLocal();
   if(bauJaResgatado(data))return;
   const pendente=(estado.avisosRecompensas||[]).some(a=>a.tipo==='bau'&&a.data===data);
   if(!pendente&&(data!==hoje||Number(estado.tarefasHojeCount||0)<=0&&estado.desafioDiarioFeitoData!==hoje))return;
+  let pagamento;
+  try{pagamento=await window.operacaoCarteiraSegura('claim-reward',{rewardId:'daily-chest',reference:data});}
+  catch(error){console.warn('Baú diário não confirmado:',error);return mostrarToast('📡 Conecte e sincronize para abrir o baú.');}
+  if(pagamento.alreadyClaimed){estado.bauDatasResgatadas=Array.isArray(estado.bauDatasResgatadas)?estado.bauDatasResgatadas:[];if(!estado.bauDatasResgatadas.includes(data))estado.bauDatasResgatadas.push(data);if(data===hoje)estado.bauDiarioAbertoData=hoje;bauDataEmAbertura=null;salvar();atualizarTela();fecharModal('modal-bau-diario');return mostrarToast('✅ Este baú já foi aberto.');}
   estado.bauDatasResgatadas=Array.isArray(estado.bauDatasResgatadas)?estado.bauDatasResgatadas:[];
-  estado.bauDatasResgatadas.push(data);
+  if(!estado.bauDatasResgatadas.includes(data))estado.bauDatasResgatadas.push(data);
   estado.bauDatasResgatadas=estado.bauDatasResgatadas.slice(-90);
   if(data===hoje)estado.bauDiarioAbertoData=hoje;
-  const n=Math.random();let texto,valor;
-  if(n<.55){valor=8+Math.floor(Math.random()*8);estado.moedas+=valor;creditoMesada(valor);texto=`+${valor} moedas`;}
-  else if(n<.88){valor=20;ganharXP(valor);texto=`+${valor} XP`;}
-  else{estado.escudosOfensiva=Math.min(2,(Number(estado.escudosOfensiva)||0)+1);texto='🛡️ Escudo da ofensiva';}
+  let texto;
+  if(pagamento.outcome==='coins'){const valor=Number(pagamento.reward)||0;texto=`+${valor} moedas`;}
+  else if(pagamento.outcome==='xp'){const valor=Number(pagamento.xp)||0;ganharXP(valor);texto=`+${valor} XP`;}
+  else{estado.escudosOfensiva=Number(pagamento.shields)||Math.min(2,(Number(estado.escudosOfensiva)||0)+1);texto='🛡️ Escudo da ofensiva';}
   const fila=estado.avisosRecompensas||[],indice=fila.findIndex(a=>a.tipo==='bau'&&a.data===data);
   if(indice>=0){const aviso=fila.splice(indice,1)[0];estado.historicoRecompensas=Array.isArray(estado.historicoRecompensas)?estado.historicoRecompensas:[];estado.historicoRecompensas.push({...aviso,abertaEm:Date.now(),premio:texto});estado.historicoRecompensas=estado.historicoRecompensas.slice(-40)}
   bauDataEmAbertura=null;

@@ -44,14 +44,15 @@
     abrirModal(modal.id);
   }
 
-  function comprar(g){
+  async function comprar(g){
     if(window.gestoPetLiberado(g.id))return;
     if(!petGato())return;
     if(saldo()<g.preco)return mostrarToast(`🪙 Faltam ${g.preco-saldo()} PetCoins.`);
-    mostrarConfirmacao(`Desbloquear ${g.nome} por ${g.preco} PetCoins? A mesada acumulada não muda.`,()=>{
+    mostrarConfirmacao(`Desbloquear ${g.nome} por ${g.preco} PetCoins? A mesada acumulada não muda.`,async()=>{
       if(window.gestoPetLiberado(g.id)||!petGato()||saldo()<g.preco)return;
-      estado.moedas=saldo()-g.preco;
-      estado.gestosDesbloqueados=[...adquiridos(),g.id];
+      try { await window.operacaoCarteiraSegura('purchase',{category:'gesto',itemId:g.id}); }
+      catch(error) { return mostrarToast(error?.code==='functions/failed-precondition'?'🪙 Saldo insuficiente.':'📡 Conecte e sincronize para concluir a compra.'); }
+      estado.gestosDesbloqueados=[...new Set([...adquiridos(),g.id])];
       aquecerImagem(g);
       salvar();atualizarTela();window.renderizarLojaGestos();
       mostrarToast(`✨ ${g.nome} liberado! Deslize as ações na tela inicial.`);

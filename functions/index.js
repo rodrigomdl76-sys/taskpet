@@ -5,6 +5,8 @@ const { getDatabase } = require('firebase-admin/database');
 const { getMessaging } = require('firebase-admin/messaging');
 const { createPushHandler } = require('./push-handler');
 const { createFamilyAccessHandlers } = require('./family-access');
+const { createTaskRewardHandlers } = require('./task-rewards');
+const { createWalletOperationHandlers } = require('./wallet-operations');
 const HttpsError = functions.https.HttpsError;
 
 const app = initializeApp();
@@ -17,6 +19,12 @@ exports.solicitarAcessoFamilia = functions.region('us-central1').https.onCall(fa
 exports.registrarResponsavelFamiliaNova = functions.region('us-central1').https.onCall(familyAccess.registrarResponsavelFamiliaNova);
 exports.listarSolicitacoesFamilia = functions.region('us-central1').https.onCall(familyAccess.listarSolicitacoes);
 exports.aprovarAcessoFamilia = functions.region('us-central1').https.onCall(familyAccess.aprovarAcesso);
+
+const taskRewards = createTaskRewardHandlers({ database, HttpsError });
+exports.aprovarTarefaSegura = functions.region('us-central1').https.onCall(taskRewards.aprovarTarefa);
+
+const walletOperations = createWalletOperationHandlers({ database, HttpsError });
+exports.operarCarteiraSegura = functions.region('us-central1').https.onCall(walletOperations.operar);
 
 const DB_INSTANCE = 'rotinapet-624a9-default-rtdb';
 const QUEUE_PATH = '/rotinapet/familias/{familyId}/pushQueue/{pushId}';

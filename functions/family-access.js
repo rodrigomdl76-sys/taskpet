@@ -2,6 +2,8 @@
 
 const FAMILY_ID_PATTERN = /^[a-z0-9_-]{1,64}$/;
 const UID_PATTERN = /^[A-Za-z0-9_-]{1,128}$/;
+const CHILD_ID_PATTERN = /^[A-Za-z0-9_-]{1,64}$/;
+const MAX_CHILD_PROFILES_PER_DEVICE = 20;
 const VALID_ROLES = new Set(['parent', 'child']);
 
 function createFamilyAccessHandlers({ database, auth, HttpsError, now = () => Date.now() }) {
@@ -62,6 +64,21 @@ function createFamilyAccessHandlers({ database, auth, HttpsError, now = () => Da
     const uid = data?.uid;
     const role = VALID_ROLES.has(data?.role) ? data.role : 'child';
     if (typeof uid !== 'string' || !UID_PATTERN.test(uid) || uid === sessao.uid) throw new HttpsError('invalid-argument', 'Aparelho inválido.');
+    let childIds = [];
+    if (role === 'child') {
+      if (!Array.isArray(data?.childIds) || data.childIds.length < 1 || data.childIds.length > MAX_CHILD_PROFILES_PER_DEVICE) {
+        throw new HttpsError('invalid-argument', 'Selecione de 1 a 20 perfis para este aparelho.');
+      }
+      if (data.childIds.some(id => typeof id !== 'string' || !CHILD_ID_PATTERN.test(id)) || new Set(data.childIds).size !== data.childIds.length) {
+        throw new HttpsError('invalid-argument', 'A lista de perfis contém IDs inválidos ou repetidos.');
+      }
+      const stateSnapshot = await database.ref(`rotinapet/familias/${familyId}/estado/criancas`).once('value');
+      const profiles = stateSnapshot.val() || {};
+      if (data.childIds.some(id => !Object.prototype.hasOwnProperty.call(profiles, id))) {
+        throw new HttpsError('invalid-argument', 'Um ou mais perfis não pertencem a esta família.');
+      }
+      childIds = [...data.childIds].sort();
+    }
     const memberRef = database.ref(`rotinapet/familias/${familyId}/security/members/${uid}`);
     const existing = (await memberRef.once('value')).val();
     if (existing?.familyId && existing.familyId !== familyId) throw new HttpsError('failed-precondition', 'A conta já pertence a outra família.');
@@ -70,12 +87,20 @@ function createFamilyAccessHandlers({ database, auth, HttpsError, now = () => Da
     if (claims.familyId && claims.familyId !== familyId) throw new HttpsError('failed-precondition', 'A conta já pertence a outra família.');
     claims.familyId = familyId;
     claims.familyRole = role;
+    if (role === 'child') claims.childScope = Object.fromEntries(childIds.map(id => [id, true]));
+    else delete claims.childScope;
     await auth.setCustomUserClaims(uid, claims);
-    await memberRef.set({ familyId, role, approvedBy: sessao.uid, approvedAt: now() });
+    await memberRef.set({
+      familyId,
+      role,
+      ...(role === 'child' ? { childIds, childScope: Object.fromEntries(childIds.map(id => [id, true])) } : {}),
+      approvedBy: sessao.uid,
+      approvedAt: now()
+    });
     await database.ref(`rotinapet/familias/${familyId}/security/accessRequests/${uid}`).remove();
-    return { uid, role };
+    return { uid, role, ...(role === 'child' ? { childIds } : {}) };
   }
   return { solicitarAcesso, registrarResponsavelFamiliaNova, listarSolicitacoes, aprovarAcesso };
 }
 
-module.exports = { createFamilyAccessHandlers, FAMILY_ID_PATTERN, UID_PATTERN };
+module.exports = { createFamilyAccessHandlers, FAMILY_ID_PATTERN, UID_PATTERN, CHILD_ID_PATTERN, MAX_CHILD_PROFILES_PER_DEVICE };

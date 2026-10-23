@@ -165,7 +165,7 @@
         if(saldo<r.preco)return mostrarToast('🪙 Faltam '+(r.preco-saldo)+' PetCoins.');
         mostrarConfirmacao('Comprar “'+r.nome+'” por '+r.preco+' PetCoins?',()=>{
           if(comprado(r.id)||(Number(estado.moedas)||0)<r.preco)return;
-          estado.moedas=Number(estado.moedas)-r.preco;compras().push(r.id);salvar();atualizarTela();
+          window.operacaoCarteiraSegura('purchase',{category:'axolote',itemId:r.id}).then(()=>{if(!comprado(r.id))compras().push(r.id);salvar();atualizarTela();}).catch(error=>mostrarToast(error?.code==='functions/failed-precondition'?'🪙 Saldo insuficiente.':'📡 Conecte e sincronize para concluir a compra.'));
           window.renderizarLojaGestos?.();mostrarToast('✨ Reação “'+r.nome+'” liberada para a Axolote!');
         });
       });
