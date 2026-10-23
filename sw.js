@@ -1,4 +1,4 @@
-const CACHE_NAME = 'rotinapet-cache-v118';
+const CACHE_NAME = 'rotinapet-cache-v119';
 const RUNTIME_CACHE_NAME = 'rotinapet-media-v16';
 const KEEP_CACHES = new Set([CACHE_NAME, RUNTIME_CACHE_NAME]);
 const MAX_RUNTIME_ENTRIES = 100;
@@ -34,6 +34,7 @@ const ASSETS = [
   "./animacoes/fase2/visuais/gato-bruxinho-halloween-v2.webp?v=halloween-gato-fase2-v2",
   "./animacoes/fase2/visuais/gato-bruxinho-halloween-thumb.webp?v=halloween-gato-fase2-v1",
   "./manifest.json",
+  "./assets/sons/nuvem-de-algodao.mp3?v=nuvem-algodao-v1",
   "./icon-192.webp?v=cat-crown-v1",
   "./icon-192.png?v=cat-crown-v2",
   "./icon-512.webp?v=cat-crown-v1",
@@ -46,7 +47,7 @@ const ASSETS = [
   "./css/05_evolucao_pet.css",
   "./css/13_gato_laranja.css?v=ovo-gato-brilhos-v1",
   "./third_party/qrcode-generator/qrcode.js?v=local-qrcode-v1",
-  "./js/02_principal.js?v=aprovacoes-multifilho-nomes-v7",
+  "./js/02_principal.js?v=musica-ambiente-nuvem-v1",
   "./js/03_extras_01.js",
   "./js/04_engajamento.js?v=mesada-tarefas-v1",
   "./css/06_extras_01.css",

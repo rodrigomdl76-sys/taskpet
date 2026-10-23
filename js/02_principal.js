@@ -68,76 +68,35 @@ function playSound(tipo){
   notas.forEach(n=>tocarNotaCartoon(...n));
   return true;
 }
-const MELODIA_CANTINHO_PET=[
-  349.23,440,523.25,698.46,659.25,523.25,440,523.25,
-  293.66,349.23,440,587.33,523.25,440,349.23,440,
-  233.08,293.66,349.23,466.16,440,349.23,293.66,349.23,
-  261.63,329.63,392,523.25,698.46,659.25,523.25,392
-];
-const BAIXOS_CANTINHO_PET=[174.61,146.83,116.54,130.81];
-let musicaAmbienteTimer=null,indiceNotaAmbiente=0,proximaNotaAmbiente=0,ganhoMusicaAmbiente=null,musicaAmbienteLiberada=false;
-function tocarNotaAmbiente(freq,inicio,duracao,volume=.13){
-  try{
-    const ctx=obterAudioContext(),osc=ctx.createOscillator(),brilho=ctx.createOscillator(),ganho=ctx.createGain(),ganhoBrilho=ctx.createGain();
-    osc.type='sine';osc.frequency.setValueAtTime(freq,inicio);
-    brilho.type='triangle';brilho.frequency.setValueAtTime(freq*2,inicio);
-    ganho.gain.setValueAtTime(.0001,inicio);
-    ganho.gain.exponentialRampToValueAtTime(Math.max(.001,volume),inicio+.025);
-    ganho.gain.setTargetAtTime(.0001,inicio+duracao-.08,.065);
-    ganhoBrilho.gain.setValueAtTime(.0001,inicio);
-    ganhoBrilho.gain.exponentialRampToValueAtTime(Math.max(.001,volume*.22),inicio+.025);
-    ganhoBrilho.gain.setTargetAtTime(.0001,inicio+duracao-.08,.055);
-    osc.connect(ganho);brilho.connect(ganhoBrilho);
-    ganho.connect(ganhoMusicaAmbiente);ganhoBrilho.connect(ganhoMusicaAmbiente);
-    osc.start(inicio);brilho.start(inicio);
-    osc.stop(inicio+duracao);brilho.stop(inicio+duracao);
-  }catch(e){}
+const URL_MUSICA_AMBIENTE='./assets/sons/nuvem-de-algodao.mp3?v=nuvem-algodao-v1';
+let audioMusicaAmbiente=null,musicaAmbienteLiberada=false;
+function obterAudioMusicaAmbiente(){
+  if(!audioMusicaAmbiente){
+    audioMusicaAmbiente=new Audio(URL_MUSICA_AMBIENTE);
+    audioMusicaAmbiente.loop=true;
+    audioMusicaAmbiente.preload='auto';
+    audioMusicaAmbiente.addEventListener('error',()=>console.warn('Não foi possível carregar a música ambiente.'));
+  }
+  return audioMusicaAmbiente;
 }
-function programarMusicaAmbiente(){
-  if(!musicaAmbienteLiberada||estado.musicaAmbienteAtiva===false||document.hidden){pausarMusicaAmbiente();return}
-  try{
-    const ctx=obterAudioContext(),agora=ctx.currentTime;
-    if(!ganhoMusicaAmbiente){ganhoMusicaAmbiente=ctx.createGain();ganhoMusicaAmbiente.gain.value=0;ganhoMusicaAmbiente.connect(ctx.destination)}
-    const volume=Math.max(0,Math.min(.40,(Number(estado.volumeMusicaAmbiente)||0)*1.35));
-    ganhoMusicaAmbiente.gain.setTargetAtTime(volume,agora,.25);
-    if(!proximaNotaAmbiente)proximaNotaAmbiente=agora+.08;
-    while(proximaNotaAmbiente<agora+1.1){
-      const passo=indiceNotaAmbiente%MELODIA_CANTINHO_PET.length;
-      const nota=MELODIA_CANTINHO_PET[passo];
-      tocarNotaAmbiente(nota,proximaNotaAmbiente,.34,.13);
-      if(passo%4===0)tocarNotaAmbiente(BAIXOS_CANTINHO_PET[Math.floor(passo/8)%BAIXOS_CANTINHO_PET.length],proximaNotaAmbiente,.72,.045);
-      if(passo%4===2)tocarNotaAmbiente(MELODIA_CANTINHO_PET[(passo+2)%MELODIA_CANTINHO_PET.length]*.5,proximaNotaAmbiente+.17,.34,.032);
-      const ritmoSaltitante=[.20,.20,.28,.20,.20,.38,.20,.24];
-      proximaNotaAmbiente+=ritmoSaltitante[passo%ritmoSaltitante.length];indiceNotaAmbiente++;
-    }
-  }catch(e){console.warn('Música ambiente indisponível:',e)}
+function aplicarVolumeMusicaAmbiente(){
+  const audio=obterAudioMusicaAmbiente();
+  audio.volume=Math.max(0,Math.min(.40,(Number(estado.volumeMusicaAmbiente)||0)*1.35));
 }
 function iniciarMusicaAmbiente(){
   if(estado.musicaAmbienteAtiva===false||document.hidden||!musicaAmbienteLiberada)return false;
   try{
-    const ctx=obterAudioContext();
-    if(!ganhoMusicaAmbiente){ganhoMusicaAmbiente=ctx.createGain();ganhoMusicaAmbiente.gain.value=0;ganhoMusicaAmbiente.connect(ctx.destination)}
-    if(!proximaNotaAmbiente)proximaNotaAmbiente=ctx.currentTime+.08;
-    ganhoMusicaAmbiente.gain.setTargetAtTime(Math.max(0,Math.min(.40,(Number(estado.volumeMusicaAmbiente)||0)*1.35)),ctx.currentTime,.25);
-    if(!musicaAmbienteTimer)musicaAmbienteTimer=setInterval(programarMusicaAmbiente,250);
-    programarMusicaAmbiente();
+    const audio=obterAudioMusicaAmbiente();
+    aplicarVolumeMusicaAmbiente();
+    if(audio.paused)audio.play().catch(erro=>console.warn('Reprodução da música ambiente aguardando interação:',erro));
     return true;
   }catch(e){return false}
 }
-function pausarMusicaAmbiente(){
-  if(musicaAmbienteTimer){clearInterval(musicaAmbienteTimer);musicaAmbienteTimer=null}
-  if(ganhoMusicaAmbiente&&audioCtx){
-    const agora=audioCtx.currentTime;
-    ganhoMusicaAmbiente.gain.cancelScheduledValues(agora);
-    ganhoMusicaAmbiente.gain.setTargetAtTime(0,agora,.08);
-  }
-}
+function pausarMusicaAmbiente(){if(audioMusicaAmbiente&&!audioMusicaAmbiente.paused)audioMusicaAmbiente.pause()}
 function sincronizarMusicaAmbienteComEstado(){
-  if(estado.musicaAmbienteAtiva===false){pausarMusicaAmbiente();renderizarMusicaAmbientePainel();return}
-  if(musicaAmbienteLiberada&&!document.hidden&&!musicaAmbienteTimer)iniciarMusicaAmbiente();
-  if(ganhoMusicaAmbiente&&audioCtx&&estado.musicaAmbienteAtiva!==false){
-    ganhoMusicaAmbiente.gain.setTargetAtTime(Math.max(0,Math.min(.40,(Number(estado.volumeMusicaAmbiente)||0)*1.35)),audioCtx.currentTime,.2);
-  }
+  if(estado.musicaAmbienteAtiva===false)pausarMusicaAmbiente();
+  else if(musicaAmbienteLiberada&&!document.hidden&&audioMusicaAmbiente?.paused)iniciarMusicaAmbiente();
+  if(audioMusicaAmbiente&&estado.musicaAmbienteAtiva!==false)aplicarVolumeMusicaAmbiente();
   renderizarMusicaAmbientePainel();
 }
 function atualizarMusicaAmbiente(ativa){
@@ -150,7 +109,7 @@ function atualizarMusicaAmbiente(ativa){
 function atualizarVolumeMusicaAmbiente(valor){
   const n=Math.max(0,Math.min(30,parseInt(valor,10)||0));
   estado.volumeMusicaAmbiente=n/100;
-  if(ganhoMusicaAmbiente&&audioCtx)ganhoMusicaAmbiente.gain.setTargetAtTime(Math.max(0,Math.min(.40,estado.volumeMusicaAmbiente*1.35)),audioCtx.currentTime,.12);
+  if(audioMusicaAmbiente)aplicarVolumeMusicaAmbiente();
   const texto=document.getElementById('txt-volume-musica');
   if(texto)texto.textContent=n+'%';
   salvar();
