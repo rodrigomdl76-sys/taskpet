@@ -503,7 +503,8 @@ function resumirErroAcessoFamilia(error){
     'unavailable':'O serviço de acesso está indisponível no momento. Tente novamente com internet.',
     'network-request-failed':'A conexão com o serviço de acesso falhou. Verifique a internet e tente novamente.'
   };
-  return {codigo:codigo||'erro-desconhecido',mensagem:mensagens[codigo]||'Não foi possível enviar o pedido ao Firebase. Atualize o app e tente novamente.'};
+  const detalhe=String(error?.message||'').replace(/\s+/g,' ').trim().slice(0,180);
+  return {codigo:codigo||'erro-desconhecido',mensagem:mensagens[codigo]||'Não foi possível enviar o pedido ao Firebase. Atualize o app e tente novamente.',detalhe};
 }
 async function verificarMembroFamilia(user){
   const token=await user.getIdTokenResult(true);
@@ -603,7 +604,7 @@ try{
             mostrarStatusVinculoFamilia(`Pedido enviado para a família ${codigoFamilia}. No celular do responsável, abra o Painel dos Pais e aprove este aparelho como criança.`);
           }else{
             const erro=resultadoSolicitacaoAcesso||{codigo:'solicitacao-nao-executada',mensagem:'O pedido não chegou ao serviço do Firebase.'};
-            mostrarStatusVinculoFamilia(`${erro.mensagem} Código: ${erro.codigo}. Família: ${codigoFamilia}.`);
+            mostrarStatusVinculoFamilia(`${erro.mensagem} Código: ${erro.codigo}.${erro.detalhe?` Detalhe: ${erro.detalhe}.`:''} Família: ${codigoFamilia}.`);
           }
         }
       }
