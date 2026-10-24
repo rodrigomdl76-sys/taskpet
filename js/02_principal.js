@@ -467,6 +467,7 @@ async function vincularFamiliaAConta(user){
   if(!anterior)await user.updateProfile({displayName:PREFIXO_FAMILIA_CONTA+codigoFamilia});
 }
 let acessoFamiliar=null;
+let resultadoSolicitacaoAcesso=null;
 let ultimoEstadoPrivadoPais={};
 let petAtualPendenteSync=null;
 const CAMPOS_PRIVADOS_PAIS=['pinHash','pinBloqueadoAte','pinTentativasFalhas','pinPersonalizado','privacidadeAceita','onboardingVistoPais','emailsRecuperacao','emailRecuperacao','pinPais'];
@@ -485,6 +486,25 @@ function restaurarPetEscolhidoDuranteSync(){
   salvarLocalmente();
 }
 function aplicarPrivadosPaisLocal(dados){CAMPOS_PRIVADOS_PAIS.forEach(k=>{if(Object.prototype.hasOwnProperty.call(dados||{},k))estado[k]=dados[k]})}
+function mostrarStatusVinculoFamilia(texto){
+  const box=document.getElementById('status-vinculo-familia');
+  const mensagem=document.getElementById('status-vinculo-familia-texto');
+  if(!box||!mensagem)return;
+  mensagem.textContent=texto;
+  box.hidden=false;
+}
+function resumirErroAcessoFamilia(error){
+  const codigo=String(error?.code||'').replace(/^functions\//,'');
+  const mensagens={
+    'not-found':'A família do convite não foi encontrada no Firebase. Confira o código no aparelho responsável.',
+    'failed-precondition':'Este aparelho já está vinculado a outra família. O responsável precisa corrigir o vínculo.',
+    'permission-denied':'O Firebase recusou o pedido. Confira a família e a autenticação deste aparelho.',
+    'unauthenticated':'O aparelho não conseguiu autenticar no Firebase. Verifique a conexão e abra o convite novamente.',
+    'unavailable':'O serviço de acesso está indisponível no momento. Tente novamente com internet.',
+    'network-request-failed':'A conexão com o serviço de acesso falhou. Verifique a internet e tente novamente.'
+  };
+  return {codigo:codigo||'erro-desconhecido',mensagem:mensagens[codigo]||'Não foi possível enviar o pedido ao Firebase. Atualize o app e tente novamente.'};
+}
 async function verificarMembroFamilia(user){
   const token=await user.getIdTokenResult(true);
   const claims=token?.claims||{};
@@ -496,9 +516,19 @@ async function verificarMembroFamilia(user){
     return true;
   }
   acessoFamiliar=null;
-  if(familiaExplicitaNesteAparelho&&window.firebase?.functions){
-    try{await firebase.functions('us-central1').httpsCallable('solicitarAcessoFamilia')({familyId:codigoFamilia,deviceLabel:(navigator.userAgent||'Aparelho').slice(0,60)})}
-    catch(error){if(error?.code!=='functions/already-exists')console.warn('Solicitação de acesso pendente:',error)}
+  resultadoSolicitacaoAcesso=null;
+  if(familiaExplicitaNesteAparelho){
+    if(typeof window.firebase?.functions!=='function'){
+      resultadoSolicitacaoAcesso={ok:false,codigo:'functions-sdk-indisponivel',mensagem:'O módulo de acesso do Firebase não carregou neste aparelho. Feche e abra o app quando estiver com internet.'};
+      return false;
+    }
+    try{
+      const resposta=await firebase.functions('us-central1').httpsCallable('solicitarAcessoFamilia')({familyId:codigoFamilia,deviceLabel:(navigator.userAgent||'Aparelho').slice(0,60)});
+      resultadoSolicitacaoAcesso={ok:true,status:resposta?.data?.status||'pending'};
+    }catch(error){
+      console.warn('Solicitação de acesso à família falhou:',error);
+      resultadoSolicitacaoAcesso={ok:false,...resumirErroAcessoFamilia(error)};
+    }
   }
   return false;
 }
@@ -566,12 +596,26 @@ try{
       const membroAprovado=await verificarMembroFamilia(usuario);
       sincronizacaoNuvemAtiva=membroAprovado;
       if(membroAprovado){await iniciarSincronizacaoNuvem()}
-      else{statusSyncAtual='local';atualizarStatusSyncUI();if(familiaExplicitaNesteAparelho)mostrarToast('📨 Aparelho aguardando aprovação do responsável.')}
+      else{
+        statusSyncAtual='local';atualizarStatusSyncUI();
+        if(familiaExplicitaNesteAparelho){
+          if(resultadoSolicitacaoAcesso?.ok){
+            mostrarStatusVinculoFamilia(`Pedido enviado para a família ${codigoFamilia}. No celular do responsável, abra o Painel dos Pais e aprove este aparelho como criança.`);
+          }else{
+            const erro=resultadoSolicitacaoAcesso||{codigo:'solicitacao-nao-executada',mensagem:'O pedido não chegou ao serviço do Firebase.'};
+            mostrarStatusVinculoFamilia(`${erro.mensagem} Código: ${erro.codigo}. Família: ${codigoFamilia}.`);
+          }
+        }
+      }
     }).catch((error)=>{
       console.error('Firebase indisponível:',error);
       sincronizacaoNuvemAtiva = false;
       statusSyncAtual='local';
       atualizarStatusSyncUI();
+      if(familiaExplicitaNesteAparelho){
+        const resumo=resumirErroAcessoFamilia(error);
+        mostrarStatusVinculoFamilia(`Não foi possível iniciar o acesso à família ${codigoFamilia}. ${resumo.mensagem} Código: ${resumo.codigo}.`);
+      }
     });
   }
 }catch(error){
@@ -3569,11 +3613,16 @@ function renderizarResumoPainelPais(){
   }
 }
 async function renderizarSolicitacoesAcesso(){
-  if(acessoFamiliar?.role!=='parent'||!dbFirebase)return;
   const lista=document.getElementById('lista-aprovacao-pais');
   if(!lista?.parentElement)return;
   let box=document.getElementById('acesso-familiar-pendencias');
   if(!box){box=document.createElement('section');box.id='acesso-familiar-pendencias';box.style.cssText='margin:10px 0;padding:10px;border:1px solid #ddd6fe;border-radius:14px;background:#faf5ff';lista.parentElement.insertBefore(box,lista)}
+  if(acessoFamiliar?.role!=='parent'||!dbFirebase){
+    box.replaceChildren();
+    const titulo=document.createElement('strong');titulo.textContent='📱 Aprovação de aparelhos';box.appendChild(titulo);
+    const aviso=document.createElement('div');aviso.textContent='Este aparelho não está autenticado como responsável da família; por isso a lista de pedidos não pode ser consultada.';aviso.style.marginTop='6px';box.appendChild(aviso);
+    return;
+  }
   try{
     const resposta=await firebase.functions('us-central1').httpsCallable('listarSolicitacoesFamilia')({});
     const pendentes=Object.entries(resposta.data?.requests||{}).filter(([,r])=>r?.status==='pending');
@@ -3585,7 +3634,12 @@ async function renderizarSolicitacoesAcesso(){
       const botao=document.createElement('button');botao.type='button';botao.className='primary-btn green-btn';botao.textContent='Aprovar como criança';botao.addEventListener('click',()=>aprovarAparelhoFamilia(uid,botao));
       linha.append(texto,botao);box.appendChild(linha);
     });
-  }catch(error){console.warn('Solicitações de acesso indisponíveis:',error);box.replaceChildren()}
+  }catch(error){
+    console.warn('Solicitações de acesso indisponíveis:',error);
+    box.replaceChildren();
+    const titulo=document.createElement('strong');titulo.textContent='⚠️ Não foi possível consultar os pedidos';box.appendChild(titulo);
+    const aviso=document.createElement('div');aviso.textContent=`Confira a conexão e o login de responsável. Código: ${String(error?.code||'erro-desconhecido')}.`;aviso.style.marginTop='6px';box.appendChild(aviso);
+  }
 }
 async function aprovarAparelhoFamilia(uid,botao){
   if(acessoFamiliar?.role!=='parent')return;

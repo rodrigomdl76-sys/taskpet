@@ -687,6 +687,7 @@
 <div id="modal-qrcode" class="modal-overlay"><div class="modal" style="text-align:center;max-width:280px"><div class="modal-title"><h3>📷 Convite por QR Code</h3><button class="close-btn" onclick="fecharModal('modal-qrcode')">×</button></div><p style="font-size:9px;color:#64748b;margin-bottom:8px">Peça para a outra pessoa escanear com a câmera do celular.</p><img id="img-qr-convite" src="" alt="QR code de convite" style="width:220px;height:220px;border-radius:12px;background:#fff;padding:6px"><p id="txt-link-qr-convite" style="font-size:8px;color:#94a3b8;margin-top:8px;word-break:break-all"></p></div></div>
 <div class="foto-viewer" id="foto-viewer" onclick="fecharVisualizadorFoto()"><img id="foto-viewer-img" src=""></div>
 <div class="toast" id="toast"></div>
+<aside id="status-vinculo-familia" role="status" aria-live="polite" hidden style="position:fixed;left:12px;right:12px;top:max(12px,env(safe-area-inset-top));z-index:2147483001;padding:12px 14px;border:1px solid #bfdbfe;border-radius:14px;background:#eff6ff;color:#1e3a8a;box-shadow:0 8px 24px #0f172a33;font:700 13px/1.45 system-ui,sans-serif"><div style="display:flex;align-items:flex-start;gap:10px"><span id="status-vinculo-familia-texto" style="flex:1"></span><button type="button" aria-label="Fechar aviso de vínculo" onclick="document.getElementById('status-vinculo-familia').hidden=true" style="border:0;background:transparent;color:inherit;font-size:20px;line-height:1;cursor:pointer">×</button></div></aside>
 <div class="banner-offline" id="banner-offline">📡 Sem conexão — as alterações serão sincronizadas quando a internet voltar.</div>
 <div class="banner-evento" id="banner-evento" onclick="abrirModalEventoSazonal()"></div>
 
@@ -732,7 +733,7 @@
 <script src="https://www.gstatic.com/firebasejs/12.18.0/firebase-storage-compat.js" defer></script>
 <script src="js/01_menu.js?v=back-3" defer></script>
 <script src="third_party/qrcode-generator/qrcode.js?v=local-qrcode-v1" defer></script>
-<script src="js/02_principal.js?v=musica-ambiente-nuvem-v1" defer></script>
+<script src="js/02_principal.js?v=family-access-status-v1" defer></script>
 <script src="js/03_extras_01.js" defer></script>
 <script src="js/04_engajamento.js?v=mesada-tarefas-v1" defer></script>
 <script src="js/05_interface.js" defer></script>
