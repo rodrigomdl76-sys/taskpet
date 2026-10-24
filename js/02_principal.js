@@ -523,7 +523,7 @@ async function verificarMembroFamilia(user){
       return false;
     }
     try{
-      const resposta=await firebase.functions('us-central1').httpsCallable('solicitarAcessoFamilia')({familyId:codigoFamilia,deviceLabel:(navigator.userAgent||'Aparelho').slice(0,60)});
+      const resposta=await firebase.app().functions('us-central1').httpsCallable('solicitarAcessoFamilia')({familyId:codigoFamilia,deviceLabel:(navigator.userAgent||'Aparelho').slice(0,60)});
       resultadoSolicitacaoAcesso={ok:true,status:resposta?.data?.status||'pending'};
     }catch(error){
       console.warn('Solicitação de acesso à família falhou:',error);
@@ -3624,7 +3624,7 @@ async function renderizarSolicitacoesAcesso(){
     return;
   }
   try{
-    const resposta=await firebase.functions('us-central1').httpsCallable('listarSolicitacoesFamilia')({});
+    const resposta=await firebase.app().functions('us-central1').httpsCallable('listarSolicitacoesFamilia')({});
     const pendentes=Object.entries(resposta.data?.requests||{}).filter(([,r])=>r?.status==='pending');
     box.replaceChildren();const titulo=document.createElement('strong');titulo.textContent='📱 Aparelhos aguardando aprovação';box.appendChild(titulo);
     if(!pendentes.length){const vazio=document.createElement('div');vazio.textContent='Nenhuma solicitação pendente.';vazio.style.marginTop='6px';box.appendChild(vazio);return}
@@ -3644,7 +3644,7 @@ async function renderizarSolicitacoesAcesso(){
 async function aprovarAparelhoFamilia(uid,botao){
   if(acessoFamiliar?.role!=='parent')return;
   botao.disabled=true;botao.textContent='Aprovando…';
-  try{await firebase.functions('us-central1').httpsCallable('aprovarAcessoFamilia')({uid,role:'child'});mostrarToast('✅ Aparelho aprovado. No outro aparelho, atualize o app.');await renderizarSolicitacoesAcesso()}
+  try{await firebase.app().functions('us-central1').httpsCallable('aprovarAcessoFamilia')({uid,role:'child'});mostrarToast('✅ Aparelho aprovado. No outro aparelho, atualize o app.');await renderizarSolicitacoesAcesso()}
   catch(error){console.error('Falha ao aprovar aparelho:',error);mostrarToast('⚠️ Não foi possível aprovar este aparelho.');botao.disabled=false;botao.textContent='Aprovar como criança'}
 }
 function renderizarPainelPais(){
