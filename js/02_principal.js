@@ -2647,6 +2647,7 @@ function sincronizarListenerTarefasV2(){
 let familiaAprovacoesPaisCache=null;
 const tarefasAprovacoesPaisPorFilho=Object.create(null);
 const listenersAprovacoesPais=Object.create(null);
+const aprovacoesEmProcessamento=new Set();
 function tarefasDeAprovacaoDoFilho(criancaId,tarefasIndividuais){
   const familia=familiaAprovacoesPaisCache||{};
   const perfil=familia.criancasDados?.[criancaId]?.tarefas;
@@ -2666,7 +2667,8 @@ function renderizarAprovacoesPais(){
     const existentes=tarefasAprovacoesPaisPorFilho[id]||[];
     tarefasAprovacoesPaisPorFilho[id]=tarefasDeAprovacaoDoFilho(id,existentes);
   });
-  const pendentes=Object.values(tarefasAprovacoesPaisPorFilho).flat();
+  const pendentes=Object.values(tarefasAprovacoesPaisPorFilho).flat()
+    .filter(t=>!aprovacoesEmProcessamento.has(`${t._criancaId}:${String(t.id)}`));
   const contador=document.getElementById('contador-aprovacoes-pais');
   if(contador)contador.textContent=pendentes.length?'('+pendentes.length+')':'';
   ap.replaceChildren();
@@ -2704,7 +2706,21 @@ function renderizarAprovacoesPais(){
     const botao=evento.target.closest('[data-aprovacao]');
     if(botao){
       const linha=botao.closest('.approval-row');
-      if(linha?.dataset.taskId&&linha.dataset.childId)executarAcaoAprovacaoDeCrianca(linha.dataset.childId,linha.dataset.taskId,botao.dataset.aprovacao);
+      if(linha?.dataset.taskId&&linha.dataset.childId){
+        const criancaId=linha.dataset.childId,id=linha.dataset.taskId,acao=botao.dataset.aprovacao;
+        const chave=`${criancaId}:${String(id)}`;
+        if(acao==='aprovar'){
+          if(aprovacoesEmProcessamento.has(chave))return;
+          aprovacoesEmProcessamento.add(chave);
+          renderizarAprovacoesPais();
+          executarAcaoAprovacaoDeCrianca(criancaId,id,acao)
+            .catch(error=>{console.error('Falha ao aprovar tarefa:',error);mostrarToast('⚠️ Não foi possível aprovar esta tarefa. Tente novamente.')})
+            .finally(()=>{
+              aprovacoesEmProcessamento.delete(chave);
+              if(document.getElementById('modal-pais')?.classList.contains('mostrar'))renderizarAprovacoesPais();
+            });
+        }else executarAcaoAprovacaoDeCrianca(criancaId,id,acao);
+      }
       return;
     }
     const foto=evento.target.closest('.approval-foto');
