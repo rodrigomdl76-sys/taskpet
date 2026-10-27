@@ -320,23 +320,23 @@
       <button class="close-btn" onclick="fecharModal('modal-privacidade')">×</button>
     </div>
     <div style="font-size:10px;color:#475569;line-height:1.45;max-height:55dvh;overflow:auto" id="texto-privacidade">
-      <p style="margin-bottom:8px"><b>RotinaPet</b> é um app familiar para rotina infantil com pet virtual. Respeitamos a LGPD e o uso supervisionado por responsáveis.</p>
+      <p style="margin-bottom:8px"><b>RotinaPet</b> ajuda famílias a organizar rotinas com um pet virtual. O responsável deve ler estas informações e dar consentimento específico antes de incluir dados de uma criança.</p>
       <p style="margin-bottom:6px"><b>1. Dados que tratamos</b></p>
-      <p style="margin-bottom:8px">Progresso do pet, tarefas, moedas, configurações da família, e-mail de recuperação (se cadastrado) e fotos enviadas como comprovante de tarefas. Dados ficam no aparelho e, se a sincronização estiver ativa, no Firebase da sua família.</p>
+      <p style="margin-bottom:8px">Tratamos apelidos, idade informada, tarefas e progresso, configurações familiares, e-mail de recuperação opcional e fotos de tarefas que a família escolher enviar. Usamos esses dados para manter as rotinas, sincronizar os aparelhos aprovados e exibir o progresso. Os dados ficam no aparelho e, quando a sincronização está ativa, nos serviços Firebase do projeto.</p>
       <p style="margin-bottom:6px"><b>2. Fotos</b></p>
-      <p style="margin-bottom:8px">Fotos de tarefas são opcionais, comprimidas no aparelho e visíveis aos responsáveis da mesma família. Não use o app para compartilhar imagens sensíveis de terceiros.</p>
+      <p style="margin-bottom:8px">Fotos são opcionais e usadas como comprovante de tarefas. O app guarda os arquivos no Firebase Storage. Os registros atuais usam links de download com token: qualquer pessoa que obtenha um desses links pode abrir a imagem enquanto o token estiver ativo. Envie apenas fotos apropriadas para a tarefa e evite imagens sensíveis ou de terceiros.</p>
       <p style="margin-bottom:6px"><b>3. Crianças</b></p>
-      <p style="margin-bottom:8px">O uso por menores deve ser acompanhado por um responsável. O painel dos pais é protegido por PIN. Moedas e “saldo em R$” são controle familiar — não constituem conta bancária nem pagamento automático.</p>
+      <p style="margin-bottom:8px">O pai, mãe ou responsável legal deve marcar a opção de consentimento antes de usar o painel dos pais e incluir dados de uma criança. O aceite registra a versão do aviso e a data. O PIN protege o painel neste aparelho. Moedas e “saldo em R$” são controle familiar — não constituem conta bancária nem pagamento automático.</p>
       <p style="margin-bottom:6px"><b>4. Conta e sincronização</b></p>
-      <p style="margin-bottom:8px">O código da família une aparelhos. Quem tiver o código e o PIN (ou e-mail vinculado) pode acessar os dados da família. Guarde o PIN com cuidado.</p>
+      <p style="margin-bottom:8px">O código de convite inicia um pedido de acesso; o responsável precisa aprovar cada aparelho. Os serviços Firebase do Google processam os dados necessários para autenticação, sincronização e armazenamento. O app não exibe anúncios nem vende dados para marketing.</p>
       <p style="margin-bottom:6px"><b>5. Seus direitos</b></p>
-      <p style="margin-bottom:8px">Você pode exportar backup, apagar dados no aparelho, desvincular e-mail e solicitar exclusão dos dados na nuvem deixando de usar o código da família / removendo o projeto no Firebase do mantenedor, conforme a operação do serviço.</p>
+      <p style="margin-bottom:8px">Para corrigir dados, retirar o consentimento ou solicitar exclusão dos dados da família e das fotos na nuvem, o responsável deve escrever para contato.rotinapet@gmail.com usando o e-mail de recuperação cadastrado, se houver, e informar o código da família. Não remova o projeto Firebase do mantenedor: isso não é uma ação disponível ao usuário. A cópia local pode ser removida em “Configurações” do navegador apagando os dados do site neste aparelho.</p>
       <p style="margin-bottom:6px"><b>6. Contato</b></p>
-      <p style="margin-bottom:8px">Para dúvidas sobre privacidade, use o canal de suporte indicado na página do app. Este texto é informativo e pode ser atualizado.</p>
+      <p style="margin-bottom:8px">Dúvidas e pedidos: contato.rotinapet@gmail.com. O RotinaPet é servido pelo GitHub Pages e usa Firebase do Google para autenticação, banco de dados, armazenamento de fotos e funções. A retenção depende da família manter os dados no app ou solicitar a exclusão.</p>
     </div>
     <label style="display:flex;align-items:flex-start;gap:8px;margin:12px 0;font-size:10px;font-weight:800;color:#334155;text-align:left;cursor:pointer">
       <input type="checkbox" id="check-privacidade" style="margin-top:2px;width:16px;height:16px;flex-shrink:0">
-      <span>Li e compreendi as informações de privacidade (LGPD / uso familiar).</span>
+      <span><b>Sou pai, mãe ou responsável legal pela criança.</b> Autorizo o tratamento dos dados descritos acima — apelido, idade, tarefas, progresso e, se eu escolher enviar, fotos de comprovação — para organizar a rotina familiar, sincronizar os aparelhos aprovados e acompanhar o progresso. Sei que posso retirar o consentimento e pedir a exclusão pelo e-mail informado.</span>
     </label>
     <button class="primary-btn green-btn" style="width:100%" id="btn-aceitar-privacidade" onclick="aceitarPrivacidade()">Continuar</button>
   </div>
