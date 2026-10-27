@@ -2668,6 +2668,7 @@ let familiaAprovacoesPaisCache=null;
 const tarefasAprovacoesPaisPorFilho=Object.create(null);
 const listenersAprovacoesPais=Object.create(null);
 const aprovacoesEmProcessamento=new Set();
+const recusasConfirmadasNaSessao=new Map();
 function tarefasDeAprovacaoDoFilho(criancaId,tarefasIndividuais){
   const familia=familiaAprovacoesPaisCache||{};
   const perfil=familia.criancasDados?.[criancaId]?.tarefas;
@@ -2687,8 +2688,15 @@ function renderizarAprovacoesPais(){
     const existentes=tarefasAprovacoesPaisPorFilho[id]||[];
     tarefasAprovacoesPaisPorFilho[id]=tarefasDeAprovacaoDoFilho(id,existentes);
   });
-  const pendentes=Object.values(tarefasAprovacoesPaisPorFilho).flat()
-    .filter(t=>!aprovacoesEmProcessamento.has(`${t._criancaId}:${String(t.id)}`));
+  const pendentes=Object.values(tarefasAprovacoesPaisPorFilho).flat().filter(t=>{
+    const chave=`${t._criancaId}:${String(t.id)}`;
+    if(aprovacoesEmProcessamento.has(chave))return false;
+    const recusadaEm=recusasConfirmadasNaSessao.get(chave);
+    if(!recusadaEm)return true;
+    const enviadaEm=Number(t.registros?.[hojeLocal()]?.enviadaEm)||Number(t.enviadaEm)||0;
+    if(enviadaEm>recusadaEm){recusasConfirmadasNaSessao.delete(chave);return true;}
+    return false;
+  });
   const contador=document.getElementById('contador-aprovacoes-pais');
   if(contador)contador.textContent=pendentes.length?'('+pendentes.length+')':'';
   ap.replaceChildren();
@@ -2812,8 +2820,10 @@ async function enviarParaAprovacao(id){
   copiarFotoParaRegistro(t);
   t.motivoRecusa=null;
   r.motivoRecusa=null;
+  const enviadaEm=Math.max(Date.now(),Number(r.recusadaEm)||0)+1;
   r.status='aguardando_aprovacao';
-  r.enviadaEm=Date.now();
+  r.enviadaEm=enviadaEm;
+  t.atualizadoEm=enviadaEm;
   t.status='aguardando_aprovacao';
   salvarLocalmente();
   renderizarTarefas();
@@ -3846,6 +3856,7 @@ function reprovarTarefaPais(id,chaveAprovacao){
     aprovacoesEmProcessamento.add(chave);
     const r=registroTarefaHoje(t);
     const agora=Math.max(Date.now(),Number(r.enviadaEm)||0)+1;
+    recusasConfirmadasNaSessao.set(chave,agora);
     t.status='pendente';
     t.motivoRecusa=texto||'Confira a tarefa e tente novamente.';
     t.foto=null;
