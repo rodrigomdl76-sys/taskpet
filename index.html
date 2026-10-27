@@ -330,7 +330,7 @@
       <p style="margin-bottom:6px"><b>4. Conta e sincronização</b></p>
       <p style="margin-bottom:8px">O código de convite inicia um pedido de acesso; o responsável precisa aprovar cada aparelho. Os serviços Firebase do Google processam os dados necessários para autenticação, sincronização e armazenamento. O app não exibe anúncios nem vende dados para marketing.</p>
       <p style="margin-bottom:6px"><b>5. Seus direitos</b></p>
-      <p style="margin-bottom:8px">Para corrigir dados, retirar o consentimento ou solicitar exclusão dos dados da família e das fotos na nuvem, o responsável deve escrever para contato.rotinapet@gmail.com usando o e-mail de recuperação cadastrado, se houver, e informar o código da família. Não remova o projeto Firebase do mantenedor: isso não é uma ação disponível ao usuário. A cópia local pode ser removida em “Configurações” do navegador apagando os dados do site neste aparelho.</p>
+      <p style="margin-bottom:8px">O responsável pode excluir os dados sincronizados e as fotos no Painel dos Pais, em “Conta e segurança → Excluir família e dados”. A exclusão é permanente, remove o vínculo dos aparelhos e preserva as contas de login. Para solicitar ajuda, consulte <a href="exclusao.html" target="_blank" rel="noopener">como excluir os dados</a>. Apagar os dados do navegador remove apenas a cópia deste aparelho.</p>
       <p style="margin-bottom:6px"><b>6. Contato</b></p>
       <p style="margin-bottom:8px">Dúvidas e pedidos: contato.rotinapet@gmail.com. O RotinaPet é servido pelo GitHub Pages e usa Firebase do Google para autenticação, banco de dados, armazenamento de fotos e funções. A retenção depende da família manter os dados no app ou solicitar a exclusão.</p>
     </div>
@@ -389,6 +389,8 @@
     <label class="field-label">🔒 Privacidade</label>
     <button type="button" class="primary-btn blue-btn botao-secundario" style="width:100%" onclick="abrirPrivacidade(false)">Ver política de privacidade</button>
     <small style="font-size:8px;color:#64748b;margin-top:3px;display:block">LGPD · dados da família, fotos e e-mail de recuperação.</small>
+    <button type="button" class="primary-btn red-btn" style="width:100%;margin-top:8px" onclick="excluirFamiliaEDados()">🗑️ Excluir família e dados</button>
+    <small style="font-size:8px;color:#64748b;margin-top:3px;display:block">Apaga os dados sincronizados e as fotos da família. As contas de login permanecem disponíveis, sem vínculo com essa família.</small>
   </div>
   <div class="section-card">
     <label class="field-label">📧 E-mail de recuperação</label>
@@ -733,7 +735,7 @@
 <script src="https://www.gstatic.com/firebasejs/12.18.0/firebase-storage-compat.js" defer></script>
 <script src="js/01_menu.js?v=back-3" defer></script>
 <script src="third_party/qrcode-generator/qrcode.js?v=local-qrcode-v1" defer></script>
-<script src="js/02_principal.js?v=family-access-status-v5" defer></script>
+<script src="js/02_principal.js?v=family-delete-v1" defer></script>
 <script src="js/03_extras_01.js" defer></script>
 <script src="js/04_engajamento.js?v=mesada-tarefas-v1" defer></script>
 <script src="js/05_interface.js" defer></script>

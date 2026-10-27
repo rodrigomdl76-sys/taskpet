@@ -4363,6 +4363,31 @@ function aceitarPrivacidade(){
   }
   fecharModal('modal-privacidade');
 }
+async function excluirFamiliaEDados(){
+  if(acessoFamiliar?.role!=='parent')return mostrarToast('Somente o responsável da família pode excluir estes dados.');
+  const auth=obterAuth();
+  const user=auth?.currentUser;
+  if(!user||user.isAnonymous)return mostrarToast('Entre na conta de responsável antes de excluir a família.');
+  const confirmacao=window.prompt(`Esta ação apaga permanentemente a família e as fotos sincronizadas. Para continuar, digite o código da família: ${codigoFamilia}`);
+  if(confirmacao!==codigoFamilia)return;
+  if(!window.confirm('Excluir agora todos os dados sincronizados e fotos desta família? Esta ação não pode ser desfeita.'))return;
+  try{
+    const resultado=await firebase.app().functions('us-central1').httpsCallable('excluirFamilia')({familyId:codigoFamilia,confirmacao});
+    if(!resultado?.data?.deleted)throw new Error('A exclusão não foi confirmada pelo serviço.');
+    const familiaExcluida=codigoFamilia;
+    ['ROTINAPET_SAVE_','ROTINAPET_PERFIL_','ROTINAPET_FILA_SYNC_'].forEach(prefixo=>localStorage.removeItem(prefixo+familiaExcluida));
+    localStorage.removeItem('ROTINAPET_FAMILIA_ID');
+    await auth.signOut();
+    window.alert('Dados e fotos da família excluídos. Sua conta de login foi preservada e desvinculada.');
+    window.location.reload();
+  }catch(error){
+    console.error('Falha ao excluir a família:',error);
+    const mensagem=error?.code==='functions/failed-precondition'&&String(error.message||'').includes('sessão recente')
+      ?'Por segurança, saia da conta e entre novamente antes de excluir a família.'
+      :(error?.message||'Não foi possível excluir a família agora. Verifique a conexão e tente novamente.');
+    mostrarAviso('⚠️','Não foi possível excluir',mensagem);
+  }
+}
 function abrirDefinirPinObrigatorio(modo){
   const tit=document.getElementById('titulo-definir-pin');
   const desc=document.getElementById('desc-definir-pin');
