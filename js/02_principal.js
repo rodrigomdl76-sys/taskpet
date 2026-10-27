@@ -2668,6 +2668,7 @@ let familiaAprovacoesPaisCache=null;
 const tarefasAprovacoesPaisPorFilho=Object.create(null);
 const listenersAprovacoesPais=Object.create(null);
 const aprovacoesEmProcessamento=new Set();
+const aprovacoesConfirmadasNaSessao=new Set();
 const recusasConfirmadasNaSessao=new Map();
 function tarefasDeAprovacaoDoFilho(criancaId,tarefasIndividuais){
   const familia=familiaAprovacoesPaisCache||{};
@@ -2691,6 +2692,7 @@ function renderizarAprovacoesPais(){
   const pendentes=Object.values(tarefasAprovacoesPaisPorFilho).flat().filter(t=>{
     const chave=`${t._criancaId}:${String(t.id)}`;
     if(aprovacoesEmProcessamento.has(chave))return false;
+    if(aprovacoesConfirmadasNaSessao.has(`${chave}:${hojeLocal()}`))return false;
     const recusadaEm=recusasConfirmadasNaSessao.get(chave);
     if(!recusadaEm)return true;
     const enviadaEm=Number(t.registros?.[hojeLocal()]?.enviadaEm)||Number(t.enviadaEm)||0;
@@ -2745,6 +2747,7 @@ function renderizarAprovacoesPais(){
           aprovacoesEmProcessamento.add(chave);
           renderizarAprovacoesPais();
           executarAcaoAprovacaoDeCrianca(criancaId,id,acao)
+            .then(sucesso=>{if(sucesso)aprovacoesConfirmadasNaSessao.add(`${chave}:${hojeLocal()}`)})
             .catch(error=>{console.error('Falha ao aprovar tarefa:',error);mostrarToast('⚠️ Não foi possível aprovar esta tarefa. Tente novamente.')})
             .finally(()=>{
               aprovacoesEmProcessamento.delete(chave);
@@ -2792,7 +2795,9 @@ async function executarAcaoAprovacaoDeCrianca(criancaId,id,acao){
     catch(error){console.warn('Falha ao atualizar tarefa antes da decisão:',error)}
   }
   if(!estado.tarefas.some(t=>String(t.id)===String(id))){mostrarToast('⚠️ Não foi possível carregar esta tarefa. Atualize o painel.');return}
-  if(acao==='aprovar')await aprovarTarefaPais(id);else reprovarTarefaPais(id,`${criancaId}:${String(id)}`);
+  if(acao==='aprovar')return await aprovarTarefaPais(id);
+  reprovarTarefaPais(id,`${criancaId}:${String(id)}`);
+  return true;
 }
 async function atualizarTarefasAprovacaoDaNuvem(){
   if(acessoFamiliar?.role!=='parent'||!dbFirebase||!sincronizacaoNuvemAtiva||!navigator.onLine)return false;
@@ -3973,18 +3978,18 @@ async function apagarFotoDepoisDaAprovacao(t,registro){
 }
 async function aprovarTarefaPais(id){
   const t=estado.tarefas.find(x=>String(x.id)===String(id));
-  if(!t)return;
+  if(!t)return false;
   const hoje=hojeLocal();
   const registroAprovacao=registroTarefaHoje(t);
   // Idempotência: a mesma tarefa só pode pagar uma vez por dia.
   // O marcador fica no registro diário e continua após recarregar ou sincronizar.
   if(t.status==='aprovada'||registroAprovacao.status==='aprovada'||registroAprovacao.recompensaPagaEm){
     mostrarToast('ℹ️ Esta tarefa já foi processada hoje.');
-    return;
+    return true;
   }
   if(statusTarefaAtual(t)!=='aguardando_aprovacao'){
     mostrarToast('ℹ️ A missão não está aguardando aprovação.');
-    return;
+    return false;
   }
   const agora=Date.now();
   const recompensa=Math.max(0,Number(t.recompensa)||0);
@@ -4060,6 +4065,7 @@ async function aprovarTarefaPais(id){
   }
   renderizarPainelPais();
   atualizarTela();
+  return gravouNaNuvem||!sincronizacaoDisponivel;
 }
 function ativarPausa(){
   const dias=Math.max(1,Math.min(30,parseInt(document.getElementById('input-dias-pausa').value)||3));
