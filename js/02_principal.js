@@ -470,7 +470,7 @@ let acessoFamiliar=null;
 let resultadoSolicitacaoAcesso=null;
 let ultimoEstadoPrivadoPais={};
 let petAtualPendenteSync=null;
-const CAMPOS_PRIVADOS_PAIS=['pinHash','pinBloqueadoAte','pinTentativasFalhas','pinPersonalizado','privacidadeAceita','onboardingVistoPais','emailsRecuperacao','emailRecuperacao','pinPais'];
+const CAMPOS_PRIVADOS_PAIS=['pinHash','pinBloqueadoAte','pinTentativasFalhas','pinPersonalizado','privacidadeAceita','consentimentoResponsavel','onboardingVistoPais','emailsRecuperacao','emailRecuperacao','pinPais'];
 function extrairCamposPrivadosPais(origem){const dados={};CAMPOS_PRIVADOS_PAIS.forEach(k=>{if(Object.prototype.hasOwnProperty.call(origem||{},k))dados[k]=origem[k]});return dados}
 function removerCamposPrivadosPais(origem){const dados={...(origem||{})};CAMPOS_PRIVADOS_PAIS.forEach(k=>{delete dados[k]});return dados}
 function estadoCompartilhadoParaSincronizar(origem=estado){
@@ -790,7 +790,7 @@ let estado={
   ],
   solicitacoesPremios:[],
   conquistas:{},habilidades:{},
-  pinBloqueadoAte:null,pinTentativasFalhas:0,pinPersonalizado:false,privacidadeAceita:false,onboardingVistoPais:false,
+  pinBloqueadoAte:null,pinTentativasFalhas:0,pinPersonalizado:false,privacidadeAceita:false,consentimentoResponsavel:null,onboardingVistoPais:false,
   acessorios:{comprados:[],ativo:null},
   pausaAte:null,
   historicoConclusoes:{},
@@ -3192,7 +3192,7 @@ async function entrarComEmail(){
     fecharLoginEmail();
     atualizarTela();
     // Login por e-mail autentica o responsável. Ainda exigimos privacidade e PIN personalizado se faltarem.
-    if(!estado.privacidadeAceita){
+    if(!consentimentoResponsavelAtual()){
       abrirPrivacidade(true);
       return;
     }
@@ -3370,7 +3370,7 @@ function abrirPainelPais(){
   if(acessoFamiliar?.role==='child'){mostrarToast('🔒 Só um responsável pode abrir este painel.');return}
   // Primeiro acesso: criar PIN do zero (sem senha padrão 1234 em produção).
   if(!estado.pinPersonalizado&&!estado.pinHash){
-    if(!estado.privacidadeAceita){
+    if(!consentimentoResponsavelAtual()){
       abrirPrivacidade(true);
       return;
     }
@@ -3460,7 +3460,7 @@ async function validarPin(){
   if(!estado.pinHash){
     fecharModal('modal-pin');
     limparPin();
-    if(!estado.privacidadeAceita){
+    if(!consentimentoResponsavelAtual()){
       abrirPrivacidade(true);
       return;
     }
@@ -3493,14 +3493,14 @@ async function validarPin(){
     limparPin();
     // Obrigatório trocar PIN padrão / não personalizado antes do painel.
     if(!estado.pinPersonalizado||aindaPinPadrao){
-      if(!estado.privacidadeAceita){
+      if(!consentimentoResponsavelAtual()){
         abrirPrivacidade(true);
         return;
       }
       abrirDefinirPinObrigatorio('trocar');
       return;
     }
-    if(!estado.privacidadeAceita){
+    if(!consentimentoResponsavelAtual()){
       abrirPrivacidade(true);
       return;
     }
@@ -4319,12 +4319,15 @@ async function salvarNovoPin(){
   if(st)st.textContent='✅ PIN personalizado ativo.';
   mostrarToast('🔑 PIN seguro atualizado!');
 }
+const VERSAO_CONSENTIMENTO_RESPONSAVEL='rotinapet-privacidade-2026-10-v1';
+function consentimentoResponsavelAtual(){const c=estado.consentimentoResponsavel;return !!estado.privacidadeAceita&&c?.versao===VERSAO_CONSENTIMENTO_RESPONSAVEL&&Number.isFinite(c?.aceitoEm)}
+function registrarConsentimentoResponsavel(){estado.privacidadeAceita=true;estado.consentimentoResponsavel={versao:VERSAO_CONSENTIMENTO_RESPONSAVEL,aceitoEm:Date.now()}}
 let privacidadePosAceite=null;
 function abrirPrivacidade(obrigatorio){
   const check=document.getElementById('check-privacidade');
   const btn=document.getElementById('btn-aceitar-privacidade');
   if(check){
-    check.checked=!!estado.privacidadeAceita;
+    check.checked=consentimentoResponsavelAtual();
     check.disabled=false;
   }
   if(btn){
@@ -4346,7 +4349,7 @@ function aceitarPrivacidade(){
       mostrarToast('Marque a opção para continuar.');
       return;
     }
-    estado.privacidadeAceita=true;
+    registrarConsentimentoResponsavel();
     salvar();
     fecharModal('modal-privacidade');
     const cb=privacidadePosAceite;
@@ -4355,7 +4358,7 @@ function aceitarPrivacidade(){
     return;
   }
   if(check?.checked){
-    estado.privacidadeAceita=true;
+    registrarConsentimentoResponsavel();
     salvar();
   }
   fecharModal('modal-privacidade');
