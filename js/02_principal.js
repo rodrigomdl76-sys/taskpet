@@ -656,7 +656,7 @@ const hojeLocal=()=>{const d=new Date();return `${d.getFullYear()}-${String(d.ge
 const ontemLocal=()=>{const d=new Date();d.setDate(d.getDate()-1);return `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`};
 // Campos que pertencem a UM filho específico (progresso do pet, tarefas, moedas...).
 // Tudo que NÃO está nessa lista é compartilhado pela família inteira (PIN, e-mails, taxa de câmbio).
-const CAMPOS_CRIANCA=['tarefasExcluidas','personalizacao','gestosDesbloqueados','palcoAtual','palcosComprados','decoracaoItens','extraDiaRemovida','avisosMissao','miniPetsComprados','miniPetAtivo','bauDatasResgatadas','historicoRecompensas','avisosRecompensas','acessorios','conquistas','habilidades','desafiosMathAcertos','dinheiroAcumulado','mesadaAtiva','fundoAtual','fundosComprados','temaInterfaceAtual','historicoConclusoes','idadeCrianca','dificuldadeJogos','nomePet','lembreteEnviadoData','metaMoedas','moedas','onboardingVistoCrianca','pausaAte','petAtual','pets','recompensas','sonhos','registroDiario','solicitacoesPremios','streak','surpresaResgatadaData','tarefas','tarefasHojeCount','timerFim','totalSacado','ultimoDiaAcesso','ultimoDiaConcluido','ultimoStreakPremiado','vozSalva','ultimoAcaoPet','ultimoDecay','desafioDiarioData','desafioDiarioFeitoData','bauDiarioAbertoData','escudosOfensiva','eventoSemanalData','missaoFamilia','mensagensPais','historicoEngajamento'];
+const CAMPOS_CRIANCA=['tarefasExcluidas','personalizacao','metasPersonalizadas','gestosDesbloqueados','palcoAtual','palcosComprados','decoracaoItens','extraDiaRemovida','avisosMissao','miniPetsComprados','miniPetAtivo','bauDatasResgatadas','historicoRecompensas','avisosRecompensas','acessorios','conquistas','habilidades','desafiosMathAcertos','dinheiroAcumulado','mesadaAtiva','fundoAtual','fundosComprados','temaInterfaceAtual','historicoConclusoes','idadeCrianca','dificuldadeJogos','nomePet','lembreteEnviadoData','metaMoedas','moedas','onboardingVistoCrianca','pausaAte','petAtual','pets','recompensas','sonhos','registroDiario','solicitacoesPremios','streak','surpresaResgatadaData','tarefas','tarefasHojeCount','timerFim','totalSacado','ultimoDiaAcesso','ultimoDiaConcluido','ultimoStreakPremiado','vozSalva','ultimoAcaoPet','ultimoDecay','desafioDiarioData','desafioDiarioFeitoData','bauDiarioAbertoData','escudosOfensiva','eventoSemanalData','missaoFamilia','mensagensPais','historicoEngajamento'];
 function valoresPadraoCrianca(){
   return {
     tarefasExcluidas:[],gestosDesbloqueados:[],decoracaoItens:[],extraDiaRemovida:null,miniPetsComprados:['passarinho'],miniPetAtivo:'passarinho',petAtual:'gato',moedas:15,dinheiroAcumulado:0,mesadaAtiva:true,idadeCrianca:7,dificuldadeJogos:'auto',nomePet:'Pipoca',
@@ -680,10 +680,15 @@ function aplicarDadosCrianca(dados){
   const padrao=valoresPadraoCrianca();
   CAMPOS_CRIANCA.forEach(k=>{estado[k]=(dados&&dados[k]!==undefined)?dados[k]:padrao[k]});
 }
-function trocarCriancaAtiva(novoId){
+function trocarCriancaAtiva(novoId,perfilRecemCriado=false){
   if(!estado.criancas[novoId]||novoId===estado.criancaAtivaId)return;
   estado.criancasDados=estado.criancasDados||{};
   estado.criancasDados[estado.criancaAtivaId]=capturarDadosCrianca();
+  // Perfil recém-cadastrado sempre começa do zero, sem reutilizar dados de
+  // qualquer perfil anterior que possa ter ficado no estado local ou na nuvem.
+  if(perfilRecemCriado){
+    estado.criancasDados[novoId]=JSON.parse(JSON.stringify(valoresPadraoCrianca()));
+  }
   aplicarDadosCrianca(estado.criancasDados[novoId]);
   // Na troca de perfil, as tarefas do filho escolhido são a fonte correta.
   // Comparar apenas a quantidade misturava missões de irmãos diferentes.
@@ -3608,7 +3613,7 @@ function abrirNovoFilho(){
   if(!nome||!nome.trim())return;
   const emoji=window.prompt('Escolha um emoji para representar (ex: 🐱 🦁 🐶 🐸):','🐾')||'🐾';
   const id=criarNovaCrianca(nome,emoji);
-  trocarCriancaAtiva(id);
+  trocarCriancaAtiva(id,true);
   renderizarListaCriancasPais();
   mostrarToast(`👨‍👩‍👧‍👦 ${nome} adicionado(a)!`);
 }
