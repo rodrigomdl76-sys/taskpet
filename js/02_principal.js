@@ -2716,8 +2716,9 @@ function renderizarAprovacoesPais(){
     const resumo=document.createElement('span');
     resumo.append(document.createTextNode((t.tipo==='obrigatoria'?'🔥 ':'⭐ ')+(t.texto||'Missão')));
     const filho=document.createElement('small');
-    filho.style.cssText='display:block;color:#64748b;font-size:8px;margin-top:2px';
-    filho.textContent='👧 '+(familiaAprovacoesPaisCache?.criancas?.[t._criancaId]?.nome||estado.criancas?.[t._criancaId]?.nome||'Criança');
+    const nomeCriancaAprovacao=familiaAprovacoesPaisCache?.criancas?.[t._criancaId]?.nome||estado.criancas?.[t._criancaId]?.nome||'Criança';
+    filho.style.cssText='display:inline-flex;align-items:center;margin-top:5px;padding:3px 8px;border-radius:999px;background:#eef2ff;color:#4338ca;font-size:10px;font-weight:900';
+    filho.textContent='👧 Enviada por: '+nomeCriancaAprovacao;
     resumo.appendChild(filho);
     const acoes=document.createElement('div');acoes.style.cssText='display:flex;gap:4px';
     const recusar=document.createElement('button');
