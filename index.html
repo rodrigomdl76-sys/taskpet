@@ -324,7 +324,7 @@
       <p style="margin-bottom:6px"><b>1. Dados que tratamos</b></p>
       <p style="margin-bottom:8px">Tratamos apelidos, idade informada, tarefas e progresso, configurações familiares, e-mail de recuperação opcional e fotos de tarefas que a família escolher enviar. Usamos esses dados para manter as rotinas, sincronizar os aparelhos aprovados e exibir o progresso. Os dados ficam no aparelho e, quando a sincronização está ativa, nos serviços Firebase do projeto.</p>
       <p style="margin-bottom:6px"><b>2. Fotos</b></p>
-      <p style="margin-bottom:8px">Fotos são opcionais e usadas como comprovante de tarefas. O app guarda os arquivos no Firebase Storage. Os registros atuais usam links de download com token: qualquer pessoa que obtenha um desses links pode abrir a imagem enquanto o token estiver ativo. Envie apenas fotos apropriadas para a tarefa e evite imagens sensíveis ou de terceiros.</p>
+      <p style="margin-bottom:8px">Fotos são opcionais e usadas como comprovante de tarefas. Nas versões atuais, o app não grava links públicos de download: as fotos são carregadas por uma função autenticada e ficam disponíveis aos responsáveis da família. Para fotos antigas, o primeiro responsável que abrir o Painel dos Pais conectado à internet inicia a revogação dos links anteriores. Até essa etapa, links antigos ainda podem funcionar; evite compartilhá-los. Envie apenas fotos apropriadas para a tarefa e evite imagens sensíveis ou de terceiros.</p>
       <p style="margin-bottom:6px"><b>3. Crianças</b></p>
       <p style="margin-bottom:8px">O pai, mãe ou responsável legal deve marcar a opção de consentimento antes de usar o painel dos pais e incluir dados de uma criança. O aceite registra a versão do aviso e a data. O PIN protege o painel neste aparelho. Moedas e “saldo em R$” são controle familiar — não constituem conta bancária nem pagamento automático.</p>
       <p style="margin-bottom:6px"><b>4. Conta e sincronização</b></p>
@@ -735,7 +735,7 @@
 <script src="https://www.gstatic.com/firebasejs/12.18.0/firebase-storage-compat.js" defer></script>
 <script src="js/01_menu.js?v=back-3" defer></script>
 <script src="third_party/qrcode-generator/qrcode.js?v=local-qrcode-v1" defer></script>
-<script src="js/02_principal.js?v=family-delete-v1" defer></script>
+<script src="js/02_principal.js?v=family-private-photos-v1" defer></script>
 <script src="js/03_extras_01.js" defer></script>
 <script src="js/04_engajamento.js?v=mesada-tarefas-v1" defer></script>
 <script src="js/05_interface.js" defer></script>

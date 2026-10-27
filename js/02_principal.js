@@ -467,6 +467,8 @@ async function vincularFamiliaAConta(user){
   if(!anterior)await user.updateProfile({displayName:PREFIXO_FAMILIA_CONTA+codigoFamilia});
 }
 let acessoFamiliar=null;
+let fotosFamiliaProtegidasNestaSessao=false;
+const cacheFotosPrivadas=new Map();
 let resultadoSolicitacaoAcesso=null;
 let ultimoEstadoPrivadoPais={};
 let petAtualPendenteSync=null;
@@ -2314,8 +2316,27 @@ async function enviarFotoParaStorage(blob,t){
   const path=`familias/${codigoFamilia}/criancas/${idTarefaSeguro(estado.criancaAtivaId)}/tarefas/${idTarefaSeguro(t.id)}/${dia}.jpg`;
   const ref=storageFirebase.ref(path);
   await ref.put(blob,{contentType:'image/jpeg',cacheControl:'private,max-age=3600'});
-  const url=await ref.getDownloadURL();
-  return {url,path};
+  return {path};
+}
+function extrairCaminhoFoto(url){
+  try{
+    const match=String(url||'').match(/\/o\/([^?]+)/);
+    if(!match)return null;
+    const path=decodeURIComponent(match[1]);
+    return path.startsWith(`familias/${codigoFamilia}/`)?path:null;
+  }catch(e){return null}
+}
+async function baixarFotoPrivada(path){
+  if(!path||!window.firebase?.functions)throw new Error('Função de fotos privadas indisponível.');
+  if(cacheFotosPrivadas.has(path))return cacheFotosPrivadas.get(path);
+  const promise=window.firebase.app().functions('us-central1').httpsCallable('baixarFotoFamilia')({path}).then(res=>{
+    const data=res?.data;
+    if(!data?.base64||!/^image\/(jpeg|webp)$/.test(data.contentType||''))throw new Error('Resposta de foto inválida.');
+    return `data:${data.contentType};base64,${data.base64}`;
+  });
+  cacheFotosPrivadas.set(path,promise);
+  if(cacheFotosPrivadas.size>20)cacheFotosPrivadas.delete(cacheFotosPrivadas.keys().next().value);
+  try{return await promise}catch(error){cacheFotosPrivadas.delete(path);throw error}
 }
 async function processarFotoCapturada(e){
   const f=e.target.files[0];
@@ -2344,7 +2365,7 @@ async function processarFotoCapturada(e){
       if(blob){
         try{
           const remoto=await enviarFotoParaStorage(blob,t);
-          if(remoto){t.foto=null;t.fotoUrl=remoto.url;t.fotoPath=remoto.path;}
+          if(remoto){t.foto=null;t.fotoUrl=null;t.fotoPath=remoto.path;}
         }catch(storageError){
           console.warn('Upload da foto no Storage falhou; usando fallback local:',storageError);
           mostrarToast('📸 Foto salva localmente; Storage indisponível.');
@@ -2355,7 +2376,7 @@ async function processarFotoCapturada(e){
       salvar();
       persistirTarefaIndividualV2(t).catch(err=>console.warn('Foto/tarefa:',err));
       renderizarTarefas();renderizarPainelPais();
-      if(t.fotoUrl)mostrarToast('☁️ Foto enviada com segurança.');
+      if(t.fotoPath)mostrarToast('☁️ Foto enviada com segurança.');
       else mostrarToast('📸 Foto otimizada com sucesso!');
     }catch(error){
       console.error('Falha ao processar foto:',error);
@@ -2376,15 +2397,14 @@ async function dataUrlParaBlob(dataUrl){
 async function migrarFotoAntigaParaStorage(t){
   if(!t?.foto||!storageFirebase)throw new Error('foto ou Storage indisponível');
   const blob=await dataUrlParaBlob(t.foto);
-  const path=`familias/${codigoFamilia}/criancas/${idTarefaSeguro(estado.criancaAtivaId)}/tarefas/${idTarefaSeguro(t.id)}/legado-${Date.now()}.jpg`;
+  const path=`familias/${codigoFamilia}/criancas/${idTarefaSeguro(estado.criancaAtivaId)}/tarefas/${idTarefaSeguro(t.id)}/${hojeLocal()}_legado-${Date.now()}.jpg`;
   const ref=storageFirebase.ref(path);
   await ref.put(blob,{contentType:'image/jpeg',cacheControl:'private,max-age=3600'});
-  const url=await ref.getDownloadURL();
-  // A foto original só é removida depois do put + getDownloadURL concluírem.
-  t.foto=null;t.fotoUrl=url;t.fotoPath=path;t.atualizadoEm=Date.now();
+  // A foto original só é removida depois que o upload termina; nenhum link bearer é salvo.
+  t.foto=null;t.fotoUrl=null;t.fotoPath=path;t.atualizadoEm=Date.now();
   await persistirTarefaIndividualV2(t);
   salvarLocalmente();
-  return url;
+  return path;
 }
 async function iniciarMigracaoFotosStorage(){
   const botao=document.getElementById('btn-migrar-fotos');
@@ -2695,10 +2715,13 @@ function renderizarAprovacoesPais(){
     const aprovar=document.createElement('button');
     aprovar.type='button';aprovar.className='primary-btn green-btn';aprovar.dataset.aprovacao='aprovar';aprovar.textContent='Aprovar';
     acoes.append(recusar,aprovar);topo.append(resumo,acoes);linha.appendChild(topo);
-    const fotoSrc=t.fotoUrl||t.foto||'';
-    if(fotoSrc){
+    if(t.fotoUrl&&!t.fotoPath)t.fotoPath=extrairCaminhoFoto(t.fotoUrl);
+    const fotoSrc=t.foto||'';
+    if(fotoSrc||t.fotoPath){
       const foto=document.createElement('img');
-      foto.className='approval-foto';foto.src=fotoSrc;foto.alt='Comprovante da missão';linha.appendChild(foto);
+      foto.className='approval-foto';foto.alt='Comprovante da missão';linha.appendChild(foto);
+      if(fotoSrc)foto.src=fotoSrc;
+      else baixarFotoPrivada(t.fotoPath).then(src=>{if(src&&foto.isConnected)foto.src=src}).catch(error=>{console.warn('Não foi possível carregar foto privada:',error);if(foto.isConnected)foto.alt='Foto indisponível; verifique sua conexão.'});
     }
     ap.appendChild(linha);
   });
@@ -2825,7 +2848,7 @@ function pedirConfirmacaoMissao(id){
   const tarefa=estado.tarefas.find(t=>String(t.id)===String(id));
   if(!tarefa||statusTarefaAtual(tarefa)!=='pendente')return;
   tarefaParaConfirmarId=id;
-  const temFoto=Boolean(tarefa.foto||tarefa.fotoUrl);
+  const temFoto=Boolean(tarefa.foto||tarefa.fotoUrl||tarefa.fotoPath);
   document.getElementById('texto-confirmar-missao').textContent=`${tarefa.texto}${temFoto?' · 📸 Foto anexada':''}`;
   abrirModal('modal-confirmar-missao');
 }
@@ -2997,7 +3020,7 @@ function renderizarTarefas(){
       row.innerHTML=`
         <div>
           <div class="task-name" style="${apr?'text-decoration:line-through;color:#94a3b8':''}">${esc(textoTarefaExibido(t.texto))}<span style="font-size:7px;color:#7c3aed;font-weight:900">${esc(badgeDias)}</span></div>
-          <span class="task-reward">+${Number(t.xp)||20} XP • +${Number(t.recompensa)||5} 🪙 ${(t.fotoUrl||t.foto)?'• 📸':''}</span>
+          <span class="task-reward">+${Number(t.xp)||20} XP • +${Number(t.recompensa)||5} 🪙 ${(t.fotoUrl||t.foto||t.fotoPath)?'• 📸':''}</span>
           ${t.motivoRecusa?`<div class="motivo-recusa">↩️ ${esc(t.motivoRecusa)}</div>`:''}
         </div>
         <div class="task-actions">
@@ -4436,6 +4459,14 @@ function fecharOnboardingPais(){
   mostrarToast('👨‍👩‍👧 Painel pronto — bom uso em família!');
 }
 function entrarPainelPaisPosAuth(){
+  if(!fotosFamiliaProtegidasNestaSessao&&acessoFamiliar?.role==='parent'&&navigator.onLine){
+    fotosFamiliaProtegidasNestaSessao=true;
+    firebase.app().functions('us-central1').httpsCallable('protegerFotosFamilia')({}).catch(error=>{
+      fotosFamiliaProtegidasNestaSessao=false;
+      console.warn('Não foi possível revogar links antigos de fotos:',error);
+      mostrarAviso('🔒','Proteção de fotos pendente','Conecte-se à internet e abra novamente este painel para revogar links antigos de fotos.');
+    });
+  }
   if(!estado.onboardingVistoPais){
     abrirModal('modal-onboarding-pais');
     return;
