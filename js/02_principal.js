@@ -2784,7 +2784,7 @@ async function executarAcaoAprovacaoDeCrianca(criancaId,id,acao){
     catch(error){console.warn('Falha ao atualizar tarefa antes da decisão:',error)}
   }
   if(!estado.tarefas.some(t=>String(t.id)===String(id))){mostrarToast('⚠️ Não foi possível carregar esta tarefa. Atualize o painel.');return}
-  if(acao==='aprovar')await aprovarTarefaPais(id);else reprovarTarefaPais(id);
+  if(acao==='aprovar')await aprovarTarefaPais(id);else reprovarTarefaPais(id,`${criancaId}:${String(id)}`);
 }
 async function atualizarTarefasAprovacaoDaNuvem(){
   if(acessoFamiliar?.role!=='parent'||!dbFirebase||!sincronizacaoNuvemAtiva||!navigator.onLine)return false;
@@ -3833,29 +3833,45 @@ function abrirVisualizadorFoto(src){
 function fecharVisualizadorFoto(){
   document.getElementById('foto-viewer').classList.remove('mostrar');
 }
-function reprovarTarefaPais(id){
+function reprovarTarefaPais(id,chaveAprovacao){
   const t=estado.tarefas.find(x=>String(x.id)===String(id));
   if(!t||statusTarefaAtual(t)!=='aguardando_aprovacao')return;
   const motivo=window.prompt(`Por que a tarefa "${t.texto}" precisa ser refeita?`,t.motivoRecusa||'')
   if(motivo===null)return;
   const texto=motivo.trim().slice(0,180);
   mostrarConfirmacao(`Devolver a tarefa para a criança${texto?` com o motivo: "${texto}"`:''}?`,async()=>{
+    const criancaId=String(estado.criancaAtivaId||'c1');
+    const chave=chaveAprovacao||`${criancaId}:${String(id)}`;
+    if(aprovacoesEmProcessamento.has(chave))return;
+    aprovacoesEmProcessamento.add(chave);
+    const r=registroTarefaHoje(t);
+    const agora=Math.max(Date.now(),Number(r.enviadaEm)||0)+1;
     t.status='pendente';
     t.motivoRecusa=texto||'Confira a tarefa e tente novamente.';
     t.foto=null;
-    const r=t.registros?.[hojeLocal()];
-    if(r){r.status='pendente';r.foto=null;r.motivoRecusa=t.motivoRecusa;r.recusadaEm=Date.now();r.historico=r.historico||[];r.historico.push({status:'recusada',t:Date.now(),motivo:t.motivoRecusa});r.historico=r.historico.slice(-20);r.atualizadoEm=Date.now();}
-    t.historicoAprovacoes=t.historicoAprovacoes||[];t.historicoAprovacoes.push({status:'recusada',t:Date.now(),motivo:t.motivoRecusa});t.historicoAprovacoes=t.historicoAprovacoes.slice(-20);
+    t.atualizadoEm=agora;
+    r.status='pendente';r.foto=null;r.motivoRecusa=t.motivoRecusa;r.recusadaEm=agora;r.historico=r.historico||[];r.historico.push({status:'recusada',t:agora,motivo:t.motivoRecusa});r.historico=r.historico.slice(-20);r.atualizadoEm=agora;
+    t.historicoAprovacoes=t.historicoAprovacoes||[];t.historicoAprovacoes.push({status:'recusada',t:agora,motivo:t.motivoRecusa});t.historicoAprovacoes=t.historicoAprovacoes.slice(-20);
+    salvarLocalmente();
+    renderizarAprovacoesPais();
     registrarLogAtividade(`Tarefa recusada: ${t.texto} — ${t.motivoRecusa}`);
     let tarefaGravada=false,estadoGravado=false;
-    try{[tarefaGravada,estadoGravado]=await Promise.all([persistirTarefaIndividualV2(t),salvar()]);}
-    catch(e){console.warn('Tarefa individual:',e);}
-    if(tarefaGravada&&estadoGravado)enfileirarPushFamilia('↩️ Missão precisa ser refeita',`“${t.texto}”: ${t.motivoRecusa}`,{
-      tag:`rotinapet-recusada-${id}`,onlyPerfil:'crianca',targetChildId:estado.criancaAtivaId
-    });
-    renderizarPainelPais();
-    atualizarTela();
-    mostrarToast('↩️ Devolvida com orientação para a criança.');
+    try{
+      [tarefaGravada,estadoGravado]=await Promise.all([persistirTarefaIndividualV2(t,criancaId),salvar()]);
+      if(!tarefaGravada||!estadoGravado)throw new Error('A recusa ainda não foi confirmada na nuvem.');
+      enfileirarPushFamilia('↩️ Missão precisa ser refeita',`“${t.texto}”: ${t.motivoRecusa}`,{
+        tag:`rotinapet-recusada-${id}`,onlyPerfil:'crianca',targetChildId:criancaId
+      });
+      mostrarToast('↩️ Devolvida com orientação para a criança.');
+    }catch(e){
+      console.warn('Falha ao salvar a recusa da tarefa:',e);
+      marcarFilaSync(true);
+      mostrarToast('📱 A tarefa saiu da lista e será sincronizada quando a conexão voltar.');
+    }finally{
+      aprovacoesEmProcessamento.delete(chave);
+      if(document.getElementById('modal-pais')?.classList.contains('mostrar'))renderizarPainelPais();
+      atualizarTela();
+    }
   });
 }
 async function trocarFamiliaManualmente(){
