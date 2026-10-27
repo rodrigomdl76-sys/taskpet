@@ -2,9 +2,9 @@ rules_version = '2';
 service firebase.storage {
   match /b/{bucket}/o {
     match /familias/{familyId}/criancas/{childId}/tarefas/{taskId}/{fileName} {
-      allow read: if request.auth != null
-        && request.auth.token.familyId == familyId
-        && request.auth.token.familyRole in ['parent', 'child'];
+      // Downloads happen through the authenticated parent-only Cloud Function.
+      // Do not expose file data or metadata through the client Storage SDK.
+      allow read: if false;
       allow create, update: if request.auth != null
         && request.auth.token.familyId == familyId
         && request.auth.token.familyRole in ['parent', 'child']
