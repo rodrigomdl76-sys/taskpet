@@ -374,6 +374,14 @@ let tarefasV2ListenerCriancaId=null;
 const SCHEMA_TAREFAS_V2=2;
 let statusSyncAtual='local'; // local | offline | syncing | online | erro
 let detalheErroSync='';
+const PALCOS_PET=[
+  {id:'cristal',nome:'Cristal',emoji:'💎',preco:0,descricao:'Uma superfície brilhante e delicada.'},
+  {id:'floresta',nome:'Bosque',emoji:'🌿',preco:20,descricao:'Musgo macio para repousar as patinhas.'},
+  {id:'nuvem',nome:'Nuvem',emoji:'☁️',preco:25,descricao:'Uma nuvem fofinha com sombra no chão.'},
+  {id:'estrelas',nome:'Galáxia',emoji:'🌟',preco:35,descricao:'Um pedacinho do céu estrelado.'},
+  {id:'doce',nome:'Doce',emoji:'🍬',preco:30,descricao:'Um palco cor de sobremesa.'},
+  {id:'ouro',nome:'Campeão',emoji:'🏆',preco:40,descricao:'Um brilho de conquista para o pet.'}
+];
 function atualizarStatusSyncUI(){
   const statusEl=document.getElementById('txt-status-nuvem');
   const banner=document.getElementById('banner-offline');
@@ -5067,14 +5075,7 @@ function abrirLojaFundos(){
   window.renderizarLojaGestos?.();
   abrirModal('modal-fundos');
 }
-const PALCOS_PET=[
-  {id:'cristal',nome:'Cristal',emoji:'💎',preco:0,descricao:'Uma superfície brilhante e delicada.'},
-  {id:'floresta',nome:'Bosque',emoji:'🌿',preco:20,descricao:'Musgo macio para repousar as patinhas.'},
-  {id:'nuvem',nome:'Nuvem',emoji:'☁️',preco:25,descricao:'Uma nuvem fofinha com sombra no chão.'},
-  {id:'estrelas',nome:'Galáxia',emoji:'🌟',preco:35,descricao:'Um pedacinho do céu estrelado.'},
-  {id:'doce',nome:'Doce',emoji:'🍬',preco:30,descricao:'Um palco cor de sobremesa.'},
-  {id:'ouro',nome:'Campeão',emoji:'🏆',preco:40,descricao:'Um brilho de conquista para o pet.'}
-];
+
 function aplicarPalcoPet(){
   const palco=PALCOS_PET.find(p=>p.id===estado.palcoAtual && (p.preco===0||(estado.palcosComprados||[]).includes(p.id)))||PALCOS_PET[0];
   const stage=document.querySelector('.pet-stage');
