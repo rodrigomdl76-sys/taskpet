@@ -373,6 +373,7 @@ let tarefasV2ListenerCallback=null;
 let tarefasV2ListenerCriancaId=null;
 const SCHEMA_TAREFAS_V2=2;
 let statusSyncAtual='local'; // local | offline | syncing | online | erro
+let detalheErroSync='';
 function atualizarStatusSyncUI(){
   const statusEl=document.getElementById('txt-status-nuvem');
   const banner=document.getElementById('banner-offline');
@@ -405,7 +406,10 @@ function atualizarStatusSyncUI(){
     }else if(statusSyncAtual==='erro'){
       banner.classList.add('mostrar');
       banner.classList.remove('syncing','synced');
-      banner.textContent='⚠️ Não foi possível sincronizar. Verifique a internet e abra o app novamente.';
+      const detalhe=String(detalheErroSync||'').slice(0,100);
+      banner.textContent=detalhe
+        ? `⚠️ Falha ao sincronizar (${detalhe}). Feche e abra o app novamente.`
+        : '⚠️ Não foi possível sincronizar. Verifique a internet e abra o app novamente.';
     }else if(!filaSyncPendente){
       banner.classList.remove('mostrar','syncing','synced');
     }
@@ -618,6 +622,7 @@ try{
         }
       }
     }).catch((error)=>{
+      detalheErroSync=String(error?.code||error?.message||'erro sem detalhe').replace(/\s+/g,' ').slice(0,100);
       console.error('Firebase indisponível:',error);
       sincronizacaoNuvemAtiva = false;
       statusSyncAtual='local';
@@ -1019,6 +1024,7 @@ async function carregarEstadoNuvem(){
     atualizarTela();
     return true;
   }catch(e){
+    detalheErroSync=String(e?.code||e?.message||'erro sem detalhe').replace(/\s+/g,' ').slice(0,100);
     console.error('Falha ao carregar família:',e);
     return null;
   }
