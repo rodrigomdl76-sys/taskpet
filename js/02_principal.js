@@ -3168,9 +3168,15 @@ async function entrarComEmail(){
   const auth=obterAuth();
   if(!auth)return mostrarErroRecuperacao('O serviço de autenticação está indisponível.');
   if(!validarEmail(email)||senha.length<6)return mostrarErroRecuperacao('Informe um e-mail válido e uma senha com pelo menos 6 caracteres.');
+  const botao=document.getElementById('btn-login-email');
+  if(botao?.disabled)return;
+  if(botao){botao.disabled=true;botao.textContent='Entrando…';botao.setAttribute('aria-busy','true');}
   try{
-    await inicializacaoFirebase;
+    // Não aguarde a sincronização inicial completa: ela pode estar esperando a aprovação
+    // de acesso de outro aparelho. O Firebase Auth pode autenticar o responsável agora.
     await auth.signInWithEmailAndPassword(email,senha);
+    if(!dbFirebase)dbFirebase=firebase.database();
+    try{if(!storageFirebase)storageFirebase=firebase.storage()}catch(storageError){console.warn('Firebase Storage indisponível:',storageError)}
     const user=auth.currentUser;
     const codigoConta=familiaDaConta(user);
     if(!codigoConta&&!familiaExplicitaNesteAparelho){
@@ -3223,6 +3229,8 @@ async function entrarComEmail(){
   }catch(error){
     console.warn('Falha no login por email:',error);
     mostrarErroRecuperacao(error?.message&&!(error.code||'').startsWith('auth/')?error.message:'Não foi possível entrar. Confira e-mail e senha ou redefina sua senha pelo Firebase.');
+  }finally{
+    if(botao){botao.disabled=false;botao.textContent='Entrar';botao.removeAttribute('aria-busy');}
   }
 }
 function restaurarBackupEstado(arquivo){
@@ -5729,6 +5737,7 @@ try{
       definirIdUsuario(usuario.uid);
       sincronizacaoNuvemAtiva = true;
       const tokenAtual=await usuario.getIdTokenResult();
+      if(firebase.auth().currentUser?.uid!==usuario.uid)return;
       const codigoConta=tokenAtual?.claims?.familyId||familiaDaConta(usuario);
       if(codigoConta&&codigoConta!==codigoFamilia){
         codigoFamilia=codigoConta;
@@ -5743,6 +5752,7 @@ try{
         }catch(e){console.warn('Cópia local da família indisponível:',e)}
       }
       const membroAprovado=await verificarMembroFamilia(usuario);
+      if(firebase.auth().currentUser?.uid!==usuario.uid)return;
       sincronizacaoNuvemAtiva=membroAprovado;
       if(membroAprovado){await iniciarSincronizacaoNuvem()}
       else{
@@ -5757,6 +5767,7 @@ try{
         }
       }
     }).catch((error)=>{
+      if(firebase.auth().currentUser&&!firebase.auth().currentUser.isAnonymous)return;
       detalheErroSync=String(error?.code||error?.message||'erro sem detalhe').replace(/\s+/g,' ').slice(0,100);
       console.error('Firebase indisponível:',error);
       sincronizacaoNuvemAtiva = false;
