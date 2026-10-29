@@ -2324,8 +2324,8 @@ function mostrarErroFotoAprovacao(foto,path,error){
   botao.type='button';botao.textContent='Tentar novamente';
   botao.style.cssText='flex:none;border:0;border-radius:8px;padding:8px 10px;background:#2563eb;color:#fff;font-weight:800;cursor:pointer';
   const mensagem=()=>{
-    const codigo=String(error?.code||'').replace(/^functions\\//,'');
-    const detalhe=String(error?.message||'Falha ao carregar a foto.').replace(/\\s+/g,' ').slice(0,140);
+    const codigo=String(error?.code||'').replace(/^functions\//,'');
+    const detalhe=String(error?.message||'Falha ao carregar a foto.').replace(/\s+/g,' ').slice(0,140);
     return `Foto indisponível (${codigo||'erro'}): ${detalhe}`;
   };
   texto.textContent=mensagem();
