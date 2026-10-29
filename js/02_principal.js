@@ -508,6 +508,9 @@ function resumirErroAcessoFamilia(error){
   const detalhe=String(error?.message||'').replace(/\s+/g,' ').trim().slice(0,180);
   return {codigo:codigo||'erro-desconhecido',mensagem:mensagens[codigo]||'Não foi possível enviar o pedido ao Firebase. Atualize o app e tente novamente.',detalhe};
 }
+// Declarados antes do boot do Firebase, que pode consultar o perfil logo na inicialização.
+let CHAVE_PERFIL_LOCAL='ROTINAPET_PERFIL_'+codigoFamilia;
+let perfilAtivo='crianca';
 async function verificarMembroFamilia(user){
   const token=await user.getIdTokenResult(true);
   const claims=token?.claims||{};
@@ -3073,8 +3076,6 @@ function renderizarTarefas(){
   atualizarOfensiva();
 }
 // O app abre sempre no perfil infantil; o perfil dos pais é acessado pelo botão próprio e continua protegido por PIN.
-let CHAVE_PERFIL_LOCAL='ROTINAPET_PERFIL_'+codigoFamilia;
-let perfilAtivo='crianca';
 function verificarPrimeiroAcesso(){
   try{localStorage.setItem(CHAVE_PERFIL_LOCAL,'crianca')}catch(e){}
   const ids=Object.keys(estado.criancas||{});
