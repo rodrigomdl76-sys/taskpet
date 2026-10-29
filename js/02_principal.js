@@ -3182,12 +3182,10 @@ async function entrarComEmail(){
     const destino=familyClaim||codigoConta||codigoFamilia;
     if(familyClaim!==destino||familyRole!=='parent')throw new Error('Esta conta ainda não foi aprovada como responsável. Abra o convite no aparelho e peça ao responsável para aprová-lo.');
     if(!dbFirebase)throw new Error('A nuvem está indisponível. Verifique a conexão e tente novamente.');
-    codigoFamilia=destino;acessoFamiliar={familyId:destino,role:familyRole};perfilAtivo=familyRole==='parent'?'pais':'crianca';
-    if(!codigoConta)await vincularFamiliaAConta(user);
+    await filaEscritaNuvem.catch(()=>{});
+    cargaNuvemPendente=true;
+    dbFirebase.ref(getCaminhoFirebase()).off();
     if(destino!==codigoFamilia){
-      await filaEscritaNuvem.catch(()=>{});
-      cargaNuvemPendente=true;
-      dbFirebase.ref(getCaminhoFirebase()).off();
       codigoFamilia=destino;
       localStorage.setItem('ROTINAPET_FAMILIA_ID',codigoFamilia);
       CHAVE_PERFIL_LOCAL='ROTINAPET_PERFIL_'+codigoFamilia;
@@ -3198,8 +3196,13 @@ async function entrarComEmail(){
         if(salvo)estado={...estado,...JSON.parse(salvo)};
       }catch(e){console.warn('Cópia local indisponível:',e)}
       ultimoEstadoSincronizado=null;
-      if(!await iniciarSincronizacaoNuvem())throw new Error('Não foi possível carregar a família. Tente novamente com internet.');
     }
+    acessoFamiliar={familyId:destino,role:familyRole};
+    perfilAtivo='pais';
+    sincronizacaoNuvemAtiva=true;
+    if(!codigoConta)await vincularFamiliaAConta(user);
+    // Sempre recarrega também os segredos privados com a sessão do responsável.
+    if(!await iniciarSincronizacaoNuvem())throw new Error('Não foi possível carregar a família. Tente novamente com internet.');
     familiaExplicitaNesteAparelho=true;
     perfilAtivo='pais';
     localStorage.setItem(CHAVE_PERFIL_LOCAL,'pais');
