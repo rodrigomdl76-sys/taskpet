@@ -1093,7 +1093,10 @@ async function iniciarSincronizacaoNuvem(){
     }catch(e){console.warn('Reset diário: falha ao atualizar tarefas V2:',e)}
   }
 
-  await sincronizarAprovacoesPendentes();
+  try{
+    const timeoutAprovacoes=new Promise((_,reject)=>setTimeout(()=>reject(new Error('timeout ao sincronizar aprovações pendentes')),8000));
+    await Promise.race([sincronizarAprovacoesPendentes(),timeoutAprovacoes]);
+  }catch(e){console.warn('Sincronização de aprovações pendentes adiada:',e)}
   ultimaSyncOkEm=Date.now();
   statusSyncAtual='online';
   // Reenvia o estado já mesclado/resetado sem risco de sobrescrever a carga inicial.
@@ -2617,7 +2620,9 @@ async function iniciarMigracaoPeloPainel(){
 
 async function carregarTarefasIndividuaisComFallback(){
   if(!dbFirebase||!sincronizacaoNuvemAtiva)return false;
-  const snap=await dbFirebase.ref(caminhoTarefasV2()).once('value');
+  const caminho=caminhoTarefasV2();
+  const timeout=new Promise((_,reject)=>setTimeout(()=>reject(new Error('timeout ao carregar tarefas da família')),8000));
+  const snap=await Promise.race([dbFirebase.ref(caminho).once('value'),timeout]);
   const dados=snap.val();
   if(!dados||typeof dados!=='object')return false;
   const individuais=Object.values(dados);
