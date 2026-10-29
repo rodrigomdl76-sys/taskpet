@@ -1004,7 +1004,8 @@ async function carregarEstadoNuvem(){
     ultimoEstadoSincronizado=JSON.parse(JSON.stringify(compartilhado));
     aplicarEstadoRemotoComMerge(compartilhado);
     if(acessoFamiliar?.role==='parent'){
-      const privSnap=await dbFirebase.ref(`rotinapet/familias/${codigoFamilia}/pais/segredos`).once('value');
+      const timeoutSegredos=new Promise((_,reject)=>setTimeout(()=>reject(new Error('timeout ao carregar configurações dos responsáveis')),8000));
+      const privSnap=await Promise.race([dbFirebase.ref(`rotinapet/familias/${codigoFamilia}/pais/segredos`).once('value'),timeoutSegredos]);
       ultimoEstadoPrivadoPais=extrairCamposPrivadosPais(privSnap.val()||{});
       aplicarPrivadosPaisLocal(ultimoEstadoPrivadoPais);
     }else{const padrao=extrairCamposPrivadosPais(estadoInicial);CAMPOS_PRIVADOS_PAIS.forEach(k=>{estado[k]=padrao[k]})}
@@ -1089,7 +1090,9 @@ async function iniciarSincronizacaoNuvem(){
     // Atualiza também os nós individuais V2; sem isso um status antigo poderia
     // voltar no próximo merge entre aparelhos.
     try{
-      await Promise.all((estado.tarefas||[]).map(t=>persistirTarefaIndividualV2(t)));
+      const gravacoesReset=Promise.all((estado.tarefas||[]).map(t=>persistirTarefaIndividualV2(t)));
+      const timeoutReset=new Promise((_,reject)=>setTimeout(()=>reject(new Error('timeout ao persistir reset diário')),8000));
+      await Promise.race([gravacoesReset,timeoutReset]);
     }catch(e){console.warn('Reset diário: falha ao atualizar tarefas V2:',e)}
   }
 
