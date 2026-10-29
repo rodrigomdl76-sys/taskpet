@@ -3382,7 +3382,12 @@ async function salvarEmailRecuperacao(){
   }
 }
 function abrirPainelPais(){
-  if(acessoFamiliar?.role==='child'){mostrarToast('🔒 Só um responsável pode abrir este painel.');return}
+  if(acessoFamiliar?.role==='child'){
+    // Permite que o responsável troque da sessão infantil para a própria conta;
+    // entrarComEmail valida o papel parent antes de abrir ou carregar o painel.
+    abrirLoginEmail();
+    return;
+  }
   // Primeiro acesso: criar PIN do zero (sem senha padrão 1234 em produção).
   if(!estado.pinPersonalizado&&!estado.pinHash){
     if(!consentimentoResponsavelAtual()){
