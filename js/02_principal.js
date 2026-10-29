@@ -617,7 +617,7 @@ try{
       atualizarStatusSyncUI();
       if(familiaExplicitaNesteAparelho){
         const resumo=resumirErroAcessoFamilia(error);
-        mostrarStatusVinculoFamilia(`Não foi possível iniciar o acesso à família ${codigoFamilia}. ${resumo.mensagem} Código: ${resumo.codigo}.`);
+        mostrarStatusVinculoFamilia(`Não foi possível iniciar o acesso à família ${codigoFamilia}. ${resumo.mensagem} Código: ${resumo.codigo}.${resumo.detalhe?` Detalhe: ${resumo.detalhe}.`:''}`);
       }
     });
   }
