@@ -209,7 +209,7 @@
     <div class="modal-title"><div><h3 style="margin:0">✦ Mais aventuras</h3><small style="font-size:8px;color:#64748b;font-weight:800">Seus atalhos em um só lugar</small></div><button class="close-btn" onclick="fecharModal('modal-menu-mais')">×</button></div>
     <div class="menu-mais-grid">
       <button class="menu-mais-item" id="btn-ajuda" onclick="fecharModal('modal-menu-mais');abrirModalAjuda()" aria-label="Abrir ajuda"><span>❓</span><b>Ajuda</b><small>Como funciona</small></button>
-      <button class="menu-mais-item" id="btn-pais" onclick="fecharModal('modal-menu-mais');abrirPainelPais()" aria-label="Abrir painel dos pais"><span>🔐</span><b>Pais</b><small>Configurações e aprovação</small></button>
+      <button class="menu-mais-item" id="btn-pais" onclick="fecharModal('modal-menu-mais');document.getElementById('telaLoginEmail').style.display='flex'" aria-label="Entrar como responsável"><span>🔐</span><b>Pais</b><small>Configurações e aprovação</small></button>
       <button class="menu-mais-item meta" onclick="fecharModal('modal-menu-mais');abrirResumoMeta()"><span>🎯</span><b>Meta</b><small>Acompanhar objetivos</small></button>
       <button class="menu-mais-item extras" onclick="fecharModal('modal-menu-mais');abrirCentralAventuras()"><span>🌟</span><b>Extras</b><small>Desafios e eventos</small></button>
       <button class="menu-mais-item hoje" onclick="fecharModal('modal-menu-mais');abrirResumoHoje()"><span>🗓️</span><b>Hoje</b><small>Progresso do dia</small></button>
