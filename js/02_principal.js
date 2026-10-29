@@ -590,63 +590,7 @@ function abrirQrConvite(){
   if(txt)txt.textContent=link;
   abrirModal('modal-qrcode');
 }
-try{
-  if(window.firebase){
-    firebase.initializeApp(firebaseConfig);
-    inicializacaoFirebase=new Promise((resolve,reject)=>{
-      const cancelar=firebase.auth().onAuthStateChanged(usuario=>{cancelar();resolve(usuario)},erro=>{cancelar();reject(erro)});
-    }).then(async usuario=>{
-      if(!usuario)usuario=(await firebase.auth().signInAnonymously()).user;
-      dbFirebase = firebase.database();
-      try{storageFirebase=firebase.storage()}catch(storageError){console.warn('Firebase Storage indisponível:',storageError)}
-      definirIdUsuario(usuario.uid);
-      sincronizacaoNuvemAtiva = true;
-      const tokenAtual=await usuario.getIdTokenResult();
-      const codigoConta=tokenAtual?.claims?.familyId||familiaDaConta(usuario);
-      if(codigoConta&&codigoConta!==codigoFamilia){
-        codigoFamilia=codigoConta;
-        localStorage.setItem('ROTINAPET_FAMILIA_ID',codigoFamilia);
-        CHAVE_PERFIL_LOCAL='ROTINAPET_PERFIL_'+codigoFamilia;
-        perfilAtivo=localStorage.getItem(CHAVE_PERFIL_LOCAL);
-        estado=JSON.parse(JSON.stringify(estadoInicial));
-        estado.tarefas=[];
-        try{
-          const salvo=localStorage.getItem(`ROTINAPET_SAVE_${codigoFamilia}`);
-          if(salvo)estado={...estado,...JSON.parse(salvo)};
-        }catch(e){console.warn('Cópia local da família indisponível:',e)}
-      }
-      const membroAprovado=await verificarMembroFamilia(usuario);
-      sincronizacaoNuvemAtiva=membroAprovado;
-      if(membroAprovado){await iniciarSincronizacaoNuvem()}
-      else{
-        statusSyncAtual='local';atualizarStatusSyncUI();
-        if(familiaExplicitaNesteAparelho){
-          if(resultadoSolicitacaoAcesso?.ok){
-            mostrarStatusVinculoFamilia(`Pedido enviado para a família ${codigoFamilia}. No celular do responsável, abra o Painel dos Pais e aprove este aparelho como criança.`);
-          }else{
-            const erro=resultadoSolicitacaoAcesso||{codigo:'solicitacao-nao-executada',mensagem:'O pedido não chegou ao serviço do Firebase.'};
-            mostrarStatusVinculoFamilia(`${erro.mensagem} Código: ${erro.codigo}.${erro.detalhe?` Detalhe: ${erro.detalhe}.`:''} Família: ${codigoFamilia}.`);
-          }
-        }
-      }
-    }).catch((error)=>{
-      detalheErroSync=String(error?.code||error?.message||'erro sem detalhe').replace(/\s+/g,' ').slice(0,100);
-      console.error('Firebase indisponível:',error);
-      sincronizacaoNuvemAtiva = false;
-      statusSyncAtual='local';
-      atualizarStatusSyncUI();
-      if(familiaExplicitaNesteAparelho){
-        const resumo=resumirErroAcessoFamilia(error);
-        mostrarStatusVinculoFamilia(`Não foi possível iniciar o acesso à família ${codigoFamilia}. ${resumo.mensagem} Código: ${resumo.codigo}.${resumo.detalhe?` Detalhe: ${resumo.detalhe}.`:''}`);
-      }
-    });
-  }
-}catch(error){
-  console.error('Falha ao inicializar Firebase:',error);
-  sincronizacaoNuvemAtiva=false;
-  statusSyncAtual='local';
-}
-window.__rotinapetInitialSync=inicializacaoFirebase.catch(()=>undefined);
+
 function definirIdUsuario(uid){
   if(uid) localStorage.setItem('ROTINAPET_UID', uid);
   statusSyncAtual='online';
@@ -5765,6 +5709,63 @@ setInterval(()=>{
     if(estado.timerFim)atualizarDisplayTimer();
   }
 },1000);
+try{
+  if(window.firebase){
+    firebase.initializeApp(firebaseConfig);
+    inicializacaoFirebase=new Promise((resolve,reject)=>{
+      const cancelar=firebase.auth().onAuthStateChanged(usuario=>{cancelar();resolve(usuario)},erro=>{cancelar();reject(erro)});
+    }).then(async usuario=>{
+      if(!usuario)usuario=(await firebase.auth().signInAnonymously()).user;
+      dbFirebase = firebase.database();
+      try{storageFirebase=firebase.storage()}catch(storageError){console.warn('Firebase Storage indisponível:',storageError)}
+      definirIdUsuario(usuario.uid);
+      sincronizacaoNuvemAtiva = true;
+      const tokenAtual=await usuario.getIdTokenResult();
+      const codigoConta=tokenAtual?.claims?.familyId||familiaDaConta(usuario);
+      if(codigoConta&&codigoConta!==codigoFamilia){
+        codigoFamilia=codigoConta;
+        localStorage.setItem('ROTINAPET_FAMILIA_ID',codigoFamilia);
+        CHAVE_PERFIL_LOCAL='ROTINAPET_PERFIL_'+codigoFamilia;
+        perfilAtivo=localStorage.getItem(CHAVE_PERFIL_LOCAL);
+        estado=JSON.parse(JSON.stringify(estadoInicial));
+        estado.tarefas=[];
+        try{
+          const salvo=localStorage.getItem(`ROTINAPET_SAVE_${codigoFamilia}`);
+          if(salvo)estado={...estado,...JSON.parse(salvo)};
+        }catch(e){console.warn('Cópia local da família indisponível:',e)}
+      }
+      const membroAprovado=await verificarMembroFamilia(usuario);
+      sincronizacaoNuvemAtiva=membroAprovado;
+      if(membroAprovado){await iniciarSincronizacaoNuvem()}
+      else{
+        statusSyncAtual='local';atualizarStatusSyncUI();
+        if(familiaExplicitaNesteAparelho){
+          if(resultadoSolicitacaoAcesso?.ok){
+            mostrarStatusVinculoFamilia(`Pedido enviado para a família ${codigoFamilia}. No celular do responsável, abra o Painel dos Pais e aprove este aparelho como criança.`);
+          }else{
+            const erro=resultadoSolicitacaoAcesso||{codigo:'solicitacao-nao-executada',mensagem:'O pedido não chegou ao serviço do Firebase.'};
+            mostrarStatusVinculoFamilia(`${erro.mensagem} Código: ${erro.codigo}.${erro.detalhe?` Detalhe: ${erro.detalhe}.`:''} Família: ${codigoFamilia}.`);
+          }
+        }
+      }
+    }).catch((error)=>{
+      detalheErroSync=String(error?.code||error?.message||'erro sem detalhe').replace(/\s+/g,' ').slice(0,100);
+      console.error('Firebase indisponível:',error);
+      sincronizacaoNuvemAtiva = false;
+      statusSyncAtual='local';
+      atualizarStatusSyncUI();
+      if(familiaExplicitaNesteAparelho){
+        const resumo=resumirErroAcessoFamilia(error);
+        mostrarStatusVinculoFamilia(`Não foi possível iniciar o acesso à família ${codigoFamilia}. ${resumo.mensagem} Código: ${resumo.codigo}.${resumo.detalhe?` Detalhe: ${resumo.detalhe}.`:''}`);
+      }
+    });
+  }
+}catch(error){
+  console.error('Falha ao inicializar Firebase:',error);
+  sincronizacaoNuvemAtiva=false;
+  statusSyncAtual='local';
+}
+window.__rotinapetInitialSync=inicializacaoFirebase.catch(()=>undefined);
 window.addEventListener('DOMContentLoaded',()=>{
   prepararSons();
   prepararClique();
