@@ -2314,6 +2314,34 @@ async function baixarFotoPrivada(path){
   if(cacheFotosPrivadas.size>20)cacheFotosPrivadas.delete(cacheFotosPrivadas.keys().next().value);
   try{return await promise}catch(error){cacheFotosPrivadas.delete(path);throw error}
 }
+function mostrarErroFotoAprovacao(foto,path,error){
+  if(!foto?.isConnected)return;
+  const caixa=document.createElement('div');
+  caixa.style.cssText='display:flex;align-items:center;justify-content:space-between;gap:8px;width:100%;margin-top:6px;padding:10px;border-radius:10px;background:#fff7ed;color:#7c2d12;font-size:12px;box-sizing:border-box';
+  const texto=document.createElement('span');
+  texto.style.cssText='min-width:0;overflow-wrap:anywhere';
+  const botao=document.createElement('button');
+  botao.type='button';botao.textContent='Tentar novamente';
+  botao.style.cssText='flex:none;border:0;border-radius:8px;padding:8px 10px;background:#2563eb;color:#fff;font-weight:800;cursor:pointer';
+  const mensagem=()=>{
+    const codigo=String(error?.code||'').replace(/^functions\\//,'');
+    const detalhe=String(error?.message||'Falha ao carregar a foto.').replace(/\\s+/g,' ').slice(0,140);
+    return `Foto indisponível (${codigo||'erro'}): ${detalhe}`;
+  };
+  texto.textContent=mensagem();
+  botao.addEventListener('click',async()=>{
+    botao.disabled=true;botao.textContent='Carregando…';texto.textContent='Tentando carregar a foto…';
+    try{
+      const src=await baixarFotoPrivada(path);
+      if(!caixa.isConnected)return;
+      foto.src=src;caixa.replaceWith(foto);
+    }catch(erro){
+      error=erro;texto.textContent=mensagem();botao.disabled=false;botao.textContent='Tentar novamente';
+    }
+  });
+  caixa.append(texto,botao);
+  foto.replaceWith(caixa);
+}
 async function processarFotoCapturada(e){
   const f=e.target.files[0];
   if(!f||!tarefaIdFoto)return;
@@ -2710,7 +2738,7 @@ function renderizarAprovacoesPais(){
       const foto=document.createElement('img');
       foto.className='approval-foto';foto.alt='Comprovante da missão';linha.appendChild(foto);
       if(fotoSrc)foto.src=fotoSrc;
-      else baixarFotoPrivada(t.fotoPath).then(src=>{if(src&&foto.isConnected)foto.src=src}).catch(error=>{console.warn('Não foi possível carregar foto privada:',error);if(foto.isConnected)foto.alt='Foto indisponível; verifique sua conexão.'});
+      else baixarFotoPrivada(t.fotoPath).then(src=>{if(src&&foto.isConnected)foto.src=src}).catch(error=>{console.warn('Não foi possível carregar foto privada:',error);mostrarErroFotoAprovacao(foto,t.fotoPath,error)});
     }
     ap.appendChild(linha);
   });
