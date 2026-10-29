@@ -402,6 +402,10 @@ function atualizarStatusSyncUI(){
           banner.classList.remove('mostrar','synced');
         }
       },2500);
+    }else if(statusSyncAtual==='erro'){
+      banner.classList.add('mostrar');
+      banner.classList.remove('syncing','synced');
+      banner.textContent='⚠️ Não foi possível sincronizar. Verifique a internet e abra o app novamente.';
     }else if(!filaSyncPendente){
       banner.classList.remove('mostrar','syncing','synced');
     }
