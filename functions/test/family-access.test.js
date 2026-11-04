@@ -58,6 +58,12 @@ test('um perfil infantil não pode ser vinculado a dois UIDs', async () => {
   assert.equal(paths.get(assignment).uid, 'primeiroUid');
 });
 
+test('pedido de aparelho não pode conceder papel de responsável', async () => {
+  const { handlers, context, paths } = setup();
+  paths.set('rotinapet/familias/casa_principal/security/accessRequests/deviceUid', { status: 'pending' });
+  await assert.rejects(handlers.aprovarAcesso({ uid: 'deviceUid', role: 'parent' }, context), { code: 'invalid-argument' });
+});
+
 test('criança não pode aprovar outros aparelhos', async () => {
   const { handlers } = setup({ role: 'child' });
   await assert.rejects(handlers.aprovarAcesso({ uid: 'childUid' }, { auth: { uid: 'kid', token: { familyId: 'casa_principal', familyRole: 'child' } } }), { code: 'permission-denied' });
