@@ -43,13 +43,15 @@ test('aprovação exige responsável, associa claims e remove o pedido', async (
 });
 
 test('vínculo exige um perfil existente e válido', async () => {
-  const { handlers, context } = setup();
+  const { handlers, context, paths } = setup();
+  paths.set('rotinapet/familias/casa_principal/security/accessRequests/childUid', { status: 'pending' });
   await assert.rejects(handlers.aprovarAcesso({ uid: 'childUid', role: 'child', childId: '../outro' }, context), { code: 'invalid-argument' });
   await assert.rejects(handlers.aprovarAcesso({ uid: 'childUid', role: 'child', childId: 'naoExiste' }, context), { code: 'not-found' });
 });
 
 test('um perfil infantil não pode ser vinculado a dois UIDs', async () => {
   const { handlers, context, paths } = setup();
+  paths.set('rotinapet/familias/casa_principal/security/accessRequests/segundoUid', { status: 'pending' });
   const assignment = 'rotinapet/familias/casa_principal/security/childAssignments/childA';
   paths.set(assignment, { uid: 'primeiroUid' });
   await assert.rejects(handlers.aprovarAcesso({ uid: 'segundoUid', role: 'child', childId: 'childA' }, context), { code: 'already-exists' });
