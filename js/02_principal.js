@@ -5821,6 +5821,16 @@ window.addEventListener('DOMContentLoaded',()=>{
     if(!botao||botao.disabled||botao.matches('.btn-ok,[data-aprovacao="aprovar"],#input-sons-ativos'))return;
     tocarClique();
   };
+  // Garante o acionamento do login mesmo se o handler inline não for resolvido pelo WebView.
+  const botaoLoginEmail=document.getElementById('btn-login-email');
+  if(botaoLoginEmail){
+    botaoLoginEmail.type='button';
+    botaoLoginEmail.addEventListener('click',evento=>{
+      evento.preventDefault();
+      if(typeof window.entrarComEmail==='function')window.entrarComEmail();
+      else mostrarErroRecuperacao('O módulo de login não carregou. Atualize o aplicativo e tente novamente.');
+    });
+  }
   document.addEventListener('pointerdown',tocarNoBotao,true);
   document.addEventListener('pointerdown',()=>{musicaAmbienteLiberada=true;iniciarMusicaAmbiente()},{once:true});
   document.addEventListener('visibilitychange',()=>{if(document.hidden)pausarMusicaAmbiente();else if(estado.musicaAmbienteAtiva!==false&&musicaAmbienteLiberada)iniciarMusicaAmbiente()});
