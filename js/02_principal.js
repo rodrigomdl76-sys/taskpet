@@ -3190,6 +3190,7 @@ function fecharLoginEmail(){
   document.getElementById('inputLoginEmail').value='';
   document.getElementById('inputLoginSenha').value='';
 }
+window.entrarComEmail = entrarComEmail;
 async function entrarComEmail(){
   const email=document.getElementById('inputLoginEmail').value.trim();
   const senha=document.getElementById('inputLoginSenha').value;
