@@ -88,7 +88,8 @@
       <label>Senha:</label>
       <input type="password" id="inputLoginSenha" autocomplete="current-password" placeholder="Sua senha">
     </div>
-    <button class="botao-principal" id="btn-login-email" onclick="entrarComEmail()" aria-live="polite">Entrar</button>
+    <button type="button" class="botao-principal" id="btn-login-email" aria-live="polite">Entrar</button>
+    <p id="login-email-status" role="status" aria-live="polite" style="display:none;margin-top:8px;padding:8px;border-radius:8px;background:#fff7ed;color:#9a3412;font-size:12px"></p>
     <button class="botao-principal botao-secundario" onclick="fecharLoginEmail()">Voltar</button>
   </div>
 </div>
@@ -735,7 +736,7 @@
 <script src="https://www.gstatic.com/firebasejs/12.18.0/firebase-storage-compat.js" defer></script>
 <script src="js/01_menu.js?v=back-3" defer></script>
 <script src="third_party/qrcode-generator/qrcode.js?v=local-qrcode-v1" defer></script>
-<script src="js/02_principal.js?v=login-click-rebind-v2" defer></script>
+<script src="js/02_principal.js?v=login-click-rebind-v3" defer></script>
 <script src="js/03_extras_01.js" defer></script>
 <script src="js/04_engajamento.js?v=mesada-tarefas-v1" defer></script>
 <script src="js/05_interface.js" defer></script>
@@ -778,6 +779,38 @@
   }
   window.addEventListener('load', liberarApp, { once: true });
   setTimeout(mostrarApp, 13000);
+})();
+</script>
+<script>
+(() => {
+  const botao = document.getElementById('btn-login-email');
+  if (!botao || botao.dataset.loginBound === '1') return;
+  botao.dataset.loginBound = '1';
+  botao.addEventListener('click', () => {
+    const status = document.getElementById('login-email-status');
+    const login = window.entrarComEmail;
+    if (typeof login !== 'function') {
+      if (status) {
+        status.textContent = 'O módulo de login não carregou. Feche e abra o aplicativo; se persistir, será necessário verificar o carregamento dos scripts.';
+        status.style.display = 'block';
+      }
+      console.error('[TaskPet] entrarComEmail não foi carregada no window.');
+      return;
+    }
+    try { Promise.resolve(login()).catch(error => {
+      console.error('[TaskPet] Falha ao iniciar login:', error);
+      if (status) {
+        status.textContent = 'Falha ao iniciar o login. Verifique a conexão e tente novamente.';
+        status.style.display = 'block';
+      }
+    }); } catch (error) {
+      console.error('[TaskPet] Erro ao acionar login:', error);
+      if (status) {
+        status.textContent = 'Não foi possível iniciar o login. Atualize o aplicativo e tente novamente.';
+        status.style.display = 'block';
+      }
+    }
+  });
 })();
 </script>
 </body>
