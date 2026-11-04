@@ -3695,33 +3695,51 @@ async function renderizarSolicitacoesAcesso(){
   if(!box){box=document.createElement('section');box.id='acesso-familiar-pendencias';box.style.cssText='margin:10px 0;padding:10px;border:1px solid #ddd6fe;border-radius:14px;background:#faf5ff';lista.parentElement.insertBefore(box,lista)}
   if(acessoFamiliar?.role!=='parent'||!dbFirebase){
     box.replaceChildren();
-    const titulo=document.createElement('strong');titulo.textContent='📱 Aprovação de aparelhos';box.appendChild(titulo);
-    const aviso=document.createElement('div');aviso.textContent='Este aparelho não está autenticado como responsável da família; por isso a lista de pedidos não pode ser consultada.';aviso.style.marginTop='6px';box.appendChild(aviso);
+    const titulo=document.createElement('strong');titulo.textContent='📱 Vínculo dos aparelhos';box.appendChild(titulo);
+    const aviso=document.createElement('div');aviso.textContent='Entre como responsável para vincular cada aparelho ao perfil correto.';aviso.style.marginTop='6px';box.appendChild(aviso);
     return;
   }
   try{
     const resposta=await firebase.app().functions('us-central1').httpsCallable('listarSolicitacoesFamilia')({});
     const pendentes=Object.entries(resposta.data?.requests||{}).filter(([,r])=>r?.status==='pending');
-    box.replaceChildren();const titulo=document.createElement('strong');titulo.textContent='📱 Aparelhos aguardando aprovação';box.appendChild(titulo);
-    if(!pendentes.length){const vazio=document.createElement('div');vazio.textContent='Nenhuma solicitação pendente.';vazio.style.marginTop='6px';box.appendChild(vazio);return}
-    pendentes.forEach(([uid])=>{
-      const linha=document.createElement('div');linha.style.cssText='display:flex;justify-content:space-between;align-items:center;gap:8px;margin-top:8px';
-      const texto=document.createElement('span');texto.textContent='Aparelho · '+uid.slice(0,8);
-      const botao=document.createElement('button');botao.type='button';botao.className='primary-btn green-btn';botao.textContent='Aprovar como criança';botao.addEventListener('click',()=>aprovarAparelhoFamilia(uid,botao));
-      linha.append(texto,botao);box.appendChild(linha);
+    const membrosSnap=await dbFirebase.ref(`rotinapet/familias/${codigoFamilia}/security/members`).once('value');
+    const membros=Object.entries(membrosSnap.val()||{}).filter(([,m])=>m?.role==='child'&&!m?.childId);
+    const criancas=Object.entries(estado.criancas||{});
+    box.replaceChildren();
+    const titulo=document.createElement('strong');titulo.textContent='📱 Vincular aparelhos às crianças';box.appendChild(titulo);
+    const ajuda=document.createElement('div');ajuda.textContent='Escolha o perfil que pertence a cada aparelho. Um perfil só pode ser vinculado a um aparelho.';ajuda.style.cssText='font-size:11px;margin:6px 0';box.appendChild(ajuda);
+    const aparelhos=new Map(membros);
+    pendentes.forEach(([uid])=>{if(!aparelhos.has(uid))aparelhos.set(uid,{status:'pending'})});
+    if(!aparelhos.size){const vazio=document.createElement('div');vazio.textContent='Nenhum aparelho aguardando vínculo.';vazio.style.marginTop='6px';box.appendChild(vazio);return}
+    aparelhos.forEach((info,uid)=>{
+      const linha=document.createElement('div');linha.style.cssText='display:flex;flex-wrap:wrap;align-items:center;gap:7px;margin-top:9px;padding-top:8px;border-top:1px solid #e9d5ff';
+      const texto=document.createElement('span');texto.style.cssText='width:100%;font-size:11px;font-weight:700';texto.textContent=(info.status==='pending'?'Novo aparelho · ':'Aparelho sem perfil · ')+uid.slice(0,10);
+      const select=document.createElement('select');select.className='field';select.style.cssText='flex:1;min-width:130px;padding:7px';
+      const placeholder=document.createElement('option');placeholder.value='';placeholder.textContent='Selecione a criança';select.appendChild(placeholder);
+      criancas.forEach(([id,c])=>{const op=document.createElement('option');op.value=id;op.textContent=(c.emoji||'🐾')+' '+(c.nome||id);select.appendChild(op)});
+      const botao=document.createElement('button');botao.type='button';botao.className='primary-btn green-btn';botao.textContent='Vincular aparelho';botao.addEventListener('click',()=>aprovarAparelhoFamilia(uid,select.value,botao));
+      linha.append(texto,select,botao);box.appendChild(linha);
     });
   }catch(error){
     console.warn('Solicitações de acesso indisponíveis:',error);
     box.replaceChildren();
-    const titulo=document.createElement('strong');titulo.textContent='⚠️ Não foi possível consultar os pedidos';box.appendChild(titulo);
+    const titulo=document.createElement('strong');titulo.textContent='⚠️ Não foi possível consultar os aparelhos';box.appendChild(titulo);
     const aviso=document.createElement('div');aviso.textContent=`Confira a conexão e o login de responsável. Código: ${String(error?.code||'erro-desconhecido')}.`;aviso.style.marginTop='6px';box.appendChild(aviso);
   }
 }
-async function aprovarAparelhoFamilia(uid,botao){
+async function aprovarAparelhoFamilia(uid,childId,botao){
   if(acessoFamiliar?.role!=='parent')return;
-  botao.disabled=true;botao.textContent='Aprovando…';
-  try{await firebase.app().functions('us-central1').httpsCallable('aprovarAcessoFamilia')({uid,role:'child'});mostrarToast('✅ Aparelho aprovado. No outro aparelho, atualize o app.');await renderizarSolicitacoesAcesso()}
-  catch(error){console.error('Falha ao aprovar aparelho:',error);mostrarToast('⚠️ Não foi possível aprovar este aparelho.');botao.disabled=false;botao.textContent='Aprovar como criança'}
+  if(!childId){mostrarToast('Selecione o perfil da criança.');return}
+  botao.disabled=true;botao.textContent='Vinculando…';
+  try{
+    await firebase.app().functions('us-central1').httpsCallable('aprovarAcessoFamilia')({uid,role:'child',childId});
+    mostrarToast('✅ Aparelho vinculado. No outro aparelho, feche e abra o app novamente.');
+    await renderizarSolicitacoesAcesso();
+  }catch(error){
+    console.error('Falha ao vincular aparelho:',error);
+    mostrarToast(error?.code==='functions/already-exists'?'⚠️ Este perfil já está vinculado a outro aparelho.':'⚠️ Não foi possível vincular este aparelho.');
+    botao.disabled=false;botao.textContent='Vincular aparelho';
+  }
 }
 function renderizarPainelPais(){
   document.getElementById('input-taxa-cambio').value=estado.taxaCambio;

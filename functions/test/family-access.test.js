@@ -5,7 +5,7 @@ const assert = require('node:assert/strict');
 const { createFamilyAccessHandlers } = require('../family-access');
 
 function setup({ role = 'parent', familyId = 'casa_principal', uid = 'parentUid' } = {}) {
-  const paths = new Map([['rotinapet/familias/casa_principal/estado', { tarefas: [] }]]);
+  const paths = new Map([['rotinapet/familias/casa_principal/estado', { tarefas: [], criancas: { childA: { nome: 'A' }, childB: { nome: 'B' } } }]]);
   const claims = new Map();
   const ref = path => ({
     once: async () => ({ val: () => paths.get(path) || null, exists: () => paths.has(path) }),
@@ -33,11 +33,35 @@ test('a solicitação usa o UID autenticado e não aceita papel escolhido pelo c
 test('aprovação exige responsável, associa claims e remove o pedido', async () => {
   const { handlers, context, paths, claims } = setup();
   paths.set('rotinapet/familias/casa_principal/security/accessRequests/childUid', { status: 'pending' });
-  const result = await handlers.aprovarAcesso({ uid: 'childUid', role: 'child' }, context);
-  assert.deepEqual(result, { uid: 'childUid', role: 'child' });
-  assert.deepEqual(claims.get('childUid'), { familyId: 'casa_principal', familyRole: 'child' });
+  const result = await handlers.aprovarAcesso({ uid: 'childUid', role: 'child', childId: 'childA' }, context);
+  assert.deepEqual(result, { uid: 'childUid', role: 'child', childId: 'childA' });
+  assert.deepEqual(claims.get('childUid'), { childId: 'childA', familyId: 'casa_principal', familyRole: 'child' });
   assert.equal(paths.get('rotinapet/familias/casa_principal/security/members/childUid').role, 'child');
+  assert.equal(paths.get('rotinapet/familias/casa_principal/security/members/childUid').childId, 'childA');
+  assert.equal(paths.get('rotinapet/familias/casa_principal/security/childAssignments/childA').uid, 'childUid');
   assert.equal(paths.has('rotinapet/familias/casa_principal/security/accessRequests/childUid'), false);
+});
+
+test('vínculo exige um perfil existente e válido', async () => {
+  const { handlers, context, paths } = setup();
+  paths.set('rotinapet/familias/casa_principal/security/accessRequests/childUid', { status: 'pending' });
+  await assert.rejects(handlers.aprovarAcesso({ uid: 'childUid', role: 'child', childId: '../outro' }, context), { code: 'invalid-argument' });
+  await assert.rejects(handlers.aprovarAcesso({ uid: 'childUid', role: 'child', childId: 'naoExiste' }, context), { code: 'not-found' });
+});
+
+test('um perfil infantil não pode ser vinculado a dois UIDs', async () => {
+  const { handlers, context, paths } = setup();
+  paths.set('rotinapet/familias/casa_principal/security/accessRequests/segundoUid', { status: 'pending' });
+  const assignment = 'rotinapet/familias/casa_principal/security/childAssignments/childA';
+  paths.set(assignment, { uid: 'primeiroUid' });
+  await assert.rejects(handlers.aprovarAcesso({ uid: 'segundoUid', role: 'child', childId: 'childA' }, context), { code: 'already-exists' });
+  assert.equal(paths.get(assignment).uid, 'primeiroUid');
+});
+
+test('pedido de aparelho não pode conceder papel de responsável', async () => {
+  const { handlers, context, paths } = setup();
+  paths.set('rotinapet/familias/casa_principal/security/accessRequests/deviceUid', { status: 'pending' });
+  await assert.rejects(handlers.aprovarAcesso({ uid: 'deviceUid', role: 'parent' }, context), { code: 'invalid-argument' });
 });
 
 test('criança não pode aprovar outros aparelhos', async () => {

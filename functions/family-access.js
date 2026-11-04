@@ -60,20 +60,52 @@ function createFamilyAccessHandlers({ database, auth, HttpsError, now = () => Da
     if (typeof familyId !== 'string' || !FAMILY_ID_PATTERN.test(familyId)) throw new HttpsError('permission-denied', 'Sessão sem família válida.');
     exigirResponsavel(context, familyId);
     const uid = data?.uid;
-    const role = VALID_ROLES.has(data?.role) ? data.role : 'child';
+    if (data?.role && data.role !== 'child') throw new HttpsError('invalid-argument', 'Aprovação de aparelhos só pode conceder acesso infantil.');
+    const role = 'child';
     if (typeof uid !== 'string' || !UID_PATTERN.test(uid) || uid === sessao.uid) throw new HttpsError('invalid-argument', 'Aparelho inválido.');
-    const memberRef = database.ref(`rotinapet/familias/${familyId}/security/members/${uid}`);
+    const base = `rotinapet/familias/${familyId}`;
+    const memberRef = database.ref(`${base}/security/members/${uid}`);
     const existing = (await memberRef.once('value')).val();
     if (existing?.familyId && existing.familyId !== familyId) throw new HttpsError('failed-precondition', 'A conta já pertence a outra família.');
+    const requestRef = database.ref(`${base}/security/accessRequests/${uid}`);
+    const request = (await requestRef.once('value')).val();
+    if (request?.status !== 'pending' && !(existing?.familyId === familyId && existing?.role === 'child' && !existing?.childId)) {
+      throw new HttpsError('failed-precondition', 'Não existe solicitação pendente para este aparelho.');
+    }
+    if (existing?.childId && existing.childId !== data?.childId) {
+      throw new HttpsError('failed-precondition', 'Este aparelho já está vinculado a outro perfil. Faça a troca pelo procedimento de desvinculação.');
+    }
     const user = await auth.getUser(uid);
     const claims = { ...(user.customClaims || {}) };
     if (claims.familyId && claims.familyId !== familyId) throw new HttpsError('failed-precondition', 'A conta já pertence a outra família.');
+
+    let childId = null;
+    if (role === 'child') {
+      childId = data?.childId;
+      if (typeof childId !== 'string' || !/^[A-Za-z0-9_-]{1,64}$/.test(childId)) {
+        throw new HttpsError('invalid-argument', 'Selecione o perfil da criança para este aparelho.');
+      }
+      const childSnapshot = await database.ref(`${base}/estado/criancas/${childId}`).once('value');
+      if (!childSnapshot.exists()) throw new HttpsError('not-found', 'O perfil selecionado não existe nesta família.');
+      const assignmentRef = database.ref(`${base}/security/childAssignments/${childId}`);
+      const assignment = await assignmentRef.transaction(current => {
+        if (current && current.uid !== uid) return;
+        return { uid, assignedBy: sessao.uid, assignedAt: now() };
+      });
+      if (!assignment.committed || assignment.snapshot.val()?.uid !== uid) {
+        throw new HttpsError('already-exists', 'Este perfil já está vinculado a outro aparelho. Desvincule-o antes de continuar.');
+      }
+      claims.childId = childId;
+    } else {
+      delete claims.childId;
+    }
+
     claims.familyId = familyId;
     claims.familyRole = role;
     await auth.setCustomUserClaims(uid, claims);
-    await memberRef.set({ familyId, role, approvedBy: sessao.uid, approvedAt: now() });
-    await database.ref(`rotinapet/familias/${familyId}/security/accessRequests/${uid}`).remove();
-    return { uid, role };
+    await memberRef.set({ familyId, role, ...(childId ? { childId } : {}), approvedBy: sessao.uid, approvedAt: now() });
+    await requestRef.remove();
+    return { uid, role, ...(childId ? { childId } : {}) };
   }
   return { solicitarAcesso, registrarResponsavelFamiliaNova, listarSolicitacoes, aprovarAcesso };
 }
