@@ -60,7 +60,8 @@ function createFamilyAccessHandlers({ database, auth, HttpsError, now = () => Da
     if (typeof familyId !== 'string' || !FAMILY_ID_PATTERN.test(familyId)) throw new HttpsError('permission-denied', 'Sessão sem família válida.');
     exigirResponsavel(context, familyId);
     const uid = data?.uid;
-    const role = VALID_ROLES.has(data?.role) ? data.role : 'child';
+    if (data?.role && data.role !== 'child') throw new HttpsError('invalid-argument', 'Aprovação de aparelhos só pode conceder acesso infantil.');
+    const role = 'child';
     if (typeof uid !== 'string' || !UID_PATTERN.test(uid) || uid === sessao.uid) throw new HttpsError('invalid-argument', 'Aparelho inválido.');
     const base = `rotinapet/familias/${familyId}`;
     const memberRef = database.ref(`${base}/security/members/${uid}`);
