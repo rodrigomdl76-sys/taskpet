@@ -66,6 +66,14 @@ function createFamilyAccessHandlers({ database, auth, HttpsError, now = () => Da
     const memberRef = database.ref(`${base}/security/members/${uid}`);
     const existing = (await memberRef.once('value')).val();
     if (existing?.familyId && existing.familyId !== familyId) throw new HttpsError('failed-precondition', 'A conta já pertence a outra família.');
+    const requestRef = database.ref(`${base}/security/accessRequests/${uid}`);
+    const request = (await requestRef.once('value')).val();
+    if (request?.status !== 'pending' && !(existing?.familyId === familyId && existing?.role === 'child' && !existing?.childId)) {
+      throw new HttpsError('failed-precondition', 'Não existe solicitação pendente para este aparelho.');
+    }
+    if (existing?.childId && existing.childId !== data?.childId) {
+      throw new HttpsError('failed-precondition', 'Este aparelho já está vinculado a outro perfil. Faça a troca pelo procedimento de desvinculação.');
+    }
     const user = await auth.getUser(uid);
     const claims = { ...(user.customClaims || {}) };
     if (claims.familyId && claims.familyId !== familyId) throw new HttpsError('failed-precondition', 'A conta já pertence a outra família.');
@@ -93,18 +101,9 @@ function createFamilyAccessHandlers({ database, auth, HttpsError, now = () => Da
 
     claims.familyId = familyId;
     claims.familyRole = role;
-    try {
-      await auth.setCustomUserClaims(uid, claims);
-      await memberRef.set({ familyId, role, ...(childId ? { childId } : {}), approvedBy: sessao.uid, approvedAt: now() });
-      await database.ref(`${base}/security/accessRequests/${uid}`).remove();
-    } catch (error) {
-      if (childId) {
-        await database.ref(`${base}/security/childAssignments/${childId}`).transaction(current =>
-          current?.uid === uid ? null : undefined
-        );
-      }
-      throw error;
-    }
+    await auth.setCustomUserClaims(uid, claims);
+    await memberRef.set({ familyId, role, ...(childId ? { childId } : {}), approvedBy: sessao.uid, approvedAt: now() });
+    await requestRef.remove();
     return { uid, role, ...(childId ? { childId } : {}) };
   }
   return { solicitarAcesso, registrarResponsavelFamiliaNova, listarSolicitacoes, aprovarAcesso };
