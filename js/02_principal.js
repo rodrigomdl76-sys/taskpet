@@ -1,4 +1,5 @@
 
+let camadaFundoAtiva='a';
 let audioCtx=null;
 function obterAudioContext(){if(!audioCtx)audioCtx=new(window.AudioContext||window.webkitAudioContext)({latencyHint:'interactive'});if(audioCtx.state==='suspended')audioCtx.resume().catch(()=>{});return audioCtx}
 function tocarTom(f,t,d,delay=0,v=.15){try{const vol=typeof obterVolumeSom==='function'?obterVolumeSom():0.55;if(vol<=0.01)return;const ctx=obterAudioContext(),o=ctx.createOscillator(),g=ctx.createGain();o.type=t;o.frequency.setValueAtTime(f,ctx.currentTime+delay);const amp=v*vol;g.gain.setValueAtTime(amp,ctx.currentTime+delay);g.gain.exponentialRampToValueAtTime(.001,ctx.currentTime+delay+d);o.connect(g);g.connect(ctx.destination);o.start(ctx.currentTime+delay);o.stop(ctx.currentTime+delay+d)}catch(e){}}
@@ -1372,7 +1373,7 @@ function renderizarParticulasCenario(fundoId){
     c.appendChild(el);
   }
 }
-let camadaFundoAtiva='a';
+
 function aplicarFundoTela(id){
   const cls='cenario-'+(id||'ceu');
   document.body.classList.forEach(c=>{if(c.startsWith('cenario-'))document.body.classList.remove(c)});
