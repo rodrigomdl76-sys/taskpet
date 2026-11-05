@@ -1,6 +1,7 @@
 
 let camadaFundoAtiva='a';
 let ultimoFundoParticulas=null;
+let idTarefaRecemAprovada=null;
 const SUGESTOES_EXTRAS=[
   'Ler uma história por 10 minutos',
   'Guardar os brinquedos depois de brincar',
@@ -2965,7 +2966,6 @@ function registrarConclusaoDoDia(){
   dispararConfetes();
   return true;
 }
-let idTarefaRecemAprovada=null;
 function obterProgressoMeta(meta){
   const hoje=new Date(),ano=hoje.getFullYear(),mes=hoje.getMonth();
   const inicio=new Date(ano,mes,1);
