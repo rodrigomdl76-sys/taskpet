@@ -1199,9 +1199,22 @@ async function carregarEstadoNuvem(){
   try{
     // Timeout de segurança: se a rede travar, não deixamos cargaNuvemPendente
     // preso para sempre (o que bloquearia salvar() indefinidamente).
-    const timeoutMs=8000;
-    const timeout=new Promise((_,reject)=>setTimeout(()=>reject(new Error('timeout ao buscar dados da família')),timeoutMs));
-    const snap=await Promise.race([dbFirebase.ref(getCaminhoFirebase()).once('value'),timeout]);
+    const refEstado=dbFirebase.ref(getCaminhoFirebase());
+    const buscarComTimeout=(tempo)=>Promise.race([
+      refEstado.once('value'),
+      new Promise((_,reject)=>setTimeout(()=>reject(new Error('timeout ao buscar dados da família')),tempo))
+    ]);
+    let snap;
+    try{
+      snap=await buscarComTimeout(10000);
+    }catch(primeiroErro){
+      if(!String(primeiroErro?.message||'').includes('timeout'))throw primeiroErro;
+      // Em aparelhos que acabaram de receber aprovação, renova o token antes
+      // da segunda leitura para garantir que as permissões da família estejam atualizadas.
+      const usuario=obterAuth()?.currentUser;
+      if(usuario)await usuario.getIdToken(true);
+      snap=await buscarComTimeout(15000);
+    }
     const remoto=snap.val();
     if(!remoto||typeof remoto!=='object'){ultimoEstadoSincronizado=null;return false}
     const compartilhado=removerCamposPrivadosPais(remoto);
