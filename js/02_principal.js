@@ -1,4 +1,5 @@
 
+const VERSAO_CONSENTIMENTO_RESPONSAVEL='rotinapet-privacidade-2026-10-v1';
 let camadaFundoAtiva='a';
 let ultimoFundoParticulas=null;
 let idTarefaRecemAprovada=null;
@@ -4448,7 +4449,6 @@ async function salvarNovoPin(){
   if(st)st.textContent='✅ PIN personalizado ativo.';
   mostrarToast('🔑 PIN seguro atualizado!');
 }
-const VERSAO_CONSENTIMENTO_RESPONSAVEL='rotinapet-privacidade-2026-10-v1';
 function consentimentoResponsavelAtual(){const c=estado.consentimentoResponsavel;return !!estado.privacidadeAceita&&c?.versao===VERSAO_CONSENTIMENTO_RESPONSAVEL&&Number.isFinite(c?.aceitoEm)}
 function registrarConsentimentoResponsavel(){estado.privacidadeAceita=true;estado.consentimentoResponsavel={versao:VERSAO_CONSENTIMENTO_RESPONSAVEL,aceitoEm:Date.now()}}
 let privacidadePosAceite=null;
