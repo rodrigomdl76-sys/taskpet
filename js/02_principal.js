@@ -12,6 +12,20 @@ const SUGESTOES_EXTRAS=[
   'Regar uma planta com um responsável'
 ];
 
+const CONQUISTAS=[
+  ['primeira','🥇','Primeiro Passo','Aprove sua primeira tarefa.',10],
+  ['diaCheio','⚡','Super Produtivo','Conclua 5 tarefas no mesmo dia.',25],
+  ['mestreMath','🧠','Gênio da Matemática','Acerte 10 desafios de matemática.',30],
+  ['cem','🪙','Cofrinho Cheio','Junte 100 moedas.',30],
+  ['streak7','🔥','Semana de Fogo','Atinja 7 dias seguidos de ofensiva.',50],
+  ['nivel10','⭐','Veterano','Chegue ao nível 10 com um pet.',60],
+  ['pet5','🐾','Colecionador','Desbloqueie todos os pets.',80],
+  ['tarefas10','📋','Mão na Massa','Aprove 10 tarefas ao todo.',45],
+  ['acessorio','🎀','Pet Fashion','Compre seu primeiro acessório.',20],
+  ['objeto','🎪','Cantinho do Pet','Equipe um objeto animado ao lado do pet.',35],
+  ['streak30','🏆','Lenda da Ofensiva','Atinja 30 dias seguidos de ofensiva.',100]
+];
+
 const DETALHES_CENARIO={
   estadio(){return `<svg viewBox="0 0 400 700" preserveAspectRatio="xMidYMax slice" xmlns="http://www.w3.org/2000/svg">
     <!-- arquibancadas -->
@@ -4727,19 +4741,6 @@ function renderizarColecao(){
   }
 
 }
-const CONQUISTAS=[
-  ['primeira','🥇','Primeiro Passo','Aprove sua primeira tarefa.',10],
-  ['diaCheio','⚡','Super Produtivo','Conclua 5 tarefas no mesmo dia.',25],
-  ['mestreMath','🧠','Gênio da Matemática','Acerte 10 desafios de matemática.',30],
-  ['cem','🪙','Cofrinho Cheio','Junte 100 moedas.',30],
-  ['streak7','🔥','Semana de Fogo','Atinja 7 dias seguidos de ofensiva.',50],
-  ['nivel10','⭐','Veterano','Chegue ao nível 10 com um pet.',60],
-  ['pet5','🐾','Colecionador','Desbloqueie todos os pets.',80],
-  ['tarefas10','📋','Mão na Massa','Aprove 10 tarefas ao todo.',45],
-  ['acessorio','🎀','Pet Fashion','Compre seu primeiro acessório.',20],
-  ['objeto','🎪','Cantinho do Pet','Equipe um objeto animado ao lado do pet.',35],
-  ['streak30','🏆','Lenda da Ofensiva','Atinja 30 dias seguidos de ofensiva.',100]
-];
 const EMBLEMAS_HABILIDADES=[
   {id:'organizacao',emoji:'🧺',nome:'Mestre da Organização',descricao:'Cuidar dos próprios espaços e pertences.'},
   {id:'leitura',emoji:'📚',nome:'Leitor Curioso',descricao:'Explorar histórias, ideias e perguntas.'},
