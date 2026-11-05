@@ -2,6 +2,14 @@
 let camadaFundoAtiva='a';
 let ultimoFundoParticulas=null;
 let idTarefaRecemAprovada=null;
+const CAMPOS_CRIANCA=['tarefasExcluidas','personalizacao','metasPersonalizadas','gestosDesbloqueados','palcoAtual','palcosComprados','decoracaoItens','extraDiaRemovida','avisosMissao','miniPetsComprados','miniPetAtivo','bauDatasResgatadas','historicoRecompensas','avisosRecompensas','acessorios','conquistas','habilidades','desafiosMathAcertos','dinheiroAcumulado','mesadaAtiva','fundoAtual','fundosComprados','temaInterfaceAtual','historicoConclusoes','idadeCrianca','dificuldadeJogos','nomePet','lembreteEnviadoData','metaMoedas','moedas','onboardingVistoCrianca','pausaAte','petAtual','pets','recompensas','sonhos','registroDiario','solicitacoesPremios','streak','surpresaResgatadaData','tarefas','tarefasHojeCount','timerFim','totalSacado','ultimoDiaAcesso','ultimoDiaConcluido','ultimoStreakPremiado','vozSalva','ultimoAcaoPet','ultimoDecay','desafioDiarioData','desafioDiarioFeitoData','bauDiarioAbertoData','escudosOfensiva','eventoSemanalData','missaoFamilia','mensagensPais','historicoEngajamento'];
+const CORES_CONFETE_PET={gato:['#a78bfa','#1e293b','#f8fafc'],cachorra:['#f4a261','#e76f51','#fff7ed'],cabra:['#f5e6d3','#a0522d','#fefce8'],frango:['#fff9c4','#ff6b6b','#ffcc00'],unicornio:['#f9a8d4','#a78bfa','#67e8f9'],dinossauro:['#84cc16','#166534','#f59e0b'],capivara:['#c08457','#92400e','#fde68a'],axolote:['#f5a7c7','#7dd3d7','#e8faff']};
+const EMBLEMAS_HABILIDADES=[
+  {id:'organizacao',emoji:'🧺',nome:'Mestre da Organização',descricao:'Cuidar dos próprios espaços e pertences.'},
+  {id:'leitura',emoji:'📚',nome:'Leitor Curioso',descricao:'Explorar histórias, ideias e perguntas.'},
+  {id:'natureza',emoji:'🌱',nome:'Guardião da Natureza',descricao:'Cuidar das plantas e do ambiente.'}
+];
+
 const SUGESTOES_EXTRAS=[
   'Ler uma história por 10 minutos',
   'Guardar os brinquedos depois de brincar',
@@ -877,7 +885,6 @@ const hojeLocal=()=>{const d=new Date();return `${d.getFullYear()}-${String(d.ge
 const ontemLocal=()=>{const d=new Date();d.setDate(d.getDate()-1);return `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`};
 // Campos que pertencem a UM filho específico (progresso do pet, tarefas, moedas...).
 // Tudo que NÃO está nessa lista é compartilhado pela família inteira (PIN, e-mails, taxa de câmbio).
-const CAMPOS_CRIANCA=['tarefasExcluidas','personalizacao','metasPersonalizadas','gestosDesbloqueados','palcoAtual','palcosComprados','decoracaoItens','extraDiaRemovida','avisosMissao','miniPetsComprados','miniPetAtivo','bauDatasResgatadas','historicoRecompensas','avisosRecompensas','acessorios','conquistas','habilidades','desafiosMathAcertos','dinheiroAcumulado','mesadaAtiva','fundoAtual','fundosComprados','temaInterfaceAtual','historicoConclusoes','idadeCrianca','dificuldadeJogos','nomePet','lembreteEnviadoData','metaMoedas','moedas','onboardingVistoCrianca','pausaAte','petAtual','pets','recompensas','sonhos','registroDiario','solicitacoesPremios','streak','surpresaResgatadaData','tarefas','tarefasHojeCount','timerFim','totalSacado','ultimoDiaAcesso','ultimoDiaConcluido','ultimoStreakPremiado','vozSalva','ultimoAcaoPet','ultimoDecay','desafioDiarioData','desafioDiarioFeitoData','bauDiarioAbertoData','escudosOfensiva','eventoSemanalData','missaoFamilia','mensagensPais','historicoEngajamento'];
 function valoresPadraoCrianca(){
   return {
     tarefasExcluidas:[],gestosDesbloqueados:[],decoracaoItens:[],extraDiaRemovida:null,miniPetsComprados:['passarinho'],miniPetAtivo:'passarinho',petAtual:'gato',moedas:15,dinheiroAcumulado:0,mesadaAtiva:true,idadeCrianca:7,dificuldadeJogos:'auto',nomePet:'Pipoca',
@@ -2291,7 +2298,6 @@ function darRemedio(){
   registrarLogAtividade('Remédio dado ao pet');
 }
 function criarTextoFlutuante(txt,e){const area=document.getElementById('pet-section-area'),s=document.createElement('div');s.className='floating-text';s.textContent=txt;const r=area.getBoundingClientRect();s.style.left=(e?.clientX?r.left<e.clientX?e.clientX-r.left:80:90)+'px';s.style.top='35%';area.appendChild(s);setTimeout(()=>s.remove(),900)}
-const CORES_CONFETE_PET={gato:['#a78bfa','#1e293b','#f8fafc'],cachorra:['#f4a261','#e76f51','#fff7ed'],cabra:['#f5e6d3','#a0522d','#fefce8'],frango:['#fff9c4','#ff6b6b','#ffcc00'],unicornio:['#f9a8d4','#a78bfa','#67e8f9'],dinossauro:['#84cc16','#166534','#f59e0b'],capivara:['#c08457','#92400e','#fde68a'],axolote:['#f5a7c7','#7dd3d7','#e8faff']};
 function ganharXP(qtd,e){
   const p=obterDadosPetAtual();
   const faseAntes=calcularFase(p.nivel);
@@ -4741,11 +4747,6 @@ function renderizarColecao(){
   }
 
 }
-const EMBLEMAS_HABILIDADES=[
-  {id:'organizacao',emoji:'🧺',nome:'Mestre da Organização',descricao:'Cuidar dos próprios espaços e pertences.'},
-  {id:'leitura',emoji:'📚',nome:'Leitor Curioso',descricao:'Explorar histórias, ideias e perguntas.'},
-  {id:'natureza',emoji:'🌱',nome:'Guardião da Natureza',descricao:'Cuidar das plantas e do ambiente.'}
-];
 function registrarHabilidadeAprovada(t){
   const habilidade=EMBLEMAS_HABILIDADES.find(h=>h.id===t.habilidade);
   if(!habilidade)return;
