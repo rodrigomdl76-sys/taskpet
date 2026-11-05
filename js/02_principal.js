@@ -1,6 +1,16 @@
 
 let camadaFundoAtiva='a';
 let ultimoFundoParticulas=null;
+const SUGESTOES_EXTRAS=[
+  'Ler uma história por 10 minutos',
+  'Guardar os brinquedos depois de brincar',
+  'Organizar a mochila para amanhã',
+  'Desenhar uma coisa que aprendeu',
+  'Separar papéis para reciclagem',
+  'Ajudar a dobrar algumas roupas',
+  'Regar uma planta com um responsável'
+];
+
 const DETALHES_CENARIO={
   estadio(){return `<svg viewBox="0 0 400 700" preserveAspectRatio="xMidYMax slice" xmlns="http://www.w3.org/2000/svg">
     <!-- arquibancadas -->
@@ -2908,15 +2918,7 @@ function tarefaEhHoje(t){
   const dias=diasNormalizados(t);
   return dias.length===0||dias.includes(diaSemanaHoje());
 }
-const SUGESTOES_EXTRAS=[
-  'Ler uma história por 10 minutos',
-  'Guardar os brinquedos depois de brincar',
-  'Organizar a mochila para amanhã',
-  'Desenhar uma coisa que aprendeu',
-  'Separar papéis para reciclagem',
-  'Ajudar a dobrar algumas roupas',
-  'Regar uma planta com um responsável'
-];
+
 function garantirExtraDoDia(){
   const dia=hojeLocal(),id=`extra-dia-${dia}`;
   if(estado.extraDiaRemovida===dia||estado.tarefas.some(t=>String(t.id)===id))return;
