@@ -1,6 +1,215 @@
 
 let camadaFundoAtiva='a';
 let ultimoFundoParticulas=null;
+const DETALHES_CENARIO={
+  estadio(){return `<svg viewBox="0 0 400 700" preserveAspectRatio="xMidYMax slice" xmlns="http://www.w3.org/2000/svg">
+    <!-- arquibancadas -->
+    <rect x="0" y="210" width="48" height="320" fill="#1e293b"/><rect x="352" y="210" width="48" height="320" fill="#1e293b"/>
+    <g fill="#334155">${[0,1,2,3,4,5,6,7].map(i=>`<rect x="4" y="${220+i*36}" width="40" height="14" rx="2"/><rect x="356" y="${220+i*36}" width="40" height="14" rx="2"/>`).join('')}</g>
+    <g fill="#fbbf24" opacity=".7">${[0,1,2,3,4,5,6].map(i=>`<circle cx="12" cy="${228+i*36}" r="2.5"/><circle cx="36" cy="${228+i*36}" r="2.5"/><circle cx="364" cy="${228+i*36}" r="2.5"/><circle cx="388" cy="${228+i*36}" r="2.5"/>`).join('')}</g>
+    <!-- gramado com faixas -->
+    <rect x="48" y="240" width="304" height="360" fill="#16a34a"/>
+    ${[0,1,2,3,4,5,6,7,8].map(i=>`<rect x="48" y="${240+i*40}" width="304" height="20" fill="${i%2?'#15803d':'#16a34a'}" opacity=".55"/>`).join('')}
+    <!-- linhas do campo -->
+    <rect x="58" y="255" width="284" height="320" fill="none" stroke="#fff" stroke-width="3" opacity=".9"/>
+    <line x1="200" y1="255" x2="200" y2="575" stroke="#fff" stroke-width="2.5" opacity=".85"/>
+    <circle cx="200" cy="415" r="42" fill="none" stroke="#fff" stroke-width="2.5"/>
+    <circle cx="200" cy="415" r="4" fill="#fff"/>
+    <!-- áreas -->
+    <rect x="110" y="255" width="180" height="70" fill="none" stroke="#fff" stroke-width="2"/>
+    <rect x="140" y="255" width="120" height="36" fill="none" stroke="#fff" stroke-width="2"/>
+    <rect x="110" y="505" width="180" height="70" fill="none" stroke="#fff" stroke-width="2"/>
+    <rect x="140" y="539" width="120" height="36" fill="none" stroke="#fff" stroke-width="2"/>
+    <!-- traves -->
+    <path d="M155 255 V230 H245 V255" fill="none" stroke="#f8fafc" stroke-width="5" stroke-linejoin="round"/>
+    <path d="M155 575 V600 H245 V575" fill="none" stroke="#f8fafc" stroke-width="5" stroke-linejoin="round"/>
+    <path d="M160 232 H240" stroke="#e2e8f0" stroke-width="2" opacity=".5"/>
+    <path d="M160 598 H240" stroke="#e2e8f0" stroke-width="2" opacity=".5"/>
+    <!-- bandeiras de escanteio -->
+    <g class="anim-bandeira"><line x1="58" y1="255" x2="58" y2="235" stroke="#fff" stroke-width="2"/><path d="M58 235 L78 242 L58 249Z" fill="#ef4444"/></g>
+    <g class="anim-bandeira" style="animation-delay:.4s"><line x1="342" y1="255" x2="342" y2="235" stroke="#fff" stroke-width="2"/><path d="M342 235 L322 242 L342 249Z" fill="#3b82f6"/></g>
+    <!-- bola -->
+    <g class="anim-bola"><circle cx="175" cy="390" r="14" fill="#fff"/><path d="M175 376 L182 388 L175 400 L168 388Z" fill="#0f172a"/><circle cx="175" cy="390" r="14" fill="none" stroke="#0f172a" stroke-width="1.5"/></g>
+    <!-- holofotes -->
+    <g fill="#e2e8f0"><rect x="14" y="150" width="10" height="34" rx="2"/><rect x="376" y="150" width="10" height="34" rx="2"/></g>
+    <g fill="#fef9c3" opacity=".85"><circle cx="19" cy="146" r="7"/><circle cx="381" cy="146" r="7"/></g>
+    <!-- plateia topo -->
+    <rect x="48" y="180" width="304" height="60" fill="#0f172a"/>
+    <g fill="#475569">${[0,1,2].map(r=>[0,1,2,3,4,5,6,7,8,9,10,11].map(c=>`<rect x="${56+c*24}" y="${188+r*16}" width="18" height="10" rx="1"/>`).join('')).join('')}</g>
+  </svg>`},
+  praia(){return `<svg viewBox="0 0 400 700" preserveAspectRatio="xMidYMax slice" xmlns="http://www.w3.org/2000/svg">
+    <defs><radialGradient id="rpSolPraia" cx="40%" cy="35%" r="65%"><stop offset="0%" stop-color="#fff8dc"/><stop offset="55%" stop-color="#fde047"/><stop offset="100%" stop-color="#f59e0b"/></radialGradient></defs>
+    <circle cx="320" cy="90" r="58" fill="#fde047" opacity=".2"/><circle cx="320" cy="90" r="42" fill="url(#rpSolPraia)"/>
+    <g class="anim-nuvem" opacity=".85"><ellipse cx="80" cy="70" rx="36" ry="18" fill="#fff"/><ellipse cx="105" cy="70" rx="24" ry="14" fill="#fff"/><ellipse cx="55" cy="72" rx="20" ry="12" fill="#fff"/></g>
+    <path d="M0 420 Q100 400 200 420 T400 420 V700 H0Z" fill="#38bdf8" opacity=".55"/>
+    <path class="anim-onda" d="M-40 440 Q40 420 120 440 T280 440 T440 440 V700 H-40Z" fill="#0ea5e9" opacity=".4"/>
+    <path d="M0 500 Q150 480 300 505 T400 500 V700 H0Z" fill="#fbbf24"/>
+    <path d="M0 560 Q200 540 400 565 V700 H0Z" fill="#f59e0b" opacity=".5"/>
+    <!-- coqueiro -->
+    <path d="M55 520 Q50 400 62 300" stroke="#78350f" stroke-width="10" fill="none"/>
+    <g fill="#16a34a"><ellipse cx="40" cy="290" rx="28" ry="12" transform="rotate(-30 40 290)"/><ellipse cx="80" cy="288" rx="30" ry="12" transform="rotate(25 80 288)"/><ellipse cx="55" cy="275" rx="26" ry="11"/><ellipse cx="70" cy="300" rx="24" ry="10" transform="rotate(40 70 300)"/></g>
+    <ellipse cx="300" cy="530" rx="22" ry="10" fill="#fff" opacity=".5"/>
+    <circle cx="250" cy="545" r="8" fill="#ef4444"/><circle cx="270" cy="550" r="6" fill="#f97316"/>
+    <circle cx="180" cy="560" r="16" fill="#f8fafc"/><path d="M180 544v32M164 560h32" stroke="#38bdf8" stroke-width="2"/><path d="M169 549l22 22M191 549l-22 22" stroke="#f87171" stroke-width="2"/>
+  </svg>`},
+  floresta(){return `<svg viewBox="0 0 400 700" preserveAspectRatio="xMidYMax slice" xmlns="http://www.w3.org/2000/svg">
+    <circle cx="330" cy="90" r="40" fill="#fde047" opacity=".7"/>
+    <g fill="#14532d">${[[30,380,50],[90,360,60],[160,370,55],[240,350,70],[320,365,58],[370,380,45]].map(([x,y,s])=>`<path d="M${x} ${y+s*1.6} L${x-s} ${y} L${x+s} ${y}Z"/><path d="M${x} ${y+s} L${x-s*.75} ${y-s*.3} L${x+s*.75} ${y-s*.3}Z"/><rect x="${x-6}" y="${y+s}" width="12" height="${s*.5}" fill="#78350f"/>`).join('')}</g>
+    <ellipse cx="200" cy="620" rx="180" ry="40" fill="#166534" opacity=".35"/>
+    <g>${[[70,610,'#fca5a5'],[200,640,'#fde68a'],[300,600,'#f9a8d4']].map(([x,y,cor])=>`<circle cx="${x}" cy="${y}" r="9" fill="#fff"/><circle cx="${x}" cy="${y}" r="4" fill="${cor}"/>`).join('')}</g>
+  </svg>`},
+  noite(){return `<svg viewBox="0 0 400 700" preserveAspectRatio="xMidYMax slice" xmlns="http://www.w3.org/2000/svg">
+    <defs><radialGradient id="rpLuaNoite" cx="38%" cy="32%" r="70%"><stop offset="0%" stop-color="#ffffff"/><stop offset="70%" stop-color="#e2e8f0"/><stop offset="100%" stop-color="#cbd5e1"/></radialGradient></defs>
+    <circle cx="310" cy="100" r="60" fill="#f8fafc" opacity=".14"/><circle cx="310" cy="100" r="48" fill="url(#rpLuaNoite)"/><circle cx="328" cy="90" r="42" fill="#0f172a"/>
+    ${[[40,60],[80,120],[150,40],[200,90],[260,50],[100,200],[180,160],[340,180],[50,280]].map(([x,y],i)=>`<circle cx="${x}" cy="${y}" r="${1+i%3}" fill="#fff" opacity="${.5+.5*(i%3)/3}"/>`).join('')}
+    <path d="M70 130 L150 90" stroke="#fff" stroke-width="2" opacity=".7" stroke-linecap="round"/><path d="M150 90 L138 92M150 90 L145 78" stroke="#fff" stroke-width="2" opacity=".7" stroke-linecap="round"/>
+  </svg>`},
+  astronauta(){return `<svg viewBox="0 0 400 700" preserveAspectRatio="xMidYMax slice" xmlns="http://www.w3.org/2000/svg">
+    ${[[30,80],[70,150],[120,40],[180,110],[250,70],[300,140],[350,50],[90,220],[200,200],[320,240]].map(([x,y],i)=>`<circle cx="${x}" cy="${y}" r="${.8+(i%4)*.6}" fill="#e0e7ff"/>`).join('')}
+    <ellipse cx="80" cy="500" rx="50" ry="18" fill="#a78bfa" opacity=".35"/>
+    <circle cx="320" cy="420" r="28" fill="#6366f1" opacity=".4"/><circle cx="330" cy="412" r="8" fill="#c7d2fe" opacity=".5"/>
+    <path d="M0 600 Q200 560 400 600 V700 H0Z" fill="#1e1b4b" opacity=".6"/>
+    <ellipse cx="230" cy="130" rx="34" ry="10" fill="#fca5a5" opacity=".8" transform="rotate(-20 230 130)"/><circle cx="230" cy="130" r="16" fill="#fca5a5" transform="rotate(-20 230 130)"/>
+  </svg>`},
+  neve(){return `<svg viewBox="0 0 400 700" preserveAspectRatio="xMidYMax slice" xmlns="http://www.w3.org/2000/svg">
+    <path d="M0 480 Q100 450 200 480 T400 470 V700 H0Z" fill="#f8fafc"/>
+    <path d="M0 560 Q200 530 400 555 V700 H0Z" fill="#e2e8f0" opacity=".7"/>
+    <!-- árvore de natal -->
+    <path d="M300 520 L260 580 H340Z" fill="#15803d"/><path d="M300 490 L270 545 H330Z" fill="#16a34a"/><path d="M300 465 L280 515 H320Z" fill="#22c55e"/>
+    <rect x="294" y="580" width="12" height="20" fill="#78350f"/><circle cx="300" cy="460" r="8" fill="#fbbf24"/>
+    <circle cx="100" cy="540" r="20" fill="#fff"/><circle cx="100" cy="505" r="15" fill="#fff"/><circle cx="100" cy="478" r="11" fill="#fff"/>
+    <circle cx="96" cy="474" r="1.6" fill="#1c1917"/><circle cx="104" cy="474" r="1.6" fill="#1c1917"/><path d="M100 478 L108 481 L100 484Z" fill="#f97316"/>
+    <circle cx="94" cy="502" r="1.6" fill="#1c1917"/><circle cx="106" cy="502" r="1.6" fill="#1c1917"/><circle cx="100" cy="510" r="1.6" fill="#1c1917"/>
+  </svg>`},
+  pirata(){return `<svg viewBox="0 0 400 700" preserveAspectRatio="xMidYMax slice" xmlns="http://www.w3.org/2000/svg">
+    <path d="M0 420 Q200 390 400 420 V700 H0Z" fill="#0369a1"/>
+    <path d="M0 500 Q200 470 400 500 V700 H0Z" fill="#0c4a6e"/>
+    <path d="M60 480 L200 300 L340 480 Z" fill="#78350f"/>
+    <rect x="190" y="220" width="20" height="90" fill="#44403c"/>
+    <path d="M210 230 L280 255 L210 280Z" fill="#dc2626"/>
+    <ellipse cx="200" cy="490" rx="150" ry="25" fill="#1c1917" opacity=".4"/>
+    <circle cx="320" cy="90" r="34" fill="#fde68a" opacity=".9"/>
+    <path d="M60 130 Q90 110 120 130 Q90 118 60 130Z" fill="#f8fafc" opacity=".8"/>
+  </svg>`},
+  fazenda(){return `<svg viewBox="0 0 400 700" preserveAspectRatio="xMidYMax slice" xmlns="http://www.w3.org/2000/svg">
+    <path d="M0 400 Q200 370 400 400 V700 H0Z" fill="#4ade80"/>
+    <path d="M0 500 Q200 470 400 505 V700 H0Z" fill="#22c55e"/>
+    <rect x="240" y="380" width="100" height="70" fill="#b45309"/><path d="M230 380 L290 330 L350 380Z" fill="#dc2626"/>
+    <rect x="280" y="410" width="24" height="40" fill="#78350f"/>
+    <circle cx="70" cy="120" r="36" fill="#fde047"/>
+    <g class="anim-nuvem" opacity=".85"><ellipse cx="180" cy="80" rx="30" ry="14" fill="#fff"/><ellipse cx="205" cy="78" rx="20" ry="10" fill="#fff"/></g>
+    <g stroke="#78350f" stroke-width="4"><line x1="10" y1="430" x2="10" y2="470"/><line x1="34" y1="430" x2="34" y2="470"/><line x1="10" y1="440" x2="34" y2="440"/></g>
+  </svg>`},
+  halloween(){return `<svg viewBox="0 0 400 700" preserveAspectRatio="xMidYMax slice" xmlns="http://www.w3.org/2000/svg">
+    <defs><radialGradient id="rpLuaHall" cx="38%" cy="32%" r="70%"><stop offset="0%" stop-color="#fff8dc"/><stop offset="100%" stop-color="#fde68a"/></radialGradient></defs>
+    <circle cx="300" cy="90" r="54" fill="#fde68a" opacity=".18"/><circle cx="300" cy="90" r="40" fill="url(#rpLuaHall)"/>
+    <path d="M0 520 Q120 480 200 530 T400 510 V700 H0Z" fill="#1c1917"/>
+    <path d="M40 520 L55 420 L70 520Z" fill="#365314"/><circle cx="55" cy="410" r="22" fill="#ea580c"/>
+    <path d="M48 405 L55 395 L62 405" fill="#166534"/>
+    <path d="M300 520 L320 400 L340 520Z" fill="#365314"/><circle cx="320" cy="390" r="26" fill="#c2410c"/>
+    <g fill="#1c1917" opacity=".85">${[[150,150],[190,170],[230,140],[110,175]].map(([x,y])=>`<path d="M${x} ${y} Q${x-14} ${y-10} ${x-20} ${y} Q${x-10} ${y-2} ${x} ${y} Q${x+10} ${y-2} ${x+20} ${y} Q${x+14} ${y-10} ${x} ${y}Z"/>`).join('')}</g>
+  </svg>`},
+  ceu(){return `<svg viewBox="0 0 400 700" preserveAspectRatio="xMidYMax slice" xmlns="http://www.w3.org/2000/svg">
+    <defs><radialGradient id="rpSolCeu" cx="40%" cy="35%" r="65%"><stop offset="0%" stop-color="#fffbea"/><stop offset="55%" stop-color="#fde047"/><stop offset="100%" stop-color="#facc15"/></radialGradient>
+    <linearGradient id="rpNuvemCeu" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#fff"/><stop offset="100%" stop-color="#e7edf7"/></linearGradient></defs>
+    <circle cx="300" cy="90" r="60" fill="#fde047" opacity=".16"/><circle cx="300" cy="90" r="44" fill="url(#rpSolCeu)"/>
+    <g class="anim-nuvem" opacity=".92"><ellipse cx="90" cy="130" rx="40" ry="20" fill="url(#rpNuvemCeu)"/><ellipse cx="120" cy="128" rx="28" ry="16" fill="url(#rpNuvemCeu)"/><ellipse cx="60" cy="132" rx="22" ry="14" fill="url(#rpNuvemCeu)"/></g>
+    <g class="anim-nuvem" opacity=".55" style="animation-delay:-12s"><ellipse cx="220" cy="210" rx="34" ry="16" fill="url(#rpNuvemCeu)"/><ellipse cx="245" cy="208" rx="22" ry="12" fill="url(#rpNuvemCeu)"/></g>
+    <g fill="#facc15" opacity=".5">${[[40,60],[350,190],[20,250]].map(([x,y])=>`<circle cx="${x}" cy="${y}" r="2.5"/>`).join('')}</g>
+  </svg>`},
+  chuva(){return `<svg viewBox="0 0 400 700" preserveAspectRatio="xMidYMax slice" xmlns="http://www.w3.org/2000/svg">
+    <defs><linearGradient id="rpNuvemChuva" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#94a3b8"/><stop offset="100%" stop-color="#64748b"/></linearGradient></defs>
+    <g class="anim-nuvem" opacity=".92"><ellipse cx="100" cy="90" rx="50" ry="24" fill="url(#rpNuvemChuva)"/><ellipse cx="140" cy="86" rx="34" ry="18" fill="url(#rpNuvemChuva)"/><ellipse cx="65" cy="92" rx="26" ry="16" fill="url(#rpNuvemChuva)"/></g>
+    <g class="anim-nuvem" opacity=".7" style="animation-delay:-9s"><ellipse cx="290" cy="150" rx="46" ry="20" fill="url(#rpNuvemChuva)"/><ellipse cx="322" cy="146" rx="28" ry="14" fill="url(#rpNuvemChuva)"/></g>
+    <path d="M0 560 Q200 538 400 560 V700 H0Z" fill="#475569" opacity=".35"/>
+    <g stroke="#cbd5e1" stroke-width="3" opacity=".4"><ellipse cx="120" cy="602" rx="46" ry="8" fill="none"/><ellipse cx="270" cy="632" rx="58" ry="9" fill="none"/></g>
+  </svg>`},
+  arcoiris(){return `<svg viewBox="0 0 400 700" preserveAspectRatio="xMidYMax slice" xmlns="http://www.w3.org/2000/svg">
+    <g fill="none" stroke-width="15">
+    <path d="M-40 350 Q200 60 440 350" stroke="#f87171"/>
+    <path d="M-40 367 Q200 95 440 367" stroke="#fb923c"/>
+    <path d="M-40 384 Q200 130 440 384" stroke="#fbbf24"/>
+    <path d="M-40 401 Q200 165 440 401" stroke="#4ade80"/>
+    <path d="M-40 418 Q200 200 440 418" stroke="#38bdf8"/>
+    <path d="M-40 435 Q200 235 440 435" stroke="#a78bfa"/>
+    </g>
+    <g class="anim-nuvem" opacity=".92"><ellipse cx="60" cy="340" rx="34" ry="16" fill="#fff"/><ellipse cx="88" cy="336" rx="22" ry="12" fill="#fff"/></g>
+    <g class="anim-nuvem" opacity=".85" style="animation-delay:-14s"><ellipse cx="330" cy="430" rx="30" ry="14" fill="#fff"/><ellipse cx="356" cy="426" rx="18" ry="10" fill="#fff"/></g>
+  </svg>`},
+  festa(){return `<svg viewBox="0 0 400 700" preserveAspectRatio="xMidYMax slice" xmlns="http://www.w3.org/2000/svg">
+    <defs><radialGradient id="rpDisco" cx="35%" cy="30%" r="70%"><stop offset="0%" stop-color="#fff"/><stop offset="60%" stop-color="#cbd5e1"/><stop offset="100%" stop-color="#64748b"/></radialGradient></defs>
+    <line x1="200" y1="0" x2="200" y2="66" stroke="#94a3b8" stroke-width="2"/><circle cx="200" cy="88" r="26" fill="url(#rpDisco)"/>
+    <g fill="#0f172a" opacity=".2">${Array.from({length:16}).map((_,i)=>`<rect x="${184+(i%4)*10}" y="${74+Math.floor(i/4)*10}" width="5" height="5"/>`).join('')}</g>
+    <g opacity=".92"><ellipse cx="58" cy="200" rx="26" ry="32" fill="#f472b6"/><line x1="58" y1="232" x2="58" y2="272" stroke="#f472b6" stroke-width="2"/></g>
+    <g opacity=".92"><ellipse cx="342" cy="240" rx="24" ry="30" fill="#22d3ee"/><line x1="342" y1="270" x2="342" y2="308" stroke="#22d3ee" stroke-width="2"/></g>
+    <g opacity=".92"><ellipse cx="112" cy="120" rx="20" ry="25" fill="#facc15"/><line x1="112" y1="145" x2="112" y2="178" stroke="#facc15" stroke-width="2"/></g>
+  </svg>`},
+  quarto(){return `<svg viewBox="0 0 400 700" preserveAspectRatio="xMidYMax slice" xmlns="http://www.w3.org/2000/svg">
+    <rect x="130" y="60" width="140" height="150" rx="10" fill="#fff" opacity=".5" stroke="#e9d5ff" stroke-width="4"/>
+    <line x1="200" y1="60" x2="200" y2="210" stroke="#e9d5ff" stroke-width="3"/><line x1="130" y1="135" x2="270" y2="135" stroke="#e9d5ff" stroke-width="3"/>
+    <path d="M130 60Q118 140 130 210" fill="none" stroke="#f0abfc" stroke-width="10" opacity=".6"/>
+    <path d="M270 60Q282 140 270 210" fill="none" stroke="#f0abfc" stroke-width="10" opacity=".6"/>
+    <g fill="#fbbf24">${[[150,90],[175,105],[195,80],[220,100],[245,88]].map(([x,y])=>`<circle cx="${x}" cy="${y}" r="3"/>`).join('')}</g>
+    <rect x="30" y="480" width="130" height="14" rx="6" fill="#e9d5ff"/>
+    <circle cx="55" cy="466" r="16" fill="#f9a8d4"/><rect x="90" y="455" width="24" height="28" rx="4" fill="#c4b5fd"/><circle cx="135" cy="470" r="12" fill="#fde68a"/>
+  </svg>`},
+  mario(){return `<svg viewBox="0 0 400 700" preserveAspectRatio="xMidYMax slice" xmlns="http://www.w3.org/2000/svg">
+    <g class="anim-nuvem" opacity=".92"><ellipse cx="90" cy="90" rx="38" ry="20" fill="#fff"/><ellipse cx="118" cy="88" rx="26" ry="15" fill="#fff"/></g>
+    <rect x="40" y="480" width="60" height="60" fill="#16a34a" stroke="#78350f" stroke-width="6"/><rect x="34" y="460" width="72" height="22" fill="#22c55e" stroke="#78350f" stroke-width="6"/>
+    <g>${[0,1,2].map(i=>`<rect x="${200+i*56}" y="380" width="44" height="44" fill="#f59e0b" stroke="#78350f" stroke-width="4"/><text x="${222+i*56}" y="410" font-size="24" font-weight="900" fill="#fff" text-anchor="middle">?</text>`).join('')}</g>
+    <circle cx="332" cy="150" r="6" fill="#fde047"/><circle cx="348" cy="140" r="4" fill="#fde047"/>
+  </svg>`},
+  dino(){return `<svg viewBox="0 0 400 700" preserveAspectRatio="xMidYMax slice" xmlns="http://www.w3.org/2000/svg">
+    <path d="M300 220 L342 380 H258Z" fill="#78350f"/><path d="M300 220 L320 262 L280 262Z" fill="#f97316"/><circle cx="300" cy="215" r="6" fill="#fbbf24"/>
+    <g fill="#166534">${[[60,380],[100,360],[150,390]].map(([x,y])=>`<path d="M${x} ${y}Q${x-10} ${y-60} ${x} ${y-90}Q${x+10} ${y-60} ${x} ${y}Z"/>`).join('')}</g>
+    <g fill="#a3e635" opacity=".8"><ellipse cx="200" cy="560" rx="18" ry="12"/><ellipse cx="230" cy="565" rx="16" ry="11"/><ellipse cx="215" cy="545" rx="14" ry="10"/></g>
+  </svg>`},
+  princesa(){return `<svg viewBox="0 0 400 700" preserveAspectRatio="xMidYMax slice" xmlns="http://www.w3.org/2000/svg">
+    <defs><linearGradient id="rpTorre" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#fbcfe8"/><stop offset="100%" stop-color="#f9a8d4"/></linearGradient></defs>
+    <rect x="60" y="320" width="60" height="150" fill="url(#rpTorre)"/><path d="M60 320 L90 270 L120 320Z" fill="#e879f9"/><rect x="86" y="230" width="8" height="42" fill="#fff"/><g class="anim-bandeira"><path d="M94 230 L114 240 L94 250Z" fill="#f472b6"/></g>
+    <rect x="280" y="300" width="70" height="170" fill="url(#rpTorre)"/><path d="M280 300 L315 245 L350 300Z" fill="#e879f9"/><rect x="310" y="200" width="8" height="46" fill="#fff"/><g class="anim-bandeira"><path d="M318 200 L340 211 L318 222Z" fill="#f472b6"/></g>
+    <rect x="150" y="350" width="110" height="120" fill="#fdf2f8" stroke="#f9a8d4" stroke-width="4"/>
+    <g fill="#fff" opacity=".9">${[[40,90,9],[340,140,7],[200,60,6]].map(([x,y,s])=>`<path d="M${x} ${y-s} L${x+s*.3} ${y-s*.3} L${x+s} ${y} L${x+s*.3} ${y+s*.3} L${x} ${y+s} L${x-s*.3} ${y+s*.3} L${x-s} ${y} L${x-s*.3} ${y-s*.3}Z"/>`).join('')}</g>
+  </svg>`},
+  aniversario(){return `<svg viewBox="0 0 400 700" preserveAspectRatio="xMidYMax slice" xmlns="http://www.w3.org/2000/svg">
+    <defs>
+    <linearGradient id="rpFaixaAniv" x1="0" y1="0" x2="1" y2="0"><stop offset="0%" stop-color="#f472b6"/><stop offset="100%" stop-color="#a78bfa"/></linearGradient>
+    <linearGradient id="rpBoloAniv" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#fde68a"/><stop offset="100%" stop-color="#f59e0b"/></linearGradient>
+    </defs>
+    <path d="M10 46 Q200 10 390 46" fill="none" stroke="#fff" stroke-width="2" opacity=".8"/>
+    <g>${Array.from({length:11}).map((_,i)=>{const t=i/10,x=10+t*380,yBase=46-Math.sin(t*Math.PI)*36,cores=['#f472b6','#fbbf24','#4ade80','#38bdf8','#a78bfa'],cor=cores[i%cores.length];return `<path d="M${x-8} ${yBase} L${x+8} ${yBase} L${x} ${yBase+16}Z" fill="${cor}"/>`;}).join('')}</g>
+    <g class="anim-balao"><ellipse cx="55" cy="175" rx="24" ry="30" fill="#f472b6"/><path d="M55 205v70" stroke="#f472b6" stroke-width="1.5" fill="none"/><path d="M50 172a6 8 0 0 1 5 -10" stroke="#fff" stroke-width="2" opacity=".5" fill="none"/></g>
+    <g class="anim-balao" style="animation-delay:-1.4s"><ellipse cx="95" cy="152" rx="20" ry="26" fill="#fbbf24"/><path d="M95 178v60" stroke="#fbbf24" stroke-width="1.5" fill="none"/></g>
+    <g class="anim-balao" style="animation-delay:-2.6s"><ellipse cx="32" cy="216" rx="17" ry="22" fill="#4ade80"/><path d="M32 238v54" stroke="#4ade80" stroke-width="1.5" fill="none"/></g>
+    <g class="anim-balao" style="animation-delay:-.8s"><ellipse cx="345" cy="163" rx="24" ry="30" fill="#38bdf8"/><path d="M345 193v66" stroke="#38bdf8" stroke-width="1.5" fill="none"/></g>
+    <g class="anim-balao" style="animation-delay:-2s"><ellipse cx="305" cy="142" rx="19" ry="25" fill="#a78bfa"/><path d="M305 167v58" stroke="#a78bfa" stroke-width="1.5" fill="none"/></g>
+    <g class="anim-balao" style="animation-delay:-3.2s"><ellipse cx="370" cy="208" rx="16" ry="21" fill="#fb7185"/><path d="M370 229v50" stroke="#fb7185" stroke-width="1.5" fill="none"/></g>
+    <g transform="translate(200,120)"><path d="M-150 -22 L150 -22 L136 0 L150 22 L-150 22 L-136 0Z" fill="url(#rpFaixaAniv)" opacity=".94"/>
+    <text x="0" y="-2" text-anchor="middle" font-family="Arial,sans-serif" font-size="20" font-weight="900" fill="#fff" style="paint-order:stroke" stroke="#831843" stroke-width="1">FELIZ ANIVERSÁRIO</text>
+    <text x="0" y="17" text-anchor="middle" font-family="Arial,sans-serif" font-size="17" font-weight="900" fill="#fef08a" style="paint-order:stroke" stroke="#831843" stroke-width="1">VIVA! 🎉</text></g>
+    <g>${[[40,270,'#f472b6',0],[382,95,'#4ade80',30],[225,58,'#38bdf8',15],[132,258,'#fbbf24',45],[300,266,'#a78bfa',10],[70,64,'#fb7185',60],[360,248,'#fde047',20]].map(([x,y,cor,rot])=>`<rect x="${x}" y="${y}" width="8" height="8" rx="2" fill="${cor}" transform="rotate(${rot} ${x} ${y})"/>`).join('')}</g>
+    <g transform="translate(200,0)">
+    <ellipse cx="0" cy="650" rx="90" ry="14" fill="#000" opacity=".12"/>
+    <rect x="-70" y="580" width="140" height="60" rx="10" fill="url(#rpBoloAniv)"/>
+    <rect x="-52" y="540" width="104" height="46" rx="10" fill="#fda4af"/>
+    <path d="M-70 580q17 -14 34 0t34 0 34 0 34 0" fill="none" stroke="#fff" stroke-width="6" stroke-linecap="round"/>
+    <path d="M-52 540q13 -12 26 0t26 0 26 0 26 0" fill="none" stroke="#fff" stroke-width="5" stroke-linecap="round"/>
+    <g>${[-30,0,30].map(x=>`<rect x="${x-2}" y="512" width="4" height="28" fill="#fef08a"/><g class="anim-vela" style="transform-origin:${x}px 512px"><path d="M${x} 512q-6 -10 0 -18q6 8 0 18Z" fill="#f97316"/></g>`).join('')}</g>
+    </g>
+    <g class="lingua-sogra" style="pointer-events:auto;cursor:pointer" onclick="soprarLinguaDeSogra(this)" transform="translate(90,600)">
+    <circle r="28" fill="#fff" opacity="0"/>
+    <path d="M0 0 L-12 22 L12 22Z" fill="#fbbf24" stroke="#b45309" stroke-width="1.5"/><circle cy="22" r="4" fill="#f472b6"/>
+    <path class="tongue" d="M0 22 q14 -22 0 -42 q-14 20 0 42Z" fill="#ef4444" stroke="#991b1b" stroke-width="1.5" style="transform-origin:0px 22px;transition:transform .4s cubic-bezier(.34,1.56,.64,1)"/>
+    </g>
+    <g class="lingua-sogra" style="pointer-events:auto;cursor:pointer" onclick="soprarLinguaDeSogra(this)" transform="translate(310,600) scale(-1,1)">
+    <circle r="28" fill="#fff" opacity="0"/>
+    <path d="M0 0 L-12 22 L12 22Z" fill="#4ade80" stroke="#166534" stroke-width="1.5"/><circle cy="22" r="4" fill="#38bdf8"/>
+    <path class="tongue" d="M0 22 q14 -22 0 -42 q-14 20 0 42Z" fill="#f472b6" stroke="#9d174d" stroke-width="1.5" style="transform-origin:0px 22px;transition:transform .4s cubic-bezier(.34,1.56,.64,1)"/>
+    </g>
+    <text x="200" y="672" text-anchor="middle" font-family="Arial,sans-serif" font-size="12" fill="#fff" opacity=".85">toque nas linguinhas de festa 🎈</text>
+  </svg>`}
+};
+
 let audioCtx=null;
 function obterAudioContext(){if(!audioCtx)audioCtx=new(window.AudioContext||window.webkitAudioContext)({latencyHint:'interactive'});if(audioCtx.state==='suspended')audioCtx.resume().catch(()=>{});return audioCtx}
 function tocarTom(f,t,d,delay=0,v=.15){try{const vol=typeof obterVolumeSom==='function'?obterVolumeSom():0.55;if(vol<=0.01)return;const ctx=obterAudioContext(),o=ctx.createOscillator(),g=ctx.createGain();o.type=t;o.frequency.setValueAtTime(f,ctx.currentTime+delay);const amp=v*vol;g.gain.setValueAtTime(amp,ctx.currentTime+delay);g.gain.exponentialRampToValueAtTime(.001,ctx.currentTime+delay+d);o.connect(g);g.connect(ctx.destination);o.start(ctx.currentTime+delay);o.stop(ctx.currentTime+delay+d)}catch(e){}}
@@ -1129,214 +1338,7 @@ const CONFIG_PARTICULAS={
   quarto:{emojis:['✨','💤'],modo:'piscar',qtd:10},
   aniversario:{emojis:['🎈','🎉','✨'],modo:'cair',qtd:14}
 };
-const DETALHES_CENARIO={
-  estadio(){return `<svg viewBox="0 0 400 700" preserveAspectRatio="xMidYMax slice" xmlns="http://www.w3.org/2000/svg">
-    <!-- arquibancadas -->
-    <rect x="0" y="210" width="48" height="320" fill="#1e293b"/><rect x="352" y="210" width="48" height="320" fill="#1e293b"/>
-    <g fill="#334155">${[0,1,2,3,4,5,6,7].map(i=>`<rect x="4" y="${220+i*36}" width="40" height="14" rx="2"/><rect x="356" y="${220+i*36}" width="40" height="14" rx="2"/>`).join('')}</g>
-    <g fill="#fbbf24" opacity=".7">${[0,1,2,3,4,5,6].map(i=>`<circle cx="12" cy="${228+i*36}" r="2.5"/><circle cx="36" cy="${228+i*36}" r="2.5"/><circle cx="364" cy="${228+i*36}" r="2.5"/><circle cx="388" cy="${228+i*36}" r="2.5"/>`).join('')}</g>
-    <!-- gramado com faixas -->
-    <rect x="48" y="240" width="304" height="360" fill="#16a34a"/>
-    ${[0,1,2,3,4,5,6,7,8].map(i=>`<rect x="48" y="${240+i*40}" width="304" height="20" fill="${i%2?'#15803d':'#16a34a'}" opacity=".55"/>`).join('')}
-    <!-- linhas do campo -->
-    <rect x="58" y="255" width="284" height="320" fill="none" stroke="#fff" stroke-width="3" opacity=".9"/>
-    <line x1="200" y1="255" x2="200" y2="575" stroke="#fff" stroke-width="2.5" opacity=".85"/>
-    <circle cx="200" cy="415" r="42" fill="none" stroke="#fff" stroke-width="2.5"/>
-    <circle cx="200" cy="415" r="4" fill="#fff"/>
-    <!-- áreas -->
-    <rect x="110" y="255" width="180" height="70" fill="none" stroke="#fff" stroke-width="2"/>
-    <rect x="140" y="255" width="120" height="36" fill="none" stroke="#fff" stroke-width="2"/>
-    <rect x="110" y="505" width="180" height="70" fill="none" stroke="#fff" stroke-width="2"/>
-    <rect x="140" y="539" width="120" height="36" fill="none" stroke="#fff" stroke-width="2"/>
-    <!-- traves -->
-    <path d="M155 255 V230 H245 V255" fill="none" stroke="#f8fafc" stroke-width="5" stroke-linejoin="round"/>
-    <path d="M155 575 V600 H245 V575" fill="none" stroke="#f8fafc" stroke-width="5" stroke-linejoin="round"/>
-    <path d="M160 232 H240" stroke="#e2e8f0" stroke-width="2" opacity=".5"/>
-    <path d="M160 598 H240" stroke="#e2e8f0" stroke-width="2" opacity=".5"/>
-    <!-- bandeiras de escanteio -->
-    <g class="anim-bandeira"><line x1="58" y1="255" x2="58" y2="235" stroke="#fff" stroke-width="2"/><path d="M58 235 L78 242 L58 249Z" fill="#ef4444"/></g>
-    <g class="anim-bandeira" style="animation-delay:.4s"><line x1="342" y1="255" x2="342" y2="235" stroke="#fff" stroke-width="2"/><path d="M342 235 L322 242 L342 249Z" fill="#3b82f6"/></g>
-    <!-- bola -->
-    <g class="anim-bola"><circle cx="175" cy="390" r="14" fill="#fff"/><path d="M175 376 L182 388 L175 400 L168 388Z" fill="#0f172a"/><circle cx="175" cy="390" r="14" fill="none" stroke="#0f172a" stroke-width="1.5"/></g>
-    <!-- holofotes -->
-    <g fill="#e2e8f0"><rect x="14" y="150" width="10" height="34" rx="2"/><rect x="376" y="150" width="10" height="34" rx="2"/></g>
-    <g fill="#fef9c3" opacity=".85"><circle cx="19" cy="146" r="7"/><circle cx="381" cy="146" r="7"/></g>
-    <!-- plateia topo -->
-    <rect x="48" y="180" width="304" height="60" fill="#0f172a"/>
-    <g fill="#475569">${[0,1,2].map(r=>[0,1,2,3,4,5,6,7,8,9,10,11].map(c=>`<rect x="${56+c*24}" y="${188+r*16}" width="18" height="10" rx="1"/>`).join('')).join('')}</g>
-  </svg>`},
-  praia(){return `<svg viewBox="0 0 400 700" preserveAspectRatio="xMidYMax slice" xmlns="http://www.w3.org/2000/svg">
-    <defs><radialGradient id="rpSolPraia" cx="40%" cy="35%" r="65%"><stop offset="0%" stop-color="#fff8dc"/><stop offset="55%" stop-color="#fde047"/><stop offset="100%" stop-color="#f59e0b"/></radialGradient></defs>
-    <circle cx="320" cy="90" r="58" fill="#fde047" opacity=".2"/><circle cx="320" cy="90" r="42" fill="url(#rpSolPraia)"/>
-    <g class="anim-nuvem" opacity=".85"><ellipse cx="80" cy="70" rx="36" ry="18" fill="#fff"/><ellipse cx="105" cy="70" rx="24" ry="14" fill="#fff"/><ellipse cx="55" cy="72" rx="20" ry="12" fill="#fff"/></g>
-    <path d="M0 420 Q100 400 200 420 T400 420 V700 H0Z" fill="#38bdf8" opacity=".55"/>
-    <path class="anim-onda" d="M-40 440 Q40 420 120 440 T280 440 T440 440 V700 H-40Z" fill="#0ea5e9" opacity=".4"/>
-    <path d="M0 500 Q150 480 300 505 T400 500 V700 H0Z" fill="#fbbf24"/>
-    <path d="M0 560 Q200 540 400 565 V700 H0Z" fill="#f59e0b" opacity=".5"/>
-    <!-- coqueiro -->
-    <path d="M55 520 Q50 400 62 300" stroke="#78350f" stroke-width="10" fill="none"/>
-    <g fill="#16a34a"><ellipse cx="40" cy="290" rx="28" ry="12" transform="rotate(-30 40 290)"/><ellipse cx="80" cy="288" rx="30" ry="12" transform="rotate(25 80 288)"/><ellipse cx="55" cy="275" rx="26" ry="11"/><ellipse cx="70" cy="300" rx="24" ry="10" transform="rotate(40 70 300)"/></g>
-    <ellipse cx="300" cy="530" rx="22" ry="10" fill="#fff" opacity=".5"/>
-    <circle cx="250" cy="545" r="8" fill="#ef4444"/><circle cx="270" cy="550" r="6" fill="#f97316"/>
-    <circle cx="180" cy="560" r="16" fill="#f8fafc"/><path d="M180 544v32M164 560h32" stroke="#38bdf8" stroke-width="2"/><path d="M169 549l22 22M191 549l-22 22" stroke="#f87171" stroke-width="2"/>
-  </svg>`},
-  floresta(){return `<svg viewBox="0 0 400 700" preserveAspectRatio="xMidYMax slice" xmlns="http://www.w3.org/2000/svg">
-    <circle cx="330" cy="90" r="40" fill="#fde047" opacity=".7"/>
-    <g fill="#14532d">${[[30,380,50],[90,360,60],[160,370,55],[240,350,70],[320,365,58],[370,380,45]].map(([x,y,s])=>`<path d="M${x} ${y+s*1.6} L${x-s} ${y} L${x+s} ${y}Z"/><path d="M${x} ${y+s} L${x-s*.75} ${y-s*.3} L${x+s*.75} ${y-s*.3}Z"/><rect x="${x-6}" y="${y+s}" width="12" height="${s*.5}" fill="#78350f"/>`).join('')}</g>
-    <ellipse cx="200" cy="620" rx="180" ry="40" fill="#166534" opacity=".35"/>
-    <g>${[[70,610,'#fca5a5'],[200,640,'#fde68a'],[300,600,'#f9a8d4']].map(([x,y,cor])=>`<circle cx="${x}" cy="${y}" r="9" fill="#fff"/><circle cx="${x}" cy="${y}" r="4" fill="${cor}"/>`).join('')}</g>
-  </svg>`},
-  noite(){return `<svg viewBox="0 0 400 700" preserveAspectRatio="xMidYMax slice" xmlns="http://www.w3.org/2000/svg">
-    <defs><radialGradient id="rpLuaNoite" cx="38%" cy="32%" r="70%"><stop offset="0%" stop-color="#ffffff"/><stop offset="70%" stop-color="#e2e8f0"/><stop offset="100%" stop-color="#cbd5e1"/></radialGradient></defs>
-    <circle cx="310" cy="100" r="60" fill="#f8fafc" opacity=".14"/><circle cx="310" cy="100" r="48" fill="url(#rpLuaNoite)"/><circle cx="328" cy="90" r="42" fill="#0f172a"/>
-    ${[[40,60],[80,120],[150,40],[200,90],[260,50],[100,200],[180,160],[340,180],[50,280]].map(([x,y],i)=>`<circle cx="${x}" cy="${y}" r="${1+i%3}" fill="#fff" opacity="${.5+.5*(i%3)/3}"/>`).join('')}
-    <path d="M70 130 L150 90" stroke="#fff" stroke-width="2" opacity=".7" stroke-linecap="round"/><path d="M150 90 L138 92M150 90 L145 78" stroke="#fff" stroke-width="2" opacity=".7" stroke-linecap="round"/>
-  </svg>`},
-  astronauta(){return `<svg viewBox="0 0 400 700" preserveAspectRatio="xMidYMax slice" xmlns="http://www.w3.org/2000/svg">
-    ${[[30,80],[70,150],[120,40],[180,110],[250,70],[300,140],[350,50],[90,220],[200,200],[320,240]].map(([x,y],i)=>`<circle cx="${x}" cy="${y}" r="${.8+(i%4)*.6}" fill="#e0e7ff"/>`).join('')}
-    <ellipse cx="80" cy="500" rx="50" ry="18" fill="#a78bfa" opacity=".35"/>
-    <circle cx="320" cy="420" r="28" fill="#6366f1" opacity=".4"/><circle cx="330" cy="412" r="8" fill="#c7d2fe" opacity=".5"/>
-    <path d="M0 600 Q200 560 400 600 V700 H0Z" fill="#1e1b4b" opacity=".6"/>
-    <ellipse cx="230" cy="130" rx="34" ry="10" fill="#fca5a5" opacity=".8" transform="rotate(-20 230 130)"/><circle cx="230" cy="130" r="16" fill="#fca5a5" transform="rotate(-20 230 130)"/>
-  </svg>`},
-  neve(){return `<svg viewBox="0 0 400 700" preserveAspectRatio="xMidYMax slice" xmlns="http://www.w3.org/2000/svg">
-    <path d="M0 480 Q100 450 200 480 T400 470 V700 H0Z" fill="#f8fafc"/>
-    <path d="M0 560 Q200 530 400 555 V700 H0Z" fill="#e2e8f0" opacity=".7"/>
-    <!-- árvore de natal -->
-    <path d="M300 520 L260 580 H340Z" fill="#15803d"/><path d="M300 490 L270 545 H330Z" fill="#16a34a"/><path d="M300 465 L280 515 H320Z" fill="#22c55e"/>
-    <rect x="294" y="580" width="12" height="20" fill="#78350f"/><circle cx="300" cy="460" r="8" fill="#fbbf24"/>
-    <circle cx="100" cy="540" r="20" fill="#fff"/><circle cx="100" cy="505" r="15" fill="#fff"/><circle cx="100" cy="478" r="11" fill="#fff"/>
-    <circle cx="96" cy="474" r="1.6" fill="#1c1917"/><circle cx="104" cy="474" r="1.6" fill="#1c1917"/><path d="M100 478 L108 481 L100 484Z" fill="#f97316"/>
-    <circle cx="94" cy="502" r="1.6" fill="#1c1917"/><circle cx="106" cy="502" r="1.6" fill="#1c1917"/><circle cx="100" cy="510" r="1.6" fill="#1c1917"/>
-  </svg>`},
-  pirata(){return `<svg viewBox="0 0 400 700" preserveAspectRatio="xMidYMax slice" xmlns="http://www.w3.org/2000/svg">
-    <path d="M0 420 Q200 390 400 420 V700 H0Z" fill="#0369a1"/>
-    <path d="M0 500 Q200 470 400 500 V700 H0Z" fill="#0c4a6e"/>
-    <path d="M60 480 L200 300 L340 480 Z" fill="#78350f"/>
-    <rect x="190" y="220" width="20" height="90" fill="#44403c"/>
-    <path d="M210 230 L280 255 L210 280Z" fill="#dc2626"/>
-    <ellipse cx="200" cy="490" rx="150" ry="25" fill="#1c1917" opacity=".4"/>
-    <circle cx="320" cy="90" r="34" fill="#fde68a" opacity=".9"/>
-    <path d="M60 130 Q90 110 120 130 Q90 118 60 130Z" fill="#f8fafc" opacity=".8"/>
-  </svg>`},
-  fazenda(){return `<svg viewBox="0 0 400 700" preserveAspectRatio="xMidYMax slice" xmlns="http://www.w3.org/2000/svg">
-    <path d="M0 400 Q200 370 400 400 V700 H0Z" fill="#4ade80"/>
-    <path d="M0 500 Q200 470 400 505 V700 H0Z" fill="#22c55e"/>
-    <rect x="240" y="380" width="100" height="70" fill="#b45309"/><path d="M230 380 L290 330 L350 380Z" fill="#dc2626"/>
-    <rect x="280" y="410" width="24" height="40" fill="#78350f"/>
-    <circle cx="70" cy="120" r="36" fill="#fde047"/>
-    <g class="anim-nuvem" opacity=".85"><ellipse cx="180" cy="80" rx="30" ry="14" fill="#fff"/><ellipse cx="205" cy="78" rx="20" ry="10" fill="#fff"/></g>
-    <g stroke="#78350f" stroke-width="4"><line x1="10" y1="430" x2="10" y2="470"/><line x1="34" y1="430" x2="34" y2="470"/><line x1="10" y1="440" x2="34" y2="440"/></g>
-  </svg>`},
-  halloween(){return `<svg viewBox="0 0 400 700" preserveAspectRatio="xMidYMax slice" xmlns="http://www.w3.org/2000/svg">
-    <defs><radialGradient id="rpLuaHall" cx="38%" cy="32%" r="70%"><stop offset="0%" stop-color="#fff8dc"/><stop offset="100%" stop-color="#fde68a"/></radialGradient></defs>
-    <circle cx="300" cy="90" r="54" fill="#fde68a" opacity=".18"/><circle cx="300" cy="90" r="40" fill="url(#rpLuaHall)"/>
-    <path d="M0 520 Q120 480 200 530 T400 510 V700 H0Z" fill="#1c1917"/>
-    <path d="M40 520 L55 420 L70 520Z" fill="#365314"/><circle cx="55" cy="410" r="22" fill="#ea580c"/>
-    <path d="M48 405 L55 395 L62 405" fill="#166534"/>
-    <path d="M300 520 L320 400 L340 520Z" fill="#365314"/><circle cx="320" cy="390" r="26" fill="#c2410c"/>
-    <g fill="#1c1917" opacity=".85">${[[150,150],[190,170],[230,140],[110,175]].map(([x,y])=>`<path d="M${x} ${y} Q${x-14} ${y-10} ${x-20} ${y} Q${x-10} ${y-2} ${x} ${y} Q${x+10} ${y-2} ${x+20} ${y} Q${x+14} ${y-10} ${x} ${y}Z"/>`).join('')}</g>
-  </svg>`},
-  ceu(){return `<svg viewBox="0 0 400 700" preserveAspectRatio="xMidYMax slice" xmlns="http://www.w3.org/2000/svg">
-    <defs><radialGradient id="rpSolCeu" cx="40%" cy="35%" r="65%"><stop offset="0%" stop-color="#fffbea"/><stop offset="55%" stop-color="#fde047"/><stop offset="100%" stop-color="#facc15"/></radialGradient>
-    <linearGradient id="rpNuvemCeu" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#fff"/><stop offset="100%" stop-color="#e7edf7"/></linearGradient></defs>
-    <circle cx="300" cy="90" r="60" fill="#fde047" opacity=".16"/><circle cx="300" cy="90" r="44" fill="url(#rpSolCeu)"/>
-    <g class="anim-nuvem" opacity=".92"><ellipse cx="90" cy="130" rx="40" ry="20" fill="url(#rpNuvemCeu)"/><ellipse cx="120" cy="128" rx="28" ry="16" fill="url(#rpNuvemCeu)"/><ellipse cx="60" cy="132" rx="22" ry="14" fill="url(#rpNuvemCeu)"/></g>
-    <g class="anim-nuvem" opacity=".55" style="animation-delay:-12s"><ellipse cx="220" cy="210" rx="34" ry="16" fill="url(#rpNuvemCeu)"/><ellipse cx="245" cy="208" rx="22" ry="12" fill="url(#rpNuvemCeu)"/></g>
-    <g fill="#facc15" opacity=".5">${[[40,60],[350,190],[20,250]].map(([x,y])=>`<circle cx="${x}" cy="${y}" r="2.5"/>`).join('')}</g>
-  </svg>`},
-  chuva(){return `<svg viewBox="0 0 400 700" preserveAspectRatio="xMidYMax slice" xmlns="http://www.w3.org/2000/svg">
-    <defs><linearGradient id="rpNuvemChuva" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#94a3b8"/><stop offset="100%" stop-color="#64748b"/></linearGradient></defs>
-    <g class="anim-nuvem" opacity=".92"><ellipse cx="100" cy="90" rx="50" ry="24" fill="url(#rpNuvemChuva)"/><ellipse cx="140" cy="86" rx="34" ry="18" fill="url(#rpNuvemChuva)"/><ellipse cx="65" cy="92" rx="26" ry="16" fill="url(#rpNuvemChuva)"/></g>
-    <g class="anim-nuvem" opacity=".7" style="animation-delay:-9s"><ellipse cx="290" cy="150" rx="46" ry="20" fill="url(#rpNuvemChuva)"/><ellipse cx="322" cy="146" rx="28" ry="14" fill="url(#rpNuvemChuva)"/></g>
-    <path d="M0 560 Q200 538 400 560 V700 H0Z" fill="#475569" opacity=".35"/>
-    <g stroke="#cbd5e1" stroke-width="3" opacity=".4"><ellipse cx="120" cy="602" rx="46" ry="8" fill="none"/><ellipse cx="270" cy="632" rx="58" ry="9" fill="none"/></g>
-  </svg>`},
-  arcoiris(){return `<svg viewBox="0 0 400 700" preserveAspectRatio="xMidYMax slice" xmlns="http://www.w3.org/2000/svg">
-    <g fill="none" stroke-width="15">
-    <path d="M-40 350 Q200 60 440 350" stroke="#f87171"/>
-    <path d="M-40 367 Q200 95 440 367" stroke="#fb923c"/>
-    <path d="M-40 384 Q200 130 440 384" stroke="#fbbf24"/>
-    <path d="M-40 401 Q200 165 440 401" stroke="#4ade80"/>
-    <path d="M-40 418 Q200 200 440 418" stroke="#38bdf8"/>
-    <path d="M-40 435 Q200 235 440 435" stroke="#a78bfa"/>
-    </g>
-    <g class="anim-nuvem" opacity=".92"><ellipse cx="60" cy="340" rx="34" ry="16" fill="#fff"/><ellipse cx="88" cy="336" rx="22" ry="12" fill="#fff"/></g>
-    <g class="anim-nuvem" opacity=".85" style="animation-delay:-14s"><ellipse cx="330" cy="430" rx="30" ry="14" fill="#fff"/><ellipse cx="356" cy="426" rx="18" ry="10" fill="#fff"/></g>
-  </svg>`},
-  festa(){return `<svg viewBox="0 0 400 700" preserveAspectRatio="xMidYMax slice" xmlns="http://www.w3.org/2000/svg">
-    <defs><radialGradient id="rpDisco" cx="35%" cy="30%" r="70%"><stop offset="0%" stop-color="#fff"/><stop offset="60%" stop-color="#cbd5e1"/><stop offset="100%" stop-color="#64748b"/></radialGradient></defs>
-    <line x1="200" y1="0" x2="200" y2="66" stroke="#94a3b8" stroke-width="2"/><circle cx="200" cy="88" r="26" fill="url(#rpDisco)"/>
-    <g fill="#0f172a" opacity=".2">${Array.from({length:16}).map((_,i)=>`<rect x="${184+(i%4)*10}" y="${74+Math.floor(i/4)*10}" width="5" height="5"/>`).join('')}</g>
-    <g opacity=".92"><ellipse cx="58" cy="200" rx="26" ry="32" fill="#f472b6"/><line x1="58" y1="232" x2="58" y2="272" stroke="#f472b6" stroke-width="2"/></g>
-    <g opacity=".92"><ellipse cx="342" cy="240" rx="24" ry="30" fill="#22d3ee"/><line x1="342" y1="270" x2="342" y2="308" stroke="#22d3ee" stroke-width="2"/></g>
-    <g opacity=".92"><ellipse cx="112" cy="120" rx="20" ry="25" fill="#facc15"/><line x1="112" y1="145" x2="112" y2="178" stroke="#facc15" stroke-width="2"/></g>
-  </svg>`},
-  quarto(){return `<svg viewBox="0 0 400 700" preserveAspectRatio="xMidYMax slice" xmlns="http://www.w3.org/2000/svg">
-    <rect x="130" y="60" width="140" height="150" rx="10" fill="#fff" opacity=".5" stroke="#e9d5ff" stroke-width="4"/>
-    <line x1="200" y1="60" x2="200" y2="210" stroke="#e9d5ff" stroke-width="3"/><line x1="130" y1="135" x2="270" y2="135" stroke="#e9d5ff" stroke-width="3"/>
-    <path d="M130 60Q118 140 130 210" fill="none" stroke="#f0abfc" stroke-width="10" opacity=".6"/>
-    <path d="M270 60Q282 140 270 210" fill="none" stroke="#f0abfc" stroke-width="10" opacity=".6"/>
-    <g fill="#fbbf24">${[[150,90],[175,105],[195,80],[220,100],[245,88]].map(([x,y])=>`<circle cx="${x}" cy="${y}" r="3"/>`).join('')}</g>
-    <rect x="30" y="480" width="130" height="14" rx="6" fill="#e9d5ff"/>
-    <circle cx="55" cy="466" r="16" fill="#f9a8d4"/><rect x="90" y="455" width="24" height="28" rx="4" fill="#c4b5fd"/><circle cx="135" cy="470" r="12" fill="#fde68a"/>
-  </svg>`},
-  mario(){return `<svg viewBox="0 0 400 700" preserveAspectRatio="xMidYMax slice" xmlns="http://www.w3.org/2000/svg">
-    <g class="anim-nuvem" opacity=".92"><ellipse cx="90" cy="90" rx="38" ry="20" fill="#fff"/><ellipse cx="118" cy="88" rx="26" ry="15" fill="#fff"/></g>
-    <rect x="40" y="480" width="60" height="60" fill="#16a34a" stroke="#78350f" stroke-width="6"/><rect x="34" y="460" width="72" height="22" fill="#22c55e" stroke="#78350f" stroke-width="6"/>
-    <g>${[0,1,2].map(i=>`<rect x="${200+i*56}" y="380" width="44" height="44" fill="#f59e0b" stroke="#78350f" stroke-width="4"/><text x="${222+i*56}" y="410" font-size="24" font-weight="900" fill="#fff" text-anchor="middle">?</text>`).join('')}</g>
-    <circle cx="332" cy="150" r="6" fill="#fde047"/><circle cx="348" cy="140" r="4" fill="#fde047"/>
-  </svg>`},
-  dino(){return `<svg viewBox="0 0 400 700" preserveAspectRatio="xMidYMax slice" xmlns="http://www.w3.org/2000/svg">
-    <path d="M300 220 L342 380 H258Z" fill="#78350f"/><path d="M300 220 L320 262 L280 262Z" fill="#f97316"/><circle cx="300" cy="215" r="6" fill="#fbbf24"/>
-    <g fill="#166534">${[[60,380],[100,360],[150,390]].map(([x,y])=>`<path d="M${x} ${y}Q${x-10} ${y-60} ${x} ${y-90}Q${x+10} ${y-60} ${x} ${y}Z"/>`).join('')}</g>
-    <g fill="#a3e635" opacity=".8"><ellipse cx="200" cy="560" rx="18" ry="12"/><ellipse cx="230" cy="565" rx="16" ry="11"/><ellipse cx="215" cy="545" rx="14" ry="10"/></g>
-  </svg>`},
-  princesa(){return `<svg viewBox="0 0 400 700" preserveAspectRatio="xMidYMax slice" xmlns="http://www.w3.org/2000/svg">
-    <defs><linearGradient id="rpTorre" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#fbcfe8"/><stop offset="100%" stop-color="#f9a8d4"/></linearGradient></defs>
-    <rect x="60" y="320" width="60" height="150" fill="url(#rpTorre)"/><path d="M60 320 L90 270 L120 320Z" fill="#e879f9"/><rect x="86" y="230" width="8" height="42" fill="#fff"/><g class="anim-bandeira"><path d="M94 230 L114 240 L94 250Z" fill="#f472b6"/></g>
-    <rect x="280" y="300" width="70" height="170" fill="url(#rpTorre)"/><path d="M280 300 L315 245 L350 300Z" fill="#e879f9"/><rect x="310" y="200" width="8" height="46" fill="#fff"/><g class="anim-bandeira"><path d="M318 200 L340 211 L318 222Z" fill="#f472b6"/></g>
-    <rect x="150" y="350" width="110" height="120" fill="#fdf2f8" stroke="#f9a8d4" stroke-width="4"/>
-    <g fill="#fff" opacity=".9">${[[40,90,9],[340,140,7],[200,60,6]].map(([x,y,s])=>`<path d="M${x} ${y-s} L${x+s*.3} ${y-s*.3} L${x+s} ${y} L${x+s*.3} ${y+s*.3} L${x} ${y+s} L${x-s*.3} ${y+s*.3} L${x-s} ${y} L${x-s*.3} ${y-s*.3}Z"/>`).join('')}</g>
-  </svg>`},
-  aniversario(){return `<svg viewBox="0 0 400 700" preserveAspectRatio="xMidYMax slice" xmlns="http://www.w3.org/2000/svg">
-    <defs>
-    <linearGradient id="rpFaixaAniv" x1="0" y1="0" x2="1" y2="0"><stop offset="0%" stop-color="#f472b6"/><stop offset="100%" stop-color="#a78bfa"/></linearGradient>
-    <linearGradient id="rpBoloAniv" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#fde68a"/><stop offset="100%" stop-color="#f59e0b"/></linearGradient>
-    </defs>
-    <path d="M10 46 Q200 10 390 46" fill="none" stroke="#fff" stroke-width="2" opacity=".8"/>
-    <g>${Array.from({length:11}).map((_,i)=>{const t=i/10,x=10+t*380,yBase=46-Math.sin(t*Math.PI)*36,cores=['#f472b6','#fbbf24','#4ade80','#38bdf8','#a78bfa'],cor=cores[i%cores.length];return `<path d="M${x-8} ${yBase} L${x+8} ${yBase} L${x} ${yBase+16}Z" fill="${cor}"/>`;}).join('')}</g>
-    <g class="anim-balao"><ellipse cx="55" cy="175" rx="24" ry="30" fill="#f472b6"/><path d="M55 205v70" stroke="#f472b6" stroke-width="1.5" fill="none"/><path d="M50 172a6 8 0 0 1 5 -10" stroke="#fff" stroke-width="2" opacity=".5" fill="none"/></g>
-    <g class="anim-balao" style="animation-delay:-1.4s"><ellipse cx="95" cy="152" rx="20" ry="26" fill="#fbbf24"/><path d="M95 178v60" stroke="#fbbf24" stroke-width="1.5" fill="none"/></g>
-    <g class="anim-balao" style="animation-delay:-2.6s"><ellipse cx="32" cy="216" rx="17" ry="22" fill="#4ade80"/><path d="M32 238v54" stroke="#4ade80" stroke-width="1.5" fill="none"/></g>
-    <g class="anim-balao" style="animation-delay:-.8s"><ellipse cx="345" cy="163" rx="24" ry="30" fill="#38bdf8"/><path d="M345 193v66" stroke="#38bdf8" stroke-width="1.5" fill="none"/></g>
-    <g class="anim-balao" style="animation-delay:-2s"><ellipse cx="305" cy="142" rx="19" ry="25" fill="#a78bfa"/><path d="M305 167v58" stroke="#a78bfa" stroke-width="1.5" fill="none"/></g>
-    <g class="anim-balao" style="animation-delay:-3.2s"><ellipse cx="370" cy="208" rx="16" ry="21" fill="#fb7185"/><path d="M370 229v50" stroke="#fb7185" stroke-width="1.5" fill="none"/></g>
-    <g transform="translate(200,120)"><path d="M-150 -22 L150 -22 L136 0 L150 22 L-150 22 L-136 0Z" fill="url(#rpFaixaAniv)" opacity=".94"/>
-    <text x="0" y="-2" text-anchor="middle" font-family="Arial,sans-serif" font-size="20" font-weight="900" fill="#fff" style="paint-order:stroke" stroke="#831843" stroke-width="1">FELIZ ANIVERSÁRIO</text>
-    <text x="0" y="17" text-anchor="middle" font-family="Arial,sans-serif" font-size="17" font-weight="900" fill="#fef08a" style="paint-order:stroke" stroke="#831843" stroke-width="1">VIVA! 🎉</text></g>
-    <g>${[[40,270,'#f472b6',0],[382,95,'#4ade80',30],[225,58,'#38bdf8',15],[132,258,'#fbbf24',45],[300,266,'#a78bfa',10],[70,64,'#fb7185',60],[360,248,'#fde047',20]].map(([x,y,cor,rot])=>`<rect x="${x}" y="${y}" width="8" height="8" rx="2" fill="${cor}" transform="rotate(${rot} ${x} ${y})"/>`).join('')}</g>
-    <g transform="translate(200,0)">
-    <ellipse cx="0" cy="650" rx="90" ry="14" fill="#000" opacity=".12"/>
-    <rect x="-70" y="580" width="140" height="60" rx="10" fill="url(#rpBoloAniv)"/>
-    <rect x="-52" y="540" width="104" height="46" rx="10" fill="#fda4af"/>
-    <path d="M-70 580q17 -14 34 0t34 0 34 0 34 0" fill="none" stroke="#fff" stroke-width="6" stroke-linecap="round"/>
-    <path d="M-52 540q13 -12 26 0t26 0 26 0 26 0" fill="none" stroke="#fff" stroke-width="5" stroke-linecap="round"/>
-    <g>${[-30,0,30].map(x=>`<rect x="${x-2}" y="512" width="4" height="28" fill="#fef08a"/><g class="anim-vela" style="transform-origin:${x}px 512px"><path d="M${x} 512q-6 -10 0 -18q6 8 0 18Z" fill="#f97316"/></g>`).join('')}</g>
-    </g>
-    <g class="lingua-sogra" style="pointer-events:auto;cursor:pointer" onclick="soprarLinguaDeSogra(this)" transform="translate(90,600)">
-    <circle r="28" fill="#fff" opacity="0"/>
-    <path d="M0 0 L-12 22 L12 22Z" fill="#fbbf24" stroke="#b45309" stroke-width="1.5"/><circle cy="22" r="4" fill="#f472b6"/>
-    <path class="tongue" d="M0 22 q14 -22 0 -42 q-14 20 0 42Z" fill="#ef4444" stroke="#991b1b" stroke-width="1.5" style="transform-origin:0px 22px;transition:transform .4s cubic-bezier(.34,1.56,.64,1)"/>
-    </g>
-    <g class="lingua-sogra" style="pointer-events:auto;cursor:pointer" onclick="soprarLinguaDeSogra(this)" transform="translate(310,600) scale(-1,1)">
-    <circle r="28" fill="#fff" opacity="0"/>
-    <path d="M0 0 L-12 22 L12 22Z" fill="#4ade80" stroke="#166534" stroke-width="1.5"/><circle cy="22" r="4" fill="#38bdf8"/>
-    <path class="tongue" d="M0 22 q14 -22 0 -42 q-14 20 0 42Z" fill="#f472b6" stroke="#9d174d" stroke-width="1.5" style="transform-origin:0px 22px;transition:transform .4s cubic-bezier(.34,1.56,.64,1)"/>
-    </g>
-    <text x="200" y="672" text-anchor="middle" font-family="Arial,sans-serif" font-size="12" fill="#fff" opacity=".85">toque nas linguinhas de festa 🎈</text>
-  </svg>`}
-};
+
 function renderizarDetalhesCenario(fundoId){
   const el=document.getElementById('cenario-detalhes');
   if(!el)return;
