@@ -209,6 +209,27 @@ const DETALHES_CENARIO={
     <text x="200" y="672" text-anchor="middle" font-family="Arial,sans-serif" font-size="12" fill="#fff" opacity=".85">toque nas linguinhas de festa 🎈</text>
   </svg>`}
 };
+const CONFIG_PARTICULAS={
+  floresta:{emojis:['🍃','🍂','🌿'],modo:'cair',qtd:14},
+  neve:{emojis:['❄️','❄'],modo:'cair',qtd:18},
+  praia:{emojis:['🫧','✨'],modo:'subir',qtd:12},
+  noite:{emojis:['✨','⭐'],modo:'piscar',qtd:20},
+  astronauta:{emojis:['✨','⭐','🌟'],modo:'piscar',qtd:22},
+  festa:{emojis:['🎊','🎉','✨'],modo:'cair',qtd:14},
+  halloween:{emojis:['🦇','🎃'],modo:'lateral',qtd:7},
+  chuva:{emojis:['💧'],modo:'cair',qtd:20},
+  pirata:{emojis:['☁️'],modo:'lateral',qtd:6},
+  fazenda:{emojis:['🌾','🌻'],modo:'cair',qtd:10},
+  mario:{emojis:['⭐','🍄'],modo:'cair',qtd:10},
+  dino:{emojis:['🍃','🦴'],modo:'cair',qtd:10},
+  princesa:{emojis:['✨','💎'],modo:'piscar',qtd:16},
+  arcoiris:{emojis:['✨','🌟'],modo:'piscar',qtd:12},
+  estadio:{emojis:['⚽','🟡'],modo:'cair',qtd:8},
+  ceu:{emojis:['☁️'],modo:'lateral',qtd:5},
+  quarto:{emojis:['✨','💤'],modo:'piscar',qtd:10},
+  aniversario:{emojis:['🎈','🎉','✨'],modo:'cair',qtd:14}
+};
+
 
 let audioCtx=null;
 function obterAudioContext(){if(!audioCtx)audioCtx=new(window.AudioContext||window.webkitAudioContext)({latencyHint:'interactive'});if(audioCtx.state==='suspended')audioCtx.resume().catch(()=>{});return audioCtx}
@@ -1318,26 +1339,7 @@ async function iniciarSincronizacaoNuvem(){
   });
   return true;
 }
-const CONFIG_PARTICULAS={
-  floresta:{emojis:['🍃','🍂','🌿'],modo:'cair',qtd:14},
-  neve:{emojis:['❄️','❄'],modo:'cair',qtd:18},
-  praia:{emojis:['🫧','✨'],modo:'subir',qtd:12},
-  noite:{emojis:['✨','⭐'],modo:'piscar',qtd:20},
-  astronauta:{emojis:['✨','⭐','🌟'],modo:'piscar',qtd:22},
-  festa:{emojis:['🎊','🎉','✨'],modo:'cair',qtd:14},
-  halloween:{emojis:['🦇','🎃'],modo:'lateral',qtd:7},
-  chuva:{emojis:['💧'],modo:'cair',qtd:20},
-  pirata:{emojis:['☁️'],modo:'lateral',qtd:6},
-  fazenda:{emojis:['🌾','🌻'],modo:'cair',qtd:10},
-  mario:{emojis:['⭐','🍄'],modo:'cair',qtd:10},
-  dino:{emojis:['🍃','🦴'],modo:'cair',qtd:10},
-  princesa:{emojis:['✨','💎'],modo:'piscar',qtd:16},
-  arcoiris:{emojis:['✨','🌟'],modo:'piscar',qtd:12},
-  estadio:{emojis:['⚽','🟡'],modo:'cair',qtd:8},
-  ceu:{emojis:['☁️'],modo:'lateral',qtd:5},
-  quarto:{emojis:['✨','💤'],modo:'piscar',qtd:10},
-  aniversario:{emojis:['🎈','🎉','✨'],modo:'cair',qtd:14}
-};
+
 
 function renderizarDetalhesCenario(fundoId){
   const el=document.getElementById('cenario-detalhes');
