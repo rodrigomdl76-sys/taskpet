@@ -3154,7 +3154,18 @@ function alternarPerfil(){
 let pinDigitado='';
   
  function obterAuth(){
-  return window.firebase?.auth ? firebase.auth() : null;
+  try{
+    if(!window.firebase||typeof firebase.auth!=='function')return null;
+    // Recupera a inicialização caso o primeiro boot tenha ocorrido antes do SDK ficar pronto.
+    if(!Array.isArray(firebase.apps)||firebase.apps.length===0){
+      if(typeof firebase.initializeApp!=='function'||typeof firebaseConfig==='undefined')return null;
+      firebase.initializeApp(firebaseConfig);
+    }
+    return firebase.auth();
+  }catch(error){
+    console.error('[TaskPet] Não foi possível obter o Firebase Auth:',error);
+    return null;
+  }
 }
 function validarEmail(email){
   return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(String(email||'').trim());
