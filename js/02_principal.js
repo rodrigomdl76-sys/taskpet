@@ -2220,7 +2220,9 @@ async function inicializarPushBase(){
     // A permissão e o estado da família só são confiáveis depois da autenticação
     // e da primeira sincronização com o Firebase.
     if(window.__rotinapetInitialSync)await window.__rotinapetInitialSync;
-    if(Notification.permission==='granted'&&estado.notificacoesAtivas){
+    // O push da família é independente do lembrete local: com permissão concedida,
+    // todo aparelho autenticado deve manter seu token FCM registrado.
+    if(Notification.permission==='granted'){
       await registrarTokenFcm();
     }
   }catch(e){console.warn('Inicialização do push adiada:',e)}
