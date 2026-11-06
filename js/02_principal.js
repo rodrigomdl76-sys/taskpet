@@ -2256,11 +2256,36 @@ async function ativarPushCompleto(){
       perm=await Notification.requestPermission();
     }
     if(perm!=='granted'){
+      // Diagnóstico explícito: no TWA a permissão do Android e a permissão
+      // do origin podem divergir. Não fingir que o push está ativo.
+      let permissaoWeb='indisponível';
+      try{
+        if(navigator.permissions?.query){
+          const estadoPermissao=await navigator.permissions.query({name:'notifications'});
+          permissaoWeb=estadoPermissao.state;
+        }
+      }catch(e){
+        permissaoWeb='consulta não suportada';
+      }
+      const contexto={
+        notification:perm,
+        permissionsApi:permissaoWeb,
+        standalone:window.matchMedia?.('(display-mode: standalone)')?.matches||false,
+        serviceWorker:'serviceWorker' in navigator,
+        secureContext:window.isSecureContext,
+        url:location.origin
+      };
+      try{
+        localStorage.setItem('ROTINAPET_DIAGNOSTICO_PERMISSAO_PUSH',JSON.stringify({
+          ...contexto,em:new Date().toISOString()
+        }));
+      }catch(e){}
+      console.warn('Diagnóstico de permissão Push:',contexto);
       const msg=perm==='denied'
-        ?'Permissão bloqueada. Libere notificações nas configurações do Android ou do navegador e tente novamente.'
-        :'Ativação cancelada. Toque novamente para permitir as notificações.';
+        ?'O navegador está retornando Notification.permission = "denied". A permissão do Android está liberada, mas a permissão Web deste endereço ainda está bloqueada ou não foi atualizada. Diagnóstico: '+JSON.stringify(contexto)
+        :'Ativação cancelada. Estado retornado: '+perm+'. Toque novamente para permitir as notificações.';
       atualizarStatusPushAparelho(msg,true);
-      mostrarToast(msg);
+      mostrarAviso('🔔','Diagnóstico da permissão',msg);
       return false;
     }
     estado.notificacoesAtivas=true;
