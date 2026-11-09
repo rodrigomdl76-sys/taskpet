@@ -5818,9 +5818,14 @@ setInterval(()=>{
 try{
   if(window.firebase){
     firebase.initializeApp(firebaseConfig);
-    inicializacaoFirebase=new Promise((resolve,reject)=>{
-      const cancelar=firebase.auth().onAuthStateChanged(usuario=>{cancelar();resolve(usuario)},erro=>{cancelar();reject(erro)});
-    }).then(async usuario=>{
+    const authFirebase=firebase.auth();
+    // Garante que a sessão (inclusive a conta dos pais) seja persistida no aparelho
+    // antes de observar o estado de autenticação e decidir se precisa criar sessão anônima.
+    inicializacaoFirebase=authFirebase.setPersistence(firebase.auth.Auth.Persistence.LOCAL)
+    .catch(error=>{console.warn('[TaskPet] Não foi possível confirmar persistência LOCAL do login:',error);})
+    .then(()=>new Promise((resolve,reject)=>{
+      const cancelar=authFirebase.onAuthStateChanged(usuario=>{cancelar();resolve(usuario)},erro=>{cancelar();reject(erro)});
+    })).then(async usuario=>{
       if(!usuario)usuario=(await firebase.auth().signInAnonymously()).user;
       dbFirebase = firebase.database();
       try{storageFirebase=firebase.storage()}catch(storageError){console.warn('Firebase Storage indisponível:',storageError)}
