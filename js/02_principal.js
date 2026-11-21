@@ -5305,13 +5305,34 @@ function criarSonhoCrianca(){
   enfileirarPushFamilia('💭 Novo sonho',texto,{tag:'rotinapet-sonho',onlyPerfil:'pais'});
 }
 function solicitarRealizacaoSonho(id){
-  if(perfilAtivo!=='crianca')return;
-  const s=(estado.sonhos||[]).find(x=>String(x.id)===String(id));
-  if(!s||s.status!=='precificado'||sonhoTemSolicitacaoPendente(id))return;
+  // Retornos sempre informam o motivo; evita que o botão pareça não responder.
+  if(perfilAtivo!=='crianca'){
+    console.warn('[TaskPet] Resgate de sonho bloqueado: perfil ativo',perfilAtivo);
+    return mostrarToast('⚠️ Entre no perfil da criança para pedir a realização do sonho.');
+  }
+  const sonhos=Array.isArray(estado.sonhos)?estado.sonhos:[];
+  const s=sonhos.find(x=>String(x.id)===String(id));
+  if(!s){
+    console.warn('[TaskPet] Sonho não encontrado para resgate:',id);
+    return mostrarToast('⚠️ Não encontramos esse sonho. Atualize a loja e tente novamente.');
+  }
+  if(s.status!=='precificado'){
+    console.warn('[TaskPet] Sonho ainda não está disponível:',s.status,id);
+    return mostrarToast('⏳ Esse sonho ainda não está liberado pelos pais. Atualize a loja.');
+  }
+  if(sonhoTemSolicitacaoPendente(id)){
+    return mostrarToast('⏳ Seu pedido já foi enviado e está aguardando seus pais.');
+  }
   const custo=Math.max(1,Number(s.custo)||0);
-  if((Number(estado.moedas)||0)<custo)return mostrarToast(`🔒 Junte mais ${custo-(Number(estado.moedas)||0)} PetCoins para pedir esse sonho.`);
+  const saldo=Math.max(0,Number(estado.moedas)||0);
+  if(saldo<custo)return mostrarToast(`🔒 Junte mais ${custo-saldo} PetCoins para pedir esse sonho.`);
+  estado.solicitacoesPremios=Array.isArray(estado.solicitacoesPremios)?estado.solicitacoesPremios:[];
   const solicitacao={id:Date.now()+Math.floor(Math.random()*1000),sonhoId:s.id,texto:s.texto,custo,tipo:'sonho',status:'pendente',data:hojeLocal(),dataHora:Date.now()};
-  estado.solicitacoesPremios.push(solicitacao);salvar();atualizarTela();renderizarLojaRecompensas();renderizarSolicitacoesPremiosPais();
+  estado.solicitacoesPremios.push(solicitacao);
+  salvar();
+  atualizarTela();
+  renderizarLojaRecompensas();
+  renderizarSolicitacoesPremiosPais();
   mostrarToast('🎟️ Pedido enviado aos seus pais!');
   registrarLogAtividade(`Pedido para realizar sonho: ${s.texto}`);
   enviarNotificacaoLocal('🎟️ Pedido de sonho',`${s.texto} — ${custo}🪙`,'rotinapet-premio');
