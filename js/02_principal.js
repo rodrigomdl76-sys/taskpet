@@ -5280,11 +5280,16 @@ function renderizarLojaRecompensas(){
     card.innerHTML=`<div class="rp-prize-icon">💭</div><div class="rp-prize-name">${esc(s.texto)}</div><div class="rp-prize-desc">Um sonho escolhido por você e combinado com seus pais.</div><div class="rp-prize-cost">🪙 ${custo}</div>${pode?`<div class="rp-can-get">✨ Você já juntou o suficiente!</div><button type="button" class="rp-prize-btn js-pedir-sonho" ${pendente?'disabled':''}>${pendente?'⏳ Pedido enviado':'🎁 Pedir para realizar'}</button>`:`<div class="rp-missing">Faltam <b>${faltam} 🪙</b></div><div class="rp-mini-track"><div style="width:${pct}%"></div></div><button type="button" class="rp-prize-btn disabled" disabled>🔒 Continue juntando</button>`}`;
     const botaoPedido=card.querySelector('.js-pedir-sonho');
     if(botaoPedido){
-      botaoPedido.addEventListener('click',evento=>{
+      botaoPedido.style.cssText+=';position:relative;z-index:20;pointer-events:auto;touch-action:manipulation;-webkit-tap-highlight-color:transparent';
+      let pedidoDisparado=false;
+      botaoPedido.addEventListener('pointerup',evento=>{
+        if(pedidoDisparado)return;
+        pedidoDisparado=true;
         evento.preventDefault();
         evento.stopPropagation();
-        console.info('[TaskPet] Clique no pedido de sonho recebido:',s.id);
+        console.info('[TaskPet] Toque recebido no pedido de sonho:',s.id);
         solicitarRealizacaoSonho(s.id);
+        setTimeout(()=>{pedidoDisparado=false;},700);
       });
     }
     c.appendChild(card);
