@@ -5277,7 +5277,16 @@ function renderizarLojaRecompensas(){
     const custo=Math.max(1,Number(s.custo)||0),pode=moedas>=custo,pendente=sonhoTemSolicitacaoPendente(s.id);
     const pct=Math.min(100,Math.round((moedas/custo)*100)),faltam=Math.max(0,custo-moedas);
     const card=document.createElement('div');card.className='rp-prize-card'+(pode?' ready':'');
-    card.innerHTML=`<div class="rp-prize-icon">💭</div><div class="rp-prize-name">${esc(s.texto)}</div><div class="rp-prize-desc">Um sonho escolhido por você e combinado com seus pais.</div><div class="rp-prize-cost">🪙 ${custo}</div>${pode?`<div class="rp-can-get">✨ Você já juntou o suficiente!</div><button class="rp-prize-btn" ${pendente?'disabled':''} onclick="solicitarRealizacaoSonho(${Number(s.id)})">${pendente?'⏳ Pedido enviado':'🎁 Pedir para realizar'}</button>`:`<div class="rp-missing">Faltam <b>${faltam} 🪙</b></div><div class="rp-mini-track"><div style="width:${pct}%"></div></div><button class="rp-prize-btn disabled" disabled>🔒 Continue juntando</button>`}`;
+    card.innerHTML=`<div class="rp-prize-icon">💭</div><div class="rp-prize-name">${esc(s.texto)}</div><div class="rp-prize-desc">Um sonho escolhido por você e combinado com seus pais.</div><div class="rp-prize-cost">🪙 ${custo}</div>${pode?`<div class="rp-can-get">✨ Você já juntou o suficiente!</div><button type="button" class="rp-prize-btn js-pedir-sonho" ${pendente?'disabled':''}>${pendente?'⏳ Pedido enviado':'🎁 Pedir para realizar'}</button>`:`<div class="rp-missing">Faltam <b>${faltam} 🪙</b></div><div class="rp-mini-track"><div style="width:${pct}%"></div></div><button type="button" class="rp-prize-btn disabled" disabled>🔒 Continue juntando</button>`}`;
+    const botaoPedido=card.querySelector('.js-pedir-sonho');
+    if(botaoPedido){
+      botaoPedido.addEventListener('click',evento=>{
+        evento.preventDefault();
+        evento.stopPropagation();
+        console.info('[TaskPet] Clique no pedido de sonho recebido:',s.id);
+        solicitarRealizacaoSonho(s.id);
+      });
+    }
     c.appendChild(card);
   });
   if(!sonhosAtivos.length&&!sonhosPendentes.length)c.insertAdjacentHTML('beforeend','<div class="rp-empty">🌈<br><b>Seu próximo sonho começa aqui!</b><small>Escreva sua ideia e peça aos seus pais para colocar um valor em PetCoins.</small></div>');
